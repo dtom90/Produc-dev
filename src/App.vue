@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>To Do List</h1>
-    <TaskList name="task 1" />
+    <TaskList :tasks="tasks" />
   </div>
 </template>
 
@@ -12,6 +12,15 @@ export default {
   name: 'app',
   components: {
     TaskList
+  },
+  data: function() {
+    return {
+      tasks: [
+        'Task 1',
+        'Task 2',
+        'Task 3'
+      ]
+    }
   }
 }
 </script>

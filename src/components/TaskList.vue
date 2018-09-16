@@ -1,7 +1,7 @@
 <template>
   <div id="task-list">
     <ul>
-      <li>{{ name }}</li>
+      <li v-for="task in tasks" :key="task">{{ task }}</li>
     </ul>
   </div>
 </template>
@@ -10,7 +10,7 @@
 export default {
   name: 'TaskList',
   props: {
-    name: String
+    tasks: Array
   }
 }
 </script>
@@ -22,7 +22,6 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
-  margin: 0 10px;
+  margin: 10px 0;
 }
 </style>

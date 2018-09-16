@@ -3,10 +3,17 @@ import TaskList from '@/components/TaskList.vue'
 
 describe('TaskList.vue', () => {
   it('renders props.name when passed', () => {
-    const name = 'new task'
+    const tasks = [
+      'new task 1',
+      'new task 2',
+      'new task 3'
+    ]
     const wrapper = shallowMount(TaskList, {
-      propsData: { name: name }
+      propsData: { tasks: tasks }
     })
-    expect(wrapper.text()).toMatch(name)
+    const renderedTasks = wrapper.findAll('li')
+    renderedTasks.wrappers.forEach((elem, i) => {
+      expect(elem.text()).toMatch(tasks[i])
+    })
   })
 })
