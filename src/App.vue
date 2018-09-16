@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <h1>To Do List</h1>
+    <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask">
     <TaskList :tasks="tasks" />
   </div>
 </template>
@@ -15,11 +16,14 @@ export default {
   },
   data: function() {
     return {
-      tasks: [
-        'Task 1',
-        'Task 2',
-        'Task 3'
-      ]
+      tasks: [],
+      newTask: ''
+    }
+  },
+  methods: {
+    addTask: function () {
+      this.tasks.push(this.newTask)
+      this.newTask = ''
     }
   }
 }
