@@ -1,7 +1,8 @@
 <template>
   <div id="task-list">
     <ul>
-      <li v-for="task in tasks" :key="task">{{ task }}</li>
+      <li v-for="task in tasks" :key="task">
+        <input type="checkbox" />{{ task }}</li>
     </ul>
   </div>
 </template>
