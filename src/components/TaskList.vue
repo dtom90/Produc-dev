@@ -1,9 +1,9 @@
-<!--suppress HtmlFormInputWithoutLabel -->
 <template>
   <div id="task-list">
     <ul>
       <li v-for="task in tasks" :key="task.id" :id="'task-'+task.id">
-        <input type="checkbox" />{{ task.name }}</li>
+        <input type="checkbox" v-model="task.completed"/>{{ task.name }}
+      </li>
     </ul>
   </div>
 </template>

@@ -2,7 +2,11 @@
   <div id="app">
     <h1>To Do List</h1>
     <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask">
-    <TaskList :tasks="tasks" />
+    <TaskList :tasks="incompleteTasks" />
+    <div v-if="completedTasks.length > 0">
+      <h3>Completed Tasks</h3>
+      <TaskList :tasks="completedTasks" />
+    </div>
   </div>
 </template>
 
@@ -20,11 +24,16 @@ export default {
       newTask: ''
     }
   },
+  computed: {
+    incompleteTasks: function () { return this.tasks.filter(t => !t.completed) },
+    completedTasks: function () { return this.tasks.filter(t => t.completed) }
+  },
   methods: {
     addTask: function () {
       const newTask = {
         id: this.tasks.length,
-        name: this.newTask
+        name: this.newTask,
+        completed: false
       }
       this.tasks.push(newTask)
       this.newTask = ''
