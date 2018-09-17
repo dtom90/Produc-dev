@@ -1,8 +1,9 @@
+<!--suppress HtmlFormInputWithoutLabel -->
 <template>
   <div id="task-list">
     <ul>
-      <li v-for="task in tasks" :key="task">
-        <input type="checkbox" />{{ task }}</li>
+      <li v-for="task in tasks" :key="task.id" :id="'task-'+task.id">
+        <input type="checkbox" />{{ task.name }}</li>
     </ul>
   </div>
 </template>

@@ -22,7 +22,11 @@ export default {
   },
   methods: {
     addTask: function () {
-      this.tasks.push(this.newTask)
+      const newTask = {
+        id: this.tasks.length,
+        name: this.newTask
+      }
+      this.tasks.push(newTask)
       this.newTask = ''
     }
   }
