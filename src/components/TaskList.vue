@@ -1,10 +1,8 @@
 <template>
-  <div id="task-list">
-    <ul>
-      <li v-for="task in tasks" :key="task.id" :id="'task-'+task.id">
-        <input type="checkbox" v-model="task.completed"/>{{ task.name }}
-      </li>
-    </ul>
+  <div class="task-list">
+    <div v-for="task in tasks" :key="task.id" :id="'task-'+task.id" class="task">
+      <input type="checkbox" v-model="task.completed"/>{{ task.name }}
+    </div>
   </div>
 </template>
 
@@ -19,11 +17,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
+.task {
   margin: 10px 0;
 }
 </style>

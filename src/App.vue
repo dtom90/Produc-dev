@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-    <h1>To Do List</h1>
-    <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask">
-    <TaskList :tasks="incompleteTasks" />
-    <div v-if="completedTasks.length > 0">
+    <div class="section">
+      <h1>To Do List</h1>
+      <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask">
+      <TaskList :tasks="incompleteTasks" />
+    </div>
+    <div class="section" v-if="completedTasks.length > 0">
       <h3>Completed Tasks</h3>
       <TaskList :tasks="completedTasks" />
     </div>
