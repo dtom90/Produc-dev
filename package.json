@@ -1,5 +1,5 @@
 {
-  "name": "ToDo-Vue",
+  "name": "todo-vue",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "testcafe chrome tests/e2e/test.js --app \"vue-cli-service serve\""
+    "test:e2e": "testcafe chrome tests/e2e/test.js --app \"vue-cli-service serve\"",
+    "test": "vue-cli-service lint && vue-cli-service test:unit && testcafe chrome tests/e2e/test.js --app \"vue-cli-service serve\""
   },
   "dependencies": {
     "vue": "^2.5.17"

@@ -41,6 +41,7 @@ test('My first test', async t => {
 
     .click(li.withText('This is my second task').child('input').withAttribute('type', 'checkbox'))
     .expect(checkbox.nth(0).checked).notOk()
-    .expect(checkbox.nth(1).checked).ok()
-    .expect(checkbox.nth(2).checked).notOk()
+    .expect(checkbox.nth(1).checked).notOk()
+    .expect(Selector('h3').innerText).eql('Completed Tasks')
+    .expect(checkbox.nth(2).checked).ok()
 });

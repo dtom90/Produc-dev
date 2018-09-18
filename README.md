@@ -1,4 +1,5 @@
 # ToDo-Vue
+[![Build Status](https://travis-ci.org/dtom90/ToDo-Vue.svg?branch=master)](https://travis-ci.org/dtom90/ToDo-Vue)
 
 ## Project setup
 ```
