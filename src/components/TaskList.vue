@@ -1,9 +1,9 @@
 <template>
-  <div class="task-list">
-    <div v-for="task in tasks" :key="task.id" :id="'task-'+task.id" class="task">
+  <ul class="task-list list-group">
+    <li v-for="task in tasks" :key="task.id" :id="'task-'+task.id" class="task list-group-item">
       <input type="checkbox" v-model="task.completed"/>{{ task.name }}
-    </div>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -18,6 +18,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .task {
-  margin: 10px 0;
+  text-align: left;
+}
+input {
+  margin-right: 20px;
 }
 </style>

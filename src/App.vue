@@ -1,13 +1,20 @@
 <template>
-  <div id="app">
-    <div class="section">
-      <h1>To Do List</h1>
-      <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask">
-      <TaskList :tasks="incompleteTasks" />
+  <div id="app" class="container">
+    <div class="row">
+    <div class="col-md"></div>
+    <div class="col-md">
+      <div class="section">
+        <h1>To Do List</h1>
+        <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask" type="text" class="form-control" >
+        <TaskList :tasks="incompleteTasks" />
+      </div>
+      <br/>
+      <div class="section" v-if="completedTasks.length > 0">
+        <h3>Completed Tasks</h3>
+        <TaskList :tasks="completedTasks" />
+      </div>
     </div>
-    <div class="section" v-if="completedTasks.length > 0">
-      <h3>Completed Tasks</h3>
-      <TaskList :tasks="completedTasks" />
+    <div class="col-md"></div>
     </div>
   </div>
 </template>
