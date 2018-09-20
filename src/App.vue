@@ -1,21 +1,15 @@
 <template>
   <div id="app" class="container">
-    <div class="row">
-    <div class="col-md"></div>
-    <div class="col-md">
-      <div class="section">
-        <h1>To Do List</h1>
-        <input id="new-task" type="text" class="form-control" placeholder="enter new task"
-               v-model="newTask" @keyup.enter="addTask" />
-        <TaskList :tasks="incompleteTasks" :deleteTask="deleteTask" />
-      </div>
-      <br/>
-      <div class="section" v-if="completedTasks.length > 0">
-        <h3>Completed Tasks</h3>
-        <TaskList :tasks="completedTasks" :deleteTask="deleteTask" />
-      </div>
+    <div class="section">
+      <h1>To Do List</h1>
+      <input id="new-task" type="text" class="form-control" placeholder="enter new task"
+             v-model="newTask" @keyup.enter="addTask" />
+      <TaskList :tasks="incompleteTasks" :deleteTask="deleteTask" />
     </div>
-    <div class="col-md"></div>
+    <br/>
+    <div class="section" v-if="completedTasks.length > 0">
+      <h3>Completed Tasks</h3>
+      <TaskList :tasks="completedTasks" :deleteTask="deleteTask" />
     </div>
   </div>
 </template>
@@ -61,11 +55,13 @@ export default {
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-size: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  max-width: 400px;
 }
 #new-task {
   margin-bottom: 10px;
