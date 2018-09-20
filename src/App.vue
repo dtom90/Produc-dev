@@ -5,7 +5,7 @@
     <div class="col-md">
       <div class="section">
         <h1>To Do List</h1>
-        <input v-model="newTask" placeholder="enter new task" @keyup.enter="addTask" type="text" class="form-control" >
+        <input id="new-task" v-model="newTask" placeholder="enter new task" @keyup.enter="addTask" type="text" class="form-control" >
         <TaskList :tasks="incompleteTasks" />
       </div>
       <br/>
@@ -27,18 +27,16 @@ export default {
   components: {
     TaskList
   },
-  data: function() {
-    return {
-      tasks: [],
-      newTask: ''
-    }
-  },
+  data: () => ({
+    tasks: [],
+    newTask: ''
+  }),
   computed: {
-    incompleteTasks: function () { return this.tasks.filter(t => !t.completed) },
-    completedTasks: function () { return this.tasks.filter(t => t.completed) }
+    incompleteTasks() { return this.tasks.filter(t => !t.completed) },
+    completedTasks() { return this.tasks.filter(t => t.completed) }
   },
   methods: {
-    addTask: function () {
+    addTask () {
       const newTask = {
         id: this.tasks.length,
         name: this.newTask,
@@ -59,5 +57,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+#new-task {
+  margin-bottom: 10px;
 }
 </style>

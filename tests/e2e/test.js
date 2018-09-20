@@ -4,8 +4,8 @@ const task1 = 'This is my first task'
 const task2 = 'This is my second task'
 const task3 = 'This is my third task'
 
-fixture `Getting Started`// declare the fixture
-  .page `http://localhost:8080`;  // specify the start page
+fixture `To Do List`
+  .page `http://localhost:8080`;
 
   const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new task')
 
