@@ -5,13 +5,14 @@
     <div class="col-md">
       <div class="section">
         <h1>To Do List</h1>
-        <input id="new-task" v-model="newTask" placeholder="enter new task" @keyup.enter="addTask" type="text" class="form-control" >
-        <TaskList :tasks="incompleteTasks" />
+        <input id="new-task" type="text" class="form-control" placeholder="enter new task"
+               v-model="newTask" @keyup.enter="addTask" />
+        <TaskList :tasks="incompleteTasks" :deleteTask="deleteTask" />
       </div>
       <br/>
       <div class="section" v-if="completedTasks.length > 0">
         <h3>Completed Tasks</h3>
-        <TaskList :tasks="completedTasks" />
+        <TaskList :tasks="completedTasks" :deleteTask="deleteTask" />
       </div>
     </div>
     <div class="col-md"></div>
@@ -44,6 +45,14 @@ export default {
       }
       this.tasks.push(newTask)
       this.newTask = ''
+    },
+    deleteTask (id) {
+      const index = this.tasks.findIndex(t => t.id === id)
+      const task = this.tasks[index];
+      const result = confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`);
+      if (result) {
+        this.tasks.splice(index, 1);
+      }
     }
   }
 }
