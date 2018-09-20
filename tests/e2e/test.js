@@ -11,11 +11,12 @@ fixture `To Do List`
 
   const todoList = Selector('.section').withText('To Do List')
   const todoTasks = todoList.find('.task')
-  const todoCheckboxes = todoTasks.child('input').withAttribute('type', 'checkbox')
+  const todoLabels = todoTasks.find('label')
+  const todoCheckboxes = todoTasks.find('input').withAttribute('type', 'checkbox')
 
   const doneList = Selector('.section').withText('Completed Tasks')
   const doneTasks = doneList.find('.task')
-  const doneCheckboxes = doneTasks.child('input').withAttribute('type', 'checkbox')
+  const doneCheckboxes = doneTasks.find('input').withAttribute('type', 'checkbox')
 
 //then create a test and place your code there
 test('My first test', async t => {
@@ -26,29 +27,29 @@ test('My first test', async t => {
 
     .typeText(newTaskInput, task1).pressKey('enter')
     .expect(todoTasks.count).eql(1)
-    .expect(todoTasks.nth(0).innerText).eql(task1)
+    .expect(todoLabels.nth(0).innerText).eql(task1)
     .expect(todoCheckboxes.count).eql(1)
     .expect(todoCheckboxes.nth(0).checked).notOk()
 
     .typeText(newTaskInput, task2).pressKey('enter')
     .expect(todoTasks.count).eql(2)
-    .expect(todoTasks.nth(0).innerText).eql(task1)
-    .expect(todoTasks.nth(1).innerText).eql(task2)
+    .expect(todoLabels.nth(0).innerText).eql(task1)
+    .expect(todoLabels.nth(1).innerText).eql(task2)
     .expect(todoCheckboxes.count).eql(2)
     .expect(todoCheckboxes.nth(0).checked).notOk()
     .expect(todoCheckboxes.nth(1).checked).notOk()
 
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(todoTasks.count).eql(3)
-    .expect(todoTasks.nth(0).innerText).eql(task1)
-    .expect(todoTasks.nth(1).innerText).eql(task2)
-    .expect(todoTasks.nth(2).innerText).eql(task3)
+    .expect(todoLabels.nth(0).innerText).eql(task1)
+    .expect(todoLabels.nth(1).innerText).eql(task2)
+    .expect(todoLabels.nth(2).innerText).eql(task3)
     .expect(todoCheckboxes.count).eql(3)
     .expect(todoCheckboxes.nth(0).checked).notOk()
     .expect(todoCheckboxes.nth(1).checked).notOk()
     .expect(todoCheckboxes.nth(2).checked).notOk()
 
-    .click(todoTasks.withText('This is my second task').child('input').withAttribute('type', 'checkbox'))
+    .click(todoTasks.withText(task2).find('input').withAttribute('type', 'checkbox'))
     .expect(todoTasks.count).eql(2)
     .expect(todoCheckboxes.count).eql(2)
     .expect(todoCheckboxes.nth(0).checked).notOk()
