@@ -27,19 +27,20 @@ fixture `To Do List`
           input.type === 'checkbox' &&
           input.checked === checked
       })
-  });
+  })
 
   function deleteButton(taskName) {
     return Selector('.task').withText(taskName).find('button')
       .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-trash-alt'))
   }
 
-  const deleteHandler = (type, text) => {
+  const deleteHandler = ClientFunction((type, text) => {
     switch (type) {
       case 'confirm':
         if (text.includes('Are you sure you want to delete task ') &&
           text.includes('? the task is not yet complete!')) {
-            return true;
+          // eslint-disable-next-line no-undef
+          return deleteTask
         } else {
           throw 'Unexpected confirm dialog!';
         }
@@ -48,7 +49,7 @@ fixture `To Do List`
       case 'alert':
         throw 'An alert was invoked!';
     }
-  }
+  })
 
 //then create a test and place your code there
 test('My first test', async t => {
@@ -80,7 +81,12 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task1, task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3], true)).ok()
 
-    .setNativeDialogHandler(deleteHandler)
+    .setNativeDialogHandler(deleteHandler, {dependencies: {deleteTask: false} })
+    .click(deleteButton(task1))
+    .expect(tasksPresent(todoList, [task1, task4])).ok()
+    .expect(tasksPresent(doneList, [task2, task3], true)).ok()
+
+    .setNativeDialogHandler(deleteHandler, {dependencies: {deleteTask: true} })
     .click(deleteButton(task1))
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3], true)).ok()
