@@ -29,6 +29,27 @@ fixture `To Do List`
       })
   });
 
+  function deleteButton(taskName) {
+    return Selector('.task').withText(taskName).find('button')
+      .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-trash-alt'))
+  }
+
+  const deleteHandler = (type, text) => {
+    switch (type) {
+      case 'confirm':
+        if (text.includes('Are you sure you want to delete task ') &&
+          text.includes('? the task is not yet complete!')) {
+            return true;
+        } else {
+          throw 'Unexpected confirm dialog!';
+        }
+      case 'prompt':
+        throw 'A prompt was invoked!';
+      case 'alert':
+        throw 'An alert was invoked!';
+    }
+  }
+
 //then create a test and place your code there
 test('My first test', async t => {
   await t
@@ -57,5 +78,10 @@ test('My first test', async t => {
 
     .click(todoTasks.withText(task3).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task1, task4])).ok()
+    .expect(tasksPresent(doneList, [task2, task3], true)).ok()
+
+    .setNativeDialogHandler(deleteHandler)
+    .click(deleteButton(task1))
+    .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3], true)).ok()
 });
