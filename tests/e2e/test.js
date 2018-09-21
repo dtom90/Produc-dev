@@ -37,12 +37,13 @@ fixture `To Do List`
   const deleteHandler = ClientFunction((type, text) => {
     switch (type) {
       case 'confirm':
-        if (text.includes('Are you sure you want to delete task ') &&
-          text.includes('? the task is not yet complete!')) {
+        switch (text) {
           // eslint-disable-next-line no-undef
-          return deleteTask
-        } else {
-          throw 'Unexpected confirm dialog!';
+          case `Are you sure you want to delete task ${taskName}? the task is not yet complete!`:
+            // eslint-disable-next-line no-undef
+            return deleteTask
+          default:
+            throw 'Unexpected confirm dialog!';
         }
       case 'prompt':
         throw 'A prompt was invoked!';
@@ -81,12 +82,12 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task1, task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3], true)).ok()
 
-    .setNativeDialogHandler(deleteHandler, {dependencies: {deleteTask: false} })
-    .click(deleteButton(task1))
+    .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task4, deleteTask: false} })
+    .click(deleteButton(task4))
     .expect(tasksPresent(todoList, [task1, task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3], true)).ok()
 
-    .setNativeDialogHandler(deleteHandler, {dependencies: {deleteTask: true} })
+    .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task1, deleteTask: true} })
     .click(deleteButton(task1))
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3], true)).ok()
