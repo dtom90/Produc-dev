@@ -12,16 +12,20 @@ fixture `To Do List`
   const todoSection = Selector('.section').withText('To Do List')
   const todoList = todoSection.find('.task-list')
   const todoTasks = todoList.find('.task')
-  const todoCheckboxes = todoTasks.find('input').withAttribute('type', 'checkbox')
 
-  const doneList = Selector('.section').withText('Completed Tasks')
+  const doneSection = Selector('.section').withText('Completed Tasks')
+  const doneList = doneSection.find('.task-list')
   const doneTasks = doneList.find('.task')
-  const doneCheckboxes = doneTasks.find('input').withAttribute('type', 'checkbox')
 
-  const tasksPresent = ClientFunction((taskList, expectedTasks) => {
+  const tasksPresent = ClientFunction((taskList, expectedTasks, checked=false) => {
     const tasks = taskList().childNodes
     return tasks.length === expectedTasks.length &&
-      [].every.call(tasks, (task, i) => task.textContent.includes(expectedTasks[i]))
+      [].every.call(tasks, (task, i) => {
+        const input = task.getElementsByTagName("input")[0]
+        return task.textContent.includes(expectedTasks[i]) &&
+          input.type === 'checkbox' &&
+          input.checked === checked
+      })
   });
 
 //then create a test and place your code there
@@ -30,33 +34,19 @@ test('My first test', async t => {
 
     .expect(todoSection.child('h1').innerText).eql('To Do List')
     .expect(todoTasks.count).eql(0)
+    .expect(doneTasks.count).eql(0)
 
     .typeText(newTaskInput, task1).pressKey('enter')
     .expect(tasksPresent(todoList, [task1])).ok()
-    .expect(todoCheckboxes.count).eql(1)
-    .expect(todoCheckboxes.nth(0).checked).notOk()
 
     .typeText(newTaskInput, task2).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2])).ok()
-    .expect(todoCheckboxes.count).eql(2)
-    .expect(todoCheckboxes.nth(0).checked).notOk()
-    .expect(todoCheckboxes.nth(1).checked).notOk()
 
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
-    .expect(todoCheckboxes.count).eql(3)
-    .expect(todoCheckboxes.nth(0).checked).notOk()
-    .expect(todoCheckboxes.nth(1).checked).notOk()
-    .expect(todoCheckboxes.nth(2).checked).notOk()
 
     .click(todoTasks.withText(task2).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task1, task3])).ok()
-    .expect(todoCheckboxes.count).eql(2)
-    .expect(todoCheckboxes.nth(0).checked).notOk()
-    .expect(todoCheckboxes.nth(1).checked).notOk()
-    .expect(doneList.child('h3').innerText).eql('Completed Tasks')
-    .expect(doneTasks.count).eql(1)
-    .expect(tasksPresent(doneTasks, [task2])).ok()
-    .expect(doneCheckboxes.count).eql(1)
-    .expect(doneCheckboxes.nth(0).checked).ok()
+    .expect(doneSection.child('h3').innerText).eql('Completed Tasks')
+    .expect(tasksPresent(doneList, [task2], true)).ok()
 });
