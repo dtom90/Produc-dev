@@ -6,8 +6,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 // Font Awesome icons
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faTrashAlt)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
