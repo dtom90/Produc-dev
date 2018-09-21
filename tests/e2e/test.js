@@ -1,4 +1,4 @@
-import { Selector } from 'testcafe'; // first import testcafe selectors
+import { Selector, ClientFunction } from 'testcafe'; // first import testcafe selectors
 
 const task1 = 'This is my first task'
 const task2 = 'This is my second task'
@@ -9,7 +9,8 @@ fixture `To Do List`
 
   const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new task')
 
-  const todoList = Selector('.section').withText('To Do List')
+  const todoSection = Selector('.section').withText('To Do List')
+  const todoList = todoSection.find('.task-list')
   const todoTasks = todoList.find('.task')
   const todoCheckboxes = todoTasks.find('input').withAttribute('type', 'checkbox')
 
@@ -17,39 +18,39 @@ fixture `To Do List`
   const doneTasks = doneList.find('.task')
   const doneCheckboxes = doneTasks.find('input').withAttribute('type', 'checkbox')
 
+  const todoTasksPresent = ClientFunction(expectedTasks => {
+    const visibleTasks = getTodoList().childNodes
+    return visibleTasks.length === expectedTasks.length &&
+      [].every.call(visibleTasks, (task, i) => task.textContent.includes(expectedTasks[i]))
+  },{ dependencies: { getTodoList: todoList } });
+
 //then create a test and place your code there
 test('My first test', async t => {
   await t
 
-    .expect(todoList.child('h1').innerText).eql('To Do List')
+    .expect(todoSection.child('h1').innerText).eql('To Do List')
     .expect(todoTasks.count).eql(0)
 
     .typeText(newTaskInput, task1).pressKey('enter')
-    .expect(todoTasks.count).eql(1)
-    .expect(todoTasks.nth(0).innerText).contains(task1)
+    .expect(todoTasksPresent([task1])).ok()
     .expect(todoCheckboxes.count).eql(1)
     .expect(todoCheckboxes.nth(0).checked).notOk()
 
     .typeText(newTaskInput, task2).pressKey('enter')
-    .expect(todoTasks.count).eql(2)
-    .expect(todoTasks.nth(0).innerText).contains(task1)
-    .expect(todoTasks.nth(1).innerText).contains(task2)
+    .expect(todoTasksPresent([task1, task2])).ok()
     .expect(todoCheckboxes.count).eql(2)
     .expect(todoCheckboxes.nth(0).checked).notOk()
     .expect(todoCheckboxes.nth(1).checked).notOk()
 
     .typeText(newTaskInput, task3).pressKey('enter')
-    .expect(todoTasks.count).eql(3)
-    .expect(todoTasks.nth(0).innerText).contains(task1)
-    .expect(todoTasks.nth(1).innerText).contains(task2)
-    .expect(todoTasks.nth(2).innerText).contains(task3)
+    .expect(todoTasksPresent([task1, task2, task3])).ok()
     .expect(todoCheckboxes.count).eql(3)
     .expect(todoCheckboxes.nth(0).checked).notOk()
     .expect(todoCheckboxes.nth(1).checked).notOk()
     .expect(todoCheckboxes.nth(2).checked).notOk()
 
     .click(todoTasks.withText(task2).find('input').withAttribute('type', 'checkbox'))
-    .expect(todoTasks.count).eql(2)
+    .expect(todoTasksPresent([task1, task3])).ok()
     .expect(todoCheckboxes.count).eql(2)
     .expect(todoCheckboxes.nth(0).checked).notOk()
     .expect(todoCheckboxes.nth(1).checked).notOk()
