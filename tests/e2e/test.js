@@ -3,6 +3,7 @@ import { Selector, ClientFunction } from 'testcafe'; // first import testcafe se
 const task1 = 'This is my first task'
 const task2 = 'This is my second task'
 const task3 = 'This is my third task'
+const task4 = 'This is my fourth task'
 
 fixture `To Do List`
   .page `http://localhost:8080`;
@@ -49,4 +50,12 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task1, task3])).ok()
     .expect(doneSection.child('h3').innerText).eql('Completed Tasks')
     .expect(tasksPresent(doneList, [task2], true)).ok()
+
+    .typeText(newTaskInput, task4).pressKey('enter')
+    .expect(tasksPresent(todoList, [task1, task3, task4])).ok()
+    .expect(tasksPresent(doneList, [task2], true)).ok()
+
+    .click(todoTasks.withText(task3).find('input').withAttribute('type', 'checkbox'))
+    .expect(tasksPresent(todoList, [task1, task4])).ok()
+    .expect(tasksPresent(doneList, [task2, task3], true)).ok()
 });
