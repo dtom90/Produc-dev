@@ -5,10 +5,18 @@
 ```
 yarn install
 ```
+or with Docker:
+```
+docker build -t todo-vue .
+```
 
 ### Compiles and hot-reloads for development
 ```
 yarn run serve
+```
+or with Docker:
+```
+./docker/dev.sh
 ```
 
 ### Compiles and minifies for production
@@ -20,3 +28,4 @@ yarn run build
 ```
 yarn run lint
 ```
+    
