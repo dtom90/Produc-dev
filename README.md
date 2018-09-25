@@ -23,9 +23,16 @@ or with Docker:
 ```
 yarn run build
 ```
+### Serves production files
+```
+yarn run serve:prod
+```
+### Compiles and minifies and serves for production with Docker:
+```
+./docker/prod.sh
+```
 
 ### Lints and fixes files
 ```
 yarn run lint
 ```
-    
