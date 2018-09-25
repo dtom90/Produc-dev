@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "testcafe chrome tests/e2e/test.js --app \"vue-cli-service serve\"",
-    "test": "vue-cli-service lint && vue-cli-service test:unit && testcafe chrome tests/e2e/test.js --app \"vue-cli-service serve\""
+    "test": "vue-cli-service lint && vue-cli-service test:unit && vue-cli-service build && testcafe chrome tests/e2e/test.js --app \"node server\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
