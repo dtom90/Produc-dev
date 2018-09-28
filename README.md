@@ -1,5 +1,6 @@
 # ToDo-Vue
 [![Build Status](https://travis-ci.org/dtom90/ToDo-Vue.svg?branch=master)](https://travis-ci.org/dtom90/ToDo-Vue)
+[![CircleCI](https://circleci.com/gh/dtom90/ToDo-Vue.svg?style=svg)](https://circleci.com/gh/dtom90/ToDo-Vue)
 
 Simple To-Do application written in [Vue.js](https://vuejs.org/)
 
