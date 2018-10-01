@@ -4,12 +4,12 @@
       <h1>To Do List</h1>
       <input id="new-task" type="text" class="form-control" placeholder="enter new task"
              v-model="newTask" @keyup.enter="addTask" />
-      <TaskList :tasks="incompleteTasks" :deleteTask="deleteTask" />
+      <TaskList :tasks="incompleteTasks" :deleteTaskFromApp="deleteTaskFromApp"/>
     </div>
     <br/>
     <div class="section" v-if="completedTasks.length > 0">
       <h3>Completed Tasks</h3>
-      <TaskList :tasks="completedTasks" :deleteTask="deleteTask" />
+      <TaskList :tasks="completedTasks" :deleteTaskFromApp="deleteTaskFromApp"/>
     </div>
   </div>
 </template>
@@ -40,7 +40,7 @@ export default {
       this.tasks.push(newTask)
       this.newTask = ''
     },
-    deleteTask (id) {
+    deleteTaskFromApp (id) {
       const index = this.tasks.findIndex(t => t.id === id)
       const task = this.tasks[index];
       const result = confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`);

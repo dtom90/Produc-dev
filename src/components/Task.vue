@@ -4,7 +4,7 @@
             <div class="col">
                 <input type="checkbox" :id="'task-'+task.id" v-model="task.completed"/>{{ task.name }}
             </div>
-            <button type="button" class="btn btn-danger btn-sm" v-on:click="deleteTask(task.id)">
+            <button type="button" class="btn btn-danger btn-sm" v-on:click="$emit('delete', task.id)">
                 <font-awesome-icon icon="trash-alt" />
             </button>
         </div>
@@ -15,8 +15,7 @@
   export default {
     name: "Task",
     props: {
-      task: Object,
-      deleteTask: Function
+      task: Object
     },
   }
 </script>
