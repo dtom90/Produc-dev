@@ -4,12 +4,12 @@
       <h1>To Do List</h1>
       <input id="new-task" type="text" class="form-control" placeholder="enter new task"
              v-model="newTask" @keyup.enter="addTask" />
-      <TaskList :tasks="incompleteTasks" :deleteTaskFromApp="deleteTaskFromApp"/>
+      <TaskList :tasks="incompleteTasks" />
     </div>
     <br/>
     <div class="section" v-if="completedTasks.length > 0">
       <h3>Completed Tasks</h3>
-      <TaskList :tasks="completedTasks" :deleteTaskFromApp="deleteTaskFromApp"/>
+      <TaskList :tasks="completedTasks" />
     </div>
   </div>
 </template>
@@ -23,30 +23,16 @@ export default {
     TaskList
   },
   data: () => ({
-    tasks: [],
     newTask: ''
   }),
   computed: {
-    incompleteTasks() { return this.tasks.filter(t => !t.completed) },
-    completedTasks() { return this.tasks.filter(t => t.completed) }
+    incompleteTasks() { return this.$root.tasks.filter(t => !t.completed) },
+    completedTasks() { return this.$root.tasks.filter(t => t.completed) }
   },
   methods: {
     addTask () {
-      const newTask = {
-        id: this.tasks.length,
-        name: this.newTask,
-        completed: false
-      }
-      this.tasks.push(newTask)
+      this.$root.addTask(this.newTask)
       this.newTask = ''
-    },
-    deleteTaskFromApp (id) {
-      const index = this.tasks.findIndex(t => t.id === id)
-      const task = this.tasks[index];
-      const result = confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`);
-      if (result) {
-        this.tasks.splice(index, 1);
-      }
     }
   }
 }

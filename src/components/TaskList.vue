@@ -1,6 +1,6 @@
 <template>
   <ul class="task-list list-group">
-    <Task v-for="task in tasks" :key="task.id" :task="task" v-on:delete="deleteTask" />
+    <Task v-for="task in tasks" :key="task.id" :task="task" />
   </ul>
 </template>
 
@@ -10,16 +10,10 @@ import Task from './Task.vue'
 export default {
   name: 'TaskList',
   props: {
-    tasks: Array,
-    deleteTaskFromApp: Function
+    tasks: Array
   },
   components: {
     Task
-  },
-  methods: {
-    deleteTask: function (id) {
-      this.deleteTaskFromApp(id)
-    }
   }
 }
 </script>
