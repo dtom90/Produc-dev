@@ -4,12 +4,12 @@
       <h1>To Do List</h1>
       <input id="new-task" type="text" class="form-control" placeholder="enter new task"
              v-model="newTask" @keyup.enter="addTask" />
-      <TaskList :tasks="incompleteTasks" />
+      <TaskList :tasks="$root.incompleteTasks()" />
     </div>
     <br/>
-    <div class="section" v-if="completedTasks.length > 0">
+    <div class="section" v-if="$root.completedTasks().length > 0">
       <h3>Completed Tasks</h3>
-      <TaskList :tasks="completedTasks" />
+      <TaskList :tasks="$root.completedTasks()" />
     </div>
   </div>
 </template>
@@ -25,10 +25,6 @@ export default {
   data: () => ({
     newTask: ''
   }),
-  computed: {
-    incompleteTasks() { return this.$root.tasks.filter(t => !t.completed) },
-    completedTasks() { return this.$root.tasks.filter(t => t.completed) }
-  },
   methods: {
     addTask () {
       this.$root.addTask(this.newTask)

@@ -15,6 +15,8 @@ Vue.config.productionTip = false
 
 const store = {
   tasks: [],
+  incompleteTasks() { return this.tasks.filter(t => !t.completed) },
+  completedTasks() { return this.tasks.filter(t => t.completed) },
   addTask (newTaskName) {
     const newTask = {
       id: this.tasks.length,
