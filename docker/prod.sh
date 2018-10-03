@@ -7,9 +7,10 @@ THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
 docker build \
-       --build-arg NODE_ENV=production \
-       -t ${IMAGE_NAME} . && \
+       -f docker/Dockerfile.production \
+       -t ${IMAGE_NAME} \
+       . && \
 docker run -i --rm \
-       -p 8080:8080 \
+       -p 8080:80 \
        --name ${CONTAINER_NAME} \
        ${IMAGE_NAME}
