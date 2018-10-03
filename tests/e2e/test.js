@@ -3,6 +3,7 @@ import { Selector, ClientFunction } from 'testcafe'; // first import testcafe se
 const task1 = 'This is my first task'
 const task2 = 'This is my second task'
 const task3 = 'This is my third task'
+const task3mod = 'This is my modified third task'
 const task4 = 'This is my fourth task'
 
 fixture `To Do List`
@@ -78,17 +79,24 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task1, task3, task4])).ok()
     .expect(tasksPresent(doneList, [task2], true)).ok()
 
-    .click(todoTasks.withText(task3).find('input').withAttribute('type', 'checkbox'))
+    .click(todoTasks.find('span').withText(task3))
+    .expect(Selector('input.edit-task').value).eql(task3)
+    .typeText(Selector('input.edit-task'), ' modified', { caretPos: 10 })
+    .pressKey('enter')
+    .expect(tasksPresent(todoList, [task1, task3mod, task4])).ok()
+    .expect(tasksPresent(doneList, [task2], true)).ok()
+
+    .click(todoTasks.withText(task3mod).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task1, task4])).ok()
-    .expect(tasksPresent(doneList, [task2, task3], true)).ok()
+    .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
 
     .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task4, deleteTask: false} })
     .click(deleteButton(task4))
     .expect(tasksPresent(todoList, [task1, task4])).ok()
-    .expect(tasksPresent(doneList, [task2, task3], true)).ok()
+    .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
 
     .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task1, deleteTask: true} })
     .click(deleteButton(task1))
     .expect(tasksPresent(todoList, [task4])).ok()
-    .expect(tasksPresent(doneList, [task2, task3], true)).ok()
+    .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
 });

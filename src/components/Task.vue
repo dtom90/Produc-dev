@@ -5,7 +5,7 @@
         <input class="task-checkbox" type="checkbox" v-model="task.completed"/>
         <span v-if="!editing" v-on:click="editing = true">{{task.name}}</span>
         <span v-if="editing">
-          <input v-model="task.name" @keyup.enter="editing = false"/>
+          <input class="edit-task" v-model="task.name" @keyup.enter="editing = false"/>
           <button type="button" class="btn btn-primary" v-on:click="editing = false">
             <font-awesome-icon icon="save"/>
           </button>
