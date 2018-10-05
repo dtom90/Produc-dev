@@ -4,9 +4,9 @@ THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
 echo "Deploying production container..."
-./docker/prod.sh > docker/prod.log &
+./docker/prod.sh &
 sleep 1
-while ! grep -m1 'Listening on port 8080' < docker/prod.log; do
+while ! curl -s 127.0.0.1:8080 > /dev/null; do
     sleep 1
 done
 echo "Production container deployed."
