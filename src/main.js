@@ -33,8 +33,7 @@ const store = {
   deleteTask(id) {
     const index = this.tasks.findIndex(t => t.id === id)
     const task = this.tasks[index];
-    const result = confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`);
-    if (result) {
+    if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
       this.tasks.splice(index, 1);
     }
   }
