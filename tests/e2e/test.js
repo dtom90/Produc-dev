@@ -2,6 +2,7 @@ import { Selector, ClientFunction } from 'testcafe'; // first import testcafe se
 
 const task1 = 'This is my first task'
 const task2 = 'This is my second task'
+const task2mod = 'This is my second completed task'
 const task3 = 'This is my third task'
 const task3mod = 'This is my modified third task'
 const task4 = 'This is my fourth task'
@@ -29,6 +30,11 @@ fixture `To Do List`
           input.checked === checked
       })
   })
+
+  function saveButton() {
+    return Selector('input.edit-task').parent('.task').find('button')
+      .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-save'))
+  }
 
   function deleteButton(taskName) {
     return Selector('.task').withText(taskName).find('button')
@@ -99,4 +105,11 @@ test('My first test', async t => {
     .click(deleteButton(task1))
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
+
+    .click(doneTasks.find('span').withText(task2))
+    .expect(Selector('input.edit-task').value).eql(task2)
+    .typeText(Selector('input.edit-task'), 'completed ', { caretPos: 18 })
+    .click(saveButton())
+    .expect(tasksPresent(todoList, [task4])).ok()
+    .expect(tasksPresent(doneList, [task2mod, task3mod], true)).ok()
 });
