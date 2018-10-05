@@ -1,14 +1,17 @@
 import {Selector, ClientFunction} from 'testcafe'; // first import testcafe selectors
 
+const hostname = 'localhost'
+const port = process.env.PORT || '8080'
+
+fixture`To Do List`
+  .page`http://${hostname}:${port}`;
+
 const task1 = 'This is my first task'
 const task2 = 'This is my second task'
 const task2mod = 'This is my second completed task'
 const task3 = 'This is my third task'
 const task3mod = 'This is my modified third task'
 const task4 = 'This is my fourth task'
-
-fixture`To Do List`
-  .page`http://localhost:8080`;
 
 const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new task')
 
