@@ -3,6 +3,9 @@
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
+./docker/dev.sh yarn run lint && yarn run test:unit
+test_exit_code=$?
+if [ ${test_exit_code} != 0 ]; then exit ${test_exit_code}; fi
 echo "Deploying production container..."
 ./docker/prod.sh &
 sleep 1
@@ -20,4 +23,4 @@ test_exit_code=$?
 echo
 echo "Stopping production container..."
 docker stop todo-vue-prod
-exit "$test_exit_code"
+exit ${test_exit_code}
