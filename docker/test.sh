@@ -3,7 +3,14 @@
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
-./docker/dev.sh yarn run lint && yarn run test:unit
+docker build \
+       -f docker/Dockerfile \
+       -t todo-vue-test \
+       . && \
+docker run -i --rm \
+       --name todo-vue-test \
+       todo-vue-test \
+       sh -c 'yarn run lint && yarn run test:unit'
 test_exit_code=$?
 if [ ${test_exit_code} != 0 ]; then exit ${test_exit_code}; fi
 echo "Deploying production container..."
