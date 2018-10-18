@@ -143,7 +143,7 @@ test('My first test', async t => {
     .expect(tasksPresent(doneList, [task2mod, task5], true)).ok()
     .click(clearButton)
     .expect(tasksPresent(todoList, [task4])).ok()
-    .expect(tasksPresent(doneList, [], true)).ok()
+    .expect(doneSection.exists).notOk()
 
     // TODO: click and drag to rearrange tasks
 });
