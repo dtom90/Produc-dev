@@ -36,6 +36,9 @@ const store = {
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
       this.tasks.splice(index, 1);
     }
+  },
+  clearTasks() {
+    this.tasks = this.tasks.filter(t => !t.completed)
   }
 }
 

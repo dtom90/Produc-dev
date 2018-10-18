@@ -8,7 +8,10 @@
     </div>
     <br/>
     <div class="section" v-if="$root.completedTasks().length > 0">
-      <h3>Completed Tasks</h3>
+      <div id="title-section">
+        <h3 id="completed-title">Completed Tasks</h3>
+        <button id="clear-btn" v-on:click="$root.clearTasks()">Clear</button>
+      </div>
       <TaskList :tasks="$root.completedTasks()"/>
     </div>
   </div>
@@ -43,10 +46,23 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    max-width: 400px;
+    max-width: 500px;
   }
 
   #new-task {
     margin-bottom: 10px;
+  }
+
+  #title-section {
+    display: flex;
+  }
+
+  #completed-title {
+    margin-left: 63px;
+    flex: 1;
+  }
+
+  #clear-btn {
+
   }
 </style>
