@@ -70,7 +70,9 @@ test('My first test', async t => {
   await t
 
     // Expect an empty To Do List
-    .expect(todoSection.child('h1').innerText).eql('To Do List')
+    .expect(todoSection.find('h1').withText('To Do List').exists).ok()
+    // TODO: setting to stack vs queue
+    .expect(Selector('button').child('svg.fa-cog').exists).ok()
     .expect(todoTasks.count).eql(0)
     .expect(doneTasks.count).eql(0)
 

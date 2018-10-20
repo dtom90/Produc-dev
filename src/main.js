@@ -3,13 +3,16 @@ import App from './App.vue'
 
 // Boostrap style
 import 'bootstrap/dist/css/bootstrap.css'
+// Bootstrap function
+import 'jquery'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // Font Awesome icons
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faTrashAlt, faSave} from '@fortawesome/free-solid-svg-icons'
+import {faTrashAlt, faSave, faCog} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-library.add(faTrashAlt, faSave)
+library.add(faTrashAlt, faSave, faCog)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

@@ -1,14 +1,26 @@
 <template>
   <div id="app" class="container">
     <div class="section">
-      <h1>To Do List</h1>
+      <div class="title-section">
+        <h1 id="todo-title">To Do List</h1>
+        <div class="dropdown">
+          <button id="settings-btn" class="btn btn-light" data-toggle="dropdown">
+            <font-awesome-icon icon="cog"/>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="settings-btn">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </div>
+      </div>
       <input id="new-task" type="text" class="form-control" placeholder="enter new task"
              v-model="newTask" @keyup.enter="addTask"/>
       <TaskList :tasks="$root.incompleteTasks()"/>
     </div>
     <br/>
     <div class="section" v-if="$root.completedTasks().length > 0">
-      <div id="title-section">
+      <div class="title-section">
         <h3 id="completed-title">Completed Tasks</h3>
         <button id="clear-btn" class="btn btn-danger" v-on:click="$root.clearTasks()">Clear All</button>
       </div>
@@ -53,16 +65,23 @@
     margin-bottom: 10px;
   }
 
-  #title-section {
+  .title-section {
     display: flex;
+  }
+
+  .title-section > h1, h3 {
+    flex: 1;
+  }
+
+  #todo-title {
+    margin-left: 40px;
+  }
+
+  .title-section > button {
+    margin-bottom: 0.5rem;
   }
 
   #completed-title {
     margin-left: 63px;
-    flex: 1;
-  }
-
-  #clear-btn {
-    margin-bottom: 0.5rem;
   }
 </style>
