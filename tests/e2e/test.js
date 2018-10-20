@@ -49,10 +49,11 @@ function deleteButton(taskName) {
 const deleteHandler = ClientFunction((type, text) => {
   switch (type) {
     case 'confirm':
-      switch (text) {
-        // eslint-disable-next-line no-undef
-        case `Are you sure you want to delete task ${taskName}? the task is not yet complete!`:
-          // eslint-disable-next-line no-undef
+      switch (text) { /* eslint-disable no-undef */
+        case (typeof taskName !== 'undefined') &&
+          `Are you sure you want to delete task ${taskName}? the task is not yet complete!`:
+          return deleteTask
+        case `Are you sure that you want to delete all ${numCompletedTasks} completed tasks?`:
           return deleteTask
         default:
           throw 'Unexpected confirm dialog!';
@@ -141,6 +142,7 @@ test('My first test', async t => {
     .click(todoTasks.withText(task5).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task2mod, task5], true)).ok()
+    .setNativeDialogHandler(deleteHandler, {dependencies: {numCompletedTasks: 2, deleteTask: true}})
     .click(clearButton)
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(doneSection.exists).notOk()

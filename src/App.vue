@@ -10,7 +10,7 @@
     <div class="section" v-if="$root.completedTasks().length > 0">
       <div id="title-section">
         <h3 id="completed-title">Completed Tasks</h3>
-        <button id="clear-btn" v-on:click="$root.clearTasks()">Clear</button>
+        <button id="clear-btn" class="btn btn-danger" v-on:click="$root.clearTasks()">Clear All</button>
       </div>
       <TaskList :tasks="$root.completedTasks()"/>
     </div>
@@ -63,6 +63,6 @@
   }
 
   #clear-btn {
-
+    margin-bottom: 0.5rem;
   }
 </style>

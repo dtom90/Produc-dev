@@ -38,7 +38,10 @@ const store = {
     }
   },
   clearTasks() {
-    this.tasks = this.tasks.filter(t => !t.completed)
+    const completedTasks = this.tasks.filter(t => t.completed)
+    if (confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
+      this.tasks = this.tasks.filter(t => !t.completed)
+    }
   }
 }
 
