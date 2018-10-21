@@ -12,7 +12,7 @@
               <div class="input-group-prepend">
                 <label class="input-group-text" for="orderGroupSelect">Order</label>
               </div>
-              <select class="custom-select" id="orderGroupSelect">
+              <select class="custom-select" id="orderGroupSelect" v-model="$root.order">
                 <option selected value="Queue">Queue</option>
                 <option value="Stack">Stack</option>
               </select>

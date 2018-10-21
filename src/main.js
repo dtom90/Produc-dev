@@ -18,8 +18,10 @@ Vue.config.productionTip = false
 
 const store = {
   tasks: [],
+  order: 'Queue',
   incompleteTasks() {
-    return this.tasks.filter(t => !t.completed)
+    const completedTasks = this.tasks.filter(t => !t.completed)
+    return this.order === 'Stack' ? completedTasks.reverse() : completedTasks
   },
   completedTasks() {
     return this.tasks.filter(t => t.completed)

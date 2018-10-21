@@ -91,7 +91,7 @@ test('My first test', async t => {
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
 
-    // TODO: setting to stack vs queue
+    // Switch list order from Queue to Stack
     .expect(orderLabel.visible).notOk()
     .expect(orderGroupSelect.visible).notOk()
     .click(settingsButton)
@@ -101,17 +101,17 @@ test('My first test', async t => {
     .click(orderGroupSelect)
     .click(orderOption.withText('Stack'))
     .expect(orderGroupSelect.value).eql('Stack')
+    .expect(tasksPresent(todoList, [task3, task2, task1])).ok()
+
+    // Add task 4
+    .typeText(newTaskInput, task4).pressKey('enter')
+    .expect(tasksPresent(todoList, [task4, task3, task2, task1])).ok()
 
     // Mark task 2 as complete
     .expect(doneSection.exists).notOk()
     .click(todoTasks.withText(task2).find('input').withAttribute('type', 'checkbox'))
-    .expect(tasksPresent(todoList, [task1, task3])).ok()
+    .expect(tasksPresent(todoList, [task4, task3, task1])).ok()
     .expect(doneSection.exists).ok()
-    .expect(tasksPresent(doneList, [task2], true)).ok()
-
-    // Add task 4
-    .typeText(newTaskInput, task4).pressKey('enter')
-    .expect(tasksPresent(todoList, [task1, task3, task4])).ok()
     .expect(tasksPresent(doneList, [task2], true)).ok()
 
     // Modify task 3 in the To Do list
@@ -119,23 +119,23 @@ test('My first test', async t => {
     .expect(Selector('input.edit-task').value).eql(task3)
     .typeText(Selector('input.edit-task'), ' modified', {caretPos: 10})
     .pressKey('enter')
-    .expect(tasksPresent(todoList, [task1, task3mod, task4])).ok()
+    .expect(tasksPresent(todoList, [task4, task3mod, task1])).ok()
     .expect(tasksPresent(doneList, [task2], true)).ok()
 
     // Mark task 3 as complete
     .click(todoTasks.withText(task3mod).find('input').withAttribute('type', 'checkbox'))
-    .expect(tasksPresent(todoList, [task1, task4])).ok()
+    .expect(tasksPresent(todoList, [task4, task1])).ok()
     .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
 
     // Click task 4 delete button, expect confirmation popup, do not confirm
     .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task4, deleteTask: false}})
     .click(deleteButton(task4))
-    .expect(tasksPresent(todoList, [task1, task4])).ok()
+    .expect(tasksPresent(todoList, [task4, task1])).ok()
     .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
 
     // Click task 3 delete button, expect no confirmation popup
     .click(deleteButton(task3mod))
-    .expect(tasksPresent(todoList, [task1, task4])).ok()
+    .expect(tasksPresent(todoList, [task4, task1])).ok()
     .expect(tasksPresent(doneList, [task2], true)).ok()
 
     // Click task 1 delete button, expect confirmation popup, confirm delete
