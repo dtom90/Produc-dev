@@ -2,7 +2,7 @@
   <li class="task list-group-item form-check">
     <div class="row">
       <div class="col">
-        <input class="task-checkbox" type="checkbox" v-model="task.completed"/>
+        <input class="task-checkbox" type="checkbox" v-model="task.completed" @change="$root.completeTask(task.id)"/>
         <span v-if="!editing" v-on:click="editing = true">{{task.name}}</span>
         <span v-if="editing">
           <input class="edit-task" v-model="task.name" @keyup.enter="editing = false"/>

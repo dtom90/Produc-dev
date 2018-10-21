@@ -20,19 +20,28 @@ const store = {
   tasks: [],
   order: 'Queue',
   incompleteTasks() {
-    const completedTasks = this.tasks.filter(t => !t.completed)
-    return this.order === 'Stack' ? completedTasks.reverse() : completedTasks
+    const incompleteTasks = this.tasks.filter(t => !t.completed)
+    return this.order === 'Stack' ? incompleteTasks.reverse() : incompleteTasks
   },
   completedTasks() {
-    return this.tasks.filter(t => t.completed)
+    const completedTasks = this.tasks.filter(t => t.completed).sort((a,b) => a.completedDate - b.completedDate)
+    return this.order === 'Stack' ? completedTasks.reverse() : completedTasks
   },
   addTask(newTaskName) {
     const newTask = {
       id: this.tasks.length,
       name: newTaskName,
-      completed: false
+      completed: false,
+      completedDate: null
     }
     this.tasks.push(newTask)
+  },
+  completeTask(id) {
+    const task = this.tasks.find(t => t.id === id)
+    if(task.completed)
+      task.completedDate = Date.now()
+    else
+      task.completedDate = null
   },
   deleteTask(id) {
     const index = this.tasks.findIndex(t => t.id === id)

@@ -125,13 +125,13 @@ test('My first test', async t => {
     // Mark task 3 as complete
     .click(todoTasks.withText(task3mod).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task4, task1])).ok()
-    .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
+    .expect(tasksPresent(doneList, [task3mod, task2], true)).ok()
 
     // Click task 4 delete button, expect confirmation popup, do not confirm
     .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task4, deleteTask: false}})
     .click(deleteButton(task4))
     .expect(tasksPresent(todoList, [task4, task1])).ok()
-    .expect(tasksPresent(doneList, [task2, task3mod], true)).ok()
+    .expect(tasksPresent(doneList, [task3mod, task2], true)).ok()
 
     // Click task 3 delete button, expect no confirmation popup
     .click(deleteButton(task3mod))
@@ -157,7 +157,7 @@ test('My first test', async t => {
     .typeText(newTaskInput, task5).pressKey('enter')
     .click(todoTasks.withText(task5).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task4])).ok()
-    .expect(tasksPresent(doneList, [task2mod, task5], true)).ok()
+    .expect(tasksPresent(doneList, [task5, task2mod], true)).ok()
     .setNativeDialogHandler(deleteHandler, {dependencies: {numCompletedTasks: 2, deleteTask: true}})
     .click(clearButton)
     .expect(tasksPresent(todoList, [task4])).ok()
