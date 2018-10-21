@@ -8,9 +8,15 @@
             <font-awesome-icon icon="cog"/>
           </button>
           <div class="dropdown-menu" aria-labelledby="settings-btn">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="orderGroupSelect">Order</label>
+              </div>
+              <select class="custom-select" id="orderGroupSelect">
+                <option selected value="Queue">Queue</option>
+                <option value="Stack">Stack</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -31,6 +37,11 @@
 
 <script>
   import TaskList from './components/TaskList.vue'
+  import $ from 'jquery'
+
+  $(document).on('click', '.title-section .dropdown-menu', function (e) {
+    e.stopPropagation();
+  });
 
   export default {
     name: 'app',

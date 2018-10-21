@@ -17,6 +17,10 @@ const task5 = 'This is my fifth task'
 const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new task')
 
 const todoSection = Selector('.section').withText('To Do List')
+const settingsButton = Selector('button').child('svg.fa-cog')
+const orderLabel = Selector('.dropdown-menu label').withText('Order').withAttribute('for', 'orderGroupSelect')
+const orderGroupSelect = Selector('#orderGroupSelect')
+const orderOption = orderGroupSelect.child('option')
 const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
 
@@ -71,8 +75,7 @@ test('My first test', async t => {
 
     // Expect an empty To Do List
     .expect(todoSection.find('h1').withText('To Do List').exists).ok()
-    // TODO: setting to stack vs queue
-    .expect(Selector('button').child('svg.fa-cog').exists).ok()
+    .expect(settingsButton.exists).ok()
     .expect(todoTasks.count).eql(0)
     .expect(doneTasks.count).eql(0)
 
@@ -87,6 +90,17 @@ test('My first test', async t => {
     // Add task 3
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
+
+    // TODO: setting to stack vs queue
+    .expect(orderLabel.visible).notOk()
+    .expect(orderGroupSelect.visible).notOk()
+    .click(settingsButton)
+    .expect(orderLabel.visible).ok()
+    .expect(orderGroupSelect.visible).ok()
+    .expect(orderGroupSelect.value).eql('Queue')
+    .click(orderGroupSelect)
+    .click(orderOption.withText('Stack'))
+    .expect(orderGroupSelect.value).eql('Stack')
 
     // Mark task 2 as complete
     .expect(doneSection.exists).notOk()

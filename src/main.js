@@ -4,7 +4,6 @@ import App from './App.vue'
 // Boostrap style
 import 'bootstrap/dist/css/bootstrap.css'
 // Bootstrap function
-import 'jquery'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // Font Awesome icons
