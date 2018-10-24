@@ -11,14 +11,33 @@
           </button>
         </span>
       </div>
-      <button type="button" class="btn btn-danger btn-sm" v-on:click="$root.deleteTask(task.id)">
-        <font-awesome-icon icon="trash-alt"/>
-      </button>
+      <div class="dropright">
+        <button type="button" class="btn btn-light" data-toggle="dropdown">
+          <font-awesome-icon icon="ellipsis-h"/>
+        </button>
+        <div class="dropdown-menu">
+          <h6>
+            Created:
+          </h6>
+          <div>
+            {{createdDate}}
+          </div>
+          <div>
+            {{createdTime}}
+          </div>
+          <div class="dropdown-divider"></div>
+          <button type="button" class="btn btn-danger btn-sm" v-on:click="$root.deleteTask(task.id)">
+            <font-awesome-icon icon="trash-alt"/>
+          </button>
+        </div>
+      </div>
     </div>
   </li>
 </template>
 
 <script>
+  import moment from 'moment'
+
   export default {
     name: "Task",
     props: {
@@ -26,7 +45,15 @@
     },
     data: () => ({
       editing: false
-    })
+    }),
+    computed: {
+      createdDate: function() {
+        return moment(this.task.createdDate).format('ddd MMM DD YYYY,')
+      },
+      createdTime: function() {
+        return moment(this.task.createdDate).format('h:mm a')
+      }
+    }
   }
 </script>
 

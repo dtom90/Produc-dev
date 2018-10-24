@@ -8,10 +8,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // Font Awesome icons
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faTrashAlt, faSave, faCog} from '@fortawesome/free-solid-svg-icons'
+import {faTrashAlt, faSave, faCog, faEllipsisH} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-library.add(faTrashAlt, faSave, faCog)
+library.add(faTrashAlt, faSave, faCog, faEllipsisH)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
@@ -32,6 +32,7 @@ const store = {
       id: this.tasks.length,
       name: newTaskName,
       completed: false,
+      createdDate: new Date(),
       completedDate: null
     }
     this.tasks.push(newTask)
