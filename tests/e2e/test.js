@@ -163,5 +163,14 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(doneSection.exists).notOk()
 
+    // Complete task 4, click the Clear button, expect no popup
+    .click(todoTasks.withText(task4).find('input').withAttribute('type', 'checkbox'))
+    .expect(tasksPresent(todoList, [])).ok()
+    .expect(tasksPresent(doneList, [task4], true)).ok()
+    .setNativeDialogHandler(deleteHandler, {dependencies: {numCompletedTasks: 9, deleteTask: false}})
+    .click(clearButton)
+    .expect(tasksPresent(todoList, [])).ok()
+    .expect(doneSection.exists).notOk()
+
     // TODO: click and drag to rearrange tasks
 });
