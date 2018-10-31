@@ -3,19 +3,19 @@
     <div class="section">
       <div class="title-section">
         <h1 id="todo-title">To Do List</h1>
-        <div class="dropdown">
-          <button id="settings-btn" class="btn btn-light" data-toggle="dropdown">
+        <div class="dropright">
+          <button class="btn btn-light" data-toggle="dropdown">
             <font-awesome-icon icon="cog"/>
           </button>
-          <div class="dropdown-menu" aria-labelledby="settings-btn">
+          <div id="todo-menu" class="dropdown-menu">
             <div class="input-group">
-              <div class="input-group-prepend">
-                <label class="input-group-text" for="orderGroupSelect">Order</label>
-              </div>
               <select class="custom-select" id="orderGroupSelect" v-model="$root.order">
-                <option selected value="Queue">Queue</option>
-                <option value="Stack">Stack</option>
+                <option selected value="Oldest">Oldest</option>
+                <option value="Newest">Newest</option>
               </select>
+              <div class="input-group-append">
+                <label class="input-group-text" for="orderGroupSelect">First</label>
+              </div>
             </div>
           </div>
         </div>
@@ -28,7 +28,24 @@
     <div class="section" v-if="$root.completedTasks().length > 0">
       <div class="title-section">
         <h3 id="completed-title">Completed Tasks</h3>
-        <button id="clear-btn" class="btn btn-danger" v-on:click="$root.clearTasks()">Clear All</button>
+        <div class="dropright">
+          <button id="completedSettingsButton" class="btn btn-light" data-toggle="dropdown">
+            <font-awesome-icon icon="cog"/>
+          </button>
+          <div class="dropdown-menu">
+            <div class="input-group">
+              <select class="custom-select" id="completedOrderGroupSelect" v-model="$root.completedOrder">
+                <option selected value="Recent">Recent</option>
+                <option value="Oldest">Oldest</option>
+              </select>
+              <div class="input-group-append">
+                <label class="input-group-text" for="completedOrderGroupSelect">First</label>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button id="clear-btn" class="btn btn-danger" v-on:click="$root.clearTasks()">Clear All</button>
+          </div>
+        </div>
       </div>
       <TaskList :tasks="$root.completedTasks()"/>
     </div>

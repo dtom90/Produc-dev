@@ -18,7 +18,7 @@ const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new t
 
 const todoSection = Selector('.section').withText('To Do List')
 const settingsButton = Selector('button').child('svg.fa-cog')
-const orderLabel = Selector('.dropdown-menu label').withText('Order').withAttribute('for', 'orderGroupSelect')
+const orderLabel = Selector('.dropdown-menu label').withText('First').withAttribute('for', 'orderGroupSelect')
 const orderGroupSelect = Selector('#orderGroupSelect')
 const orderOption = orderGroupSelect.child('option')
 const todoList = todoSection.find('.task-list')
@@ -96,16 +96,16 @@ test('My first test', async t => {
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
 
-    // Switch list order from Queue to Stack
+    // Switch list order from Oldest First to Newest First
     .expect(orderLabel.visible).notOk()
     .expect(orderGroupSelect.visible).notOk()
     .click(settingsButton)
     .expect(orderLabel.visible).ok()
     .expect(orderGroupSelect.visible).ok()
-    .expect(orderGroupSelect.value).eql('Queue')
+    .expect(orderGroupSelect.value).eql('Oldest')
     .click(orderGroupSelect)
-    .click(orderOption.withText('Stack'))
-    .expect(orderGroupSelect.value).eql('Stack')
+    .click(orderOption.withText('Newest'))
+    .expect(orderGroupSelect.value).eql('Newest')
     .expect(tasksPresent(todoList, [task3, task2, task1])).ok()
 
     // Add task 4
@@ -167,6 +167,7 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task5, task2mod], true)).ok()
     .setNativeDialogHandler(deleteHandler, {dependencies: {numCompletedTasks: 2, deleteTask: true}})
+    .click('#completedSettingsButton')
     .click(clearButton)
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(doneSection.exists).notOk()
@@ -176,6 +177,7 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [])).ok()
     .expect(tasksPresent(doneList, [task4], true)).ok()
     .setNativeDialogHandler(deleteHandler, {dependencies: {numCompletedTasks: 9, deleteTask: false}})
+    .click('#completedSettingsButton')
     .click(clearButton)
     .expect(tasksPresent(todoList, [])).ok()
     .expect(doneSection.exists).notOk()
