@@ -65,4 +65,8 @@
   .task-checkbox {
     margin-right: 20px;
   }
+
+  .dropdown-menu {
+    padding: 8px;
+  }
 </style>

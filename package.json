@@ -8,7 +8,7 @@
     "serve:prod": "serve -s dist -p 8081",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e:dev": "testcafe chrome tests/e2e --app \"yarn run serve\"",
+    "test:e2e:dev": "testcafe chrome tests/e2e --app \"yarn run dev\"",
     "test:e2e:prod": "yarn run build && PORT=8081 testcafe chrome tests/e2e --app \"yarn run serve:prod\"",
     "test": "yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
   },

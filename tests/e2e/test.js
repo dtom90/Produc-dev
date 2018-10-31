@@ -45,6 +45,11 @@ function saveButton() {
     .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-save'))
 }
 
+function menuButton(taskName) {
+  return Selector('.task').withText(taskName).find('button')
+    .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-ellipsis-h'))
+}
+
 function deleteButton(taskName) {
   return Selector('.task').withText(taskName).find('button')
     .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-trash-alt'))
@@ -129,17 +134,20 @@ test('My first test', async t => {
 
     // Click task 4 delete button, expect confirmation popup, do not confirm
     .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task4, deleteTask: false}})
+    .click(menuButton(task4))
     .click(deleteButton(task4))
     .expect(tasksPresent(todoList, [task4, task1])).ok()
     .expect(tasksPresent(doneList, [task3mod, task2], true)).ok()
 
     // Click task 3 delete button, expect no confirmation popup
+    .click(menuButton(task3mod))
     .click(deleteButton(task3mod))
     .expect(tasksPresent(todoList, [task4, task1])).ok()
     .expect(tasksPresent(doneList, [task2], true)).ok()
 
     // Click task 1 delete button, expect confirmation popup, confirm delete
     .setNativeDialogHandler(deleteHandler, {dependencies: {taskName: task1, deleteTask: true}})
+    .click(menuButton(task1))
     .click(deleteButton(task1))
     .expect(tasksPresent(todoList, [task4])).ok()
     .expect(tasksPresent(doneList, [task2], true)).ok()
