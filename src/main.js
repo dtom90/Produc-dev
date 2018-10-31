@@ -8,10 +8,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // Font Awesome icons
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faTrashAlt, faSave, faCog, faEllipsisH} from '@fortawesome/free-solid-svg-icons'
+import {faTrashAlt, faSave, faCog, faEllipsisH, faPencilAlt} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-library.add(faTrashAlt, faSave, faCog, faEllipsisH)
+library.add(faTrashAlt, faSave, faCog, faEllipsisH, faPencilAlt)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

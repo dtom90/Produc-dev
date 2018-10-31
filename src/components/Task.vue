@@ -17,18 +17,23 @@
         </button>
         <div class="dropdown-menu">
           <h6>
-            Created:
+            {{dateType}} on
           </h6>
           <div>
-            {{createdDate}}
+            {{displayDate}}
           </div>
           <div>
-            {{createdTime}}
+            {{displayTime}}
           </div>
           <div class="dropdown-divider"></div>
-          <button type="button" class="btn btn-danger btn-sm" v-on:click="$root.deleteTask(task.id)">
-            <font-awesome-icon icon="trash-alt"/>
-          </button>
+          <div class="flex-column">
+            <button type="button" class="btn btn-warning btn-sm" v-on:click="editing = true">
+              <font-awesome-icon icon="pencil-alt"/>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" v-on:click="$root.deleteTask(task.id)">
+              <font-awesome-icon icon="trash-alt"/>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -47,11 +52,17 @@
       editing: false
     }),
     computed: {
-      createdDate: function() {
-        return moment(this.task.createdDate).format('ddd MMM DD YYYY,')
+      dateType: function() {
+        return this.task.completed ? 'Completed' : 'Created'
       },
-      createdTime: function() {
-        return moment(this.task.createdDate).format('h:mm a')
+      date: function() {
+        return this.task.completed ? this.task.completedDate : this.task.createdDate
+      },
+      displayDate: function() {
+        return moment(this.date).format('ddd MMM DD YYYY,')
+      },
+      displayTime: function() {
+        return moment(this.date).format('h:mm a')
       }
     }
   }
@@ -66,7 +77,11 @@
     margin-right: 20px;
   }
 
-  .dropdown-menu {
-    padding: 8px;
+  .dropdown-menu > :not(.dropdown-divider) {
+    margin-left: 8px;
+  }
+
+  .dropdown-menu button {
+    margin-right: 8px;
   }
 </style>
