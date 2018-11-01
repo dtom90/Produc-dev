@@ -1,15 +1,15 @@
 <template>
   <li class="task list-group-item form-check">
-    <div class="row">
-      <div class="col">
+    <div class="d-flex">
+      <div class="flex-grow-1 d-flex align-items-center">
         <input class="task-checkbox" type="checkbox" v-model="task.completed" @change="$root.completeTask(task.id)"/>
         <span v-if="!editing" v-on:click="editing = true">{{task.name}}</span>
-        <span v-if="editing">
+        <div v-if="editing" class="d-flex align-items-center">
           <input class="edit-task" v-model="task.name" @keyup.enter="editing = false"/>
           <button type="button" class="btn btn-primary" v-on:click="editing = false">
             <font-awesome-icon icon="save"/>
           </button>
-        </span>
+        </div>
       </div>
       <div class="dropright">
         <button type="button" class="btn btn-light" data-toggle="dropdown">
