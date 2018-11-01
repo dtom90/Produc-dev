@@ -182,5 +182,4 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [])).ok()
     .expect(doneSection.exists).notOk()
 
-    // TODO: click and drag to rearrange tasks
 });
