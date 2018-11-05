@@ -32,15 +32,16 @@ yarn run lint
 ```
 yarn run test:unit
 ```
-#### Run end-to-end tests with [TestCafé](https://testcafe.devexpress.com/)
+#### Run end-to-end tests with [TestCafé](https://testcafe.devexpress.com/) (with dev or prod server)
 ```
-yarn run test:e2e
+yarn run test:e2e:dev
+yarn run test:e2e:prod
 ```
 #### Run all tests (lint, unit tests, end-to-end tests)
 ```
 yarn run test
 ```
-#### Run end-to-end tests in Docker container against production container
+#### Run all tests in Docker containers
 ```
 ./docker/test.sh
 ```

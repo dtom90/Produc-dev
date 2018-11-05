@@ -10,17 +10,48 @@ jobs:
     - run:
         name: Install dependencies
         command: |
-          apk add --no-cache bash curl
+          apk update && apk add --no-cache bash curl
     - run:
-        name: Build Docker image
+        name: Build test Docker image
         command: |
           docker build \
                  -f docker/Dockerfile \
                  -t todo-vue-test \
                  .
     - run:
-        name: Run lint and unit testing
+        name: Run lint and unit tests
         command: |
           docker run -i --rm \
                  todo-vue-test \
                  sh -c 'yarn run lint && yarn run test:unit'
+    - run:
+        name: Build production Docker image
+        command: |
+          docker build \
+                 -f docker/Dockerfile.production \
+                 -t todo-vue-prod \
+                 .
+    - run:
+        name: Run production Docker container
+        command: |
+          docker run -i --rm \
+                 -p 8080:80 \
+                 --name todo-vue-prod \
+                 todo-vue-prod
+        background: true
+    - run:
+        name: Build TestCafé image
+        command: |
+          docker build \
+                 -f docker/Dockerfile.testcafe \
+                 -t todo-testcafe \
+                 .
+    - run:
+        name: Run TestCafé against production container
+        command: |
+          docker run -i --rm \
+                 --net="host" \
+                 todo-testcafe 'chromium --no-sandbox,firefox' /tests
+    - run:
+        name: Stop production Docker contianer
+        command: docker stop todo-vue-prod
