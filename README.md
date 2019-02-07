@@ -8,9 +8,9 @@ Simple To-Do application written in [Vue.js](https://vuejs.org/)
 ```
 yarn install
 ```
-#### Build Docker image for development:
+#### Install in Docker for development:
 ```
-docker build -t todo-vue .
+./docker/install.sh
 ```
 
 ## Development
@@ -18,7 +18,7 @@ docker build -t todo-vue .
 ```
 yarn run serve
 ```
-#### Build Docker image and deploy container for development:
+#### Deploy container for development:
 ```
 ./docker/dev.sh
 ```

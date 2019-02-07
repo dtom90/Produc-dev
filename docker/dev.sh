@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME=todo-vue-dev
+IMAGE_NAME=node:10.15.0-alpine
 CONTAINER_NAME=todo-vue-dev
 
 CMD="$@"
@@ -8,13 +8,10 @@ CMD="$@"
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
-docker build \
-       -f docker/Dockerfile \
-       -t ${IMAGE_NAME} \
-       . && \
 docker run -i --rm \
        -p 8080:8080 \
        -v `pwd`:/app \
+       -w /app \
        --name ${CONTAINER_NAME} \
        ${IMAGE_NAME} \
-       ${CMD}
+       yarn run dev
