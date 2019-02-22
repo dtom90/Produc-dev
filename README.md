@@ -4,7 +4,7 @@
 
 Simple To-Do application written in [Vue.js](https://vuejs.org/)
 
-## Project setup
+## Setup
 ```
 yarn install
 ```
