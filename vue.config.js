@@ -1,5 +1,5 @@
 module.exports = {
-  baseUrl: process.env.BASE_URL
+  publicPath: process.env.BASE_URL
     ? process.env.BASE_URL
     : '/'
 }

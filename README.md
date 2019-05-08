@@ -16,7 +16,7 @@ yarn install
 ## Development
 #### Compile and hot-reload for development:
 ```
-yarn run serve
+yarn run dev
 ```
 #### Deploy container for development:
 ```
