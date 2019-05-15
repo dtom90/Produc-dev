@@ -18,8 +18,8 @@ const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new t
 
 const todoSection = Selector('.section').withText('To Do List')
 const settingsButton = Selector('button').child('svg.fa-cog')
-const orderLabel = Selector('.dropdown-menu label').withText('First').withAttribute('for', 'orderGroupSelect')
-const orderGroupSelect = Selector('#orderGroupSelect')
+const orderLabel = Selector('.dropdown-menu label').withText('First').withAttribute('for', 'toDoOrderGroupSelect')
+const orderGroupSelect = Selector('#toDoOrderGroupSelect')
 const orderOption = orderGroupSelect.child('option')
 const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
