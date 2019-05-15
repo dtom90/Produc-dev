@@ -113,7 +113,6 @@ test('My first test', async t => {
     .expect(tasksPresent(todoList, [task4, task3, task2, task1])).ok()
 
     // Mark task 2 as complete
-    .expect(doneSection.exists).notOk()
     .click(todoTasks.withText(task2).find('input').withAttribute('type', 'checkbox'))
     .expect(tasksPresent(todoList, [task4, task3, task1])).ok()
     .expect(doneSection.exists).ok()
@@ -170,7 +169,6 @@ test('My first test', async t => {
     .click('#completedSettingsButton')
     .click(clearButton)
     .expect(tasksPresent(todoList, [task4])).ok()
-    .expect(doneSection.exists).notOk()
 
     // Complete task 4, click the Clear button, expect no popup
     .click(todoTasks.withText(task4).find('input').withAttribute('type', 'checkbox'))
@@ -180,6 +178,5 @@ test('My first test', async t => {
     .click('#completedSettingsButton')
     .click(clearButton)
     .expect(tasksPresent(todoList, [])).ok()
-    .expect(doneSection.exists).notOk()
 
 });

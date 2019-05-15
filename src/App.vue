@@ -3,12 +3,9 @@
 
     <TaskList title="To Do List"
               :tasks="$root.incompleteTasks()"/>
-    <br/>
-    <br/>
 
     <TaskList title="Completed Tasks"
-              :tasks="$root.completedTasks()"
-              v-if="$root.completedTasks().length > 0"/>
+              :tasks="$root.completedTasks()"/>
   </div>
 </template>
 
@@ -32,6 +29,6 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    max-width: 500px;
+    display: flex;
   }
 </style>

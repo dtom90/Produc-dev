@@ -1,9 +1,9 @@
 <template>
   <div class="section">
     <div class="title-section">
-      <component :is="titleTag" class="title">
+      <h1 class="title">
         {{this.title}}
-      </component>
+      </h1>
       <div class="dropright">
         <button :id="btnId" class="btn btn-light" data-toggle="dropdown">
           <font-awesome-icon icon="cog"/>
@@ -77,6 +77,11 @@
 </script>
 
 <style scoped>
+  .section {
+    flex: 1;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 
   #new-task {
     margin-bottom: 10px;
