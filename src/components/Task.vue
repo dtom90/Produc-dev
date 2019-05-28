@@ -2,7 +2,10 @@
   <li class="task list-group-item form-check">
     <div class="d-flex">
       <div class="flex-grow-1 d-flex align-items-center">
-        <input class="task-checkbox" type="checkbox" v-model="task.completed" @change="$root.completeTask(task.id)"/>
+        <div class="checkbox-container">
+          <input class="task-checkbox" type="checkbox" v-model="task.completed" @change="$root.completeTask(task.id)"/>
+          <span class="check-custom"></span>
+        </div>
         <span v-if="!editing" v-on:click="editing = true">{{task.name}}</span>
         <div v-if="editing" class="d-flex align-items-center">
           <input class="edit-task" v-model="task.name" @keyup.enter="editing = false"/>
@@ -73,8 +76,50 @@
     text-align: left;
   }
 
-  .task-checkbox {
+  /* Adapted from https://hackernoon.com/hacking-custom-checkboxes-and-radios-5d48230440d */
+
+  .checkbox-container {
     margin-right: 20px;
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .checkbox-container > * {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* Styles for hiding the native checkbox */
+  .task-checkbox {
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Styles for the basic appearance of the custom checkbox */
+  .check-custom {
+    border: 2px solid #969696;
+    border-radius: 50%;
+  }
+
+  /* Styles for the hover state of the custom checkbox */
+  .task-checkbox:hover ~ .check-custom {
+    border-color: #4a4a4a;
+  }
+
+  /* Styles for the focus state of the custom checkbox */
+  .task-checkbox:focus ~ .check-custom {
+    border-color: #b0d5ff;
+    box-shadow: 0 0 0 2px rgba(23, 133, 255, 0.25);
+  }
+
+  /* Styles for the checked state of the custom checkbox */
+  .task-checkbox:checked ~ .check-custom {
+    border-color: #1785ff;
+    background: #1785ff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIyMCA2IDkgMTcgNCAxMiI+PC9wb2x5bGluZT48L3N2Zz4=) center no-repeat;
+    background-size: 75%;
   }
 
   .dropdown-menu > :not(.dropdown-divider) {
