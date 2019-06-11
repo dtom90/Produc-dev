@@ -1,5 +1,7 @@
 <template>
-    <div class="section">
+    
+    <div>
+        
         <h2>Active Task</h2>
         
         <div v-if="task" class="border">
@@ -27,6 +29,7 @@
             </div>
             
             <!--  Play Task Button  -->
+            <br/>
             <button type="button" class="btn btn-success btn-lg">
                 <font-awesome-icon icon="play"/>
             </button>
@@ -54,6 +57,7 @@
 
         
     </div>
+    
 </template>
 
 <script>

@@ -1,13 +1,20 @@
 <template>
-  <div id="app" class="container">
+  <div id="app" class="container-fluid d-flex">
+    
+    <div class="section task-list">
+      <TaskList title="To Do List"
+                :tasks="$root.incompleteTasks()"/>
+    </div>
 
-    <TaskList title="To Do List"
-              :tasks="$root.incompleteTasks()"/>
+    <div class="section active-task">
+      <ActiveTask :task="$root.selectedTask" />
+    </div>
     
-    <ActiveTask :task="$root.selectedTask" />
+    <div class="section task-list">
+      <TaskList title="Completed Tasks"
+                :tasks="$root.completedTasks()"/>
+    </div>
     
-    <TaskList title="Completed Tasks"
-              :tasks="$root.completedTasks()"/>
   </div>
 </template>
 
@@ -33,12 +40,19 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    display: flex;
   }
 
   .section {
-    flex: 1;
     margin-left: 20px;
     margin-right: 20px;
   }
+  
+  .task-list {
+    flex: 2;
+  }
+  
+  .active-task {
+    flex: 3;
+  }
+  
 </style>

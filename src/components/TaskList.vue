@@ -1,6 +1,6 @@
 <template>
 
-  <div class="section">
+  <div>
 
     <!-- TaskList Title Section -->
     <div class="title-section">
@@ -70,7 +70,6 @@
     },
     computed: {
       completedList: function() { return this.title === 'Completed Tasks' },
-      titleTag: function() { return this.completedList ? 'h3' : 'h1' },
       btnId: function() { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
       selectId: function() { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' }
     },
