@@ -4,7 +4,7 @@
     <TaskList title="To Do List"
               :tasks="$root.incompleteTasks()"/>
     
-    <ActiveTask />
+    <ActiveTask :task="$root.selectedTask" />
     
     <TaskList title="Completed Tasks"
               :tasks="$root.completedTasks()"/>
