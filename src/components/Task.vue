@@ -1,11 +1,20 @@
 <template>
-  <li class="task list-group-item form-check">
+  
+  <!--  Task List Group Item Wrapper  -->
+  <li class="task list-group-item list-group-item-action form-check" v-on:click="$root.selectTask(task.id)">
+    
     <div class="d-flex">
+
+      <!--  Main Section (Flex Grow)  -->
       <div class="flex-grow-1 d-flex align-items-center">
+
+        <!--  Checkbox Container  -->
         <div class="checkbox-container">
           <input class="task-checkbox" type="checkbox" v-model="task.completed" @change="$root.completeTask(task.id)"/>
           <span class="check-custom"></span>
         </div>
+
+        <!--  Task Name & Field (when editing)  -->
         <span v-if="!editing" v-on:click="editing = true">{{task.name}}</span>
         <div v-if="editing" class="d-flex align-items-center">
           <input class="edit-task" v-model="task.name" @keyup.enter="editing = false"/>
@@ -14,8 +23,10 @@
           </button>
         </div>
       </div>
+
+      <!--  Task Settings Button  -->
       <div class="dropright">
-        <button type="button" class="btn btn-light" data-toggle="dropdown">
+        <button type="button" class="btn btn-light task-btn" data-toggle="dropdown">
           <font-awesome-icon icon="ellipsis-h"/>
         </button>
         <div class="dropdown-menu">
@@ -39,7 +50,14 @@
           </div>
         </div>
       </div>
+
+      <!--  Play Task Button  -->
+      <button type="button" class="btn btn-light task-btn">
+        <font-awesome-icon icon="play"/>
+      </button>
+      
     </div>
+    
   </li>
 </template>
 
@@ -120,6 +138,10 @@
     border-color: #1785ff;
     background: #1785ff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIyMCA2IDkgMTcgNCAxMiI+PC9wb2x5bGluZT48L3N2Zz4=) center no-repeat;
     background-size: 75%;
+  }
+  
+  .task-btn {
+    margin-left: 10px;
   }
 
   .dropdown-menu > :not(.dropdown-divider) {

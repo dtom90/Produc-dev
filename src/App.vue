@@ -3,7 +3,9 @@
 
     <TaskList title="To Do List"
               :tasks="$root.incompleteTasks()"/>
-
+    
+    <ActiveTask />
+    
     <TaskList title="Completed Tasks"
               :tasks="$root.completedTasks()"/>
   </div>
@@ -11,11 +13,13 @@
 
 <script>
   import TaskList from './components/TaskList.vue'
+  import ActiveTask from './components/ActiveTask.vue'
 
   export default {
     name: 'app',
     components: {
-      TaskList
+      TaskList,
+      ActiveTask
     }
   }
 </script>
@@ -30,5 +34,11 @@
     color: #2c3e50;
     margin-top: 60px;
     display: flex;
+  }
+
+  .section {
+    flex: 1;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 </style>

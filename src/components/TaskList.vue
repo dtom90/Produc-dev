@@ -1,9 +1,16 @@
 <template>
+
   <div class="section">
+
+    <!-- TaskList Title Section -->
     <div class="title-section">
-      <h1 class="title">
+
+      <!-- TaskList Title -->
+      <h3 class="title">
         {{this.title}}
-      </h1>
+      </h3>
+      
+      <!-- TaskList Settings Button -->
       <div class="dropright">
         <button :id="btnId" class="btn btn-light" data-toggle="dropdown">
           <font-awesome-icon icon="cog"/>
@@ -27,14 +34,20 @@
           </button>
         </div>
       </div>
+      
     </div>
+    
+    <!-- New Task Input Field -->
     <input id="new-task" type="text"
            v-if="!completedList"
            class="form-control" placeholder="enter new task"
            v-model="newTask" @keyup.enter="addTask"/>
+    
+    <!-- TaskList -->
     <ul class="task-list list-group">
       <Task v-for="task in tasks" :key="task.id" :task="task"/>
     </ul>
+    
   </div>
 </template>
 
@@ -77,11 +90,6 @@
 </script>
 
 <style scoped>
-  .section {
-    flex: 1;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
 
   #new-task {
     margin-bottom: 10px;
