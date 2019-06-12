@@ -30,20 +30,22 @@
             
             <!--  Play Task Button  -->
             <br/>
-            <button type="button" class="btn btn-success btn-lg">
+            <button id="play-btn" type="button" class="btn btn-success btn-lg">
                 <font-awesome-icon icon="play"/>
             </button>
             
             <br/><br/>
-            <h6>
-                {{dateType}} on
-            </h6>
-            <div>
-                {{displayDate}}
-            </div>
-            <div>
-                {{displayTime}}
-            </div>
+            <table class="table">
+                <tr>
+                    <th>Created: </th>
+                    <td>{{displayDate(task.createdDate)}} {{displayTime(task.createdDate)}}</td>
+                </tr>
+                <tr v-if="task.completedDate">
+                    <th>Completed: </th>
+                    <td>{{displayDate(this.task.completedDate)}} {{displayTime(this.task.completedDate)}}</td>
+                </tr>
+            </table>
+            <br/>
             <div class="flex-column">
                 <button type="button" class="btn btn-warning" v-on:click="editing = true">
                     <font-awesome-icon icon="pencil-alt"/>
@@ -77,41 +79,41 @@
       },
       date: function() {
         return this.task.completed ? this.task.completedDate : this.task.createdDate
-      },
-      displayDate: function() {
-        return moment(this.date).format('ddd MMM DD YYYY,')
-      },
-      displayTime: function() {
-        return moment(this.date).format('h:mm a')
       }
+    },
+    methods: {
+      displayDate: date => moment(date).format('ddd MMM DD YYYY,'),
+      displayTime: date => moment(date).format('h:mm a')
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     
     .task-name-container {
         margin-left: 5px;
     }
     
     .task-name {
-        font-weight: bolder;
-        font-size: x-large;
+        font-weight: 600;
+        font-size: xx-large;
     }
     
     /* Adapted from https://hackernoon.com/hacking-custom-checkboxes-and-radios-5d48230440d */
-
+    
+    $checkbox-size: 2.2rem;
+    
     .checkbox-container {
-        margin-right: 20px;
+        margin-right: 25px;
         position: relative;
-        width: 2rem;
-        height: 2rem;
+        width: $checkbox-size;
+        height: $checkbox-size;
     }
 
     .checkbox-container > * {
         position: absolute;
-        width: 2rem;
-        height: 2rem;
+        width: $checkbox-size;
+        height: $checkbox-size;
     }
 
     /* Styles for hiding the native checkbox */
@@ -129,15 +131,10 @@
 
     /* Styles for the hover state of the custom checkbox */
     .task-checkbox:hover ~ .check-custom {
-        border-color: #4a4a4a;
-    }
-
-    /* Styles for the focus state of the custom checkbox */
-    .task-checkbox:focus ~ .check-custom {
         border-color: #b0d5ff;
         box-shadow: 0 0 0 2px rgba(23, 133, 255, 0.25);
     }
-
+    
     /* Styles for the checked state of the custom checkbox */
     .task-checkbox:checked ~ .check-custom {
         border-color: #1785ff;
@@ -147,5 +144,14 @@
     
     .btn {
         margin: 8px;
+    }
+    
+    $play-btn-size: 75px;
+    
+    #play-btn {
+        width: $play-btn-size;
+        height: $play-btn-size;
+        font-size: 28px;
+        border-radius: $play-btn-size;
     }
 </style>
