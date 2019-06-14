@@ -7,6 +7,7 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 import TaskList from '@/components/TaskList.vue'
 
 describe('TaskList.vue', () => {
+  
   it('renders props.name when passed', () => {
     const tasks = [
       {id: 1, name: 'new task 1'},
@@ -22,4 +23,5 @@ describe('TaskList.vue', () => {
       expect(elem.text()).toMatch(tasks[i].name)
     })
   })
+  
 })

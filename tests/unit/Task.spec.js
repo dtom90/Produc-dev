@@ -7,6 +7,7 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 import Task from '@/components/Task.vue'
 
 describe('Task.vue', () => {
+  
   it('renders props.name when passed', () => {
     const taskName = 'new task 1'
     const task = {id: 1, name: taskName}
@@ -16,4 +17,5 @@ describe('Task.vue', () => {
     })
     expect(wrapper.text()).toMatch(taskName)
   })
+  
 })

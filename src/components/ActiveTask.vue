@@ -38,11 +38,11 @@
             <table class="table">
                 <tr>
                     <th>Created: </th>
-                    <td>{{displayDate(task.createdDate)}} {{displayTime(task.createdDate)}}</td>
+                    <td>{{displayDateTime(task.createdDate)}}</td>
                 </tr>
                 <tr v-if="task.completedDate">
                     <th>Completed: </th>
-                    <td>{{displayDate(this.task.completedDate)}} {{displayTime(this.task.completedDate)}}</td>
+                    <td>{{displayDateTime(task.completedDate)}}</td>
                 </tr>
             </table>
             <br/>
@@ -82,8 +82,7 @@
       }
     },
     methods: {
-      displayDate: date => moment(date).format('ddd MMM DD YYYY,'),
-      displayTime: date => moment(date).format('h:mm a')
+      displayDateTime: date => moment(date).format('ddd MMM DD YYYY, h:mm a'),
     }
   }
 </script>
