@@ -8,14 +8,18 @@ import Task from '@/components/Task.vue'
 
 describe('Task.vue', () => {
   
-  it('renders props.name when passed', () => {
+  it('renders renders the task name', () => {
+    
     const taskName = 'new task 1'
     const task = {id: 1, name: taskName}
+    
     const wrapper = shallowMount(Task, {
       propsData: { task: task },
       localVue
     })
-    expect(wrapper.text()).toMatch(taskName)
+  
+    const li = wrapper.find('li')
+    expect(li.text()).toMatch(taskName)
   })
   
 })

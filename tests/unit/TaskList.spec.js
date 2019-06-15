@@ -4,8 +4,8 @@ import TaskList from '@/components/TaskList.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faCog, faEllipsisH, faPencilAlt, faPlay, faSave, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
-library.add(faTrashAlt, faPlay, faSave, faCog, faEllipsisH, faPencilAlt)
 
+library.add(faTrashAlt, faPlay, faSave, faCog, faEllipsisH, faPencilAlt)
 const localVue = createLocalVue();
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -53,6 +53,7 @@ describe('TaskList.vue', () => {
     wrapper.setData({
       sortOrder: 'Newest'
     })
+    expect(wrapper.vm.sortOrder).toBe('Newest')
     
     const renderedTasks = wrapper.findAll('li')
     renderedTasks.wrappers.forEach((elem, i) => {
