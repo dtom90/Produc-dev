@@ -1,5 +1,6 @@
-import { mount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import TaskList from '@/components/TaskList.vue'
+import Task from '@/components/Task.vue'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {library} from "@fortawesome/fontawesome-svg-core";
@@ -19,45 +20,46 @@ describe('TaskList.vue', () => {
   let wrapper;
   
   beforeEach(() => {
-  
-    wrapper = mount(TaskList, {
+    
+    wrapper = shallowMount(TaskList, {
       propsData: { tasks: tasks },
       localVue
     })
     
   })
   
-  it('should have tasks loade into props', () => {
+  it('should have tasks loaded into props', () => {
     
     expect(wrapper.props().tasks).toBe(tasks)
-  
+    
   })
   
   it('renders tasks in oldest-first order', () => {
-  
+    
     wrapper.setData({
       sortOrder: 'Oldest'
     })
-  
     expect(wrapper.vm.sortOrder).toBe('Oldest')
     
-    const renderedTasks = wrapper.findAll('li')
-    renderedTasks.wrappers.forEach((elem, i) => {
-      expect(elem.text()).toMatch(tasks[i].name)//'fasdsa'
+    const renderedTasks = wrapper.findAll(Task)
+    expect(renderedTasks.length).toBe(3)
+    renderedTasks.wrappers.forEach((renderedTask, i) => {
+      expect(renderedTask.props().task.name).toMatch(tasks[i].name)
     })
     
   })
   
   it('renders tasks in newest-first order', () => {
-  
+    
     wrapper.setData({
       sortOrder: 'Newest'
     })
     expect(wrapper.vm.sortOrder).toBe('Newest')
     
-    const renderedTasks = wrapper.findAll('li')
-    renderedTasks.wrappers.forEach((elem, i) => {
-      expect(elem.text()).toMatch(tasks[tasks.length-1-i].name)
+    const renderedTasks = wrapper.findAll(Task)
+    expect(renderedTasks.length).toBe(3)
+    renderedTasks.wrappers.forEach((renderedTask, i) => {
+      expect(renderedTask.props().task.name).toMatch(tasks[tasks.length-1-i].name)
     })
     
   })
