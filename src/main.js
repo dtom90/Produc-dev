@@ -20,17 +20,13 @@ const store = {
   
   tasks: [],
   selectedTask: null,
-  order: 'Oldest',
-  completedOrder: 'Recent',
   
   incompleteTasks() {
-    const incompleteTasks = this.tasks.filter(t => !t.completed)
-    return this.order === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
+    return this.tasks.filter(t => !t.completed)
   },
   
   completedTasks() {
-    const completedTasks = this.tasks.filter(t => t.completed).sort((a,b) => a.completedDate - b.completedDate)
-    return this.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
+    return this.tasks.filter(t => t.completed).sort((a,b) => a.completedDate - b.completedDate)
   },
   
   addTask(newTaskName) {
