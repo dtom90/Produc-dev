@@ -11,7 +11,7 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 import moment from 'moment'
 
-describe('ActiveTask.vue', () => {
+describe('ActiveTask', () => {
   
   describe('Incomplete Task', () => {
   
@@ -22,17 +22,11 @@ describe('ActiveTask.vue', () => {
       completedDate: null,
       completed: false
     }
-    let wrapper;
-  
-    beforeEach(() => {
-    
-      wrapper = shallowMount(ActiveTask, {
+    const wrapper = shallowMount(ActiveTask, {
         propsData: { task: task },
         localVue
       })
     
-    })
-  
     it('renders the task name when passed', () => {
     
       expect(wrapper.text()).toMatch(task.name)
@@ -43,8 +37,13 @@ describe('ActiveTask.vue', () => {
     
       expect(wrapper.text()).toMatch('Created:')
       expect(wrapper.text()).toMatch(moment(task.createdDate).format('ddd MMM DD YYYY, h:mm a'))
-      expect(wrapper.text()).not.toMatch('Completed:')
     
+    })
+  
+    it('does not render the task completed date', () => {
+  
+      expect(wrapper.text()).not.toMatch('Completed:')
+      
     })
     
   })
@@ -58,17 +57,11 @@ describe('ActiveTask.vue', () => {
       completedDate: moment(new Date()).add(30, 'm').toDate(),
       completed: true
     }
-    let wrapper;
-    
-    beforeEach(() => {
-      
-      wrapper = shallowMount(ActiveTask, {
+    const wrapper = shallowMount(ActiveTask, {
         propsData: { task: task },
         localVue
       })
       
-    })
-    
     it('renders the task name when passed', () => {
       
       expect(wrapper.text()).toMatch(task.name)
@@ -77,11 +70,17 @@ describe('ActiveTask.vue', () => {
     
     it('renders the task created date', () => {
       
-      expect(wrapper.text()).toMatch('Completed:')
-      expect(wrapper.text()).toMatch(moment(task.completedDate).format('ddd MMM DD YYYY, h:mm a'))
       expect(wrapper.text()).toMatch('Created:')
       expect(wrapper.text()).toMatch(moment(task.createdDate).format('ddd MMM DD YYYY, h:mm a'))
       
+      
+    })
+    
+    it('renders the task completed date', () => {
+    
+      expect(wrapper.text()).toMatch('Completed:')
+      expect(wrapper.text()).toMatch(moment(task.completedDate).format('ddd MMM DD YYYY, h:mm a'))
+    
     })
     
   })
