@@ -1,9 +1,13 @@
 <template>
-  <div id="app" class="container-fluid d-flex">
-    
+  <div
+    id="app"
+    class="container-fluid d-flex"
+  >
     <div class="section task-list">
-      <TaskList title="To Do List"
-                :tasks="$root.incompleteTasks()"/>
+      <TaskList
+        title="To Do List"
+        :tasks="$root.incompleteTasks()"
+      />
     </div>
 
     <div class="section active-task">
@@ -11,10 +15,11 @@
     </div>
     
     <div class="section task-list">
-      <TaskList title="Completed Tasks"
-                :tasks="$root.completedTasks()"/>
+      <TaskList
+        title="Completed Tasks"
+        :tasks="$root.completedTasks()"
+      />
     </div>
-    
   </div>
 </template>
 
@@ -23,7 +28,7 @@ import TaskList from './components/TaskList.vue'
 import ActiveTask from './components/ActiveTask.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     TaskList,
     ActiveTask

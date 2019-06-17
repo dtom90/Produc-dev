@@ -67,6 +67,6 @@ const store = {
 }
 
 new Vue({
-  render: h => h(App),
-  data: store
+  data: store,
+  render: h => h(App)
 }).$mount('#app')

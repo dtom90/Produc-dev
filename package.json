@@ -53,7 +53,7 @@
     "extends": [
       "eslint:recommended",
       "standard",
-      "plugin:vue/essential"
+      "plugin:vue/recommended"
     ],
     "rules": {
       "no-trailing-spaces": [

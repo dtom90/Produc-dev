@@ -1,14 +1,12 @@
 <template>
-  
   <!--  Task List Group Item Wrapper  -->
-  <li :class="'task list-group-item list-group-item-action form-check'+active" v-on:click="$root.selectTask(task.id)">
-    
+  <li
+    :class="'task list-group-item list-group-item-action form-check'+active"
+    @click="$root.selectTask(task.id)"
+  >
     <div class="d-flex">
-
-      <span>{{task.name}}</span>
-      
+      <span>{{ task.name }}</span>
     </div>
-    
   </li>
 </template>
 
@@ -16,7 +14,18 @@
 export default {
   name: 'Task',
   props: {
-    task: Object
+    task: {
+      type: Object,
+      default: function () {
+        return {
+          id: 1,
+          name: 'new task 1',
+          createdDate: new Date(),
+          completedDate: null,
+          completed: false
+        }
+      }
+    }
   },
   computed: {
     active: function () {
@@ -27,5 +36,5 @@ export default {
 </script>
 
 <style scoped>
-  
+
 </style>
