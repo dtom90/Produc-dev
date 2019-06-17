@@ -19,16 +19,16 @@
 </template>
 
 <script>
-  import TaskList from './components/TaskList.vue'
-  import ActiveTask from './components/ActiveTask.vue'
+import TaskList from './components/TaskList.vue'
+import ActiveTask from './components/ActiveTask.vue'
 
-  export default {
-    name: 'app',
-    components: {
-      TaskList,
-      ActiveTask
-    }
+export default {
+  name: 'app',
+  components: {
+    TaskList,
+    ActiveTask
   }
+}
 </script>
 
 <style>

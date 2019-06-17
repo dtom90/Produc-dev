@@ -51,46 +51,46 @@
 </template>
 
 <script>
-  import Task from './Task.vue'
-  import $ from 'jquery'
+import Task from './Task.vue'
+import $ from 'jquery'
 
-  $(document).on('click', '.title-section .dropdown-menu', function (e) {
-    e.stopPropagation();
-  });
+$(document).on('click', '.title-section .dropdown-menu', function (e) {
+  e.stopPropagation()
+})
 
-  export default {
-    name: 'TaskList',
-    props: {
-      title: {
-        type: String,
-        default: 'To Do List'
-      },
-      tasks: Array
+export default {
+  name: 'TaskList',
+  props: {
+    title: {
+      type: String,
+      default: 'To Do List'
     },
-    computed: {
-      completedList: function() { return this.title === 'Completed Tasks' },
-      btnId: function() { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
-      selectId: function() { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-      sortingOptions: function() { return this.completedList ? [ 'Recent', 'Oldest' ] : [ 'Oldest', 'Newest' ] },
-      sortedTasks: function() { return this.sortOrder !== 'Oldest' ? this.tasks.slice().reverse() : this.tasks }
-    },
-    components: {
-      Task
-    },
-    data: () => ({
-      newTask: '',
-      sortOrder: 'Oldest'
-    }),
-    mounted: function() {
-      this.sortOrder = this.sortingOptions[0]
-    },
-    methods: {
-      addTask() {
-        this.$root.addTask(this.newTask)
-        this.newTask = ''
-      }
+    tasks: Array
+  },
+  computed: {
+    completedList: function () { return this.title === 'Completed Tasks' },
+    btnId: function () { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
+    selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
+    sortingOptions: function () { return this.completedList ? [ 'Recent', 'Oldest' ] : [ 'Oldest', 'Newest' ] },
+    sortedTasks: function () { return this.sortOrder !== 'Oldest' ? this.tasks.slice().reverse() : this.tasks }
+  },
+  components: {
+    Task
+  },
+  data: () => ({
+    newTask: '',
+    sortOrder: 'Oldest'
+  }),
+  mounted: function () {
+    this.sortOrder = this.sortingOptions[0]
+  },
+  methods: {
+    addTask () {
+      this.$root.addTask(this.newTask)
+      this.newTask = ''
     }
   }
+}
 </script>
 
 <style scoped>

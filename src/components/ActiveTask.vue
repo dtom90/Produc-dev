@@ -56,35 +56,34 @@
             </div>
             <br/>
         </div>
-
         
     </div>
     
 </template>
 
 <script>
-  import moment from 'moment'
+import moment from 'moment'
   
-  export default {
-    name: "ActiveTask",
-    props: {
-      task: Object
+export default {
+  name: 'ActiveTask',
+  props: {
+    task: Object
+  },
+  data: () => ({
+    editing: false
+  }),
+  computed: {
+    dateType: function () {
+      return this.task.completed ? 'Completed' : 'Created'
     },
-    data: () => ({
-      editing: false
-    }),
-    computed: {
-      dateType: function() {
-        return this.task.completed ? 'Completed' : 'Created'
-      },
-      date: function() {
-        return this.task.completed ? this.task.completedDate : this.task.createdDate
-      }
-    },
-    methods: {
-      displayDateTime: date => moment(date).format('ddd MMM DD YYYY, h:mm a'),
+    date: function () {
+      return this.task.completed ? this.task.completedDate : this.task.createdDate
     }
+  },
+  methods: {
+    displayDateTime: date => moment(date).format('ddd MMM DD YYYY, h:mm a')
   }
+}
 </script>
 
 <style scoped lang="scss">

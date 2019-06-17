@@ -13,17 +13,17 @@
 </template>
 
 <script>
-  export default {
-    name: "Task",
-    props: {
-      task: Object
-    },
-    computed: {
-      active: function() {
-        return this.$root.selectedTask === this.task ? ' active' : ''
-      }
+export default {
+  name: 'Task',
+  props: {
+    task: Object
+  },
+  computed: {
+    active: function () {
+      return this.$root.selectedTask === this.task ? ' active' : ''
     }
   }
+}
 </script>
 
 <style scoped>

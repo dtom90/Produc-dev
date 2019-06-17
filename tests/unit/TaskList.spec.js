@@ -3,17 +3,17 @@ import TaskList from '@/components/TaskList.vue'
 import Task from '@/components/Task.vue'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {library} from "@fortawesome/fontawesome-svg-core";
-import {faTrashAlt, faSave, faSort, faBars, faCog, faEllipsisH, faPencilAlt} from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTrashAlt, faSave, faSort, faBars, faCog, faEllipsisH, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 library.add(faTrashAlt, faSave, faSort, faBars, faCog, faEllipsisH, faPencilAlt)
 
-const localVue = createLocalVue();
+const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const tasks = [
-  {id: 1, name: 'new task 1'},
-  {id: 2, name: 'new task 2'},
-  {id: 3, name: 'new task 3'}
+  { id: 1, name: 'new task 1' },
+  { id: 2, name: 'new task 2' },
+  { id: 3, name: 'new task 3' }
 ]
 
 const titles = [
@@ -31,7 +31,7 @@ describe('TaskList', () => {
     const wrapper = shallowMount(TaskList, {
       propsData: Object.assign(titleProps, { tasks: tasks }),
       localVue
-    });
+    })
     
     it(`should have the title "${title}"`, () => {
       
@@ -65,7 +65,7 @@ describe('TaskList', () => {
       const renderedTasks = wrapper.findAll(Task)
       expect(renderedTasks.length).toBe(tasks.length)
       renderedTasks.wrappers.forEach((renderedTask, i) => {
-        const index = sortOrder === 'Oldest' ? i : tasks.length-1-i
+        const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
         expect(renderedTask.props().task.name).toMatch(tasks[index].name)
       })
       
@@ -83,7 +83,7 @@ describe('TaskList', () => {
       const renderedTasks = wrapper.findAll(Task)
       expect(renderedTasks.length).toBe(tasks.length)
       renderedTasks.wrappers.forEach((renderedTask, i) => {
-        const index = sortOrder === 'Oldest' ? i : tasks.length-1-i
+        const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
         expect(renderedTask.props().task.name).toMatch(tasks[index].name)
       })
       
