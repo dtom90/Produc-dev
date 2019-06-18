@@ -47,15 +47,9 @@
         </div>
       </div>
 
-      <!--  Play Task Button  -->
+      <!--  Countdown Timer  -->
       <br>
-      <button
-        id="play-btn"
-        type="button"
-        class="btn btn-success btn-lg"
-      >
-        <font-awesome-icon icon="play" />
-      </button>
+      <Countdown />
 
       <br><br>
       <table class="table">
@@ -91,10 +85,14 @@
 </template>
 
 <script>
+import Countdown from './Countdown'
 import moment from 'moment'
 
 export default {
   name: 'ActiveTask',
+  components: {
+    Countdown
+  },
   props: {
     task: {
       type: Object,
