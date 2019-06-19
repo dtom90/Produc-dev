@@ -121,7 +121,8 @@ export default {
   },
   methods: {
     addTask () {
-      this.$root.addTask(this.newTask)
+      const taskID = this.$root.addTask(this.newTask)
+      this.$root.selectTask(taskID)
       this.newTask = ''
     }
   }
