@@ -1,44 +1,44 @@
 <template>
-  <div>
-    <button
-      id="play-btn"
-      type="button"
-      class="btn btn-success btn-lg"
-      @click="startTimer"
-    >
-      <font-awesome-icon icon="play" />
-    </button>
-    
-    <p
-      v-if="!editing"
-      id="timerDisplay"
-      @click="editing = true"
-    >
-      {{ timeRemaining }}
-    </p>
-    
-    <div class="d-flex justify-content-center">
-      <div
-        v-if="editing"
-        id="edit-container"
-        class="input-group"
+  <div class="d-flex justify-content-center">
+    <div id="countdown-container">
+      <p
+        v-if="!editing"
+        id="timer-display"
+        @click="editing = true"
       >
-        <input
-          v-model="timeRemaining"
-          type="number"
-          class="form-control"
-          @keyup.enter="editing = false"
+        {{ timeRemaining }}
+      </p>
+
+      <div class="d-flex justify-content-center">
+        <div
+          v-if="editing"
+          id="edit-container"
+          class="input-group"
         >
-        <div class="input-group-append">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="editing = false"
+          <input
+            v-model="timeRemaining"
+            type="number"
+            class="form-control"
+            @keyup.enter="editing = false"
           >
-            <font-awesome-icon icon="save" />
-          </button>
+          <div class="input-group-append">
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="editing = false"
+            >
+              <font-awesome-icon icon="save" />
+            </button>
+          </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        @click="toggleTimer"
+      >
+        <font-awesome-icon :icon="btnIcon" />
+      </button>
     </div>
   </div>
 </template>
@@ -53,13 +53,32 @@ export default {
   
   data: () => ({
     timeRemaining: TIMER,
+    countingDown: false,
     editing: false
   }),
   
+  computed: {
+    
+    btnIcon: function() {
+      return this.countingDown ? 'pause' : 'play'
+    }
+    
+  },
+  
   methods: {
+  
+    toggleTimer () {
+      if(this.countingDown) {
+        clearInterval(this.timer)
+        this.countingDown = false
+      } else {
+        this.startTimer()
+      }
+    },
     
     startTimer () {
       this.timer = setInterval(this.decrementTimer, 1000)
+      this.countingDown = true
     },
     
     decrementTimer () {
@@ -80,6 +99,18 @@ export default {
 </script>
 
 <style scoped>
+
+#countdown-container {
+    width: 200px;
+    height: 200px;
+    padding-top: 35px;
+    border-radius: 100px;
+    border: red 2px solid;
+}
+
+#timer-display {
+    font-size: xx-large;
+}
 
 #edit-container {
   max-width: 110px;
