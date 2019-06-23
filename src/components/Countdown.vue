@@ -1,74 +1,91 @@
 <template>
-  <div class="d-flex justify-content-center">
-    <div id="countdown-container">
-      <p
-        v-if="!editing"
-        id="timer-display"
-        @click="editing = true"
-      >
-        {{ timeRemaining }}
-      </p>
-
-      <div class="d-flex justify-content-center">
-        <div
-          v-if="editing"
-          id="edit-container"
-          class="input-group"
-        >
-          <input
-            v-model="timeRemaining"
-            type="number"
-            class="form-control"
-            @keyup.enter="editing = false"
+  <div :style="cssProps">
+    <div class="d-flex justify-content-center">
+      <div id="countdown-container">
+        <div id="countdown-button-rotator">
+          <div id="countdown-button" />
+        </div>
+        
+        <div id="countdown-trail">
+          <p
+            v-if="!editing"
+            id="timer-display"
+            @click="editing = true"
           >
-          <div class="input-group-append">
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="editing = false"
+            {{ timeRemaining }}
+          </p>
+
+          <div class="d-flex justify-content-center">
+            <div
+              v-if="editing"
+              id="edit-wrapper"
+              class="input-group"
             >
-              <font-awesome-icon icon="save" />
-            </button>
+              <input
+                v-model="timeRemaining"
+                type="number"
+                class="form-control"
+                @keyup.enter="editing = false"
+              >
+              <div class="input-group-append">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  @click="editing = false"
+                >
+                  <font-awesome-icon icon="save" />
+                </button>
+              </div>
+            </div>
           </div>
+
+          <button
+            type="button"
+            @click="toggleTimer"
+          >
+            <font-awesome-icon :icon="btnIcon" />
+          </button>
         </div>
       </div>
-
-      <button
-        type="button"
-        @click="toggleTimer"
-      >
-        <font-awesome-icon :icon="btnIcon" />
-      </button>
     </div>
   </div>
 </template>
 
 <script>
 
-const TIMER = 25
-
 export default {
   
   name: 'Countdown',
   
   data: () => ({
-    timeRemaining: TIMER,
+    totalTime: 25,
+    timeRemaining: 0,
     countingDown: false,
     editing: false
   }),
   
   computed: {
     
-    btnIcon: function() {
+    btnIcon () {
       return this.countingDown ? 'pause' : 'play'
+    },
+
+    cssProps () {
+      return {
+        '--rotation-factor': (-this.timeRemaining / this.totalTime).toString() + 'turn'
+      }
     }
     
+  },
+  
+  mounted: function () {
+    this.timeRemaining = this.totalTime
   },
   
   methods: {
   
     toggleTimer () {
-      if(this.countingDown) {
+      if (this.countingDown) {
         clearInterval(this.timer)
         this.countingDown = false
       } else {
@@ -90,7 +107,7 @@ export default {
     },
     
     finishTimer () {
-      this.timeRemaining = TIMER
+      this.timeRemaining = this.totalTime
       clearInterval(this.timer)
     }
   }
@@ -101,19 +118,49 @@ export default {
 <style scoped>
 
 #countdown-container {
-    width: 200px;
-    height: 200px;
-    padding-top: 35px;
-    border-radius: 100px;
-    border: red 2px solid;
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+#countdown-button-rotator {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(var(--rotation-factor));
+}
+
+#countdown-button {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: red 2px solid;
+  transform: translate(90px, -10px);
+}
+
+#countdown-trail {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding-top: 35px;
+  border-radius: 100px;
+  border: red 2px solid;
 }
 
 #timer-display {
-    font-size: xx-large;
+  font-size: xx-large;
 }
 
-#edit-container {
+#edit-wrapper {
+  height: 48px;
   max-width: 110px;
+  margin-bottom: 16px;
+}
+
+#edit-wrapper > input {
+  height: 100%;
+  font-size: 1.2rem;
 }
 
 </style>
