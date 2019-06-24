@@ -11,6 +11,8 @@ library.add(faTrashAlt, faPlay, faSave, faCog, faEllipsisH, faPencilAlt)
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
+const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
+
 describe('ActiveTask', () => {
   
   describe('Incomplete Task', () => {
@@ -36,7 +38,7 @@ describe('ActiveTask', () => {
     it('renders the task created date', () => {
     
       expect(wrapper.text()).toMatch('Created:')
-      expect(wrapper.text()).toMatch(moment(task.createdDate).format('ddd MMM DD YYYY, h:mm a'))
+      expect(wrapper.text()).toMatch(moment(task.createdDate).format(EXPECTED_DATETIME_FORMAT))
     
     })
   
@@ -71,15 +73,15 @@ describe('ActiveTask', () => {
     it('renders the task created date', () => {
       
       expect(wrapper.text()).toMatch('Created:')
-      expect(wrapper.text()).toMatch(moment(task.createdDate).format('ddd MMM DD YYYY, h:mm a'))
+      expect(wrapper.text()).toMatch(moment(task.createdDate).format(EXPECTED_DATETIME_FORMAT))
       
     })
     
     it('renders the task completed date', () => {
-    
+      
       expect(wrapper.text()).toMatch('Completed:')
-      expect(wrapper.text()).toMatch(moment(task.completedDate).format('ddd MMM DD YYYY, h:mm a'))
-    
+      expect(wrapper.text()).toMatch(moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT))
+      
     })
     
   })

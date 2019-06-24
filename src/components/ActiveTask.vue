@@ -49,12 +49,19 @@
 
       <!--  Countdown Timer  -->
       <br>
-      <Countdown />
+      <Countdown :task-id="task.id" />
 
       <br><br>
       <table class="table">
         <tr>
           <th>Created: </th>
+          <td>{{ displayDateTime(task.createdDate) }}</td>
+        </tr>
+        <tr
+          v-for="(event, index) in task.activity"
+          :key="index"
+        >
+          <th>{{ $root.eventNames[event.type] }}: </th>
           <td>{{ displayDateTime(task.createdDate) }}</td>
         </tr>
         <tr v-if="task.completedDate">
@@ -119,7 +126,7 @@ export default {
     }
   },
   methods: {
-    displayDateTime: date => moment(date).format('ddd MMM DD YYYY, h:mm a')
+    displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a')
   }
 }
 </script>

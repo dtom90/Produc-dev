@@ -1,7 +1,17 @@
+const eventMapping = {
+  Created: 0,
+  Started: 1,
+  Stopped: 2,
+  Completed: 3
+}
+
 export default {
   
   tasks: [],
   selectedTask: null,
+  
+  eventTypes: eventMapping,
+  eventNames: Object.keys(eventMapping),
   
   incompleteTasks () {
     return this.tasks.filter(t => !t.completed)
@@ -17,6 +27,7 @@ export default {
       name: newTaskName,
       completed: false,
       createdDate: new Date(),
+      activity: [],
       completedDate: null
     }
     this.tasks.push(newTask)
@@ -25,6 +36,14 @@ export default {
   
   selectTask (id) {
     this.selectedTask = this.tasks.find(t => t.id === id)
+  },
+  
+  addTaskEvent (id, type, time) {
+    const task = this.tasks.find(t => t.id === id)
+    task.activity.push({
+      type,
+      time
+    })
   },
   
   completeTask (id) {

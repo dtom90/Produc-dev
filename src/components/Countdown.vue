@@ -22,7 +22,7 @@
               class="input-group"
             >
               <input
-                v-model="secondsRemaining"
+                v-model="timerMinutes"
                 type="number"
                 class="form-control"
                 @keyup.enter="editing = false"
@@ -40,10 +40,12 @@
           </div>
 
           <button
+            id="play-pause-btn"
             type="button"
+            class="btn btn-light btn-lg"
             @click="toggleTimer"
           >
-            <font-awesome-icon :icon="btnIcon" />
+            <font-awesome-icon :icon="playPauseIcon" />
           </button>
         </div>
       </div>
@@ -57,16 +59,27 @@ export default {
   
   name: 'Countdown',
   
+  props: {
+    taskId: {
+      type: Number,
+      default: 1
+    }
+  },
+  
   data: () => ({
-    totalTime: 25 * 60,
+    timerMinutes: 25,
     secondsRemaining: 0,
     countingDown: false,
     editing: false
   }),
   
   computed: {
+
+    totalTime () {
+      return this.timerMinutes * 60
+    },
     
-    btnIcon () {
+    playPauseIcon () {
       return this.countingDown ? 'pause' : 'play'
     },
 
@@ -96,9 +109,11 @@ export default {
     toggleTimer () {
       if (this.countingDown) {
         this.timer.pause()
+        this.$root.addTaskEvent(this.taskId, this.$root.eventTypes.Stopped, Date.now())
         this.countingDown = false
       } else {
         this.timer.start()
+        this.$root.addTaskEvent(this.taskId, this.$root.eventTypes.Started, Date.now())
         this.countingDown = true
       }
     },
@@ -194,6 +209,10 @@ function Timer (callback, interval = 1000) {
 #edit-wrapper > input {
   height: 100%;
   font-size: 1.2rem;
+}
+
+#play-pause-btn {
+  color: darkred;
 }
 
 </style>

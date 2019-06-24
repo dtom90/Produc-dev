@@ -13,14 +13,14 @@ describe('Countdown', () => {
   
   it('renders the default countdown time of 25 minutes', () => {
     
-    expect(wrapper.text()).toBe('25')
+    expect(wrapper.text()).toBe('25:00')
     
   })
   
   it('renders a field for adjusting the pomodoro timer when the time is clicked', () => {
     
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
-    expect(wrapper.find('#timer-display').text()).toBe('25')
+    expect(wrapper.find('#timer-display').text()).toBe('25:00')
     expect(wrapper.find('input[type="number"]').exists()).toBe(false)
     
     wrapper.find('#timer-display').trigger('click')
