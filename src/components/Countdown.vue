@@ -12,7 +12,7 @@
             id="timer-display"
             @click="editing = true"
           >
-            {{ timeRemaining }}
+            {{ displayTime }}
           </p>
 
           <div class="d-flex justify-content-center">
@@ -22,7 +22,7 @@
               class="input-group"
             >
               <input
-                v-model="timeRemaining"
+                v-model="secondsRemaining"
                 type="number"
                 class="form-control"
                 @keyup.enter="editing = false"
@@ -58,8 +58,8 @@ export default {
   name: 'Countdown',
   
   data: () => ({
-    totalTime: 25,
-    timeRemaining: 0,
+    totalTime: 25 * 60,
+    secondsRemaining: 0,
     countingDown: false,
     editing: false
   }),
@@ -72,44 +72,74 @@ export default {
 
     cssProps () {
       return {
-        '--rotation-factor': (-this.timeRemaining / this.totalTime).toString() + 'turn'
+        '--rotation-factor': (this.secondsRemaining / this.totalTime).toString() + 'turn'
       }
+    },
+    
+    displayTime () {
+      const totalSecs = this.secondsRemaining
+      const mins = Math.floor(totalSecs / 60)
+      const secs = totalSecs % 60
+      const secString = secs.toString().padStart(2, '0')
+      return `${mins}:${secString}`
     }
     
   },
   
   mounted: function () {
-    this.timeRemaining = this.totalTime
+    this.secondsRemaining = this.totalTime
+    this.timer = new Timer(this.decrementTimer)
   },
   
   methods: {
   
     toggleTimer () {
       if (this.countingDown) {
-        clearInterval(this.timer)
+        this.timer.pause()
         this.countingDown = false
       } else {
-        this.startTimer()
+        this.timer.start()
+        this.countingDown = true
       }
-    },
-    
-    startTimer () {
-      this.timer = setInterval(this.decrementTimer, 1000)
-      this.countingDown = true
     },
     
     decrementTimer () {
-      if (this.timeRemaining > 1) {
-        this.timeRemaining -= 1
+      if (this.secondsRemaining > 1) {
+        this.secondsRemaining -= 1
       } else {
-        this.finishTimer()
+        this.secondsRemaining = this.totalTime
+        this.timer.clear()
+        this.countingDown = false
       }
-    },
-    
-    finishTimer () {
-      this.timeRemaining = this.totalTime
-      clearInterval(this.timer)
     }
+  }
+}
+
+function Timer (callback, interval = 1000) {
+  let timerId; let startTime; let remaining = interval
+  
+  this.id = () => timerId
+  
+  this.start = function () {
+    const t = this
+    clearTimeout(timerId)
+    startTime = Date.now()
+    timerId = setTimeout(function () { t.start() }, remaining)
+    if (remaining !== interval) {
+      remaining = interval
+    } else {
+      callback()
+    }
+  }
+
+  this.pause = function () {
+    clearTimeout(timerId)
+    remaining -= Date.now() - startTime
+  }
+  
+  this.clear = function () {
+    clearTimeout(timerId)
+    remaining = interval
   }
 }
 
@@ -128,6 +158,8 @@ export default {
   width: 100%;
   height: 100%;
   transform: rotate(var(--rotation-factor));
+  z-index: 1;
+  pointer-events: none;
 }
 
 #countdown-button {
@@ -136,7 +168,8 @@ export default {
   height: 20px;
   border-radius: 10px;
   border: red 2px solid;
-  transform: translate(90px, -10px);
+  background-color: white;
+  transform: translate(90px, -8px);
 }
 
 #countdown-trail {
@@ -145,7 +178,7 @@ export default {
   height: 100%;
   padding-top: 35px;
   border-radius: 100px;
-  border: red 2px solid;
+  border: red 4px solid;
 }
 
 #timer-display {
