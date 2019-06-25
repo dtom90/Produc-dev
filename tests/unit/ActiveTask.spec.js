@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { shallowMount, mount, createLocalVue } from '@vue/test-utils'
 import ActiveTask from '@/components/ActiveTask.vue'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -20,7 +20,8 @@ describe('ActiveTask', () => {
     const task = {
       id: 1,
       name: 'new task 1',
-      createdDate: new Date(),
+      createdDate: Date.now(),
+      activity: [],
       completedDate: null,
       completed: false
     }
@@ -55,11 +56,21 @@ describe('ActiveTask', () => {
     const task = {
       id: 1,
       name: 'new task 1',
-      createdDate: new Date(),
-      completedDate: moment(new Date()).add(30, 'm').toDate(),
+      createdDate: Date.now(),
+      activity: [
+        // {
+        //   type: eventTypes.Started,
+        //   time: moment(Date.now()).add(3, 'm').toDate()
+        // },
+        // {
+        //   type: eventTypes.Stopped,
+        //   time: moment(Date.now()).add(28, 'm').toDate()
+        // }
+      ],
+      completedDate: moment(Date.now()).add(30, 'm').toDate(),
       completed: true
     }
-    const wrapper = shallowMount(ActiveTask, {
+    const wrapper = mount(ActiveTask, {
       propsData: { task: task },
       localVue
     })
@@ -76,6 +87,20 @@ describe('ActiveTask', () => {
       expect(wrapper.text()).toMatch(moment(task.createdDate).format(EXPECTED_DATETIME_FORMAT))
       
     })
+    
+    // it('renders the task started date-time', () => {
+    //
+    //   expect(wrapper.text()).toMatch('Started:')
+    //   expect(wrapper.text()).toMatch(moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT))
+    //
+    // })
+    //
+    // it('renders the task stopped date-time', () => {
+    //
+    //   expect(wrapper.text()).toMatch('Stopped:')
+    //   expect(wrapper.text()).toMatch(moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT))
+    //
+    // })
     
     it('renders the task completed date', () => {
       

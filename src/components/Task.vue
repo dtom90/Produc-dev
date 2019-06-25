@@ -20,7 +20,7 @@ export default {
         return {
           id: 1,
           name: 'new task 1',
-          createdDate: new Date(),
+          createdDate: Date.now(),
           completedDate: null,
           completed: false
         }

@@ -26,7 +26,7 @@ export default {
       id: this.tasks.length,
       name: newTaskName,
       completed: false,
-      createdDate: new Date(),
+      createdDate: Date.now(),
       activity: [],
       completedDate: null
     }
