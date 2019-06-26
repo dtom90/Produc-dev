@@ -2,14 +2,10 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ActiveTask from '@/components/ActiveTask.vue'
 import store from '@/store'
 import { eventTypes } from '@/constants'
-
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCog, faEllipsisH, faPencilAlt, faPlay, faSave, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@/font-awesome-icons'
 
 import moment from 'moment'
 
-library.add(faTrashAlt, faPlay, faSave, faCog, faEllipsisH, faPencilAlt)
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -117,6 +113,18 @@ describe('ActiveTask', () => {
       expect(wrapper.text()).toMatch('Completed:')
       expect(wrapper.text()).toMatch(moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT))
       
+    })
+  
+    it('renders an edit button for changing the task name', () => {
+    
+      expect(wrapper.find('button.btn-warning').find(FontAwesomeIcon).attributes('icon')).toBe('pencil-alt')
+    
+    })
+  
+    it('renders a delete button for removing the task', () => {
+    
+      expect(wrapper.find('button.btn-danger').find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
+    
     })
     
   })

@@ -1,13 +1,18 @@
-import { shallowMount } from '@vue/test-utils'
+import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Countdown from '@/components/Countdown.vue'
+import { FontAwesomeIcon } from '@/font-awesome-icons'
+
+const localVue = createLocalVue()
+localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('Countdown', () => {
   
-  const wrapper = shallowMount(Countdown)
+  const wrapper = shallowMount(Countdown, { localVue })
   
   it('renders a play button for the timer', () => {
     
-    expect(wrapper.find('button').find('font-awesome-icon').attributes('icon')).toBe('play')
+    expect(wrapper.find('#play-pause-btn').find(FontAwesomeIcon).isVisible()).toBe(true)
+    expect(wrapper.find('#play-pause-btn').find(FontAwesomeIcon).attributes('icon')).toBe('play')
     
   })
   
