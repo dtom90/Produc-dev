@@ -78,20 +78,23 @@
 
       <!--  Countdown Timer  -->
       <br>
-      <Countdown :task-id="task.id" />
+      <Countdown
+        v-if="!task.completed"
+        :task-id="task.id"
+      />
 
       <br><br>
       <table class="table">
+        <tr v-if="task.completedDate">
+          <th>Completed: </th>
+          <td>{{ displayDateTime(task.completedDate) }}</td>
+        </tr>
         <tr
           v-for="(event, index) in task.activity"
           :key="index"
         >
           <th>{{ eventNames[event.type] }}: </th>
-          <td>{{ displayDateTime(task.createdDate) }}</td>
-        </tr>
-        <tr v-if="task.completedDate">
-          <th>Completed: </th>
-          <td>{{ displayDateTime(task.completedDate) }}</td>
+          <td>{{ displayDateTime(event.time) }}</td>
         </tr>
       </table>
       <br>

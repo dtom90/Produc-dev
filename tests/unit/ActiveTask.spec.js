@@ -64,14 +64,14 @@ describe('ActiveTask', () => {
         },
         {
           type: eventTypes.Started,
-          time: moment(createdDate).add(3, 'm').unix()
+          time: moment(createdDate).add(3, 'm').valueOf()
         },
         {
           type: eventTypes.Stopped,
-          time: moment(createdDate).add(28, 'm').unix()
+          time: moment(createdDate).add(28, 'm').valueOf()
         }
       ],
-      completedDate: moment(createdDate).add(30, 'm').unix(),
+      completedDate: moment(createdDate).add(30, 'm').valueOf(),
       completed: true
     }
     
@@ -89,29 +89,25 @@ describe('ActiveTask', () => {
     
     it('renders the task created date', () => {
       
-      expect(wrapper.text()).toMatch('Created:')
-      expect(wrapper.text()).toMatch(moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.text()).toMatch('Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT))
       
     })
     
     it('renders the task started date-time', () => {
 
-      expect(wrapper.text()).toMatch('Started:')
-      expect(wrapper.text()).toMatch(moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.text()).toMatch('Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT))
 
     })
 
     it('renders the task stopped date-time', () => {
 
-      expect(wrapper.text()).toMatch('Stopped:')
-      expect(wrapper.text()).toMatch(moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.text()).toMatch('Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT))
 
     })
     
     it('renders the task completed date', () => {
       
-      expect(wrapper.text()).toMatch('Completed:')
-      expect(wrapper.text()).toMatch(moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.text()).toMatch('Completed:  ' + moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT))
       
     })
   
