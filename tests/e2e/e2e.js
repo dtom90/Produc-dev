@@ -28,6 +28,7 @@ const todoTasks = todoList.find('.task')
 // Active Task selectors
 const activeSection = Selector('.section').withText('Active Task')
 const checkbox = activeSection.find('input').withAttribute('type', 'checkbox')
+const menuButton = activeSection.find('button').child('svg.fa-ellipsis-v')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Completed Tasks')
@@ -164,12 +165,14 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Click task 5 delete button, expect confirmation popup, do not confirm
     .setNativeDialogHandler(deleteHandler, { dependencies: { taskName: task5, deleteTask: false } })
     .click(todoTasks.withText(task5))
+    .click(menuButton)
     .click(deleteButton(task5))
     .expect(tasksPresent(todoList, [task5, task1])).ok()
     .expect(tasksPresent(doneList, [task3mod, task2, task4])).ok()
     
     // Click task 3 delete button, expect no confirmation popup
     .click(doneTasks.withText(task3mod))
+    .click(menuButton)
     .click(deleteButton(task3mod))
     .expect(tasksPresent(todoList, [task5, task1])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()
@@ -177,6 +180,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Click task 1 delete button, expect confirmation popup, confirm delete
     .setNativeDialogHandler(deleteHandler, { dependencies: { taskName: task1, deleteTask: true } })
     .click(todoTasks.withText(task1))
+    .click(menuButton)
     .click(deleteButton(task1))
     .expect(tasksPresent(todoList, [task5])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()

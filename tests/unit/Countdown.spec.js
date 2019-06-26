@@ -1,4 +1,4 @@
-import {createLocalVue, shallowMount} from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Countdown from '@/components/Countdown.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 
