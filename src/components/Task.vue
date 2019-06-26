@@ -42,7 +42,7 @@ export default {
       return this.selectedTask === this.task ? ' active' : ''
     }
   },
-
+  
   methods: {
     ...mapMutations([
       'selectTask'

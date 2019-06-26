@@ -14,7 +14,7 @@
           class="btn btn-light"
           data-toggle="dropdown"
         >
-          <font-awesome-icon icon="cog" />
+          <font-awesome-icon icon="ellipsis-v" />
         </button>
         <div class="dropdown-menu">
           <div class="input-group">
@@ -86,10 +86,13 @@ $(document).on('click', '.title-section .dropdown-menu', function (e) {
 })
 
 export default {
+  
   name: 'TaskList',
+  
   components: {
     Task
   },
+  
   props: {
     title: {
       type: String,
@@ -106,20 +109,24 @@ export default {
       }
     }
   },
+  
   data: () => ({
     newTask: '',
     sortOrder: 'Oldest'
   }),
+  
   computed: {
     completedList: function () { return this.title === 'Completed Tasks' },
     btnId: function () { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    sortingOptions: function () { return this.completedList ? [ 'Recent', 'Oldest' ] : [ 'Oldest', 'Newest' ] },
+    sortingOptions: function () { return this.completedList ? [ 'Recent', 'Oldest' ] : [ 'Newest', 'Oldest' ] },
     sortedTasks: function () { return this.sortOrder !== 'Oldest' ? this.tasks.slice().reverse() : this.tasks }
   },
+  
   mounted: function () {
     this.sortOrder = this.sortingOptions[0]
   },
+  
   methods: {
     ...mapMutations([
       'addTask',
@@ -130,6 +137,7 @@ export default {
       this.newTask = ''
     }
   }
+  
 }
 </script>
 

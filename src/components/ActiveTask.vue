@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="dropright">
+        <div class="dropleft">
           <button
             class="btn btn-light"
             data-toggle="dropdown"

@@ -17,7 +17,7 @@ const tasks = [
 ]
 
 const titles = [
-  ['To Do List', ['Oldest', 'Newest']],
+  ['To Do List', ['Newest', 'Oldest']],
   ['Completed Tasks', ['Recent', 'Oldest']]
 ]
 
