@@ -6,18 +6,18 @@
     <div class="section task-list">
       <TaskList
         title="To Do List"
-        :tasks="$root.incompleteTasks()"
+        :tasks="incompleteTasks"
       />
     </div>
 
     <div class="section active-task">
-      <ActiveTask :task="$root.selectedTask" />
+      <ActiveTask :task="$store.state.selectedTask" />
     </div>
     
     <div class="section task-list">
       <TaskList
         title="Completed Tasks"
-        :tasks="$root.completedTasks()"
+        :tasks="completedTasks"
       />
     </div>
   </div>
@@ -26,12 +26,22 @@
 <script>
 import TaskList from './components/TaskList.vue'
 import ActiveTask from './components/ActiveTask.vue'
+import { mapGetters } from 'vuex'
 
 export default {
+  
   name: 'App',
+  
   components: {
     TaskList,
     ActiveTask
+  },
+
+  computed: {
+    ...mapGetters([
+      'incompleteTasks',
+      'completedTasks'
+    ])
   }
 }
 </script>

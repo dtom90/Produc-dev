@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import { eventTypes } from '@/constants'
 
 export default {
   
@@ -105,15 +107,27 @@ export default {
   },
   
   methods: {
+
+    ...mapMutations([
+      'addTaskEvent'
+    ]),
   
     toggleTimer () {
       if (this.countingDown) {
         this.timer.pause()
-        this.$root.addTaskEvent(this.taskId, this.$root.eventTypes.Stopped, Date.now())
+        this.addTaskEvent({
+          id: this.taskId,
+          type: eventTypes.Stopped,
+          time: Date.now()
+        })
         this.countingDown = false
       } else {
         this.timer.start()
-        this.$root.addTaskEvent(this.taskId, this.$root.eventTypes.Started, Date.now())
+        this.addTaskEvent({
+          id: this.taskId,
+          type: eventTypes.Started,
+          time: Date.now()
+        })
         this.countingDown = true
       }
     },

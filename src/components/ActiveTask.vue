@@ -15,7 +15,7 @@
             v-model="task.completed"
             class="task-checkbox"
             type="checkbox"
-            @change="$root.completeTask(task.id)"
+            @change="completeTask(task.id)"
           >
           <span class="check-custom" />
         </div>
@@ -53,15 +53,11 @@
 
       <br><br>
       <table class="table">
-        <tr>
-          <th>Created: </th>
-          <td>{{ displayDateTime(task.createdDate) }}</td>
-        </tr>
         <tr
           v-for="(event, index) in task.activity"
           :key="index"
         >
-          <th>{{ $root.eventNames[event.type] }}: </th>
+          <th>{{ eventNames[event.type] }}: </th>
           <td>{{ displayDateTime(task.createdDate) }}</td>
         </tr>
         <tr v-if="task.completedDate">
@@ -81,7 +77,7 @@
         <button
           type="button"
           class="btn btn-danger"
-          @click="$root.deleteTask(task.id)"
+          @click="deleteTask(task.id)"
         >
           <font-awesome-icon icon="trash-alt" />
         </button>
@@ -93,13 +89,18 @@
 
 <script>
 import Countdown from './Countdown'
+import { eventNames } from '@/constants'
+import { mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
+  
   name: 'ActiveTask',
+  
   components: {
     Countdown
   },
+  
   props: {
     task: {
       type: Object,
@@ -108,25 +109,40 @@ export default {
           id: 1,
           name: 'new task 1',
           createdDate: Date.now(),
-          activity: [],
+          activity: [{
+            type: 0,
+            time: Date.now()
+          }],
           completedDate: null,
           completed: false
         }
       }
     }
   },
+  
   data: () => ({
     editing: false
   }),
+  
   computed: {
-    dateType: function () {
-      return this.task.completed ? 'Completed' : 'Created'
+
+    eventNames: function() {
+      return eventNames
     },
+    
     date: function () {
       return this.task.completed ? this.task.completedDate : this.task.createdDate
     }
+    
   },
+  
   methods: {
+    
+    ...mapMutations([
+      'completeTask',
+      'deleteTask'
+    ]),
+    
     displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a')
   }
 }

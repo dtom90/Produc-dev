@@ -46,7 +46,7 @@
             v-if="completedList"
             id="clear-btn"
             class="btn btn-danger"
-            @click="$root.clearTasks()"
+            @click="clearTasks"
           >
             Clear All
           </button>
@@ -62,7 +62,7 @@
       type="text"
       class="form-control"
       placeholder="enter new task"
-      @keyup.enter="addTask"
+      @keyup.enter="addNewTask"
     >
 
     <!-- TaskList -->
@@ -78,6 +78,7 @@
 
 <script>
 import Task from './Task.vue'
+import { mapMutations } from 'vuex'
 import $ from 'jquery'
 
 $(document).on('click', '.title-section .dropdown-menu', function (e) {
@@ -120,9 +121,12 @@ export default {
     this.sortOrder = this.sortingOptions[0]
   },
   methods: {
-    addTask () {
-      const taskID = this.$root.addTask(this.newTask)
-      this.$root.selectTask(taskID)
+    ...mapMutations([
+      'addTask',
+      'clearTasks'
+    ]),
+    addNewTask () {
+      this.addTask(this.newTask)
       this.newTask = ''
     }
   }

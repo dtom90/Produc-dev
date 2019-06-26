@@ -1,7 +1,8 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
 import Task from '@/components/Task.vue'
+import store from '@/store'
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
@@ -15,9 +16,10 @@ describe('Task.vue', () => {
     
     const wrapper = shallowMount(Task, {
       propsData: { task: task },
+      store,
       localVue
     })
-  
+    
     const li = wrapper.find('li')
     expect(li.text()).toMatch(taskName)
   })

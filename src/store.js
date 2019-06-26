@@ -1,69 +1,76 @@
-const eventMapping = {
-  Created: 0,
-  Started: 1,
-  Stopped: 2,
-  Completed: 3
-}
+import Vue from 'vue'
+import Vuex from 'vuex'
+import { eventTypes } from './constants'
 
-export default {
+Vue.use(Vuex)
+
+export default new Vuex.Store({
   
-  tasks: [],
-  selectedTask: null,
-  
-  eventTypes: eventMapping,
-  eventNames: Object.keys(eventMapping),
-  
-  incompleteTasks () {
-    return this.tasks.filter(t => !t.completed)
+  state: {
+    tasks: [],
+    selectedTask: null
   },
   
-  completedTasks () {
-    return this.tasks.filter(t => t.completed).sort((a, b) => a.completedDate - b.completedDate)
-  },
-  
-  addTask (newTaskName) {
-    const newTask = {
-      id: this.tasks.length,
-      name: newTaskName,
-      completed: false,
-      createdDate: Date.now(),
-      activity: [],
-      completedDate: null
-    }
-    this.tasks.push(newTask)
-    return newTask.id
-  },
-  
-  selectTask (id) {
-    this.selectedTask = this.tasks.find(t => t.id === id)
-  },
-  
-  addTaskEvent (id, type, time) {
-    const task = this.tasks.find(t => t.id === id)
-    task.activity.push({
-      type,
-      time
-    })
-  },
-  
-  completeTask (id) {
-    const task = this.tasks.find(t => t.id === id)
-    if (task.completed) { task.completedDate = Date.now() } else { task.completedDate = null }
-  },
-  
-  deleteTask (id) {
-    const index = this.tasks.findIndex(t => t.id === id)
-    const task = this.tasks[index]
-    if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
-      this.tasks.splice(index, 1)
+  getters: {
+    incompleteTasks (state) {
+      const incompleteTasks = state.tasks.filter(t => !t.completed)
+      return state.incompleteOrder === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
+    },
+    
+    completedTasks (state) {
+      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => a.completedDate - b.completedDate)
+      return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
     }
   },
   
-  clearTasks () {
-    const completedTasks = this.tasks.filter(t => t.completed)
-    if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
-      this.tasks = this.tasks.filter(t => !t.completed)
+  mutations: {
+    
+    addTask (state, newTaskName) {
+      const newTask = {
+        id: state.tasks.length,
+        name: newTaskName,
+        completed: false,
+        activity: [{
+          type: eventTypes.Created,
+          time: Date.now()
+        }],
+        completedDate: null
+      }
+      state.tasks.push(newTask)
+      state.selectedTask = newTask
+    },
+    
+    selectTask (state, id) {
+      state.selectedTask = state.tasks.find(t => t.id === id)
+    },
+    
+    addTaskEvent (state, payload) {
+      const task = state.tasks.find(t => t.id === payload.id)
+      task.activity.push({
+        type: payload.type,
+        time: payload.time
+      })
+    },
+    
+    completeTask (state, id) {
+      const task = state.tasks.find(t => t.id === id)
+      if (task.completed) { task.completedDate = Date.now() } else { task.completedDate = null }
+    },
+    
+    deleteTask (state, id) {
+      const index = state.tasks.findIndex(t => t.id === id)
+      const task = state.tasks[index]
+      if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
+        state.tasks.splice(index, 1)
+      }
+    },
+    
+    clearTasks (state) {
+      const completedTasks = state.tasks.filter(t => t.completed)
+      if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
+        state.tasks = state.tasks.filter(t => !t.completed)
+      }
     }
   }
   
-}
+})

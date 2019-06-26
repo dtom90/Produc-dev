@@ -2,7 +2,7 @@
   <!--  Task List Group Item Wrapper  -->
   <li
     :class="'task list-group-item list-group-item-action form-check'+active"
-    @click="$root.selectTask(task.id)"
+    @click="selectTask(task.id)"
   >
     <div class="d-flex">
       <span>{{ task.name }}</span>
@@ -11,8 +11,12 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 export default {
+  
   name: 'Task',
+  
   props: {
     task: {
       type: Object,
@@ -27,11 +31,24 @@ export default {
       }
     }
   },
+  
   computed: {
+    
+    ...mapState([
+      'selectedTask'
+    ]),
+    
     active: function () {
-      return this.$root.selectedTask === this.task ? ' active' : ''
+      return this.selectedTask === this.task ? ' active' : ''
     }
+  },
+
+  methods: {
+    ...mapMutations([
+      'selectTask'
+    ])
   }
+  
 }
 </script>
 
