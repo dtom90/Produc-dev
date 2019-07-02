@@ -48,6 +48,7 @@
           </div>
         </div>
 
+        <!-- Menu Options -->
         <div class="dropleft">
           <button
             class="btn btn-light"
@@ -76,21 +77,25 @@
         </div>
       </div>
 
-      <!--  Countdown Timer  -->
-      <br>
+      <!-- Countdown Timer -->
       <Countdown
         v-if="!task.completed"
         :task-id="task.id"
       />
 
-      <br><br>
+      <!-- Task Time Spent -->
+      <br>
+      <h4>Time Spent: {{ timeSpent }}</h4>
+
+      <!-- Task Activity Log -->
+      <br>
       <table class="table">
         <tr v-if="task.completedDate">
           <th>Completed: </th>
           <td>{{ displayDateTime(task.completedDate) }}</td>
         </tr>
         <tr
-          v-for="(event, index) in task.activity"
+          v-for="(event, index) in taskEvents"
           :key="index"
         >
           <th>{{ eventNames[event.type] }}: </th>
@@ -98,14 +103,13 @@
         </tr>
       </table>
       <br>
-      <br>
     </div>
   </div>
 </template>
 
 <script>
 import Countdown from './Countdown'
-import { eventNames } from '@/constants'
+import { eventTypes, eventNames } from '@/constants'
 import { mapMutations } from 'vuex'
 import moment from 'moment'
 
@@ -146,8 +150,22 @@ export default {
       return eventNames
     },
     
-    date: function () {
-      return this.task.completed ? this.task.completedDate : this.task.createdDate
+    taskEvents: function () {
+      const taskEvents = this.task.activity.slice()
+      taskEvents.reverse()
+      return taskEvents
+    },
+    
+    timeSpent: function () {
+      return moment.duration(
+        this.task.activity
+          .filter((event, i) =>
+            (event.type === eventTypes.Started && i !== this.task.activity.length - 1) ||
+                              event.type === eventTypes.Stopped)
+          .reduce((total, event) => event.type === eventTypes.Started
+            ? total - event.time
+            : total + event.time, 0)
+      )
     }
     
   },

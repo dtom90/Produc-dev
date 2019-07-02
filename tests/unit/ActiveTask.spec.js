@@ -110,6 +110,17 @@ describe('ActiveTask', () => {
       expect(wrapper.text()).toMatch('Completed:  ' + moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT))
       
     })
+    
+    it('renders the task activity sequence in reverse-chronological order', () => {
+  
+      expect(wrapper.text()).toMatch(
+        'Completed:  ' + moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT) +
+        ' Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT)
+      )
+      
+    })
   
     it('renders an edit button for changing the task name', () => {
     

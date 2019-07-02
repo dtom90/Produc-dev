@@ -1,55 +1,59 @@
 <template>
-  <div :style="cssProps">
-    <div class="d-flex justify-content-center">
-      <div id="countdown-container">
-        <div id="countdown-button-rotator">
-          <div id="countdown-button" />
-        </div>
-        
-        <div id="countdown-trail">
-          <p
-            v-if="!editing"
-            id="timer-display"
-            @click="editing = true"
-          >
-            {{ displayTime }}
-          </p>
-
-          <div class="d-flex justify-content-center">
-            <div
-              v-if="editing"
-              id="edit-wrapper"
-              class="input-group"
-            >
-              <input
-                v-model="timerMinutes"
-                type="number"
-                class="form-control"
-                @keyup.enter="editing = false"
-              >
-              <div class="input-group-append">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  @click="editing = false"
-                >
-                  <font-awesome-icon icon="save" />
-                </button>
-              </div>
-            </div>
+  <div>
+    <br>
+    <div :style="cssProps">
+      <div class="d-flex justify-content-center">
+        <div id="countdown-container">
+          <div id="countdown-button-rotator">
+            <div id="countdown-button" />
           </div>
 
-          <button
-            id="play-pause-btn"
-            type="button"
-            class="btn btn-light btn-lg"
-            @click="toggleTimer"
-          >
-            <font-awesome-icon :icon="playPauseIcon" />
-          </button>
+          <div id="countdown-trail">
+            <p
+              v-if="!editing"
+              id="timer-display"
+              @click="editing = true"
+            >
+              {{ displayTime }}
+            </p>
+
+            <div class="d-flex justify-content-center">
+              <div
+                v-if="editing"
+                id="edit-wrapper"
+                class="input-group"
+              >
+                <input
+                  v-model="timerMinutes"
+                  type="number"
+                  class="form-control"
+                  @keyup.enter="editing = false"
+                >
+                <div class="input-group-append">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="editing = false"
+                  >
+                    <font-awesome-icon icon="save" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              id="play-pause-btn"
+              type="button"
+              class="btn btn-light btn-lg"
+              @click="toggleTimer"
+            >
+              <font-awesome-icon :icon="playPauseIcon" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
+    <br>
   </div>
 </template>
 

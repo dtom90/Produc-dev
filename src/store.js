@@ -46,7 +46,7 @@ export default new Vuex.Store({
     
     addTaskEvent (state, payload) {
       const task = state.tasks.find(t => t.id === payload.id)
-      task.activity.unshift({
+      task.activity.push({
         type: payload.type,
         time: payload.time
       })
