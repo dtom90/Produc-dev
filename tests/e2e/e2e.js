@@ -16,8 +16,8 @@ const task4 = 'The fourth task'
 const task5 = 'The fifth task'
 
 // To Do List selectors
-const todoSection = Selector('.section').withText('To Do List')
-const todoSortButton = todoSection.find('button').child('svg.fa-cog')
+const todoSection = Selector('.section').withText('To Do')
+const todoSortButton = todoSection.find('button').child('svg.fa-ellipsis-v')
 const todoSortLabel = todoSortButton.parent().find('label').withText('First')
 const todoSortSelect = todoSortButton.parent().find('select')
 const todoSortOption = todoSortSelect.child('option')
@@ -26,19 +26,18 @@ const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
 
 // Active Task selectors
-const activeSection = Selector('.section').withText('Active Task')
+const activeSection = Selector('.section.active-task')
 const checkbox = activeSection.find('input').withAttribute('type', 'checkbox')
 const menuButton = activeSection.find('button').child('svg.fa-ellipsis-v')
 
 // Completed List selectors
-const doneSection = Selector('.section').withText('Completed Tasks')
-const doneSortButton = doneSection.find('button').child('svg.fa-cog')
-const doneSortLabel = doneSortButton.parent().find('label').withText('First')
-const doneSortSelect = doneSortButton.parent().find('select')
+const doneSection = Selector('.section').withText('Done')
+const doneMenuButton = doneSection.find('button').child('svg.fa-ellipsis-v')
+const doneSortLabel = doneMenuButton.parent().find('label').withText('First')
+const doneSortSelect = doneMenuButton.parent().find('select')
 const doneSortOption = doneSortSelect.child('option')
 const doneList = doneSection.find('.task-list')
 const doneTasks = doneList.find('.task')
-const doneMenuButton = doneSection.find('button').child('svg.fa-cog')
 const clearAllButton = Selector('button').withText('Clear All')
 
 const tasksPresent = ClientFunction((taskList, expectedTasks) => {
@@ -81,7 +80,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
   await t
     
     // Expect an empty To Do List
-    .expect(todoSection.find('h3').withText('To Do List').exists).ok()
+    .expect(todoSection.find('h3').withText('To Do').exists).ok()
     .expect(todoSortButton.exists).ok()
     .expect(todoTasks.count).eql(0)
     .expect(doneTasks.count).eql(0)
@@ -92,11 +91,11 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Add task 2
     .typeText(newTaskInput, task2).pressKey('enter')
-    .expect(tasksPresent(todoList, [task1, task2])).ok()
+    .expect(tasksPresent(todoList, [task2, task1])).ok()
     
     // Add task 3
     .typeText(newTaskInput, task3).pressKey('enter')
-    .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
+    .expect(tasksPresent(todoList, [task3, task2, task1])).ok()
     
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
@@ -104,19 +103,19 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(todoSortButton)
     .expect(todoSortLabel.visible).ok()
     .expect(todoSortSelect.visible).ok()
-    .expect(todoSortSelect.value).eql('Oldest')
-    .click(todoSortSelect)
-    .click(todoSortOption.withText('Newest'))
     .expect(todoSortSelect.value).eql('Newest')
-    .expect(tasksPresent(todoList, [task3, task2, task1])).ok()
+    .click(todoSortSelect)
+    .click(todoSortOption.withText('Oldest'))
+    .expect(todoSortSelect.value).eql('Oldest')
+    .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
     
     // Add task 4
     .typeText(newTaskInput, task4).pressKey('enter')
-    .expect(tasksPresent(todoList, [task4, task3, task2, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task2, task3, task4])).ok()
     
     // Add task 5
     .typeText(newTaskInput, task5).pressKey('enter')
-    .expect(tasksPresent(todoList, [task5, task4, task3, task2, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task2, task3, task4, task5])).ok()
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
@@ -125,13 +124,13 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(todoTasks.withText(task2))
     .expect(activeSection.withText(task2).visible).ok()
     .click(checkbox(task2))
-    .expect(tasksPresent(todoList, [task5, task3, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task3, task5])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()
     
     // Switch completed list order from Oldest First to Newest First
     .expect(doneSortLabel.visible).notOk()
     .expect(doneSortSelect.visible).notOk()
-    .click(doneSortButton)
+    .click(doneMenuButton)
     .expect(doneSortLabel.visible).ok()
     .expect(doneSortSelect.visible).ok()
     .expect(doneSortSelect.value).eql('Recent')
@@ -154,12 +153,12 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(activeSection.find('input.edit-task'), ' modified', { caretPos: 3 })
     .pressKey('enter')
     .expect(activeSection.withText(task3mod).visible).ok()
-    .expect(tasksPresent(todoList, [task5, task3mod, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task3mod, task5])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()
     
     // Mark task 3 as complete
     .click(checkbox(task3mod))
-    .expect(tasksPresent(todoList, [task5, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task5])).ok()
     .expect(tasksPresent(doneList, [task3mod, task2, task4])).ok()
     
     // Click task 5 delete button, expect confirmation popup, do not confirm
@@ -167,14 +166,14 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(todoTasks.withText(task5))
     .click(menuButton)
     .click(deleteButton(task5))
-    .expect(tasksPresent(todoList, [task5, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task5])).ok()
     .expect(tasksPresent(doneList, [task3mod, task2, task4])).ok()
     
     // Click task 3 delete button, expect no confirmation popup
     .click(doneTasks.withText(task3mod))
     .click(menuButton)
     .click(deleteButton(task3mod))
-    .expect(tasksPresent(todoList, [task5, task1])).ok()
+    .expect(tasksPresent(todoList, [task1, task5])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()
     
     // Click task 1 delete button, expect confirmation popup, confirm delete

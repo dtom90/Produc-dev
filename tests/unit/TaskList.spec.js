@@ -17,8 +17,8 @@ const tasks = [
 ]
 
 const titles = [
-  ['To Do List', ['Newest', 'Oldest']],
-  ['Completed Tasks', ['Recent', 'Oldest']]
+  ['To Do', ['Newest', 'Oldest']],
+  ['Done', ['Recent', 'Oldest']]
 ]
 
 describe('TaskList', () => {

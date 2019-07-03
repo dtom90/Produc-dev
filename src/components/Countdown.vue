@@ -121,16 +121,14 @@ export default {
         this.timer.pause()
         this.addTaskEvent({
           id: this.taskId,
-          type: eventTypes.Stopped,
-          time: Date.now()
+          type: eventTypes.Stopped
         })
         this.countingDown = false
       } else {
         this.timer.start()
         this.addTaskEvent({
           id: this.taskId,
-          type: eventTypes.Started,
-          time: Date.now()
+          type: eventTypes.Started
         })
         this.countingDown = true
       }

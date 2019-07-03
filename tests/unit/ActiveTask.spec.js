@@ -22,7 +22,6 @@ describe('ActiveTask', () => {
         type: eventTypes.Created,
         time: Date.now()
       }],
-      completedDate: null,
       completed: false
     }
     const wrapper = shallowMount(ActiveTask, {
@@ -69,9 +68,12 @@ describe('ActiveTask', () => {
         {
           type: eventTypes.Stopped,
           time: moment(createdDate).add(28, 'm').valueOf()
+        },
+        {
+          type: eventTypes.Completed,
+          time: moment(createdDate).add(28, 'm').valueOf()
         }
       ],
-      completedDate: moment(createdDate).add(30, 'm').valueOf(),
       completed: true
     }
     
@@ -87,35 +89,17 @@ describe('ActiveTask', () => {
       
     })
     
-    it('renders the task created date', () => {
+    it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch('Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT))
-      
-    })
-    
-    it('renders the task started date-time', () => {
-
-      expect(wrapper.text()).toMatch('Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT))
-
-    })
-
-    it('renders the task stopped date-time', () => {
-
-      expect(wrapper.text()).toMatch('Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT))
-
-    })
-    
-    it('renders the task completed date', () => {
-      
-      expect(wrapper.text()).toMatch('Completed:  ' + moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.text()).toMatch('Time Spent: 25 minutes')
       
     })
     
     it('renders the task activity sequence in reverse-chronological order', () => {
   
       expect(wrapper.text()).toMatch(
-        'Completed:  ' + moment(task.completedDate).format(EXPECTED_DATETIME_FORMAT) +
-        ' Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Completed:  ' + moment(task.activity[3].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
         'Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
         'Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT)
       )

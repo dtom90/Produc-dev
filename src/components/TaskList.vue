@@ -116,7 +116,7 @@ export default {
   }),
   
   computed: {
-    completedList: function () { return this.title === 'Completed Tasks' },
+    completedList: function () { return this.title === 'Done' },
     btnId: function () { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
     sortingOptions: function () { return this.completedList ? [ 'Recent', 'Oldest' ] : [ 'Newest', 'Oldest' ] },

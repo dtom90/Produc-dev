@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h2>Active Task</h2>
-
     <div
       v-if="task"
       class="border"
@@ -89,11 +87,10 @@
 
       <!-- Task Activity Log -->
       <br>
-      <table class="table">
-        <tr v-if="task.completedDate">
-          <th>Completed: </th>
-          <td>{{ displayDateTime(task.completedDate) }}</td>
-        </tr>
+      <table
+        id="activity-log"
+        class="table"
+      >
         <tr
           v-for="(event, index) in taskEvents"
           :key="index"
@@ -133,7 +130,6 @@ export default {
             type: 0,
             time: Date.now()
           }],
-          completedDate: null,
           completed: false
         }
       }
@@ -165,7 +161,7 @@ export default {
           .reduce((total, event) => event.type === eventTypes.Started
             ? total - event.time
             : total + event.time, 0)
-      )
+      ).humanize()
     }
     
   },
@@ -247,5 +243,9 @@ export default {
         height: $play-btn-size;
         font-size: 28px;
         border-radius: $play-btn-size;
+    }
+
+    #activity-log {
+        font-size: 16px;
     }
 </style>

@@ -25,7 +25,6 @@ export default {
           id: 1,
           name: 'new task 1',
           createdDate: Date.now(),
-          completedDate: null,
           completed: false
         }
       }

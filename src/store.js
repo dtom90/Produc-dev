@@ -4,6 +4,10 @@ import { eventTypes } from './constants'
 
 Vue.use(Vuex)
 
+const event = type => ({ type, time: Date.now() })
+
+const completedDate = task => task.activity.filter(event => event.type === eventTypes.Completed)[0].time
+
 export default new Vuex.Store({
   
   state: {
@@ -18,7 +22,7 @@ export default new Vuex.Store({
     },
     
     completedTasks (state) {
-      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => a.completedDate - b.completedDate)
+      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => completedDate(a) - completedDate(b))
       return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
     }
   },
@@ -30,11 +34,7 @@ export default new Vuex.Store({
         id: state.tasks.length,
         name: newTaskName,
         completed: false,
-        activity: [{
-          type: eventTypes.Created,
-          time: Date.now()
-        }],
-        completedDate: null
+        activity: [event(eventTypes.Created)]
       }
       state.tasks.push(newTask)
       state.selectedTask = newTask
@@ -46,15 +46,16 @@ export default new Vuex.Store({
     
     addTaskEvent (state, payload) {
       const task = state.tasks.find(t => t.id === payload.id)
-      task.activity.push({
-        type: payload.type,
-        time: payload.time
-      })
+      task.activity.push(event(payload.type))
     },
     
     completeTask (state, id) {
       const task = state.tasks.find(t => t.id === id)
-      if (task.completed) { task.completedDate = Date.now() } else { task.completedDate = null }
+      if (task.completed) {
+        task.activity.push(event(eventTypes.Completed))
+      } else {
+        task.activity.pop()
+      }
     },
     
     deleteTask (state, id) {
