@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME=todo-vue-test
-CONTAINER_NAME=todo-vue-test
+# Runs temporary container in development mode
+# - Node modules installed in Docker image
+# - Source code is copied to Docker image
+# - Run with additional command to replace default command
 
-CMD="$@"
-if [[ -z "$CMD" ]]; then CMD="yarn run dev"; fi
+IMAGE_NAME=producdev-test
+CONTAINER_NAME=producdev-test
 
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
 docker build \
-       -f docker/Dockerfile \
+       -f docker/Dockerfile.dev \
        -t ${IMAGE_NAME} \
        . && \
-docker run -i --rm \
+docker run -it --rm \
        -p 8080:8080 \
        --name ${CONTAINER_NAME} \
        ${IMAGE_NAME} \
-       ${CMD}
+       "$@"

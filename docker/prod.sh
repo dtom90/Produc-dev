@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME=todo-vue-prod
-CONTAINER_NAME=todo-vue-prod
+# Runs production container
+
+IMAGE_NAME=produc-dev-prod
+CONTAINER_NAME=produc-dev-prod
 
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
 
 docker build \
-       -f docker/Dockerfile.production \
+       -f docker/Dockerfile.prod \
        -t ${IMAGE_NAME} \
        . && \
 docker run -i --rm \

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-IMAGE_NAME=node:10.15.1-alpine
+# Installs node modules to host directory
+
+IMAGE_NAME=node:lts-alpine
 
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.."
