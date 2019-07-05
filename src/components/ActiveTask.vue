@@ -93,8 +93,8 @@
           <a
             class="nav-link active"
             data-toggle="tab"
-            v-on:click="view = 'all'"
             href="#"
+            @click="view = 'all'"
           >All Activity</a>
         </li>
         <li
@@ -104,11 +104,15 @@
           <a
             class="nav-link"
             data-toggle="tab"
-            v-on:click="view = 'daily'"
             href="#"
+            @click="view = 'daily'"
           >Daily Activity</a>
         </li>
       </ul>
+      
+      <div id="viewtype">
+        {{ view }}
+      </div>
       
       <!-- Task Time Spent -->
       <br>
@@ -177,7 +181,9 @@ export default {
     },
     
     taskEvents: function () {
-      const taskEvents = this.task.activity.slice()
+      const taskEvents = this.task.activity.filter(dt =>
+        this.view === 'all' ? dt
+          : moment(dt.time).isSame(new Date(), 'day'))
       taskEvents.reverse()
       return taskEvents
     },

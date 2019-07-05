@@ -117,7 +117,7 @@ describe('ActiveTask', () => {
     
     it('renders the task activity sequence in reverse-chronological order', () => {
       
-      expect(wrapper.text()).toMatch(
+      expect(wrapper.find('#activity-log').text()).toMatch(
         'Completed:  ' + moment(task.activity[5].time).format(EXPECTED_DATETIME_FORMAT) +
         'Stopped:  ' + moment(task.activity[4].time).format(EXPECTED_DATETIME_FORMAT) +
         'Started:  ' + moment(task.activity[3].time).format(EXPECTED_DATETIME_FORMAT) +
@@ -125,6 +125,29 @@ describe('ActiveTask', () => {
         'Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
         'Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT)
       )
+      
+    })
+    
+    it('renders the daily task activity sequence in reverse-chronological order', async () => {
+      
+      expect(wrapper.vm.view).toBe('all')
+      expect(wrapper.find('#viewtype').text()).toBe('all')
+      
+      const dailyViewBtn = wrapper.find('#daily-view > a')
+      dailyViewBtn.trigger('click')
+      
+      expect(wrapper.vm.view).toBe('daily')
+      expect(wrapper.find('#viewtype').text()).toBe('daily')
+      
+      expect(wrapper.find('#activity-log').text()).toMatch(
+        'Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT)
+      )
+  
+      expect(wrapper.find('#activity-log').text()).not.toMatch('Completed:  ' + moment(task.activity[5].time).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.find('#activity-log').text()).not.toMatch('Stopped:  ' + moment(task.activity[4].time).format(EXPECTED_DATETIME_FORMAT))
+      expect(wrapper.find('#activity-log').text()).not.toMatch('Started:  ' + moment(task.activity[3].time).format(EXPECTED_DATETIME_FORMAT))
       
     })
     
