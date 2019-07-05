@@ -114,24 +114,8 @@
         {{ view }}
       </div>
       
-      <!-- Task Time Spent -->
       <br>
-      <h4>Time Spent: {{ timeSpent }}</h4>
-      
-      <!-- Task Activity Log -->
-      <br>
-      <table
-        id="activity-log"
-        class="table"
-      >
-        <tr
-          v-for="(event, index) in taskEvents"
-          :key="index"
-        >
-          <th>{{ eventNames[event.type] }}: </th>
-          <td>{{ displayDateTime(event.time) }}</td>
-        </tr>
-      </table>
+      <ActivityLog :activity="activityEvents" />
       <br>
     </div>
   </div>
@@ -139,7 +123,7 @@
 
 <script>
 import Countdown from './Countdown'
-import { eventTypes, eventNames } from '@/constants'
+import ActivityLog from './ActivityLog'
 import { mapMutations } from 'vuex'
 import moment from 'moment'
 
@@ -148,7 +132,8 @@ export default {
   name: 'ActiveTask',
   
   components: {
-    Countdown
+    Countdown,
+    ActivityLog
   },
   
   props: {
@@ -175,29 +160,10 @@ export default {
   }),
   
   computed: {
-
-    eventNames: function () {
-      return eventNames
-    },
     
-    taskEvents: function () {
-      const taskEvents = this.task.activity.filter(dt =>
-        this.view === 'all' ? dt
-          : moment(dt.time).isSame(new Date(), 'day'))
-      taskEvents.reverse()
-      return taskEvents
-    },
-    
-    timeSpent: function () {
-      return moment.duration(
-        this.task.activity
-          .filter((event, i) =>
-            (event.type === eventTypes.Started && i !== this.task.activity.length - 1) ||
-                              event.type === eventTypes.Stopped)
-          .reduce((total, event) => event.type === eventTypes.Started
-            ? total - event.time
-            : total + event.time, 0)
-      ).humanize()
+    activityEvents: function () {
+      return this.task.activity.filter(dt =>
+        this.view === 'all' ? dt : moment(dt.time).isSame(new Date(), 'day'))
     }
     
   },
@@ -207,9 +173,8 @@ export default {
     ...mapMutations([
       'completeTask',
       'deleteTask'
-    ]),
+    ])
     
-    displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a')
   }
 }
 </script>
@@ -279,9 +244,5 @@ export default {
         height: $play-btn-size;
         font-size: 28px;
         border-radius: $play-btn-size;
-    }
-
-    #activity-log {
-        font-size: 16px;
     }
 </style>

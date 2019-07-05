@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-describe('Task.vue', () => {
+describe('Task', () => {
   
   it('renders renders the task name', () => {
     
