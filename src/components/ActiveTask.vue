@@ -80,11 +80,40 @@
         v-if="!task.completed"
         :task-id="task.id"
       />
-
+      
+      <!-- View Switch -->
+      <ul
+        id="view-type"
+        class="nav nav-pills d-flex justify-content-center"
+      >
+        <li
+          id="all-view"
+          class="nav-item"
+        >
+          <a
+            class="nav-link active"
+            data-toggle="tab"
+            v-on:click="view = 'all'"
+            href="#"
+          >All Activity</a>
+        </li>
+        <li
+          id="daily-view"
+          class="nav-item"
+        >
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            v-on:click="view = 'daily'"
+            href="#"
+          >Daily Activity</a>
+        </li>
+      </ul>
+      
       <!-- Task Time Spent -->
       <br>
       <h4>Time Spent: {{ timeSpent }}</h4>
-
+      
       <!-- Task Activity Log -->
       <br>
       <table
@@ -137,7 +166,8 @@ export default {
   },
   
   data: () => ({
-    editing: false
+    editing: false,
+    view: 'all'
   }),
   
   computed: {
