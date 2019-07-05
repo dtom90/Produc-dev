@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@/font-awesome-icons'
 
 import moment from 'moment'
 
+const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
+
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -37,7 +39,7 @@ describe('ActiveTask', () => {
     it('renders the task activity log', () => {
       
       const renderedActivityLog = wrapper.find(ActivityLog)
-      expect(renderedActivityLog.props()).toEqual({ activity: task.activity })
+      expect(renderedActivityLog.props()).toEqual({ activity: task.activity, day: null })
       
     })
     
@@ -123,36 +125,24 @@ describe('ActiveTask', () => {
     it('renders the task activity log', () => {
     
       const renderedActivityLog = wrapper.find(ActivityLog)
-      expect(renderedActivityLog.props()).toEqual({ activity: task.activity })
+      expect(renderedActivityLog.props()).toEqual({ activity: task.activity, day: null })
     
     })
     
-    // it('renders the daily task activity sequence in reverse-chronological order', async () => {
-    //
-    //   expect(wrapper.vm.view).toBe('all')
-    //   expect(wrapper.find('#viewtype').text()).toBe('all')
-    //
-    //   const dailyViewBtn = wrapper.find('#daily-view > a')
-    //   dailyViewBtn.trigger('click')
-    //
-    //   expect(wrapper.vm.view).toBe('daily')
-    //   expect(wrapper.find('#viewtype').text()).toBe('daily')
-    //
-    //   const dayLogs = wrapper.findAll('table.day-log')
-    //
-    //   // expect(dayLogs.at(0).text()).toMatch(
-    //   //   'Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
-    //   //   'Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
-    //   //   'Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT)
-    //   // )
-    //
-    //   expect(dayLogs.at(0).text()).toMatch(
-    //     'Completed:  ' + moment(task.activity[5].time).format(EXPECTED_DATETIME_FORMAT) +
-    //     'Stopped:  ' + moment(task.activity[4].time).format(EXPECTED_DATETIME_FORMAT) +
-    //     'Started:  ' + moment(task.activity[3].time).format(EXPECTED_DATETIME_FORMAT)
-    //   )
-    //
-    // })
+    it('renders the daily task activity logs', async () => {
+
+      expect(wrapper.vm.view).toBe('all')
+
+      const dailyViewBtn = wrapper.find('#daily-view > a')
+      dailyViewBtn.trigger('click')
+
+      expect(wrapper.vm.view).toBe('daily')
+
+      const activityLogs = wrapper.findAll(ActivityLog)
+      expect(activityLogs.at(0).props()).toEqual({ activity: task.activity.slice(0, 3), day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT) })
+      expect(activityLogs.at(1).props()).toEqual({ activity: task.activity.slice(3, 6), day: moment(completedDate).format(EXPECTED_DAY_KEY_FORMAT) })
+      
+    })
     
   })
   

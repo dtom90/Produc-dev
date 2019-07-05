@@ -1,6 +1,11 @@
 <template>
   <div>
-    <!-- Task Time Spent -->
+    <!-- Time Spent on Task -->
+    <h4 v-if="day">
+      {{ displayDay }}
+    </h4>
+    
+    <!-- Time Spent on Task -->
     <h4>Time Spent: {{ timeSpent }}</h4>
 
     <!-- Task Activity Log -->
@@ -28,6 +33,10 @@ export default {
   name: 'ActivityLog',
   
   props: {
+    day: {
+      type: String,
+      default: null
+    },
     activity: {
       type: Array,
       default: () => []
@@ -35,6 +44,10 @@ export default {
   },
   
   computed: {
+    
+    displayDay: function () {
+      return moment(this.day, 'YYYY-MM-DD').format('ddd MMM DD')
+    },
     
     timeSpent: function () {
       return moment.duration(

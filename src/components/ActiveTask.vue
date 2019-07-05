@@ -80,6 +80,7 @@
         v-if="!task.completed"
         :task-id="task.id"
       />
+      <br>
       
       <!-- View Switch -->
       <ul
@@ -110,12 +111,19 @@
         </li>
       </ul>
       
-      <div id="viewtype">
-        {{ view }}
-      </div>
-      
       <br>
-      <ActivityLog :activity="activityEvents" />
+      <ActivityLog
+        v-if="view === 'all'"
+        :activity="activityEvents"
+      />
+      <div v-if="view === 'daily'">
+        <ActivityLog
+          v-for="(events, day) in activityEvents"
+          :key="day"
+          :day="day"
+          :activity="events"
+        />
+      </div>
       <br>
     </div>
   </div>
@@ -162,8 +170,21 @@ export default {
   computed: {
     
     activityEvents: function () {
-      return this.task.activity.filter(dt =>
-        this.view === 'all' ? dt : moment(dt.time).isSame(new Date(), 'day'))
+      if (this.view === 'all') {
+        return this.task.activity
+      } else {
+        const dayActivity = {}
+        let day
+        for (let event of this.task.activity) {
+          day = moment(event.time).format('YYYY-MM-DD')
+          if (day in dayActivity) {
+            dayActivity[day].push(event)
+          } else {
+            dayActivity[day] = [event]
+          }
+        }
+        return dayActivity
+      }
     }
     
   },
