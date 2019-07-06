@@ -7,7 +7,8 @@ const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
-const completedDate = Date.now()
+const completedDate = new Date()
+completedDate.setHours(12)
 
 const activity = [
   {

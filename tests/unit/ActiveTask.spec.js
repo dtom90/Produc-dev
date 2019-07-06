@@ -53,7 +53,8 @@ describe('ActiveTask', () => {
   
   describe('Completed Task', () => {
     
-    const completedDate = Date.now()
+    const completedDate = new Date()
+    completedDate.setHours(12)
     const task = {
       id: 1,
       name: 'new task 1',
