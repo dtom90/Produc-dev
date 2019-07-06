@@ -1,15 +1,16 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import ActiveTask from '@/components/ActiveTask.vue'
+import ActivityLog from '@/components/ActivityLog.vue'
 import store from '@/store'
 import { eventTypes } from '@/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 
 import moment from 'moment'
 
+const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
+
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
-
-const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
 
 describe('ActiveTask', () => {
   
@@ -34,14 +35,14 @@ describe('ActiveTask', () => {
       expect(wrapper.text()).toMatch(task.name)
     
     })
-  
-    it('renders the task created date', () => {
     
-      expect(wrapper.text()).toMatch('Created:')
-      expect(wrapper.text()).toMatch(moment(task.createdDate).format(EXPECTED_DATETIME_FORMAT))
-    
+    it('renders the task activity log', () => {
+      
+      const renderedActivityLog = wrapper.find(ActivityLog)
+      expect(renderedActivityLog.props()).toEqual({ activity: task.activity, day: null })
+      
     })
-  
+    
     it('does not render the task completed date', () => {
   
       expect(wrapper.text()).not.toMatch('Completed:')
@@ -52,26 +53,35 @@ describe('ActiveTask', () => {
   
   describe('Completed Task', () => {
     
-    const createdDate = Date.now()
+    const completedDate = new Date()
+    completedDate.setHours(12)
     const task = {
       id: 1,
       name: 'new task 1',
       activity: [
         {
           type: eventTypes.Created,
-          time: createdDate
+          time: moment(completedDate).subtract(1, 'd')
         },
         {
           type: eventTypes.Started,
-          time: moment(createdDate).add(3, 'm').valueOf()
+          time: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf()
         },
         {
           type: eventTypes.Stopped,
-          time: moment(createdDate).add(28, 'm').valueOf()
+          time: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
+        },
+        {
+          type: eventTypes.Started,
+          time: moment(completedDate).subtract(30, 'm').valueOf()
+        },
+        {
+          type: eventTypes.Stopped,
+          time: moment(completedDate).subtract(10, 'm').valueOf()
         },
         {
           type: eventTypes.Completed,
-          time: moment(createdDate).add(28, 'm').valueOf()
+          time: completedDate
         }
       ],
       completed: true
@@ -89,33 +99,50 @@ describe('ActiveTask', () => {
       
     })
     
-    it('renders the time spent on the task', () => {
-      
-      expect(wrapper.text()).toMatch('Time Spent: 25 minutes')
-      
-    })
-    
-    it('renders the task activity sequence in reverse-chronological order', () => {
-  
-      expect(wrapper.text()).toMatch(
-        'Completed:  ' + moment(task.activity[3].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Stopped:  ' + moment(task.activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Started:  ' + moment(task.activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Created:  ' + moment(task.activity[0].time).format(EXPECTED_DATETIME_FORMAT)
-      )
-      
-    })
-  
     it('renders an edit button for changing the task name', () => {
-    
+      
       expect(wrapper.find('button.btn-warning').find(FontAwesomeIcon).attributes('icon')).toBe('pencil-alt')
+      
+    })
+    
+    it('renders a delete button for removing the task', () => {
+      
+      expect(wrapper.find('button.btn-danger').find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
+      
+    })
+    
+    it('renders "All Activity" and "Daily Activity" display options', () => {
+    
+      const allViewBtn = wrapper.find('#all-view')
+      expect(allViewBtn.text()).toBe('All Activity')
+      expect(allViewBtn.find('a').classes()).toContain('active')
+    
+      const dailyViewBtn = wrapper.find('#daily-view')
+      expect(dailyViewBtn.text()).toBe('Daily Activity')
+      expect(dailyViewBtn.find('a').classes()).not.toContain('active')
     
     })
   
-    it('renders a delete button for removing the task', () => {
+    it('renders the task activity log', () => {
     
-      expect(wrapper.find('button.btn-danger').find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
+      const renderedActivityLog = wrapper.find(ActivityLog)
+      expect(renderedActivityLog.props()).toEqual({ activity: task.activity, day: null })
     
+    })
+    
+    it('renders the daily task activity logs', async () => {
+
+      expect(wrapper.vm.view).toBe('all')
+
+      const dailyViewBtn = wrapper.find('#daily-view > a')
+      dailyViewBtn.trigger('click')
+
+      expect(wrapper.vm.view).toBe('daily')
+
+      const activityLogs = wrapper.findAll(ActivityLog)
+      expect(activityLogs.at(0).props()).toEqual({ activity: task.activity.slice(0, 3), day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT) })
+      expect(activityLogs.at(1).props()).toEqual({ activity: task.activity.slice(3, 6), day: moment(completedDate).format(EXPECTED_DAY_KEY_FORMAT) })
+      
     })
     
   })

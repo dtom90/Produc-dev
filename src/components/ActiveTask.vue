@@ -80,25 +80,50 @@
         v-if="!task.completed"
         :task-id="task.id"
       />
-
-      <!-- Task Time Spent -->
       <br>
-      <h4>Time Spent: {{ timeSpent }}</h4>
-
-      <!-- Task Activity Log -->
-      <br>
-      <table
-        id="activity-log"
-        class="table"
+      
+      <!-- View Switch -->
+      <ul
+        id="view-type"
+        class="nav nav-pills d-flex justify-content-center"
       >
-        <tr
-          v-for="(event, index) in taskEvents"
-          :key="index"
+        <li
+          id="all-view"
+          class="nav-item"
         >
-          <th>{{ eventNames[event.type] }}: </th>
-          <td>{{ displayDateTime(event.time) }}</td>
-        </tr>
-      </table>
+          <a
+            class="nav-link active"
+            data-toggle="tab"
+            href="#"
+            @click="view = 'all'"
+          >All Activity</a>
+        </li>
+        <li
+          id="daily-view"
+          class="nav-item"
+        >
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#"
+            @click="view = 'daily'"
+          >Daily Activity</a>
+        </li>
+      </ul>
+      
+      <br>
+      <ActivityLog
+        v-if="view === 'all'"
+        :activity="activityEvents"
+      />
+      <div v-if="view === 'daily'">
+        <ActivityLog
+          v-for="(events, day) in activityEvents"
+          :key="day"
+          :day="day"
+          :activity="events"
+        />
+      </div>
       <br>
     </div>
   </div>
@@ -106,7 +131,7 @@
 
 <script>
 import Countdown from './Countdown'
-import { eventTypes, eventNames } from '@/constants'
+import ActivityLog from './ActivityLog'
 import { mapMutations } from 'vuex'
 import moment from 'moment'
 
@@ -115,7 +140,8 @@ export default {
   name: 'ActiveTask',
   
   components: {
-    Countdown
+    Countdown,
+    ActivityLog
   },
   
   props: {
@@ -137,31 +163,28 @@ export default {
   },
   
   data: () => ({
-    editing: false
+    editing: false,
+    view: 'all'
   }),
   
   computed: {
-
-    eventNames: function () {
-      return eventNames
-    },
     
-    taskEvents: function () {
-      const taskEvents = this.task.activity.slice()
-      taskEvents.reverse()
-      return taskEvents
-    },
-    
-    timeSpent: function () {
-      return moment.duration(
-        this.task.activity
-          .filter((event, i) =>
-            (event.type === eventTypes.Started && i !== this.task.activity.length - 1) ||
-                              event.type === eventTypes.Stopped)
-          .reduce((total, event) => event.type === eventTypes.Started
-            ? total - event.time
-            : total + event.time, 0)
-      ).humanize()
+    activityEvents: function () {
+      if (this.view === 'all') {
+        return this.task.activity
+      } else {
+        const dayActivity = {}
+        let day
+        for (let event of this.task.activity) {
+          day = moment(event.time).format('YYYY-MM-DD')
+          if (day in dayActivity) {
+            dayActivity[day].push(event)
+          } else {
+            dayActivity[day] = [event]
+          }
+        }
+        return dayActivity
+      }
     }
     
   },
@@ -171,9 +194,8 @@ export default {
     ...mapMutations([
       'completeTask',
       'deleteTask'
-    ]),
+    ])
     
-    displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a')
   }
 }
 </script>
@@ -243,9 +265,5 @@ export default {
         height: $play-btn-size;
         font-size: 28px;
         border-radius: $play-btn-size;
-    }
-
-    #activity-log {
-        font-size: 16px;
     }
 </style>
