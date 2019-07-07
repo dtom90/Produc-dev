@@ -49,6 +49,43 @@ describe('ActiveTask', () => {
       
     })
     
+    it('renders the task name when passed', () => {
+    
+      expect(wrapper.text()).toMatch(task.name)
+    
+    })
+    
+    it('renders an edit button for changing the task name', () => {
+    
+      expect(wrapper.find('button.btn-warning').find(FontAwesomeIcon).attributes('icon')).toBe('pencil-alt')
+    
+    })
+    
+    it('renders an renders an input field for adding tags to the task', () => {
+    
+      expect(wrapper.text()).toMatch('Tags')
+      expect(wrapper.find('input#add-tag').attributes('placeholder')).toBe('add new tag')
+    
+    })
+    
+    it('renders a delete button for removing the task', () => {
+    
+      expect(wrapper.find('button.btn-danger').find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
+    
+    })
+    
+    it('renders "All Activity" and "Daily Activity" display options', () => {
+    
+      const allViewBtn = wrapper.find('#all-view')
+      expect(allViewBtn.text()).toBe('All Activity')
+      expect(allViewBtn.find('a').classes()).toContain('active')
+    
+      const dailyViewBtn = wrapper.find('#daily-view')
+      expect(dailyViewBtn.text()).toBe('Daily Activity')
+      expect(dailyViewBtn.find('a').classes()).not.toContain('active')
+    
+    })
+    
   })
   
   describe('Completed Task', () => {
@@ -91,36 +128,6 @@ describe('ActiveTask', () => {
       propsData: { task: task },
       store,
       localVue
-    })
-      
-    it('renders the task name when passed', () => {
-      
-      expect(wrapper.text()).toMatch(task.name)
-      
-    })
-    
-    it('renders an edit button for changing the task name', () => {
-      
-      expect(wrapper.find('button.btn-warning').find(FontAwesomeIcon).attributes('icon')).toBe('pencil-alt')
-      
-    })
-    
-    it('renders a delete button for removing the task', () => {
-      
-      expect(wrapper.find('button.btn-danger').find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
-      
-    })
-    
-    it('renders "All Activity" and "Daily Activity" display options', () => {
-    
-      const allViewBtn = wrapper.find('#all-view')
-      expect(allViewBtn.text()).toBe('All Activity')
-      expect(allViewBtn.find('a').classes()).toContain('active')
-    
-      const dailyViewBtn = wrapper.find('#daily-view')
-      expect(dailyViewBtn.text()).toBe('Daily Activity')
-      expect(dailyViewBtn.find('a').classes()).not.toContain('active')
-    
     })
   
     it('renders the task activity log', () => {

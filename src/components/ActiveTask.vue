@@ -74,7 +74,26 @@
           </div>
         </div>
       </div>
-
+      
+      <!-- Tags List -->
+      <div class="form-inline">
+        <label class="col-sm-2">Tags: </label>
+        <input
+          id="add-tag"
+          v-model="newTag"
+          class="form-control"
+          placeholder="add new tag"
+          @keyup.enter="addTag"
+        >
+        <h4>
+          <span
+            v-for="tag in tags"
+            :key="tag"
+            class="badge badge-primary"
+          >{{ tag }}</span>
+        </h4>
+      </div>
+      
       <!-- Countdown Timer -->
       <Countdown
         v-if="!task.completed"
@@ -164,6 +183,8 @@ export default {
   
   data: () => ({
     editing: false,
+    newTag: '',
+    tags: [],
     view: 'all'
   }),
   
@@ -194,7 +215,12 @@ export default {
     ...mapMutations([
       'completeTask',
       'deleteTask'
-    ])
+    ]),
+    
+    addTag: function () {
+      this.tags.push(this.newTag)
+      this.newTag = ''
+    }
     
   }
 }
@@ -252,6 +278,14 @@ export default {
         border-color: #1785ff;
         background: #1785ff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIyMCA2IDkgMTcgNCAxMiI+PC9wb2x5bGluZT48L3N2Zz4=) center no-repeat;
         background-size: 75%;
+    }
+    
+    #add-tag {
+      max-width: 160px;
+    }
+    
+    .badge {
+      margin-left: 20px;
     }
 
     .btn {
