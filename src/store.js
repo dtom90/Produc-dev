@@ -33,6 +33,7 @@ export default new Vuex.Store({
       const newTask = {
         id: state.tasks.length,
         name: newTaskName,
+        tags: [],
         completed: false,
         activity: [event(eventTypes.Created)]
       }
@@ -47,6 +48,11 @@ export default new Vuex.Store({
     addTaskEvent (state, payload) {
       const task = state.tasks.find(t => t.id === payload.id)
       task.activity.push(event(payload.type))
+    },
+
+    addTaskTag (state, payload) {
+      const task = state.tasks.find(t => t.id === payload.id)
+      task.tags.push(payload.tag)
     },
     
     completeTask (state, id) {

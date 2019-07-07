@@ -81,15 +81,16 @@
         <input
           id="add-tag"
           v-model="newTag"
+          type="text"
           class="form-control"
           placeholder="add new tag"
           @keyup.enter="addTag"
         >
         <h4>
           <span
-            v-for="tag in tags"
+            v-for="tag in task.tags"
             :key="tag"
-            class="badge badge-primary"
+            class="tag badge badge-primary"
           >{{ tag }}</span>
         </h4>
       </div>
@@ -213,12 +214,13 @@ export default {
   methods: {
     
     ...mapMutations([
+      'addTaskTag',
       'completeTask',
       'deleteTask'
     ]),
     
     addTag: function () {
-      this.tags.push(this.newTag)
+      this.addTaskTag({ id: this.task.id, tag: this.newTag })
       this.newTag = ''
     }
     

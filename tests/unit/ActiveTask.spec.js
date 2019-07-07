@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
+// import Vuex from 'vuex'
 import ActiveTask from '@/components/ActiveTask.vue'
 import ActivityLog from '@/components/ActivityLog.vue'
-import store from '@/store'
 import { eventTypes } from '@/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 
@@ -10,12 +10,13 @@ import moment from 'moment'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 
 const localVue = createLocalVue()
+// localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('ActiveTask', () => {
   
   describe('Incomplete Task', () => {
-  
+    
     const task = {
       id: 1,
       name: 'new task 1',
@@ -25,9 +26,19 @@ describe('ActiveTask', () => {
       }],
       completed: false
     }
+    
+    // const mutations = {
+    //   addTaskTag: jest.fn()
+    // }
+    //
+    // const store = new Vuex.Store({
+    //   mutations
+    // })
+    
     const wrapper = shallowMount(ActiveTask, {
       propsData: { task: task },
       localVue
+      // store
     })
     
     it('renders the task name when passed', () => {
@@ -63,9 +74,26 @@ describe('ActiveTask', () => {
     
     it('renders an renders an input field for adding tags to the task', () => {
     
-      expect(wrapper.text()).toMatch('Tags')
-      expect(wrapper.find('input#add-tag').attributes('placeholder')).toBe('add new tag')
+      expect(wrapper.text()).toMatch('Tags:')
+      expect(wrapper.find('input[type="text"]#add-tag').attributes('placeholder')).toBe('add new tag')
     
+    })
+
+    it('allows the user to add new tags to the task', () => {
+      
+      expect(wrapper.findAll('.tag').length).toBe(0)
+      
+      const textInput = wrapper.find('#add-tag')
+      
+      textInput.setValue('some tag')
+      expect(textInput.element.value).toBe('some tag')
+      expect(wrapper.vm.newTag).toBe('some tag')
+      
+      // textInput.trigger('keydown.enter')
+      // textInput.trigger('keydown', { key: 'Enter' })
+      // expect(mutations.addTaskTag).toHaveBeenCalled()
+      // expect(textInput.element.value).toBe('')
+      
     })
     
     it('renders a delete button for removing the task', () => {
@@ -126,7 +154,6 @@ describe('ActiveTask', () => {
     
     const wrapper = shallowMount(ActiveTask, {
       propsData: { task: task },
-      store,
       localVue
     })
   

@@ -3,7 +3,7 @@ import { Selector, ClientFunction } from 'testcafe' // first import testcafe sel
 const hostname = 'localhost'
 const port = process.env.PORT || '8080'
 
-fixture`To Do List`
+fixture`Produc-dev`
   .page`http://${hostname}:${port}`
 
 // Tasks
