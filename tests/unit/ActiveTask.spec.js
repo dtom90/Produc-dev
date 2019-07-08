@@ -27,6 +27,10 @@ describe('ActiveTask', () => {
       completed: false
     }
     
+    // const getters = {
+    //   availableTags: state => jest.fn()
+    // }
+    //
     // const mutations = {
     //   addTaskTag: jest.fn()
     // }
@@ -76,25 +80,26 @@ describe('ActiveTask', () => {
     
       expect(wrapper.text()).toMatch('Tags:')
       expect(wrapper.find('input[type="text"]#add-tag').attributes('placeholder')).toBe('add new tag')
-    
-    })
-
-    it('allows the user to add new tags to the task', () => {
-      
       expect(wrapper.findAll('.tag').length).toBe(0)
       
-      const textInput = wrapper.find('#add-tag')
-      
-      textInput.setValue('some tag')
-      expect(textInput.element.value).toBe('some tag')
-      expect(wrapper.vm.newTag).toBe('some tag')
-      
-      // textInput.trigger('keydown.enter')
-      // textInput.trigger('keydown', { key: 'Enter' })
-      // expect(mutations.addTaskTag).toHaveBeenCalled()
-      // expect(textInput.element.value).toBe('')
-      
     })
+
+    // it('allows the user to add new tags to the task', () => {
+    //
+    //   expect(wrapper.findAll('.tag').length).toBe(0)
+    //
+    //   const textInput = wrapper.find('#add-tag')
+    //
+    //   textInput.setValue('some tag')
+    //   expect(textInput.element.value).toBe('some tag')
+    //   expect(wrapper.vm.newTag).toBe('some tag')
+    //
+    //   // textInput.trigger('keydown.enter')
+    //   // textInput.trigger('keydown', { key: 'Enter' })
+    //   // expect(mutations.addTaskTag).toHaveBeenCalled()
+    //   // expect(textInput.element.value).toBe('')
+    //
+    // })
     
     it('renders a delete button for removing the task', () => {
     

@@ -80,7 +80,9 @@ export default new Vuex.Store({
     completedTasks (state) {
       const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => completedDate(a) - completedDate(b))
       return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
-    }
+    },
+    
+    availableTags: (state) => (snip) => Object.keys(state.tags).filter(tag => tag.includes(snip))
   },
   
   mutations

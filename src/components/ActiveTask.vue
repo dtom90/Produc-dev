@@ -78,14 +78,40 @@
       <!-- Tags List -->
       <div class="form-inline">
         <label class="col-sm-2">Tags: </label>
-        <input
-          id="add-tag"
-          v-model="newTag"
-          type="text"
-          class="form-control"
-          placeholder="add new tag"
-          @keyup.enter="addTag"
-        >
+        
+        <div class="d-flex">
+          <div
+            id="tagDropdown"
+            class="dropdown"
+          >
+            <button
+              id="dropdownTrigger"
+              data-toggle="dropdown"
+            />
+            <div
+              ref="tagDropdownMenu"
+              :class="'dropdown-menu ' + showTagDropdown"
+            >
+              <a
+                v-for="tag in tagOptions"
+                :key="tag"
+                class="dropdown-item"
+                href="#"
+              >{{ tag }}</a>
+            </div>
+          </div>
+          <input
+            id="add-tag"
+            v-model="newTag"
+            type="text"
+            class="form-control"
+            placeholder="add new tag"
+            @input="tagInputChange"
+            @focus="tagInputChange"
+            @blur="showTagDropdown = ''"
+            @keyup.enter="addTag"
+          >
+        </div>
         <h4>
           <span
             v-for="tag in task.tags"
@@ -152,7 +178,7 @@
 <script>
 import Countdown from './Countdown'
 import ActivityLog from './ActivityLog'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -185,11 +211,17 @@ export default {
   data: () => ({
     editing: false,
     newTag: '',
+    tagOptions: [],
+    showTagDropdown: '',
     tags: [],
     view: 'all'
   }),
   
   computed: {
+    
+    ...mapGetters([
+      'availableTags'
+    ]),
     
     activityEvents: function () {
       if (this.view === 'all') {
@@ -219,9 +251,20 @@ export default {
       'deleteTask'
     ]),
     
+    tagInputChange: function () {
+      this.tagOptions = this.availableTags(this.newTag)
+      
+      if (this.tagOptions.length > 0) {
+        this.showTagDropdown = 'show'
+      } else {
+        this.showTagDropdown = ''
+      }
+    },
+    
     addTag: function () {
       this.addTaskTag({ id: this.task.id, tag: this.newTag })
       this.newTag = ''
+      this.tagInputChange()
     }
     
   }
@@ -284,6 +327,14 @@ export default {
     
     #add-tag {
       max-width: 160px;
+    }
+    
+    #dropdownTrigger {
+      height: 30px;
+      width: 2px!important;
+      margin: 0;
+      padding: 0;
+      visibility: hidden;
     }
     
     .badge {

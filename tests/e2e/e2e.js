@@ -29,6 +29,8 @@ const todoTasks = todoList.find('.task')
 const activeSection = Selector('.section.active-task')
 const checkbox = activeSection.find('input').withAttribute('type', 'checkbox')
 const menuButton = activeSection.find('button').child('svg.fa-ellipsis-v')
+const saveButton = () => activeSection.find('button').find('svg.fa-save')
+const deleteButton = taskName => activeSection.withText(taskName).find('button').find('svg.fa-trash-alt')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Done')
@@ -45,16 +47,6 @@ const tasksPresent = ClientFunction((taskList, expectedTasks) => {
   return tasks.length === expectedTasks.length &&
     [].every.call(tasks, (task, i) => task.textContent.includes(expectedTasks[i]))
 })
-
-function saveButton () {
-  return activeSection.find('button')
-    .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-save'))
-}
-
-function deleteButton (taskName) {
-  return activeSection.withText(taskName).find('button')
-    .filter(node => node.getElementsByTagName('svg')[0].classList.contains('fa-trash-alt'))
-}
 
 const deleteHandler = ClientFunction((type, text) => {
   switch (type) { /* eslint-disable no-throw-literal */
