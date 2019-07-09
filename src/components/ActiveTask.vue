@@ -76,47 +76,51 @@
       </div>
       
       <!-- Tags List -->
-      <div class="form-inline">
-        <label class="col-sm-2">Tags: </label>
-        
-        <div class="d-flex">
+      <div id="tagZone" class="form-inline">
+        <label class="col-sm-2">Tags:</label>
+        <div
+          id="tagDropdown"
+        >
           <div
-            id="tagDropdown"
+            id="tagDropdownMenu"
+            class="btn-group-vertical"
+            @blur="tagOptions = []"
           >
-            <div
-              id="tagDropdownMenu"
-              class="btn-group-vertical"
-              @blur="tagOptions = []"
+            <button
+              v-for="tag in tagOptions"
+              :key="tag"
+              class="tag-option btn btn-light"
+              @click="addTag(tag)"
             >
-              <button
-                v-for="tag in tagOptions"
-                :key="tag"
-                class="tag-option btn btn-light"
-                @click="addTag(tag)"
-              >
-                {{ tag }}
-              </button>
-            </div>
+              {{ tag }}
+            </button>
           </div>
-          <input
-            id="add-tag"
-            v-model="newTag"
-            type="text"
-            class="form-control"
-            placeholder="add new tag"
-            @input="tagInputChange"
-            @focus="tagInputChange"
-            @blur="clickOutside"
-            @keyup.enter="addTag(newTag)"
-          >
         </div>
-        <h4>
-          <span
-            v-for="tag in task.tags"
-            :key="tag"
-            class="tag badge badge-primary"
-          >{{ tag }}</span>
-        </h4>
+        <input
+          id="add-tag"
+          v-model="newTag"
+          type="text"
+          class="form-control"
+          placeholder="add new tag"
+          @input="tagInputChange"
+          @focus="tagInputChange"
+          @blur="clickOutside"
+          @keyup.enter="addTag(newTag)"
+        >
+        <div
+          v-for="tag in task.tags"
+          :key="tag"
+          class="tag btn-group"
+        >
+          <button
+            class="btn btn-primary"
+          >
+            {{ tag }}
+          </button>
+          <button class="btn btn-primary" @click="removeTag(tag)">
+            x
+          </button>
+        </div>
       </div>
       
       <!-- Countdown Timer -->
@@ -210,7 +214,6 @@ export default {
     editing: false,
     newTag: '',
     tagOptions: [],
-    tags: [],
     view: 'all'
   }),
   
@@ -244,6 +247,7 @@ export default {
     
     ...mapMutations([
       'addTaskTag',
+      'removeTaskTag',
       'completeTask',
       'deleteTask'
     ]),
@@ -257,6 +261,11 @@ export default {
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = []
+    },
+    
+    removeTag: function (tag) {
+      this.removeTaskTag({ id: this.task.id, tag })
+      this.$forceUpdate()
     },
     
     clickOutside: function (event) {
@@ -324,6 +333,10 @@ export default {
         background-size: 75%;
     }
     
+    #tagZone > * {
+       margin-top: 20px;
+    }
+    
     #add-tag {
         max-width: 160px;
     }
@@ -334,18 +347,11 @@ export default {
 
     #tagDropdownMenu {
         position: absolute;
-        top: 40px;
+        top: 20px;
+        z-index: 4;
     }
     
-    #dropdownTrigger {
-        height: 30px;
-        width: 2px!important;
-        margin: 0;
-        padding: 0;
-        visibility: hidden;
-    }
-    
-    .badge {
+    .tag {
         margin-left: 20px;
     }
 

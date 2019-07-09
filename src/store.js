@@ -38,6 +38,12 @@ export const mutations = {
     task.tags.add(payload.tag)
   },
   
+  removeTaskTag (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    task.tags.delete(payload.tag)
+    state.tags[payload.tag].delete(payload.id)
+  },
+  
   completeTask (state, id) {
     const task = state.tasks.find(t => t.id === id)
     if (task.completed) {
@@ -82,7 +88,7 @@ export default new Vuex.Store({
       return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
     },
     
-    availableTags: (state) => (id, snip) => Object.keys(state.tags).filter(tag =>
+    availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
       tag.startsWith(snip) && !state.tags[tag].has(id))
   },
   
