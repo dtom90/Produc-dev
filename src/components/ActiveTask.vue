@@ -82,22 +82,20 @@
         <div class="d-flex">
           <div
             id="tagDropdown"
-            class="dropdown"
           >
-            <button
-              id="dropdownTrigger"
-              data-toggle="dropdown"
-            />
             <div
-              ref="tagDropdownMenu"
-              :class="'dropdown-menu ' + showTagDropdown"
+              id="tagDropdownMenu"
+              class="btn-group-vertical"
+              @blur="tagOptions = []"
             >
-              <a
+              <button
                 v-for="tag in tagOptions"
                 :key="tag"
-                class="dropdown-item"
-                href="#"
-              >{{ tag }}</a>
+                class="tag-option btn btn-light"
+                @click="addTag(tag)"
+              >
+                {{ tag }}
+              </button>
             </div>
           </div>
           <input
@@ -108,8 +106,8 @@
             placeholder="add new tag"
             @input="tagInputChange"
             @focus="tagInputChange"
-            @blur="showTagDropdown = ''"
-            @keyup.enter="addTag"
+            @blur="clickOutside"
+            @keyup.enter="addTag(newTag)"
           >
         </div>
         <h4>
@@ -212,7 +210,6 @@ export default {
     editing: false,
     newTag: '',
     tagOptions: [],
-    showTagDropdown: '',
     tags: [],
     view: 'all'
   }),
@@ -252,19 +249,21 @@ export default {
     ]),
     
     tagInputChange: function () {
-      this.tagOptions = this.availableTags(this.newTag)
-      
-      if (this.tagOptions.length > 0) {
-        this.showTagDropdown = 'show'
-      } else {
-        this.showTagDropdown = ''
-      }
+      this.tagOptions = this.availableTags(this.task.id, this.newTag)
     },
     
-    addTag: function () {
-      this.addTaskTag({ id: this.task.id, tag: this.newTag })
+    addTag: function (newTag) {
+      this.addTaskTag({ id: this.task.id, tag: newTag })
       this.newTag = ''
       this.tagInputChange()
+      this.tagOptions = []
+    },
+    
+    clickOutside: function (event) {
+      if (!(event.relatedTarget && event.relatedTarget.classList &&
+             event.relatedTarget.classList.contains('tag-option'))) {
+        this.tagOptions = []
+      }
     }
     
   }
@@ -326,22 +325,31 @@ export default {
     }
     
     #add-tag {
-      max-width: 160px;
+        max-width: 160px;
+    }
+    
+    #tagDropdown {
+        position: relative;
+    }
+
+    #tagDropdownMenu {
+        position: absolute;
+        top: 40px;
     }
     
     #dropdownTrigger {
-      height: 30px;
-      width: 2px!important;
-      margin: 0;
-      padding: 0;
-      visibility: hidden;
+        height: 30px;
+        width: 2px!important;
+        margin: 0;
+        padding: 0;
+        visibility: hidden;
     }
     
     .badge {
-      margin-left: 20px;
+        margin-left: 20px;
     }
 
-    .btn {
+    .dropleft .btn {
         margin: 8px;
     }
 

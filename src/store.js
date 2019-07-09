@@ -14,7 +14,7 @@ export const mutations = {
     const newTask = {
       id: state.tasks.length,
       name: newTaskName,
-      tags: [],
+      tags: new Set([]),
       completed: false,
       activity: [event(eventTypes.Created)]
     }
@@ -33,9 +33,9 @@ export const mutations = {
   
   addTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    if (!(payload.tag in state.tags)) state.tags[payload.tag] = [task.id]
-    else state.tags[payload.tag].push(task.id)
-    task.tags.push(payload.tag)
+    if (!(payload.tag in state.tags)) state.tags[payload.tag] = new Set([task.id])
+    else state.tags[payload.tag].add(task.id)
+    task.tags.add(payload.tag)
   },
   
   completeTask (state, id) {
@@ -82,7 +82,8 @@ export default new Vuex.Store({
       return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
     },
     
-    availableTags: (state) => (snip) => Object.keys(state.tags).filter(tag => tag.includes(snip))
+    availableTags: (state) => (id, snip) => Object.keys(state.tags).filter(tag =>
+      tag.startsWith(snip) && !state.tags[tag].has(id))
   },
   
   mutations
