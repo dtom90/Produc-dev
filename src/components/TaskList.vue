@@ -96,7 +96,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'To Do List'
+      default: 'To Do'
     },
     tasks: {
       type: Array,

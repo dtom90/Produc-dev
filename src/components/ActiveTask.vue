@@ -74,7 +74,55 @@
           </div>
         </div>
       </div>
-
+      
+      <!-- Tags List -->
+      <div id="tagZone" class="form-inline">
+        <label class="col-sm-2">Tags:</label>
+        <div
+          id="tagDropdown"
+        >
+          <div
+            id="tagDropdownMenu"
+            class="btn-group-vertical"
+            @blur="tagOptions = []"
+          >
+            <button
+              v-for="tag in tagOptions"
+              :key="tag"
+              class="tag-option btn btn-light"
+              @click="addTag(tag)"
+            >
+              {{ tag }}
+            </button>
+          </div>
+        </div>
+        <input
+          id="add-tag"
+          v-model="newTag"
+          type="text"
+          class="form-control"
+          placeholder="add new tag"
+          @input="tagInputChange"
+          @focus="tagInputChange"
+          @blur="clickOutside"
+          @keyup.enter="addTag(newTag)"
+        >
+        <div
+          v-for="tag in task.tags"
+          :key="tag"
+          class="tag btn-group"
+        >
+          <button
+            class="btn btn-primary"
+          >
+            {{ tag }}
+          </button>
+          <button class="btn btn-primary" @click="removeTag(tag)">
+            x
+          </button>
+        </div>
+      </div>
+      
       <!-- Countdown Timer -->
       <Countdown
         v-if="!task.completed"
@@ -132,7 +180,7 @@
 <script>
 import Countdown from './Countdown'
 import ActivityLog from './ActivityLog'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -164,10 +212,16 @@ export default {
   
   data: () => ({
     editing: false,
+    newTag: '',
+    tagOptions: [],
     view: 'all'
   }),
   
   computed: {
+    
+    ...mapGetters([
+      'availableTags'
+    ]),
     
     activityEvents: function () {
       if (this.view === 'all') {
@@ -192,9 +246,34 @@ export default {
   methods: {
     
     ...mapMutations([
+      'addTaskTag',
+      'removeTaskTag',
       'completeTask',
       'deleteTask'
-    ])
+    ]),
+    
+    tagInputChange: function () {
+      this.tagOptions = this.availableTags(this.task.id, this.newTag)
+    },
+    
+    addTag: function (newTag) {
+      this.addTaskTag({ id: this.task.id, tag: newTag })
+      this.newTag = ''
+      this.tagInputChange()
+      this.tagOptions = []
+    },
+    
+    removeTag: function (tag) {
+      this.removeTaskTag({ id: this.task.id, tag })
+      this.$forceUpdate()
+    },
+    
+    clickOutside: function (event) {
+      if (!(event.relatedTarget && event.relatedTarget.classList &&
+             event.relatedTarget.classList.contains('tag-option'))) {
+        this.tagOptions = []
+      }
+    }
     
   }
 }
@@ -253,8 +332,30 @@ export default {
         background: #1785ff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIyMCA2IDkgMTcgNCAxMiI+PC9wb2x5bGluZT48L3N2Zz4=) center no-repeat;
         background-size: 75%;
     }
+    
+    #tagZone > * {
+       margin-top: 20px;
+    }
+    
+    #add-tag {
+        max-width: 160px;
+    }
+    
+    #tagDropdown {
+        position: relative;
+    }
 
-    .btn {
+    #tagDropdownMenu {
+        position: absolute;
+        top: 20px;
+        z-index: 4;
+    }
+    
+    .tag {
+        margin-left: 20px;
+    }
+
+    .dropleft .btn {
         margin: 8px;
     }
 
