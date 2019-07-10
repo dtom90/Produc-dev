@@ -76,7 +76,10 @@
       </div>
       
       <!-- Tags List -->
-      <div id="tagZone" class="form-inline">
+      <div
+        id="tagZone"
+        class="form-inline"
+      >
         <label class="col-sm-2">Tags:</label>
         <div
           id="tagDropdown"
@@ -117,7 +120,10 @@
           >
             {{ tag }}
           </button>
-          <button class="btn btn-primary" @click="removeTag(tag)">
+          <button
+            class="btn btn-primary"
+            @click="removeTag(tag)"
+          >
             x
           </button>
         </div>
