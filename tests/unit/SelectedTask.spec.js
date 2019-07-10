@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@/font-awesome-icons'
 
 import moment from 'moment'
 
-
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -51,7 +50,7 @@ describe('SelectedTask', () => {
     it('renders the task activity log', () => {
       
       const renderedActivity = wrapper.find(ActivityView)
-      expect(renderedActivity.props()).toEqual({ activity: task.activity })
+      expect(renderedActivity.props()).toEqual({ activity: task.activity, tag: null })
       
     })
     
@@ -150,7 +149,7 @@ describe('SelectedTask', () => {
     it('renders the task activity views', () => {
     
       const renderedActivity = wrapper.find(ActivityView)
-      expect(renderedActivity.props()).toEqual({ activity: task.activity })
+      expect(renderedActivity.props()).toEqual({ activity: task.activity, tag: null })
     
     })
     

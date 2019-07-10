@@ -136,8 +136,8 @@
       <div v-if="!selectedTag">
         <!-- Countdown Timer -->
         <Countdown
-                v-if="!task.completed"
-                :task-id="task.id"
+          v-if="!task.completed"
+          :task-id="task.id"
         />
         <br>
 
@@ -145,7 +145,10 @@
         <ActivityView :activity="task.activity" />
       </div>
 
-      <ActivityView v-if="selectedTag" :tag="selectedTag" />
+      <ActivityView
+        v-if="selectedTag"
+        :tag="selectedTag"
+      />
       
       <br>
     </div>
@@ -220,10 +223,7 @@ export default {
     },
     
     showTag: function (tag) {
-      if (!this.selectedTag)
-        this.selectedTag = tag
-      else
-        this.selectedTag = null
+      if (!this.selectedTag) { this.selectedTag = tag } else { this.selectedTag = null }
     },
     
     removeTag: function (tag) {

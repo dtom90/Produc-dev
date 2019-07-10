@@ -43,7 +43,7 @@ describe('ActivityView', () => {
   it('renders the task activity log', () => {
     
     const renderedActivity = wrapper.find(ActivityView)
-    expect(renderedActivity.props()).toEqual({ activity })
+    expect(renderedActivity.props()).toEqual({ activity, tag: null })
     
   })
   

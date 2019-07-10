@@ -1,5 +1,8 @@
 <template>
-  <div class="d-flex justify-content-center" :style="cssProps">
+  <div
+    class="d-flex justify-content-center"
+    :style="cssProps"
+  >
     <div id="countdown-container">
       <div id="countdown-button-rotator">
         <div id="countdown-button" />

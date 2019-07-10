@@ -1,7 +1,8 @@
 <template>
   <div>
-    
-    <h3 v-if="tag">Activity for: {{ tag }}</h3>
+    <h3 v-if="tag">
+      Activity for: {{ tag }}
+    </h3>
     
     <!-- View Switch -->
     <ul
