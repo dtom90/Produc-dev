@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 // import Vuex from 'vuex'
-import ActiveTask from '@/components/ActiveTask.vue'
+import SelectedTask from '@/components/SelectedTask.vue'
 import Activity from '@/components/Activity.vue'
 import { eventTypes } from '@/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
@@ -13,7 +13,7 @@ const localVue = createLocalVue()
 // localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-describe('ActiveTask', () => {
+describe('SelectedTask', () => {
   
   describe('Incomplete Task', () => {
     
@@ -39,7 +39,7 @@ describe('ActiveTask', () => {
     //   mutations
     // })
     
-    const wrapper = shallowMount(ActiveTask, {
+    const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue
       // store
@@ -157,7 +157,7 @@ describe('ActiveTask', () => {
       completed: true
     }
     
-    const wrapper = shallowMount(ActiveTask, {
+    const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue
     })

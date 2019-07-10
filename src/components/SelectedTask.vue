@@ -191,7 +191,7 @@ import moment from 'moment'
 
 export default {
   
-  name: 'ActiveTask',
+  name: 'SelectedTask',
   
   components: {
     Countdown,

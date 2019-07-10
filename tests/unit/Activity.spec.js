@@ -10,7 +10,7 @@ const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 const completedDate = new Date()
 completedDate.setHours(12)
 
-describe('ActiveTask', () => {
+describe('SelectedTask', () => {
   
   const activity = [
     {
