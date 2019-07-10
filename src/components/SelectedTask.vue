@@ -117,6 +117,7 @@
         >
           <button
             class="btn btn-primary"
+            data-toggle="button"
             @click="showTag(tag)"
           >
             {{ tag }}
@@ -129,16 +130,23 @@
           </button>
         </div>
       </div>
-      
-      <!-- Countdown Timer -->
-      <Countdown
-        v-if="!task.completed"
-        :task-id="task.id"
-      />
+
       <br>
       
-      <!-- Activity Views -->
-      <ActivityView :activity="task.activity" />
+      <div v-if="!selectedTag">
+        <!-- Countdown Timer -->
+        <Countdown
+                v-if="!task.completed"
+                :task-id="task.id"
+        />
+        <br>
+
+        <!-- Activity Views -->
+        <ActivityView :activity="task.activity" />
+      </div>
+
+      <ActivityView v-if="selectedTag" :tag="selectedTag" />
+      
       <br>
     </div>
   </div>
@@ -179,7 +187,8 @@ export default {
   data: () => ({
     editing: false,
     newTag: '',
-    tagOptions: []
+    tagOptions: [],
+    selectedTag: null
   }),
   
   computed: {
@@ -211,7 +220,10 @@ export default {
     },
     
     showTag: function (tag) {
-      alert(tag)
+      if (!this.selectedTag)
+        this.selectedTag = tag
+      else
+        this.selectedTag = null
     },
     
     removeTag: function (tag) {

@@ -1,5 +1,8 @@
 <template>
   <div>
+    
+    <h3 v-if="tag">Activity for: {{ tag }}</h3>
+    
     <!-- View Switch -->
     <ul
       id="view-type"
@@ -60,10 +63,13 @@ export default {
     activity: {
       type: Array,
       default: function () {
-        return [{
-          type: 0,
-          time: Date.now()
-        }]
+        return []
+      }
+    },
+    tag: {
+      type: String,
+      default: function () {
+        return null
       }
     }
   },
