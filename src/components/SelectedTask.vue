@@ -117,6 +117,7 @@
         >
           <button
             class="btn btn-primary"
+            @click="showTag(tag)"
           >
             {{ tag }}
           </button>
@@ -136,48 +137,8 @@
       />
       <br>
       
-      <!-- View Switch -->
-      <ul
-        id="view-type"
-        class="nav nav-pills d-flex justify-content-center"
-      >
-        <li
-          id="all-view"
-          class="nav-item"
-        >
-          <a
-            class="nav-link active"
-            data-toggle="tab"
-            href="#"
-            @click="view = 'all'"
-          >All Activity</a>
-        </li>
-        <li
-          id="daily-view"
-          class="nav-item"
-        >
-          <a
-            class="nav-link"
-            data-toggle="tab"
-            href="#"
-            @click="view = 'daily'"
-          >Daily Activity</a>
-        </li>
-      </ul>
-      
-      <br>
-      <Activity
-        v-if="view === 'all'"
-        :activity="activityEvents"
-      />
-      <div v-if="view === 'daily'">
-        <Activity
-          v-for="(events, day) in activityEvents"
-          :key="day"
-          :day="day"
-          :activity="events"
-        />
-      </div>
+      <!-- Activity Views -->
+      <ActivityView :activity="task.activity" />
       <br>
     </div>
   </div>
@@ -185,9 +146,8 @@
 
 <script>
 import Countdown from './Countdown'
-import Activity from './Activity'
+import ActivityView from './ActivityView'
 import { mapGetters, mapMutations } from 'vuex'
-import moment from 'moment'
 
 export default {
   
@@ -195,7 +155,7 @@ export default {
   
   components: {
     Countdown,
-    Activity
+    ActivityView
   },
   
   props: {
@@ -219,33 +179,14 @@ export default {
   data: () => ({
     editing: false,
     newTag: '',
-    tagOptions: [],
-    view: 'all'
+    tagOptions: []
   }),
   
   computed: {
     
     ...mapGetters([
       'availableTags'
-    ]),
-    
-    activityEvents: function () {
-      if (this.view === 'all') {
-        return this.task.activity
-      } else {
-        const dayActivity = {}
-        let day
-        for (let event of this.task.activity) {
-          day = moment(event.time).format('YYYY-MM-DD')
-          if (day in dayActivity) {
-            dayActivity[day].push(event)
-          } else {
-            dayActivity[day] = [event]
-          }
-        }
-        return dayActivity
-      }
-    }
+    ])
     
   },
   
@@ -267,6 +208,10 @@ export default {
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = []
+    },
+    
+    showTag: function (tag) {
+      alert(tag)
     },
     
     removeTag: function (tag) {

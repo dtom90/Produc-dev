@@ -1,16 +1,13 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-// import Vuex from 'vuex'
 import SelectedTask from '@/components/SelectedTask.vue'
-import Activity from '@/components/Activity.vue'
+import ActivityView from '@/components/ActivityView.vue'
 import { eventTypes } from '@/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 
 import moment from 'moment'
 
-const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 
 const localVue = createLocalVue()
-// localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('SelectedTask', () => {
@@ -53,8 +50,8 @@ describe('SelectedTask', () => {
     
     it('renders the task activity log', () => {
       
-      const renderedActivity = wrapper.find(Activity)
-      expect(renderedActivity.props()).toEqual({ activity: task.activity, day: null })
+      const renderedActivity = wrapper.find(ActivityView)
+      expect(renderedActivity.props()).toEqual({ activity: task.activity })
       
     })
     
@@ -107,18 +104,6 @@ describe('SelectedTask', () => {
     
     })
     
-    it('renders "All Activity" and "Daily Activity" display options', () => {
-    
-      const allViewBtn = wrapper.find('#all-view')
-      expect(allViewBtn.text()).toBe('All Activity')
-      expect(allViewBtn.find('a').classes()).toContain('active')
-    
-      const dailyViewBtn = wrapper.find('#daily-view')
-      expect(dailyViewBtn.text()).toBe('Daily Activity')
-      expect(dailyViewBtn.find('a').classes()).not.toContain('active')
-    
-    })
-    
   })
   
   describe('Completed Task', () => {
@@ -162,26 +147,11 @@ describe('SelectedTask', () => {
       localVue
     })
   
-    it('renders the task activity log', () => {
+    it('renders the task activity views', () => {
     
-      const renderedActivity = wrapper.find(Activity)
-      expect(renderedActivity.props()).toEqual({ activity: task.activity, day: null })
+      const renderedActivity = wrapper.find(ActivityView)
+      expect(renderedActivity.props()).toEqual({ activity: task.activity })
     
-    })
-    
-    it('renders the daily task activity logs', async () => {
-
-      expect(wrapper.vm.view).toBe('all')
-
-      const dailyViewBtn = wrapper.find('#daily-view > a')
-      dailyViewBtn.trigger('click')
-
-      expect(wrapper.vm.view).toBe('daily')
-
-      const activityLogs = wrapper.findAll(Activity)
-      expect(activityLogs.at(0).props()).toEqual({ activity: task.activity.slice(0, 3), day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT) })
-      expect(activityLogs.at(1).props()).toEqual({ activity: task.activity.slice(3, 6), day: moment(completedDate).format(EXPECTED_DAY_KEY_FORMAT) })
-      
     })
     
   })
