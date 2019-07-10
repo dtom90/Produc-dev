@@ -51,7 +51,7 @@ describe('SelectedTask', () => {
     
     it('renders the task activity sequence in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activity-log').text()).toMatch(
+      expect(wrapper.find('#activityLog').text()).toMatch(
         'Completed:  ' + moment(activity[5].time).format(EXPECTED_DATETIME_FORMAT) +
         'Stopped:  ' + moment(activity[4].time).format(EXPECTED_DATETIME_FORMAT) +
         'Started:  ' + moment(activity[3].time).format(EXPECTED_DATETIME_FORMAT) +
@@ -87,7 +87,7 @@ describe('SelectedTask', () => {
     
     it('renders the task activity sequence in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activity-log').text()).toMatch(
+      expect(wrapper.find('#activityLog').text()).toMatch(
         'Stopped:  ' + moment(activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
         'Started:  ' + moment(activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
         'Created:  ' + moment(activity[0].time).format(EXPECTED_DATETIME_FORMAT)
@@ -120,7 +120,7 @@ describe('SelectedTask', () => {
     
     it('renders the task activity sequence in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activity-log').text()).toMatch(
+      expect(wrapper.find('#activityLog').text()).toMatch(
         'Completed:  ' + moment(activity[5].time).format(EXPECTED_DATETIME_FORMAT) +
         'Stopped:  ' + moment(activity[4].time).format(EXPECTED_DATETIME_FORMAT) +
         'Started:  ' + moment(activity[3].time).format(EXPECTED_DATETIME_FORMAT)

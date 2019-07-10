@@ -49,11 +49,11 @@ describe('ActivityView', () => {
   
   it('renders "All Activity" and "Daily Activity" display options', () => {
     
-    const allViewBtn = wrapper.find('#all-view')
+    const allViewBtn = wrapper.find('#allView')
     expect(allViewBtn.text()).toBe('All Activity')
     expect(allViewBtn.find('a').classes()).toContain('active')
     
-    const dailyViewBtn = wrapper.find('#daily-view')
+    const dailyViewBtn = wrapper.find('#dailyView')
     expect(dailyViewBtn.text()).toBe('Daily Activity')
     expect(dailyViewBtn.find('a').classes()).not.toContain('active')
     
@@ -63,7 +63,7 @@ describe('ActivityView', () => {
     
     expect(wrapper.vm.view).toBe('all')
     
-    const dailyViewBtn = wrapper.find('#daily-view > a')
+    const dailyViewBtn = wrapper.find('#dailyView > a')
     dailyViewBtn.trigger('click')
     
     expect(wrapper.vm.view).toBe('daily')
