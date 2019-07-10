@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 // import Vuex from 'vuex'
 import ActiveTask from '@/components/ActiveTask.vue'
-import ActivityLog from '@/components/ActivityLog.vue'
+import Activity from '@/components/Activity.vue'
 import { eventTypes } from '@/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 
@@ -53,8 +53,8 @@ describe('ActiveTask', () => {
     
     it('renders the task activity log', () => {
       
-      const renderedActivityLog = wrapper.find(ActivityLog)
-      expect(renderedActivityLog.props()).toEqual({ activity: task.activity, day: null })
+      const renderedActivity = wrapper.find(Activity)
+      expect(renderedActivity.props()).toEqual({ activity: task.activity, day: null })
       
     })
     
@@ -164,8 +164,8 @@ describe('ActiveTask', () => {
   
     it('renders the task activity log', () => {
     
-      const renderedActivityLog = wrapper.find(ActivityLog)
-      expect(renderedActivityLog.props()).toEqual({ activity: task.activity, day: null })
+      const renderedActivity = wrapper.find(Activity)
+      expect(renderedActivity.props()).toEqual({ activity: task.activity, day: null })
     
     })
     
@@ -178,7 +178,7 @@ describe('ActiveTask', () => {
 
       expect(wrapper.vm.view).toBe('daily')
 
-      const activityLogs = wrapper.findAll(ActivityLog)
+      const activityLogs = wrapper.findAll(Activity)
       expect(activityLogs.at(0).props()).toEqual({ activity: task.activity.slice(0, 3), day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT) })
       expect(activityLogs.at(1).props()).toEqual({ activity: task.activity.slice(3, 6), day: moment(completedDate).format(EXPECTED_DAY_KEY_FORMAT) })
       

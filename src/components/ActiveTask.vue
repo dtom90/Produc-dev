@@ -166,12 +166,12 @@
       </ul>
       
       <br>
-      <ActivityLog
+      <Activity
         v-if="view === 'all'"
         :activity="activityEvents"
       />
       <div v-if="view === 'daily'">
-        <ActivityLog
+        <Activity
           v-for="(events, day) in activityEvents"
           :key="day"
           :day="day"
@@ -185,7 +185,7 @@
 
 <script>
 import Countdown from './Countdown'
-import ActivityLog from './ActivityLog'
+import Activity from './Activity'
 import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 
@@ -195,7 +195,7 @@ export default {
   
   components: {
     Countdown,
-    ActivityLog
+    Activity
   },
   
   props: {
