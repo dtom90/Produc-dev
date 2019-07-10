@@ -89,7 +89,12 @@ export default new Vuex.Store({
     },
     
     availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
-      tag.startsWith(snip) && !state.tags[tag].has(id))
+      tag.startsWith(snip) && !state.tags[tag].has(id)),
+    
+    tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
+      const task = state.tasks.find(t => t.id === taskID)
+      return task.activity.map(event => Object.assign({ task: task.name }, event))
+    }).flat()
   },
   
   mutations

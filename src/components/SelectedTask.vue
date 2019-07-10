@@ -147,9 +147,8 @@
       <ActivityView
         v-if="selectedTag"
         :tag="selectedTag"
+        :activity="tagActivity(selectedTag)"
       />
-      
-      <br>
     </div>
   </div>
 </template>
@@ -196,7 +195,8 @@ export default {
   computed: {
     
     ...mapGetters([
-      'availableTags'
+      'availableTags',
+      'tagActivity'
     ])
     
   },

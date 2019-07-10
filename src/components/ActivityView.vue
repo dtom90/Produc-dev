@@ -1,16 +1,19 @@
 <template>
-  <div>
+  <div
+    id="panel"
+    class="border-top"
+  >
     <h3 v-if="tag">
       Activity for: {{ tag }}
     </h3>
     
     <!-- View Switch -->
     <ul
-      id="view-type"
+      id="viewType"
       class="nav nav-pills d-flex justify-content-center"
     >
       <li
-        id="all-view"
+        id="allView"
         class="nav-item"
       >
         <a
@@ -21,7 +24,7 @@
         >All Activity</a>
       </li>
       <li
-        id="daily-view"
+        id="dailyView"
         class="nav-item"
       >
         <a
@@ -33,7 +36,7 @@
       </li>
     </ul>
 
-    <br>
+    <!-- Activity Data -->
     <Activity
       v-if="view === 'all'"
       :activity="activityEvents"
@@ -105,4 +108,8 @@ export default {
 
 <style scoped>
 
+  #panel {
+    padding: 20px;
+  }
+  
 </style>
