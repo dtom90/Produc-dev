@@ -116,8 +116,7 @@
           class="tag btn-group"
         >
           <button
-            class="btn btn-primary"
-            data-toggle="button"
+            :class="'btn btn-primary' + (selectedTag === tag ? ' active' : '')"
             @click="showTag(tag)"
           >
             {{ tag }}
@@ -223,7 +222,11 @@ export default {
     },
     
     showTag: function (tag) {
-      if (!this.selectedTag) { this.selectedTag = tag } else { this.selectedTag = null }
+      if (this.selectedTag && this.selectedTag === tag) {
+        this.selectedTag = null
+      } else {
+        this.selectedTag = tag
+      }
     },
     
     removeTag: function (tag) {
