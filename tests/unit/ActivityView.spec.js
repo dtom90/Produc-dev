@@ -9,41 +9,39 @@ const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const completedDate = new Date()
 completedDate.setHours(12)
 
-describe('ActivityView', () => {
-  
-  const activity = [
-    {
-      type: eventTypes.Created,
-      time: moment(completedDate).subtract(1, 'd')
-    },
-    {
-      type: eventTypes.Started,
-      time: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Stopped,
-      time: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Started,
-      time: moment(completedDate).subtract(30, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Stopped,
-      time: moment(completedDate).subtract(10, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Completed,
-      time: completedDate
-    }
-  ]
-  
-  const wrapper = shallowMount(ActivityView, { propsData: { activity } })
+const activity = [
+  {
+    type: eventTypes.Created,
+    time: moment(completedDate).subtract(1, 'd')
+  },
+  {
+    type: eventTypes.Started,
+    time: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf()
+  },
+  {
+    type: eventTypes.Stopped,
+    time: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
+  },
+  {
+    type: eventTypes.Started,
+    time: moment(completedDate).subtract(30, 'm').valueOf()
+  },
+  {
+    type: eventTypes.Stopped,
+    time: moment(completedDate).subtract(10, 'm').valueOf()
+  },
+  {
+    type: eventTypes.Completed,
+    time: completedDate
+  }
+]
+
+const shouldBehaveLikeActivityView = function (wrapper) {
   
   it('renders the task activity log', () => {
     
-    const renderedActivity = wrapper.find(ActivityView)
-    expect(renderedActivity.props()).toEqual({ activity, tag: null })
+    const renderedActivity = wrapper.find(Activity)
+    expect(renderedActivity.props()).toEqual({ activity, day: null })
     
   })
   
@@ -71,6 +69,38 @@ describe('ActivityView', () => {
     const activityLogs = wrapper.findAll(Activity)
     expect(activityLogs.at(0).props()).toEqual({ activity: activity.slice(0, 3), day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT) })
     expect(activityLogs.at(1).props()).toEqual({ activity: activity.slice(3, 6), day: moment(completedDate).format(EXPECTED_DAY_KEY_FORMAT) })
+    
+  })
+  
+}
+
+describe('ActivityView', () => {
+  
+  describe('for task', () => {
+    
+    const wrapper = shallowMount(ActivityView, { propsData: { activity } })
+  
+    it('does not render a title with the tag name', () => {
+    
+      expect(wrapper.text()).not.toMatch('Activity for:')
+    
+    })
+  
+    shouldBehaveLikeActivityView(wrapper)
+    
+  })
+  
+  describe('for tag', () => {
+    
+    const wrapper = shallowMount(ActivityView, { propsData: { activity, tag: 'myTag' } })
+    
+    it('renders a title with the tag name', () => {
+      
+      expect(wrapper.text()).toMatch('Activity for: myTag')
+      
+    })
+  
+    shouldBehaveLikeActivityView(wrapper)
     
   })
   
