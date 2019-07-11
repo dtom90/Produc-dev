@@ -94,7 +94,7 @@ export default new Vuex.Store({
     tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
       const task = state.tasks.find(t => t.id === taskID)
       return task.activity.map(event => Object.assign({ task: task.name }, event))
-    }).flat()
+    }).flat().sort((a, b) => a.time - b.time)
   },
   
   mutations
