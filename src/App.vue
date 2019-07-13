@@ -11,7 +11,7 @@
     </div>
 
     <div class="section active-task">
-      <ActiveTask :task="selectedTask" />
+      <SelectedTask :task="selectedTask" />
     </div>
     
     <div class="section task-list">
@@ -25,7 +25,7 @@
 
 <script>
 import TaskList from './components/TaskList.vue'
-import ActiveTask from './components/ActiveTask.vue'
+import SelectedTask from './components/SelectedTask.vue'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -34,7 +34,7 @@ export default {
   
   components: {
     TaskList,
-    ActiveTask
+    SelectedTask
   },
 
   computed: {

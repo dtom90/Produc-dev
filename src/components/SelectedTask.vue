@@ -76,7 +76,10 @@
       </div>
       
       <!-- Tags List -->
-      <div id="tagZone" class="form-inline">
+      <div
+        id="tagZone"
+        class="form-inline"
+      >
         <label class="col-sm-2">Tags:</label>
         <div
           id="tagDropdown"
@@ -113,83 +116,55 @@
           class="tag btn-group"
         >
           <button
-            class="btn btn-primary"
+            :class="'btn btn-primary' + (selectedTag === tag ? ' active' : '')"
+            @click="showTag(tag)"
           >
             {{ tag }}
           </button>
-          <button class="btn btn-primary" @click="removeTag(tag)">
+          <button
+            class="btn btn-primary"
+            @click="removeTag(tag)"
+          >
             x
           </button>
         </div>
       </div>
-      
-      <!-- Countdown Timer -->
-      <Countdown
-        v-if="!task.completed"
-        :task-id="task.id"
-      />
+
       <br>
       
-      <!-- View Switch -->
-      <ul
-        id="view-type"
-        class="nav nav-pills d-flex justify-content-center"
-      >
-        <li
-          id="all-view"
-          class="nav-item"
-        >
-          <a
-            class="nav-link active"
-            data-toggle="tab"
-            href="#"
-            @click="view = 'all'"
-          >All Activity</a>
-        </li>
-        <li
-          id="daily-view"
-          class="nav-item"
-        >
-          <a
-            class="nav-link"
-            data-toggle="tab"
-            href="#"
-            @click="view = 'daily'"
-          >Daily Activity</a>
-        </li>
-      </ul>
-      
-      <br>
-      <ActivityLog
-        v-if="view === 'all'"
-        :activity="activityEvents"
-      />
-      <div v-if="view === 'daily'">
-        <ActivityLog
-          v-for="(events, day) in activityEvents"
-          :key="day"
-          :day="day"
-          :activity="events"
+      <div v-if="!selectedTag">
+        <!-- Countdown Timer -->
+        <Countdown
+          v-if="!task.completed"
+          :task-id="task.id"
         />
+        <br>
+
+        <!-- Activity Views -->
+        <ActivityView :activity="task.activity" />
       </div>
-      <br>
+
+      <ActivityView
+        v-if="selectedTag"
+        :tag="selectedTag"
+        :activity="tagActivity(selectedTag)"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import Countdown from './Countdown'
-import ActivityLog from './ActivityLog'
+import ActivityView from './ActivityView'
 import { mapGetters, mapMutations } from 'vuex'
-import moment from 'moment'
 
 export default {
   
-  name: 'ActiveTask',
+  name: 'SelectedTask',
   
   components: {
     Countdown,
-    ActivityLog
+    ActivityView
   },
   
   props: {
@@ -214,32 +189,15 @@ export default {
     editing: false,
     newTag: '',
     tagOptions: [],
-    view: 'all'
+    selectedTag: null
   }),
   
   computed: {
     
     ...mapGetters([
-      'availableTags'
-    ]),
-    
-    activityEvents: function () {
-      if (this.view === 'all') {
-        return this.task.activity
-      } else {
-        const dayActivity = {}
-        let day
-        for (let event of this.task.activity) {
-          day = moment(event.time).format('YYYY-MM-DD')
-          if (day in dayActivity) {
-            dayActivity[day].push(event)
-          } else {
-            dayActivity[day] = [event]
-          }
-        }
-        return dayActivity
-      }
-    }
+      'availableTags',
+      'tagActivity'
+    ])
     
   },
   
@@ -261,6 +219,14 @@ export default {
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = []
+    },
+    
+    showTag: function (tag) {
+      if (this.selectedTag && this.selectedTag === tag) {
+        this.selectedTag = null
+      } else {
+        this.selectedTag = tag
+      }
     },
     
     removeTag: function (tag) {
