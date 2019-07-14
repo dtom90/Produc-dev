@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
 import { eventTypes } from './constants'
 
 Vue.use(Vuex)
+
+const vuexLocalStorage = new VuexPersist({
+  key: 'vuex', // The key to store the state on in the storage provider.
+  storage: window.localStorage // or window.sessionStorage or localForage
+})
 
 const event = type => ({ type, time: Date.now() })
 
@@ -97,6 +103,8 @@ export default new Vuex.Store({
     }).flat().sort((a, b) => a.time - b.time)
   },
   
-  mutations
+  mutations,
+  
+  plugins: [vuexLocalStorage.plugin]
   
 })
