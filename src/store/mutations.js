@@ -1,17 +1,6 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import VuexPersist from 'vuex-persist'
 import { eventTypes } from './constants'
 
-Vue.use(Vuex)
-
-const vuexLocalStorage = new VuexPersist({
-  storage: window.localStorage
-})
-
 const event = type => ({ type, time: Date.now() })
-
-const completedDate = task => task.activity.filter(event => event.type === eventTypes.Completed)[0].time
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -19,11 +8,11 @@ const addElem = (arr, elem) => {
   }
 }
 
-const deleteTag = (arr, tag) => {
-  arr.splice(arr.indexOf(tag), 1)
+const deleteElem = (arr, elem) => {
+  arr.splice(arr.indexOf(elem), 1)
 }
 
-export const mutations = {
+const mutations = {
   
   addTask (state, newTaskName) {
     const newTask = {
@@ -58,8 +47,8 @@ export const mutations = {
   
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    deleteTag(task.tags, payload.tag)
-    deleteTag(state.tags[payload.tag], payload.id)
+    deleteElem(task.tags, payload.tag)
+    deleteElem(state.tags[payload.tag], payload.id)
   },
   
   completeTask (state, id) {
@@ -87,36 +76,4 @@ export const mutations = {
   }
 }
 
-export default new Vuex.Store({
-  
-  state: {
-    tasks: [],
-    tags: {},
-    selectedTask: null
-  },
-  
-  getters: {
-    incompleteTasks (state) {
-      const incompleteTasks = state.tasks.filter(t => !t.completed)
-      return state.incompleteOrder === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
-    },
-    
-    completedTasks (state) {
-      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => completedDate(a) - completedDate(b))
-      return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
-    },
-    
-    availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
-      tag.startsWith(snip) && !state.tags[tag].includes(id)),
-    
-    tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
-      const task = state.tasks.find(t => t.id === taskID)
-      return task.activity.map(event => Object.assign({ task: task.name }, event))
-    }).flat().sort((a, b) => a.time - b.time)
-  },
-  
-  mutations,
-  
-  plugins: [vuexLocalStorage.plugin]
-  
-})
+export default mutations

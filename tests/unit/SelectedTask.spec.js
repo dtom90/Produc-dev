@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import SelectedTask from '@/components/SelectedTask.vue'
 import ActivityView from '@/components/ActivityView.vue'
-import { eventTypes } from '@/constants'
+import { eventTypes } from '@/store/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 
 import moment from 'moment'

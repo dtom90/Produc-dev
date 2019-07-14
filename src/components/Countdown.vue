@@ -56,7 +56,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { eventTypes } from '@/constants'
+import { eventTypes } from '@/store/constants'
 
 export default {
   
