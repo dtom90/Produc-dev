@@ -1,5 +1,7 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? `${process.cwd()}/dist/`
-    : '/'
+  publicPath: process.env.BASE_URL
+    ? process.env.BASE_URL
+    : process.env.BUILD_ENV === 'electron'
+      ? `${process.cwd()}/dist-electron/`
+      : '/'
 }

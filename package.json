@@ -5,15 +5,16 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "dev:electron": "vue-cli-service serve & sleep 5 && NODE_ENV=DEV electron app.js",
-    "build": "vue-cli-service build",
+    "build:web": "vue-cli-service build",
     "build:gh-pages": "vue-cli-service build --mode gh-pages --dest docs",
-    "serve:web": "serve -s dist -p 8081",
+    "build:electron": "vue-cli-service build --mode electron --dest dist-electron",
+    "serve:web": "serve -s dist",
     "serve:electron": "electron app.js",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e:dev": "testcafe chrome tests/e2e --app \"yarn run dev\"",
-    "test:e2e:prod": "yarn run build && PORT=8081 testcafe chrome:headless tests/e2e --app \"yarn run serve:prod\"",
+    "test:e2e:prod": "yarn run build && PORT=8081 testcafe chrome:headless tests/e2e --app \"yarn run serve:web\"",
     "test": "yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
   },
   "dependencies": {
