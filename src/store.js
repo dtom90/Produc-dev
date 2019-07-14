@@ -6,13 +6,22 @@ import { eventTypes } from './constants'
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({
-  key: 'vuex', // The key to store the state on in the storage provider.
-  storage: window.localStorage // or window.sessionStorage or localForage
+  storage: window.localStorage
 })
 
 const event = type => ({ type, time: Date.now() })
 
 const completedDate = task => task.activity.filter(event => event.type === eventTypes.Completed)[0].time
+
+const addElem = (arr, elem) => {
+  if (!(arr.includes(elem))) {
+    arr.push(elem)
+  }
+}
+
+const deleteTag = (arr, tag) => {
+  arr.splice(arr.indexOf(tag), 1)
+}
 
 export const mutations = {
   
@@ -20,7 +29,7 @@ export const mutations = {
     const newTask = {
       id: state.tasks.length,
       name: newTaskName,
-      tags: new Set([]),
+      tags: [],
       completed: false,
       activity: [event(eventTypes.Created)]
     }
@@ -39,15 +48,18 @@ export const mutations = {
   
   addTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    if (!(payload.tag in state.tags)) state.tags[payload.tag] = new Set([task.id])
-    else state.tags[payload.tag].add(task.id)
-    task.tags.add(payload.tag)
+    if (!(payload.tag in state.tags)) {
+      state.tags[payload.tag] = [task.id]
+    } else {
+      addElem(state.tags[payload.tag], task.id)
+    }
+    addElem(task.tags, payload.tag)
   },
   
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    task.tags.delete(payload.tag)
-    state.tags[payload.tag].delete(payload.id)
+    deleteTag(task.tags, payload.tag)
+    deleteTag(state.tags[payload.tag], payload.id)
   },
   
   completeTask (state, id) {
@@ -95,7 +107,7 @@ export default new Vuex.Store({
     },
     
     availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
-      tag.startsWith(snip) && !state.tags[tag].has(id)),
+      tag.startsWith(snip) && !state.tags[tag].includes(id)),
     
     tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
       const task = state.tasks.find(t => t.id === taskID)
