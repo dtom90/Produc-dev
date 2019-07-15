@@ -25,12 +25,16 @@ const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new t
 const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
 
-// Active Task selectors
-const activeSection = Selector('.section.active-task')
-const checkbox = activeSection.find('input').withAttribute('type', 'checkbox')
-const menuButton = activeSection.find('button').child('svg.fa-ellipsis-v')
-const saveButton = () => activeSection.find('button').find('svg.fa-save')
-const deleteButton = taskName => activeSection.withText(taskName).find('button').find('svg.fa-trash-alt')
+// Selected Task selectors
+const selectedSection = Selector('.section.active-task')
+const selectedTaskName = selectedSection.find('#task-name')
+const checkbox = selectedSection.find('input').withAttribute('type', 'checkbox')
+const menuButton = selectedSection.find('button').child('svg.fa-ellipsis-v')
+const saveButton = () => selectedSection.find('button').find('svg.fa-save')
+const deleteButton = taskName => selectedSection.withText(taskName).find('button').find('svg.fa-trash-alt')
+const tagInput = selectedSection.find('input[placeholder="add new tag"]')
+const tag = selectedSection.find('.tag')
+const tagOption = selectedSection.find('button.tag-option')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Done')
@@ -46,6 +50,11 @@ const tasksPresent = ClientFunction((taskList, expectedTasks) => {
   const tasks = taskList().childNodes
   return tasks.length === expectedTasks.length &&
     [].every.call(tasks, (task, i) => task.textContent.includes(expectedTasks[i]))
+})
+
+const tagOptions = ClientFunction(() => {
+  const tags = document.querySelectorAll('button.tag-option')
+  return Array.apply(null, tags).map(tag => tag.innerText)
 })
 
 const deleteHandler = ClientFunction((type, text) => {
@@ -78,16 +87,34 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(doneTasks.count).eql(0)
     
     // Add task 1
-    .typeText(newTaskInput, task1).pressKey('enter')
+    .typeText(newTaskInput, task1)
+    .pressKey('enter')
     .expect(tasksPresent(todoList, [task1])).ok()
+    .expect(selectedTaskName.textContent).eql(task1)
+    
+    // Add a tag to task 1
+    .click(tagInput)
+    .expect(tagOptions()).eql([])
+    .typeText(tagInput, 'my tag')
+    .pressKey('enter')
+    .expect(tag.withText('my tag').visible).ok()
     
     // Add task 2
     .typeText(newTaskInput, task2).pressKey('enter')
     .expect(tasksPresent(todoList, [task2, task1])).ok()
+    .expect(selectedTaskName.textContent).eql(task2)
+    
+    // Add the previous tag to task 2
+    .expect(tag.withText('my tag').exists).notOk()
+    .click(tagInput)
+    .expect(tagOptions()).eql(['my tag'])
+    .click(tagOption.withText('my tag'))
+    .expect(tag.withText('my tag').visible).ok()
     
     // Add task 3
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList, [task3, task2, task1])).ok()
+    .expect(selectedTaskName.textContent).eql(task3)
     
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
@@ -104,17 +131,19 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Add task 4
     .typeText(newTaskInput, task4).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2, task3, task4])).ok()
+    .expect(selectedTaskName.textContent).eql(task4)
     
     // Add task 5
     .typeText(newTaskInput, task5).pressKey('enter')
     .expect(tasksPresent(todoList, [task1, task2, task3, task4, task5])).ok()
+    .expect(selectedTaskName.textContent).eql(task5)
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
-    .expect(activeSection.withText(task4).visible).ok()
+    .expect(selectedSection.withText(task4).visible).ok()
     .click(checkbox(task4))
     .click(todoTasks.withText(task2))
-    .expect(activeSection.withText(task2).visible).ok()
+    .expect(selectedSection.withText(task2).visible).ok()
     .click(checkbox(task2))
     .expect(tasksPresent(todoList, [task1, task3, task5])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()
@@ -139,12 +168,12 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Modify task 3 in the Active section
     .click(todoTasks.withText(task3))
-    .expect(activeSection.withText(task3).visible).ok()
-    .click(activeSection.find('span').withText(task3))
-    .expect(activeSection.find('input.edit-task').value).eql(task3)
-    .typeText(activeSection.find('input.edit-task'), ' modified', { caretPos: 3 })
+    .expect(selectedSection.withText(task3).visible).ok()
+    .click(selectedSection.find('span').withText(task3))
+    .expect(selectedSection.find('input.edit-task').value).eql(task3)
+    .typeText(selectedSection.find('input.edit-task'), ' modified', { caretPos: 3 })
     .pressKey('enter')
-    .expect(activeSection.withText(task3mod).visible).ok()
+    .expect(selectedSection.withText(task3mod).visible).ok()
     .expect(tasksPresent(todoList, [task1, task3mod, task5])).ok()
     .expect(tasksPresent(doneList, [task2, task4])).ok()
     
@@ -178,10 +207,10 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Modify task 2 in the completed list
     .click(doneTasks.withText(task2))
-    .expect(activeSection.withText(task2).visible).ok()
-    .click(activeSection.find('span').withText(task2))
-    .expect(activeSection.find('input.edit-task').value).eql(task2)
-    .typeText(activeSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
+    .expect(selectedSection.withText(task2).visible).ok()
+    .click(selectedSection.find('span').withText(task2))
+    .expect(selectedSection.find('input.edit-task').value).eql(task2)
+    .typeText(selectedSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
     .click(saveButton())
     .expect(tasksPresent(todoList, [task5])).ok()
     .expect(tasksPresent(doneList, [task2mod, task4])).ok()
