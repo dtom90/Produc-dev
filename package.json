@@ -4,14 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "dev:electron": "vue-cli-service serve & sleep 5 && NODE_ENV=DEV electron app.js",
+    "build:web": "vue-cli-service build",
     "build:gh-pages": "vue-cli-service build --mode gh-pages --dest docs",
-    "serve:prod": "serve -s dist -p 8081",
+    "build:electron": "vue-cli-service build --mode electron --dest dist-electron",
+    "serve:web": "serve -s dist",
+    "serve:electron": "electron app.js",
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e:dev": "testcafe chrome tests/e2e --app \"yarn run dev\"",
-    "test:e2e:prod": "yarn run build && PORT=8081 testcafe chrome:headless tests/e2e --app \"yarn run serve:prod\"",
+    "test:e2e:prod": "yarn run build:web && PORT=5000 testcafe chrome:headless tests/e2e --app \"yarn run serve:web\"",
     "test": "yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
   },
   "dependencies": {
@@ -25,7 +28,8 @@
     "sass-loader": "^7.1.0",
     "serve": "^11.0.1",
     "vue": "^2.6.10",
-    "vuex": "^3.1.1"
+    "vuex": "^3.1.1",
+    "vuex-persist": "^2.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
@@ -35,6 +39,7 @@
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
+    "electron": "^5.0.6",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.17.3",

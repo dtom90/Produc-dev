@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { eventTypes, eventNames } from '@/constants'
+import { eventTypes, eventNames } from '@/store/constants'
 import moment from 'moment'
 
 export default {

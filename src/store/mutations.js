@@ -1,20 +1,24 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import { eventTypes } from './constants'
-
-Vue.use(Vuex)
 
 const event = type => ({ type, time: Date.now() })
 
-const completedDate = task => task.activity.filter(event => event.type === eventTypes.Completed)[0].time
+const addElem = (arr, elem) => {
+  if (!(arr.includes(elem))) {
+    arr.push(elem)
+  }
+}
 
-export const mutations = {
+const deleteElem = (arr, elem) => {
+  arr.splice(arr.indexOf(elem), 1)
+}
+
+const mutations = {
   
   addTask (state, newTaskName) {
     const newTask = {
       id: state.tasks.length,
       name: newTaskName,
-      tags: new Set([]),
+      tags: [],
       completed: false,
       activity: [event(eventTypes.Created)]
     }
@@ -33,15 +37,18 @@ export const mutations = {
   
   addTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    if (!(payload.tag in state.tags)) state.tags[payload.tag] = new Set([task.id])
-    else state.tags[payload.tag].add(task.id)
-    task.tags.add(payload.tag)
+    if (!(payload.tag in state.tags)) {
+      state.tags[payload.tag] = [task.id]
+    } else {
+      addElem(state.tags[payload.tag], task.id)
+    }
+    addElem(task.tags, payload.tag)
   },
   
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    task.tags.delete(payload.tag)
-    state.tags[payload.tag].delete(payload.id)
+    deleteElem(task.tags, payload.tag)
+    deleteElem(state.tags[payload.tag], payload.id)
   },
   
   completeTask (state, id) {
@@ -69,34 +76,4 @@ export const mutations = {
   }
 }
 
-export default new Vuex.Store({
-  
-  state: {
-    tasks: [],
-    tags: {},
-    selectedTask: null
-  },
-  
-  getters: {
-    incompleteTasks (state) {
-      const incompleteTasks = state.tasks.filter(t => !t.completed)
-      return state.incompleteOrder === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
-    },
-    
-    completedTasks (state) {
-      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => completedDate(a) - completedDate(b))
-      return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
-    },
-    
-    availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
-      tag.startsWith(snip) && !state.tags[tag].has(id)),
-    
-    tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
-      const task = state.tasks.find(t => t.id === taskID)
-      return task.activity.map(event => Object.assign({ task: task.name }, event))
-    }).flat().sort((a, b) => a.time - b.time)
-  },
-  
-  mutations
-  
-})
+export default mutations

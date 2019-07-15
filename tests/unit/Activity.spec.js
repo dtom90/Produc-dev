@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import Activity from '@/components/Activity.vue'
-import { eventTypes } from '@/constants'
+import { eventTypes } from '@/store/constants'
 import moment from 'moment'
 
 const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
