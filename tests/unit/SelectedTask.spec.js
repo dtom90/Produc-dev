@@ -1,10 +1,8 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import SelectedTask from '@/components/SelectedTask.vue'
 import ActivityView from '@/components/ActivityView.vue'
-import { eventTypes } from '@/store/constants'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
-
-import moment from 'moment'
+import { newTask, taskWithActivity } from './fixtures'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
@@ -13,15 +11,7 @@ describe('SelectedTask', () => {
   
   describe('Incomplete Task', () => {
     
-    const task = {
-      id: 1,
-      name: 'new task 1',
-      activity: [{
-        type: eventTypes.Created,
-        time: Date.now()
-      }],
-      completed: false
-    }
+    const task = newTask()
     
     // const getters = {
     //   availableTags: state => jest.fn()
@@ -107,39 +97,7 @@ describe('SelectedTask', () => {
   
   describe('Completed Task', () => {
     
-    const completedDate = new Date()
-    completedDate.setHours(12)
-    const task = {
-      id: 1,
-      name: 'new task 1',
-      activity: [
-        {
-          type: eventTypes.Created,
-          time: moment(completedDate).subtract(1, 'd')
-        },
-        {
-          type: eventTypes.Started,
-          time: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf()
-        },
-        {
-          type: eventTypes.Stopped,
-          time: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
-        },
-        {
-          type: eventTypes.Started,
-          time: moment(completedDate).subtract(30, 'm').valueOf()
-        },
-        {
-          type: eventTypes.Stopped,
-          time: moment(completedDate).subtract(10, 'm').valueOf()
-        },
-        {
-          type: eventTypes.Completed,
-          time: completedDate
-        }
-      ],
-      completed: true
-    }
+    const task = taskWithActivity()
     
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },

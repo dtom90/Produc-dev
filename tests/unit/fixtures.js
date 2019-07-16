@@ -36,3 +36,25 @@ export function generateActivity () {
     completedDate
   }
 }
+
+export function newTask () {
+  
+  return {
+    id: 1,
+    name: 'new task 1',
+    activity: [{
+      type: eventTypes.Created,
+      time: Date.now()
+    }],
+    completed: false
+  }
+  
+}
+
+export function taskWithActivity () {
+  
+  const task = newTask()
+  task.activity = generateActivity().activity
+  return task
+  
+}
