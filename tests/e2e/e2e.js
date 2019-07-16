@@ -46,9 +46,14 @@ const doneList = doneSection.find('.task-list')
 const doneTasks = doneList.find('.task')
 const clearAllButton = Selector('button').withText('Clear All')
 
-const tasksPresent = ClientFunction((list) => {
+const tasksPresent = ClientFunction(list => {
   const tasks = list().querySelectorAll('.task')
   return Array.apply(null, tasks).map(task => task.innerText)
+})
+
+const tagsPresent = ClientFunction(() => {
+  const tags = document.querySelectorAll('.section.active-task .tag > .tag-name')
+  return Array.apply(null, tags).map(tag => tag.innerText)
 })
 
 const tagOptions = ClientFunction(() => {
@@ -92,11 +97,12 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(selectedTaskName.textContent).eql(task1)
     
     // Add a tag to task 1
+    .expect(tagsPresent()).eql([])
     .click(tagInput)
     .expect(tagOptions()).eql([])
     .typeText(tagInput, 'my tag')
     .pressKey('enter')
-    .expect(tag.withText('my tag').visible).ok()
+    .expect(tagsPresent()).eql(['my tag'])
     
     // Add task 2
     .typeText(newTaskInput, task2).pressKey('enter')
@@ -104,16 +110,47 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(selectedTaskName.textContent).eql(task2)
     
     // Add the previous tag to task 2
-    .expect(tag.withText('my tag').exists).notOk()
+    .expect(tagsPresent()).eql([])
     .click(tagInput)
     .expect(tagOptions()).eql(['my tag'])
     .click(tagOption.withText('my tag'))
-    .expect(tag.withText('my tag').visible).ok()
+    .expect(tagsPresent()).eql(['my tag'])
+    
+    // Add another tag to task 2
+    .click(tagInput)
+    .expect(tagOptions()).eql([])
+    .typeText(tagInput, 'another tag')
+    .pressKey('enter')
+    .expect(tagsPresent()).eql(['my tag', 'another tag'])
     
     // Add task 3
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task3, task2, task1])
     .expect(selectedTaskName.textContent).eql(task3)
+    
+    // Add the previous tag to task 3
+    .expect(tagsPresent()).eql([])
+    .click(tagInput)
+    .expect(tagOptions()).eql(['my tag', 'another tag'])
+    .click(tagOption.withText('another tag'))
+    .pressKey('enter')
+    .expect(tagsPresent()).eql(['another tag'])
+    
+    // Go back to task 2 and remove 'another tag'
+    .click(todoTasks.withText(task2))
+    .expect(tagsPresent()).eql(['my tag', 'another tag'])
+    .click(tag.withText('another tag').child('button').withText('x'))
+    .expect(tagsPresent()).eql(['my tag'])
+    
+    // Expect option to reappear when input clicked
+    .click(tagInput)
+    .expect(tagOptions()).eql(['another tag'])
+    
+    // Remove the other tag and then expect both options to reappear
+    .click(tag.withText('my tag').child('button').withText('x'))
+    .expect(tagsPresent()).eql([])
+    .click(tagInput)
+    .expect(tagOptions()).eql(['my tag', 'another tag'])
     
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
