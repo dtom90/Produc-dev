@@ -1,43 +1,15 @@
 import { shallowMount } from '@vue/test-utils'
 import Activity from '@/components/Activity.vue'
-import { eventTypes } from '@/store/constants'
 import moment from 'moment'
+import { generateActivity } from './fixtures'
 
 const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
-const completedDate = new Date()
-completedDate.setHours(12)
+const { activity, completedDate } = generateActivity()
 
 describe('SelectedTask', () => {
-  
-  const activity = [
-    {
-      type: eventTypes.Created,
-      time: moment(completedDate).subtract(1, 'd')
-    },
-    {
-      type: eventTypes.Started,
-      time: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Stopped,
-      time: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Started,
-      time: moment(completedDate).subtract(30, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Stopped,
-      time: moment(completedDate).subtract(10, 'm').valueOf()
-    },
-    {
-      type: eventTypes.Completed,
-      time: completedDate
-    }
-  ]
   
   describe('All Activity', () => {
     
