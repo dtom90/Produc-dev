@@ -132,6 +132,21 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(selectedTaskName.textContent).eql(task3)
     .expect(selectedSection.find('tr').textContent).eql('Created: ' + moment().local().format('ddd MMM DD, h:mm a'))
     
+    // Adjust the timer and expect the dial to remain still
+    .expect(selectedSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedSection.find('p').withText('25:00'))
+    .expect(selectedSection.find('input[type="number"]').visible).ok()
+    .expect(selectedSection.find('button > svg.fa-save').visible).ok()
+    .typeText(selectedSection.find('#edit-wrapper input'), '12', { replace: true })
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedSection.find('button > svg.fa-save'))
+    .expect(selectedSection.find('p').withText('12:00').visible).ok()
+    .click(selectedSection.find('p').withText('12:00'))
+    .typeText(selectedSection.find('#edit-wrapper input'), '25', { replace: true })
+    .pressKey('enter')
+    .expect(selectedSection.find('p').withText('25:00').visible).ok()
+    
     // Add the previous tag to task 3
     .expect(tagsPresent()).eql([])
     .click(tagInput)
@@ -158,8 +173,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(doneSection.find('h3').withText('Done'))
     
     // Press the countdown play button and expect the countdown to decrement
-    .expect(selectedSection.find('#timer-display').visible).ok()
-    .expect(selectedSection.find('#timer-display').textContent).contains('25:00')
+    .expect(selectedSection.find('p').withText('25:00').visible).ok()
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
     .click(selectedSection.find('button > svg.fa-play'))
     .expect(selectedSection.find('tr').textContent).eql('Started: ' + moment().local().format('ddd MMM DD, h:mm a'))

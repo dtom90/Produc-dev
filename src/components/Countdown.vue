@@ -28,6 +28,7 @@
               v-model="timerMinutes"
               type="number"
               class="form-control"
+              @input="secondsRemaining = totalTime"
               @keyup.enter="editing = false"
             >
             <div class="input-group-append">
