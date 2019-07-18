@@ -15,7 +15,9 @@ const getters = {
 
 const mutations = {
   addTaskTag: jest.fn(),
-  removeTaskTag: jest.fn()
+  removeTaskTag: jest.fn(),
+  completeTask: jest.fn(),
+  deleteTask: jest.fn()
 }
 
 const store = new Vuex.Store({
@@ -84,15 +86,25 @@ describe('SelectedTask', () => {
       expect(wrapper.vm.newTag).toBe('some tag')
       
       textInput.trigger('keyup.enter')
-      expect(mutations.addTaskTag).toHaveBeenCalledWith({}, { id: 1, tag: 'some tag' })
+      expect(mutations.addTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: 'some tag' })
       expect(textInput.element.value).toBe('')
       
     })
     
+    it('calls completeTask when the checkbox is clicked', () => {
+      
+      wrapper.find('input[type="checkbox"]').trigger('click')
+      expect(mutations.completeTask).toHaveBeenCalledWith({}, task.id)
+      
+    })
+    
     it('renders a delete button for removing the task', () => {
-    
-      expect(wrapper.find('button.btn-danger').find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
-    
+      
+      const deleteButton = wrapper.find('button.btn-danger')
+      expect(deleteButton.find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
+      deleteButton.trigger('click')
+      expect(mutations.deleteTask).toHaveBeenCalledWith({}, task.id)
+      
     })
     
   })
@@ -118,7 +130,7 @@ describe('SelectedTask', () => {
       expect(removeTagBtn.text()).toEqual('x')
       
       removeTagBtn.trigger('click')
-      expect(mutations.removeTaskTag).toHaveBeenCalledWith({}, { id: 1, tag: 'one tag' })
+      expect(mutations.removeTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: task.tags[0] })
       
     })
     
