@@ -39,7 +39,7 @@ describe('Task', () => {
   it('selects the task when clicked', () => {
   
     wrapper.trigger('click')
-    expect(mutations.selectTask).toHaveBeenCalled()
+    expect(mutations.selectTask).toHaveBeenCalledWith({}, task.id)
     
   })
   

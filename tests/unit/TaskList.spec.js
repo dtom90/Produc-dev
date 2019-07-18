@@ -9,7 +9,8 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
 const mutations = {
-  addTask: jest.fn()
+  addTask: jest.fn(),
+  clearTasks: jest.fn()
 }
 
 const store = new Vuex.Store({
@@ -104,8 +105,19 @@ describe('TaskList', () => {
         taskInput.setValue('new task 4')
         taskInput.trigger('keyup.enter')
   
-        expect(mutations.addTask).toHaveBeenCalled()
+        expect(mutations.addTask).toHaveBeenCalledWith({}, 'new task 4')
         expect(taskInput.element.value).toBe('')
+      }
+      
+    })
+    
+    it('should clear all tasks when the button is clicked', () => {
+  
+      if (title === 'Done') {
+        const clearAllBtn = wrapper.find('button.btn-danger')
+        expect(clearAllBtn.text()).toEqual('Clear All')
+        clearAllBtn.trigger('click')
+        expect(mutations.clearTasks).toHaveBeenCalled()
       }
       
     })
