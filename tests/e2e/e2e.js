@@ -1,4 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe' // first import testcafe selectors
+import moment from 'moment'
 
 const hostname = 'localhost'
 const port = process.env.PORT || '8080'
@@ -26,7 +27,7 @@ const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
 
 // Selected Task selectors
-const selectedSection = Selector('.section.active-task')
+const selectedSection = Selector('#selected-task')
 const selectedTaskName = selectedSection.find('#task-name')
 const checkbox = selectedSection.find('input').withAttribute('type', 'checkbox')
 const menuButton = selectedSection.find('button').child('svg.fa-ellipsis-v')
@@ -52,7 +53,7 @@ const tasksPresent = ClientFunction(list => {
 })
 
 const tagsPresent = ClientFunction(() => {
-  const tags = document.querySelectorAll('.section.active-task .tag > .tag-name')
+  const tags = document.querySelectorAll('.section#selected-task .tag > .tag-name')
   return Array.apply(null, tags).map(tag => tag.innerText)
 })
 
@@ -95,6 +96,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task1])
     .expect(selectedTaskName.textContent).eql(task1)
+    .expect(selectedSection.find('tr').textContent).eql('Created: ' + moment().local().format('ddd MMM DD, h:mm a'))
     
     // Add a tag to task 1
     .expect(tagsPresent()).eql([])
@@ -108,6 +110,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task2).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task2, task1])
     .expect(selectedTaskName.textContent).eql(task2)
+    .expect(selectedSection.find('tr').textContent).eql('Created: ' + moment().local().format('ddd MMM DD, h:mm a'))
     
     // Add the previous tag to task 2
     .expect(tagsPresent()).eql([])
@@ -127,6 +130,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task3, task2, task1])
     .expect(selectedTaskName.textContent).eql(task3)
+    .expect(selectedSection.find('tr').textContent).eql('Created: ' + moment().local().format('ddd MMM DD, h:mm a'))
     
     // Add the previous tag to task 3
     .expect(tagsPresent()).eql([])
@@ -151,6 +155,19 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tagsPresent()).eql([])
     .click(tagInput)
     .expect(tagOptions()).eql(['my tag', 'another tag'])
+    .click(doneSection.find('h3').withText('Done'))
+    
+    // Press the countdown play button and expect the countdown to decrement
+    .expect(selectedSection.find('#timer-display').visible).ok()
+    .expect(selectedSection.find('#timer-display').textContent).contains('25:00')
+    .click(selectedSection.find('button > svg.fa-play'))
+    .expect(selectedSection.find('tr').textContent).eql('Started: ' + moment().local().format('ddd MMM DD, h:mm a'))
+    .expect(selectedSection.find('p').withText('24:59').visible).ok()
+    .expect(selectedSection.find('p').withText('24:58').visible).ok()
+    .expect(selectedSection.find('p').withText('24:57').visible).ok()
+    .click(selectedSection.find('button').child('svg[data-icon="pause"]'))
+    .expect(selectedSection.find('tr').textContent).eql('Stopped: ' + moment().local().format('ddd MMM DD, h:mm a'))
+    .expect(selectedSection.find('p').withText('24:56').exists).notOk()
     
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
@@ -178,9 +195,11 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(todoTasks.withText(task4))
     .expect(selectedSection.withText(task4).visible).ok()
     .click(checkbox(task4))
+    .expect(selectedSection.find('tr').textContent).eql('Completed: ' + moment().local().format('ddd MMM DD, h:mm a'))
     .click(todoTasks.withText(task2))
     .expect(selectedSection.withText(task2).visible).ok()
     .click(checkbox(task2))
+    .expect(selectedSection.find('tr').textContent).eql('Completed: ' + moment().local().format('ddd MMM DD, h:mm a'))
     .expect(tasksPresent(todoList)).eql([task1, task3, task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
