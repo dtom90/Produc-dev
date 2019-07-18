@@ -181,6 +181,8 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
     .expect(selectedSection.find('p').withText('24:58').visible).ok()
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
+    .click(selectedSection.find('p').withText('24:58'))
+    .expect(selectedSection.find('input[type="number"]').exists).notOk()
     .expect(selectedSection.find('p').withText('24:57').visible).ok()
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
     .click(selectedSection.find('button').child('svg[data-icon="pause"]'))

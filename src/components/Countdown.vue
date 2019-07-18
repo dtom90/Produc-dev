@@ -13,7 +13,7 @@
         <p
           v-if="!editing"
           id="timer-display"
-          @click="editing = true"
+          @click="editing = !countingDown"
         >
           {{ displayTime }}
         </p>
