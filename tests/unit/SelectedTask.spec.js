@@ -3,32 +3,35 @@ import SelectedTask from '@/components/SelectedTask.vue'
 import ActivityView from '@/components/ActivityView.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 import { newTask, taskWithActivity } from './fixtures'
+import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
+localVue.use(Vuex)
+
+const getters = {
+  availableTags: () => jest.fn()
+}
+
+const mutations = {
+  addTaskTag: jest.fn(),
+  removeTaskTag: jest.fn()
+}
+
+const store = new Vuex.Store({
+  getters,
+  mutations
+})
 
 describe('SelectedTask', () => {
   
   describe('Incomplete Task', () => {
-    
+  
     const task = newTask()
-    
-    // const getters = {
-    //   availableTags: state => jest.fn()
-    // }
-    //
-    // const mutations = {
-    //   addTaskTag: jest.fn()
-    // }
-    //
-    // const store = new Vuex.Store({
-    //   mutations
-    // })
-    
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
-      localVue
-      // store
+      localVue,
+      store
     })
     
     it('renders the task name when passed', () => {
@@ -70,22 +73,21 @@ describe('SelectedTask', () => {
       
     })
 
-    // it('allows the user to add new tags to the task', () => {
-    //
-    //   expect(wrapper.findAll('.tag').length).toBe(0)
-    //
-    //   const textInput = wrapper.find('#add-tag')
-    //
-    //   textInput.setValue('some tag')
-    //   expect(textInput.element.value).toBe('some tag')
-    //   expect(wrapper.vm.newTag).toBe('some tag')
-    //
-    //   // textInput.trigger('keydown.enter')
-    //   // textInput.trigger('keydown', { key: 'Enter' })
-    //   // expect(mutations.addTaskTag).toHaveBeenCalled()
-    //   // expect(textInput.element.value).toBe('')
-    //
-    // })
+    it('allows the user to add new tags to the task', () => {
+
+      expect(wrapper.findAll('.tag').length).toBe(0)
+
+      const textInput = wrapper.find('#add-tag')
+
+      textInput.setValue('some tag')
+      expect(textInput.element.value).toBe('some tag')
+      expect(wrapper.vm.newTag).toBe('some tag')
+      
+      textInput.trigger('keyup.enter')
+      expect(mutations.addTaskTag).toHaveBeenCalledWith({}, { id: 1, tag: 'some tag' })
+      expect(textInput.element.value).toBe('')
+      
+    })
     
     it('renders a delete button for removing the task', () => {
     
@@ -95,15 +97,41 @@ describe('SelectedTask', () => {
     
   })
   
+  describe('Tagged Task', () => {
+  
+    const task = newTask(true)
+    const wrapper = shallowMount(SelectedTask, {
+      propsData: { task: task },
+      localVue,
+      store
+    })
+  
+    it('allows the user to remove tags from the task', () => {
+      
+      const tags = wrapper.findAll('.tag')
+      
+      expect(tags.length).toBe(2)
+      expect(tags.at(0).text()).toMatch(task.tags[0])
+      expect(tags.at(1).text()).toMatch(task.tags[1])
+  
+      const removeTagBtn = tags.at(0).findAll('button').at(1)
+      expect(removeTagBtn.text()).toEqual('x')
+      
+      removeTagBtn.trigger('click')
+      expect(mutations.removeTaskTag).toHaveBeenCalledWith({}, { id: 1, tag: 'one tag' })
+      
+    })
+    
+  })
+  
   describe('Completed Task', () => {
     
     const task = taskWithActivity()
-    
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue
     })
-  
+    
     it('renders the task activity views', () => {
     
       const renderedActivity = wrapper.find(ActivityView)

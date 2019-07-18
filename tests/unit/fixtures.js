@@ -37,7 +37,9 @@ export function generateActivity () {
   }
 }
 
-export function newTask () {
+export function newTask (includeTags = false) {
+  
+  const tags = includeTags ? ['one tag', 'another tag'] : []
   
   return {
     id: 1,
@@ -46,6 +48,7 @@ export function newTask () {
       type: eventTypes.Created,
       time: Date.now()
     }],
+    tags,
     completed: false
   }
   
