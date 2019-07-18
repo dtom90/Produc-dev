@@ -160,13 +160,19 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Press the countdown play button and expect the countdown to decrement
     .expect(selectedSection.find('#timer-display').visible).ok()
     .expect(selectedSection.find('#timer-display').textContent).contains('25:00')
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
     .click(selectedSection.find('button > svg.fa-play'))
     .expect(selectedSection.find('tr').textContent).eql('Started: ' + moment().local().format('ddd MMM DD, h:mm a'))
     .expect(selectedSection.find('p').withText('24:59').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
     .expect(selectedSection.find('p').withText('24:58').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
     .expect(selectedSection.find('p').withText('24:57').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
     .click(selectedSection.find('button').child('svg[data-icon="pause"]'))
     .expect(selectedSection.find('tr').textContent).eql('Stopped: ' + moment().local().format('ddd MMM DD, h:mm a'))
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
+    .expect(selectedSection.find('p').withText('24:57').visible).ok()
     .expect(selectedSection.find('p').withText('24:56').exists).notOk()
     
     // Switch To Do list order from Oldest First to Newest First

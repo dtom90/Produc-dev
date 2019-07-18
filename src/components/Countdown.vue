@@ -1,9 +1,10 @@
 <template>
   <div
+    id="countdown-container"
     class="d-flex justify-content-center"
     :style="cssProps"
   >
-    <div id="countdown-container">
+    <div id="dial-container">
       <div id="countdown-button-rotator">
         <div id="countdown-button" />
       </div>
@@ -183,7 +184,7 @@ function Timer (callback, interval = 1000) {
 
 <style scoped>
 
-#countdown-container {
+#dial-container {
   position: relative;
   width: 200px;
   height: 200px;
