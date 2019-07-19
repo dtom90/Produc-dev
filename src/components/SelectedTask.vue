@@ -20,10 +20,10 @@
           </div>
 
           <!--  Task Name & Field (when editing)  -->
-          <div class="task-name-container">
+          <div id="task-name-container">
             <span
               v-if="!editing"
-              class="task-name"
+              id="task-name"
               @click="editing = true"
             >{{ task.name }}</span>
             <div
@@ -116,7 +116,7 @@
           class="tag btn-group"
         >
           <button
-            :class="'btn btn-primary' + (selectedTag === tag ? ' active' : '')"
+            :class="'tag-name btn btn-primary' + (selectedTag === tag ? ' active' : '')"
             @click="showTag(tag)"
           >
             {{ tag }}
@@ -247,11 +247,11 @@ export default {
 
 <style scoped lang="scss">
 
-    .task-name-container {
+    #task-name-container {
         margin-left: 5px;
     }
 
-    .task-name {
+    #task-name {
         font-weight: 600;
         font-size: xx-large;
     }

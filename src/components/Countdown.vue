@@ -1,9 +1,10 @@
 <template>
   <div
+    id="countdown-container"
     class="d-flex justify-content-center"
     :style="cssProps"
   >
-    <div id="countdown-container">
+    <div id="dial-container">
       <div id="countdown-button-rotator">
         <div id="countdown-button" />
       </div>
@@ -12,7 +13,7 @@
         <p
           v-if="!editing"
           id="timer-display"
-          @click="editing = true"
+          @click="editing = !countingDown"
         >
           {{ displayTime }}
         </p>
@@ -27,6 +28,7 @@
               v-model="timerMinutes"
               type="number"
               class="form-control"
+              @input="secondsRemaining = totalTime"
               @keyup.enter="editing = false"
             >
             <div class="input-group-append">
@@ -183,7 +185,7 @@ function Timer (callback, interval = 1000) {
 
 <style scoped>
 
-#countdown-container {
+#dial-container {
   position: relative;
   width: 200px;
   height: 200px;

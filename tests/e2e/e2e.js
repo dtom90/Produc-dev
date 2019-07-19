@@ -1,4 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe' // first import testcafe selectors
+import moment from 'moment'
 
 const hostname = 'localhost'
 const port = process.env.PORT || '8080'
@@ -25,12 +26,16 @@ const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new t
 const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
 
-// Active Task selectors
-const activeSection = Selector('.section.active-task')
-const checkbox = activeSection.find('input').withAttribute('type', 'checkbox')
-const menuButton = activeSection.find('button').child('svg.fa-ellipsis-v')
-const saveButton = () => activeSection.find('button').find('svg.fa-save')
-const deleteButton = taskName => activeSection.withText(taskName).find('button').find('svg.fa-trash-alt')
+// Selected Task selectors
+const selectedSection = Selector('#selected-task')
+const selectedTaskName = selectedSection.find('#task-name')
+const checkbox = selectedSection.find('input').withAttribute('type', 'checkbox')
+const menuButton = selectedSection.find('button').child('svg.fa-ellipsis-v')
+const saveButton = () => selectedSection.find('button').find('svg.fa-save')
+const deleteButton = taskName => selectedSection.withText(taskName).find('button').find('svg.fa-trash-alt')
+const tagInput = selectedSection.find('input[placeholder="add new tag"]')
+const tag = selectedSection.find('.tag')
+const tagOption = selectedSection.find('button.tag-option')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Done')
@@ -42,10 +47,19 @@ const doneList = doneSection.find('.task-list')
 const doneTasks = doneList.find('.task')
 const clearAllButton = Selector('button').withText('Clear All')
 
-const tasksPresent = ClientFunction((taskList, expectedTasks) => {
-  const tasks = taskList().childNodes
-  return tasks.length === expectedTasks.length &&
-    [].every.call(tasks, (task, i) => task.textContent.includes(expectedTasks[i]))
+const tasksPresent = ClientFunction(list => {
+  const tasks = list().querySelectorAll('.task')
+  return Array.apply(null, tasks).map(task => task.innerText)
+})
+
+const tagsPresent = ClientFunction(() => {
+  const tags = document.querySelectorAll('.section#selected-task .tag > .tag-name')
+  return Array.apply(null, tags).map(tag => tag.innerText)
+})
+
+const tagOptions = ClientFunction(() => {
+  const tags = document.querySelectorAll('button.tag-option')
+  return Array.apply(null, tags).map(tag => tag.innerText)
 })
 
 const deleteHandler = ClientFunction((type, text) => {
@@ -67,6 +81,17 @@ const deleteHandler = ClientFunction((type, text) => {
   }
 })
 
+const eventNow = (type) => {
+  const now = moment().local()
+  const oneMinAgo = moment(now).subtract(1, 'minute')
+  const oneMinAhead = moment(now).add(1, 'minute')
+  return new RegExp([
+    `${type}: ${oneMinAgo.format('ddd MMM DD, h:mm a')}`,
+    `${type}: ${now.format('ddd MMM DD, h:mm a')}`,
+    `${type}: ${oneMinAhead.format('ddd MMM DD, h:mm a')}`
+  ].join('|'))
+}
+
 // then create a test and place your code there
 test('Create, Complete and Delete Tasks to Test Functionality', async t => {
   await t
@@ -78,16 +103,104 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(doneTasks.count).eql(0)
     
     // Add task 1
-    .typeText(newTaskInput, task1).pressKey('enter')
-    .expect(tasksPresent(todoList, [task1])).ok()
+    .typeText(newTaskInput, task1)
+    .pressKey('enter')
+    .expect(tasksPresent(todoList)).eql([task1])
+    .expect(selectedTaskName.textContent).eql(task1)
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Created'))
+    
+    // Add a tag to task 1
+    .expect(tagsPresent()).eql([])
+    .click(tagInput)
+    .expect(tagOptions()).eql([])
+    .typeText(tagInput, 'my tag')
+    .pressKey('enter')
+    .expect(tagsPresent()).eql(['my tag'])
     
     // Add task 2
     .typeText(newTaskInput, task2).pressKey('enter')
-    .expect(tasksPresent(todoList, [task2, task1])).ok()
+    .expect(tasksPresent(todoList)).eql([task2, task1])
+    .expect(selectedTaskName.textContent).eql(task2)
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Created'))
+    
+    // Add the previous tag to task 2
+    .expect(tagsPresent()).eql([])
+    .click(tagInput)
+    .expect(tagOptions()).eql(['my tag'])
+    .click(tagOption.withText('my tag'))
+    .expect(tagsPresent()).eql(['my tag'])
+    
+    // Add another tag to task 2
+    .click(tagInput)
+    .expect(tagOptions()).eql([])
+    .typeText(tagInput, 'another tag')
+    .pressKey('enter')
+    .expect(tagsPresent()).eql(['my tag', 'another tag'])
     
     // Add task 3
     .typeText(newTaskInput, task3).pressKey('enter')
-    .expect(tasksPresent(todoList, [task3, task2, task1])).ok()
+    .expect(tasksPresent(todoList)).eql([task3, task2, task1])
+    .expect(selectedTaskName.textContent).eql(task3)
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Created'))
+    
+    // Adjust the timer and expect the dial to remain still
+    .expect(selectedSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedSection.find('p').withText('25:00'))
+    .expect(selectedSection.find('input[type="number"]').visible).ok()
+    .expect(selectedSection.find('button > svg.fa-save').visible).ok()
+    .typeText(selectedSection.find('#edit-wrapper input'), '12', { replace: true })
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedSection.find('button > svg.fa-save'))
+    .expect(selectedSection.find('p').withText('12:00').visible).ok()
+    .click(selectedSection.find('p').withText('12:00'))
+    .typeText(selectedSection.find('#edit-wrapper input'), '25', { replace: true })
+    .pressKey('enter')
+    .expect(selectedSection.find('p').withText('25:00').visible).ok()
+    
+    // Add the previous tag to task 3
+    .expect(tagsPresent()).eql([])
+    .click(tagInput)
+    .expect(tagOptions()).eql(['my tag', 'another tag'])
+    .click(tagOption.withText('another tag'))
+    .pressKey('enter')
+    .expect(tagsPresent()).eql(['another tag'])
+    
+    // Go back to task 2 and remove 'another tag'
+    .click(todoTasks.withText(task2))
+    .expect(tagsPresent()).eql(['my tag', 'another tag'])
+    .click(tag.withText('another tag').child('button').withText('x'))
+    .expect(tagsPresent()).eql(['my tag'])
+    
+    // Expect option to reappear when input clicked
+    .click(tagInput)
+    .expect(tagOptions()).eql(['another tag'])
+    
+    // Remove the other tag and then expect both options to reappear
+    .click(tag.withText('my tag').child('button').withText('x'))
+    .expect(tagsPresent()).eql([])
+    .click(tagInput)
+    .expect(tagOptions()).eql(['my tag', 'another tag'])
+    .click(doneSection.find('h3').withText('Done'))
+    
+    // Press the countdown play button and expect the countdown to decrement
+    .expect(selectedSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedSection.find('button > svg.fa-play'))
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Started'))
+    .expect(selectedSection.find('p').withText('24:59').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedSection.find('p').withText('24:58').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
+    .click(selectedSection.find('p').withText('24:58'))
+    .expect(selectedSection.find('input[type="number"]').exists).notOk()
+    .expect(selectedSection.find('p').withText('24:57').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
+    .click(selectedSection.find('button').child('svg[data-icon="pause"]'))
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Stopped'))
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
+    .expect(selectedSection.find('p').withText('24:57').visible).ok()
+    .expect(selectedSection.find('p').withText('24:56').exists).notOk()
     
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
@@ -99,25 +212,29 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(todoSortSelect)
     .click(todoSortOption.withText('Oldest'))
     .expect(todoSortSelect.value).eql('Oldest')
-    .expect(tasksPresent(todoList, [task1, task2, task3])).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task2, task3])
     
     // Add task 4
     .typeText(newTaskInput, task4).pressKey('enter')
-    .expect(tasksPresent(todoList, [task1, task2, task3, task4])).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task2, task3, task4])
+    .expect(selectedTaskName.textContent).eql(task4)
     
     // Add task 5
     .typeText(newTaskInput, task5).pressKey('enter')
-    .expect(tasksPresent(todoList, [task1, task2, task3, task4, task5])).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task2, task3, task4, task5])
+    .expect(selectedTaskName.textContent).eql(task5)
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
-    .expect(activeSection.withText(task4).visible).ok()
+    .expect(selectedSection.withText(task4).visible).ok()
     .click(checkbox(task4))
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Completed'))
     .click(todoTasks.withText(task2))
-    .expect(activeSection.withText(task2).visible).ok()
+    .expect(selectedSection.withText(task2).visible).ok()
     .click(checkbox(task2))
-    .expect(tasksPresent(todoList, [task1, task3, task5])).ok()
-    .expect(tasksPresent(doneList, [task2, task4])).ok()
+    .expect(selectedSection.find('tr').textContent).match(eventNow('Completed'))
+    .expect(tasksPresent(todoList)).eql([task1, task3, task5])
+    .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Switch completed list order from Oldest First to Newest First
     .expect(doneSortLabel.visible).notOk()
@@ -129,78 +246,78 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(doneSortSelect)
     .click(doneSortOption.withText('Oldest'))
     .expect(doneSortSelect.value).eql('Oldest')
-    .expect(tasksPresent(doneList, [task4, task2])).ok()
+    .expect(tasksPresent(doneList)).eql([task4, task2])
     .expect(doneSortLabel.visible).ok()
     .expect(doneSortSelect.visible).ok()
     .expect(doneSortSelect.value).eql('Oldest')
     .click(doneSortSelect)
     .click(doneSortOption.withText('Recent'))
-    .expect(tasksPresent(doneList, [task2, task4])).ok()
+    .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Modify task 3 in the Active section
     .click(todoTasks.withText(task3))
-    .expect(activeSection.withText(task3).visible).ok()
-    .click(activeSection.find('span').withText(task3))
-    .expect(activeSection.find('input.edit-task').value).eql(task3)
-    .typeText(activeSection.find('input.edit-task'), ' modified', { caretPos: 3 })
+    .expect(selectedSection.withText(task3).visible).ok()
+    .click(selectedSection.find('span').withText(task3))
+    .expect(selectedSection.find('input.edit-task').value).eql(task3)
+    .typeText(selectedSection.find('input.edit-task'), ' modified', { caretPos: 3 })
     .pressKey('enter')
-    .expect(activeSection.withText(task3mod).visible).ok()
-    .expect(tasksPresent(todoList, [task1, task3mod, task5])).ok()
-    .expect(tasksPresent(doneList, [task2, task4])).ok()
+    .expect(selectedSection.withText(task3mod).visible).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task3mod, task5])
+    .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Mark task 3 as complete
     .click(checkbox(task3mod))
-    .expect(tasksPresent(todoList, [task1, task5])).ok()
-    .expect(tasksPresent(doneList, [task3mod, task2, task4])).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task5])
+    .expect(tasksPresent(doneList)).eql([task3mod, task2, task4])
     
     // Click task 5 delete button, expect confirmation popup, do not confirm
     .setNativeDialogHandler(deleteHandler, { dependencies: { taskName: task5, deleteTask: false } })
     .click(todoTasks.withText(task5))
     .click(menuButton)
     .click(deleteButton(task5))
-    .expect(tasksPresent(todoList, [task1, task5])).ok()
-    .expect(tasksPresent(doneList, [task3mod, task2, task4])).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task5])
+    .expect(tasksPresent(doneList)).eql([task3mod, task2, task4])
     
     // Click task 3 delete button, expect no confirmation popup
     .click(doneTasks.withText(task3mod))
     .click(menuButton)
     .click(deleteButton(task3mod))
-    .expect(tasksPresent(todoList, [task1, task5])).ok()
-    .expect(tasksPresent(doneList, [task2, task4])).ok()
+    .expect(tasksPresent(todoList)).eql([task1, task5])
+    .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Click task 1 delete button, expect confirmation popup, confirm delete
     .setNativeDialogHandler(deleteHandler, { dependencies: { taskName: task1, deleteTask: true } })
     .click(todoTasks.withText(task1))
     .click(menuButton)
     .click(deleteButton(task1))
-    .expect(tasksPresent(todoList, [task5])).ok()
-    .expect(tasksPresent(doneList, [task2, task4])).ok()
+    .expect(tasksPresent(todoList)).eql([task5])
+    .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Modify task 2 in the completed list
     .click(doneTasks.withText(task2))
-    .expect(activeSection.withText(task2).visible).ok()
-    .click(activeSection.find('span').withText(task2))
-    .expect(activeSection.find('input.edit-task').value).eql(task2)
-    .typeText(activeSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
+    .expect(selectedSection.withText(task2).visible).ok()
+    .click(selectedSection.find('span').withText(task2))
+    .expect(selectedSection.find('input.edit-task').value).eql(task2)
+    .typeText(selectedSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
     .click(saveButton())
-    .expect(tasksPresent(todoList, [task5])).ok()
-    .expect(tasksPresent(doneList, [task2mod, task4])).ok()
+    .expect(tasksPresent(todoList)).eql([task5])
+    .expect(tasksPresent(doneList)).ok([task2mod, task4])
     
     // Click the Clear button to clear all completed tasks
     .setNativeDialogHandler(deleteHandler, { dependencies: { numCompletedTasks: 2, deleteTask: true } })
     .click(doneMenuButton)
     .click(clearAllButton)
-    .expect(tasksPresent(todoList, [task5])).ok()
-    .expect(tasksPresent(doneList, [])).ok()
+    .expect(tasksPresent(todoList)).eql([task5])
+    .expect(tasksPresent(doneList)).eql([])
     
     // Complete task 5, click the Clear button, expect no popup
     .click(todoTasks.withText(task5))
     .click(checkbox(task5))
-    .expect(tasksPresent(todoList, [])).ok()
-    .expect(tasksPresent(doneList, [task5])).ok()
+    .expect(tasksPresent(todoList)).eql([])
+    .expect(tasksPresent(doneList)).eql([task5])
     .setNativeDialogHandler(deleteHandler, { dependencies: { numCompletedTasks: 9, deleteTask: false } })
     .click(doneMenuButton)
     .click(clearAllButton)
-    .expect(tasksPresent(todoList, [])).ok()
-    .expect(tasksPresent(doneList, [])).ok()
+    .expect(tasksPresent(todoList)).eql([])
+    .expect(tasksPresent(doneList)).eql([])
 })

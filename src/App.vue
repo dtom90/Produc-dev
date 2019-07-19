@@ -10,7 +10,10 @@
       />
     </div>
 
-    <div class="section active-task">
+    <div
+      id="selected-task"
+      class="section"
+    >
       <SelectedTask :task="selectedTask" />
     </div>
     
@@ -71,7 +74,7 @@ export default {
     flex: 2;
   }
   
-  .active-task {
+  #selected-task {
     flex: 3;
   }
   

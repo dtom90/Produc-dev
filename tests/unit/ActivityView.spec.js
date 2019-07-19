@@ -1,40 +1,12 @@
 import { shallowMount } from '@vue/test-utils'
 import ActivityView from '@/components/ActivityView.vue'
 import Activity from '@/components/Activity.vue'
-import { eventTypes } from '@/store/constants'
+import { generateActivity } from './fixtures'
 import moment from 'moment'
 
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 
-const completedDate = new Date()
-completedDate.setHours(12)
-
-const activity = [
-  {
-    type: eventTypes.Created,
-    time: moment(completedDate).subtract(1, 'd')
-  },
-  {
-    type: eventTypes.Started,
-    time: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf()
-  },
-  {
-    type: eventTypes.Stopped,
-    time: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
-  },
-  {
-    type: eventTypes.Started,
-    time: moment(completedDate).subtract(30, 'm').valueOf()
-  },
-  {
-    type: eventTypes.Stopped,
-    time: moment(completedDate).subtract(10, 'm').valueOf()
-  },
-  {
-    type: eventTypes.Completed,
-    time: completedDate
-  }
-]
+const { activity, completedDate } = generateActivity()
 
 const shouldBehaveLikeActivityView = function (wrapper) {
   

@@ -1,14 +1,21 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import TaskList from '@/components/TaskList.vue'
 import Task from '@/components/Task.vue'
-
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTrashAlt, faSave, faSort, faBars, faCog, faEllipsisH, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
-library.add(faTrashAlt, faSave, faSort, faBars, faCog, faEllipsisH, faPencilAlt)
+import { FontAwesomeIcon } from '@/font-awesome-icons'
+import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
+localVue.use(Vuex)
+
+const mutations = {
+  addTask: jest.fn(),
+  clearTasks: jest.fn()
+}
+
+const store = new Vuex.Store({
+  mutations
+})
 
 const tasks = [
   { id: 1, name: 'new task 1' },
@@ -30,7 +37,8 @@ describe('TaskList', () => {
     
     const wrapper = shallowMount(TaskList, {
       propsData: Object.assign(titleProps, { tasks: tasks }),
-      localVue
+      localVue,
+      store
     })
     
     it(`should have the title "${title}"`, () => {
@@ -86,6 +94,31 @@ describe('TaskList', () => {
         const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
         expect(renderedTask.props().task.name).toMatch(tasks[index].name)
       })
+      
+    })
+    
+    it('should add a new task when entered', () => {
+      
+      if (title === 'To Do') {
+        const taskInput = wrapper.find('input[placeholder="enter new task"]')
+        taskInput.trigger('click')
+        taskInput.setValue('new task 4')
+        taskInput.trigger('keyup.enter')
+  
+        expect(mutations.addTask).toHaveBeenCalledWith({}, 'new task 4')
+        expect(taskInput.element.value).toBe('')
+      }
+      
+    })
+    
+    it('should clear all tasks when the button is clicked', () => {
+  
+      if (title === 'Done') {
+        const clearAllBtn = wrapper.find('button.btn-danger')
+        expect(clearAllBtn.text()).toEqual('Clear All')
+        clearAllBtn.trigger('click')
+        expect(mutations.clearTasks).toHaveBeenCalled()
+      }
       
     })
     
