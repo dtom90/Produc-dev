@@ -212,6 +212,19 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task5).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task1, task2, task3, task4, task5])
     .expect(selectedTaskName.textContent).eql(task5)
+  
+    // Start timer and switch tasks midway
+    .expect(selectedSection.find('p').withText('24:57').visible).ok()
+    .click(selectedSection.find('button > svg.fa-play'))
+    .expect(selectedSection.find('tr').textContent).eql('Started: ' + moment().local().format('ddd MMM DD, h:mm a'))
+    .expect(selectedSection.find('p').withText('24:56').visible).ok()
+    .expect(selectedSection.find('p').withText('24:55').visible).ok()
+    .click(todoTasks.withText(task4))
+  const switchTime = moment().local()
+  await t
+    .expect(selectedSection.find('tr').textContent).eql('Started: ' + switchTime.format('ddd MMM DD, h:mm a'))
+    .click(todoTasks.withText(task5))
+    .expect(selectedSection.find('tr').textContent).eql('Stopped: ' + switchTime.format('ddd MMM DD, h:mm a'))
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
