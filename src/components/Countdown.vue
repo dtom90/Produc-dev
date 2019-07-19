@@ -103,6 +103,21 @@ export default {
     }
     
   },
+
+  watch: {
+    taskId: function (newId, oldId) {
+      if (this.countingDown) {
+        this.addTaskEvent({
+          id: oldId,
+          type: eventTypes.Stopped
+        })
+        this.addTaskEvent({
+          id: newId,
+          type: eventTypes.Started
+        })
+      }
+    }
+  },
   
   mounted: function () {
     this.secondsRemaining = this.totalTime
