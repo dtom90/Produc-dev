@@ -53,6 +53,7 @@ const mutations = {
   
   completeTask (state, id) {
     const task = state.tasks.find(t => t.id === id)
+    task.completed = !task.completed
     if (task.completed) {
       task.activity.push(event(eventTypes.Completed))
     } else {
