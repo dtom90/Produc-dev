@@ -36,6 +36,14 @@ describe('SelectedTask', () => {
       store
     })
     
+    it('renders an empty checkbox', () => {
+      
+      const checkboxContainer = wrapper.find('.checkbox-container')
+      expect(checkboxContainer.find('span.check-custom').isVisible()).toBe(true)
+      expect(checkboxContainer.find('input[type="checkbox"]').element.checked).toBe(false)
+      
+    })
+    
     it('renders the task name when passed', () => {
     
       expect(wrapper.text()).toMatch(task.name)
@@ -142,6 +150,14 @@ describe('SelectedTask', () => {
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue
+    })
+    
+    it('renders a checked checkbox', () => {
+    
+      const checkboxContainer = wrapper.find('.checkbox-container')
+      expect(checkboxContainer.find('span.check-custom').isVisible()).toBe(true)
+      expect(checkboxContainer.find('input[type="checkbox"]').element.checked).toBe(true)
+    
     })
     
     it('renders the task activity views', () => {

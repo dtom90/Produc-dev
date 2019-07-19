@@ -58,6 +58,7 @@ export function taskWithActivity () {
   
   const task = newTask()
   task.activity = generateActivity().activity
+  task.completed = true
   return task
   
 }
