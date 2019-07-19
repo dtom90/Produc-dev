@@ -4,7 +4,11 @@
     :class="'task list-group-item list-group-item-action form-check'+active"
     @click="selectTask(task.id)"
   >
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
+      <Checkbox
+        :checked="task.completed"
+        :task-id="task.id"
+      />
       <span>{{ task.name }}</span>
     </div>
   </li>
@@ -12,11 +16,12 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import Checkbox from './Checkbox'
 
 export default {
   
   name: 'Task',
-  
+  components: { Checkbox },
   props: {
     task: {
       type: Object,
