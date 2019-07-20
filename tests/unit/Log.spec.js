@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Activity from '@/components/Activity.vue'
+import Log from '@/components/Log.vue'
 import moment from 'moment'
 import { generateActivity } from './fixtures'
 
@@ -10,11 +10,11 @@ const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
 const allDuration = moment.duration(day1Duration + day2Duration)
 
-describe('SelectedTask', () => {
+describe('Log', () => {
   
-  describe('All Activity', () => {
+  describe('Full Log', () => {
     
-    const wrapper = shallowMount(Activity, { propsData: { log, timeSpent: allDuration } })
+    const wrapper = shallowMount(Log, { propsData: { log, timeSpent: allDuration } })
     
     it('renders the time spent on the task', () => {
       
@@ -37,11 +37,11 @@ describe('SelectedTask', () => {
     
   })
   
-  describe('Day 1 Activity', () => {
+  describe('Day 1 Log', () => {
     
     const day = moment(completedDate).subtract(1, 'd')
     
-    const wrapper = shallowMount(Activity, { propsData: {
+    const wrapper = shallowMount(Log, { propsData: {
       day: day.format(EXPECTED_DAY_KEY_FORMAT),
       log: log.slice(0, 3),
       timeSpent: day1Duration
@@ -71,11 +71,11 @@ describe('SelectedTask', () => {
     
   })
   
-  describe('Day 2 Activity', () => {
+  describe('Day 2 Log', () => {
     
     const day = moment(completedDate)
     
-    const wrapper = shallowMount(Activity, { propsData: {
+    const wrapper = shallowMount(Log, { propsData: {
       day: day.format(EXPECTED_DAY_KEY_FORMAT),
       log: log.slice(3, 6),
       timeSpent: day2Duration

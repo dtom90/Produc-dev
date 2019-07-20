@@ -35,7 +35,7 @@ import { eventNames } from '@/store/constants'
 import moment from 'moment'
 
 export default {
-  name: 'Activity',
+  name: 'Log',
   
   props: {
     day: {

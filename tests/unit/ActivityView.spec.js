@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import ActivityView from '@/components/ActivityView.vue'
-import Activity from '@/components/Activity.vue'
+import Log from '@/components/Log.vue'
 import { generateActivity } from './fixtures'
 import moment from 'moment'
 
@@ -13,7 +13,7 @@ const shouldBehaveLikeActivityView = function (wrapper) {
   
   it('renders the task log', () => {
     
-    const renderedActivity = wrapper.find(Activity)
+    const renderedActivity = wrapper.find(Log)
     expect(renderedActivity.props()).toEqual({ log: log, day: null, timeSpent: allDuration })
     
   })
@@ -39,7 +39,7 @@ const shouldBehaveLikeActivityView = function (wrapper) {
     
     expect(wrapper.vm.view).toBe('daily')
     
-    const activityLogs = wrapper.findAll(Activity)
+    const activityLogs = wrapper.findAll(Log)
     expect(activityLogs.at(0).props()).toEqual({
       log: log.slice(0, 3),
       day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT),

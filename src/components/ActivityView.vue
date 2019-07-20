@@ -40,13 +40,13 @@
     </ul>
 
     <!-- Activity Data -->
-    <Activity
+    <Log
       v-if="view === 'all'"
       :log="log"
       :time-spent="calculateTimeSpent(log)"
     />
     <div v-if="view === 'daily'">
-      <Activity
+      <Log
         v-for="(dayActivity, day) in dailyActivity.dailyActivity"
         :key="day"
         :day="day"
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import Activity from './Activity'
+import Log from './Log'
 import ActivityChart from './ActivityChart'
 import { eventTypes } from '@/store/constants'
 import moment from 'moment'
@@ -67,7 +67,7 @@ export default {
   name: 'ActivityView',
   
   components: {
-    Activity,
+    Log,
     ActivityChart
   },
   
