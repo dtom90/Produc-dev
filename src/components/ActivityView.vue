@@ -3,12 +3,15 @@
     id="panel"
     class="border-top"
   >
-    <h3 v-if="tag">
-      Activity for: {{ tag }}
+    <h3>
+      Activity for <strong>{{ element }}</strong>
     </h3>
     
     <!-- ActivityChart -->
-    <ActivityChart :chart-data="chartData" />
+    <ActivityChart
+      id="activity-chart"
+      :chart-data="dailyActivity.chartData"
+    />
     
     <!-- View Switch -->
     <ul
@@ -78,87 +81,57 @@ export default {
         return []
       }
     },
-    tag: {
+    element: {
       type: String,
-      default: function () {
-        return null
-      }
+      default: 'Task'
     }
   },
   
   data: function () {
     return {
-      view: 'all',
-      chartData: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          label: 'Dataset 1',
-          backgroundColor: 'red',
-          borderColor: 'red',
-          borderWidth: 1,
-          data: [
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt()
-          ]
-        }, {
-          label: 'Dataset 2',
-          backgroundColor: 'blue',
-          borderColor: 'blue',
-          borderWidth: 1,
-          data: [
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt(),
-            this.getRandomInt()
-          ]
-        }]
-      }
+      view: 'all'
     }
   },
   
   computed: {
     
     dailyActivity: function () {
-      const chartData = {
-        labels: [],
-        datasets: {
-          label: 'Activity For This',
-          backgroundColor: 'blue',
-          data: []
-        }
-      }
       const dailyActivity = {}
-      
       let day
+      
+      // Create dailyActivity Object from this.log
       for (let event of this.log) {
         day = moment(event.time).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
         } else {
           dailyActivity[day] = { log: [event] }
-          chartData.labels.push(day)
         }
       }
       
+      // Initialize chartData
+      const chartData = {
+        labels: [],
+        datasets: [{
+          label: 'Activity for ' + this.element,
+          backgroundColor: 'blue',
+          data: []
+        }]
+      }
+      
+      // Add time spent per day and add to chartData
       Object.keys(dailyActivity).forEach(day => {
         dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
+        chartData.labels.push(moment(day, 'YYYY-MM-DD').format('ddd MMM DD'))
+        chartData.datasets[0].data.push(dailyActivity[day].timeSpent.asMinutes())
       })
-
+      
       return { dailyActivity, chartData }
     }
     
   },
   
   methods: {
-
     calculateTimeSpent (log) {
       return moment.duration(
         log.filter((event, i) =>
@@ -168,10 +141,6 @@ export default {
             ? total - event.time
             : total + event.time, 0)
       )
-    },
-    
-    getRandomInt () {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
     }
   }
 }

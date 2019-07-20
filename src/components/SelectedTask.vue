@@ -136,12 +136,15 @@
         <br>
 
         <!-- Activity Views -->
-        <ActivityView :log="task.log" />
+        <ActivityView
+          :element="task.name"
+          :log="task.log"
+        />
       </div>
 
       <ActivityView
         v-if="selectedTag"
-        :tag="selectedTag"
+        :element="selectedTag"
         :log="tagActivity(selectedTag)"
       />
     </div>

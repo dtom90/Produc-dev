@@ -73,11 +73,11 @@ describe('ActivityView', () => {
   
   describe('for tag', () => {
     
-    const wrapper = shallowMount(ActivityView, { propsData: { log: log, tag: 'myTag' } })
+    const wrapper = shallowMount(ActivityView, { propsData: { log: log, element: 'myTag' } })
     
     it('renders a title with the tag name', () => {
       
-      expect(wrapper.text()).toMatch('Activity for: myTag')
+      expect(wrapper.text()).toMatch('Activity for myTag')
       
     })
   
