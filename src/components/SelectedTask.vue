@@ -136,13 +136,13 @@
         <br>
 
         <!-- Activity Views -->
-        <ActivityView :activity="task.activity" />
+        <ActivityView :log="task.log" />
       </div>
 
       <ActivityView
         v-if="selectedTag"
         :tag="selectedTag"
-        :activity="tagActivity(selectedTag)"
+        :log="tagActivity(selectedTag)"
       />
     </div>
   </div>
@@ -172,7 +172,7 @@ export default {
           id: 1,
           name: 'new task 1',
           createdDate: Date.now(),
-          activity: [{
+          log: [{
             type: 0,
             time: Date.now()
           }],

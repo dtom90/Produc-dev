@@ -10,7 +10,7 @@ const vuexLocalStorage = new VuexPersist({
   storage: window.localStorage
 })
 
-const completedDate = task => task.activity.filter(event => event.type === eventTypes.Completed)[0].time
+const completedDate = task => task.log.filter(event => event.type === eventTypes.Completed)[0].time
 
 export default new Vuex.Store({
   
@@ -36,7 +36,7 @@ export default new Vuex.Store({
     
     tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
       const task = state.tasks.find(t => t.id === taskID)
-      return task.activity.map(event => Object.assign({ task: task.name }, event))
+      return task.log.map(event => Object.assign({ task: task.name }, event))
     }).flat().sort((a, b) => a.time - b.time)
   },
   

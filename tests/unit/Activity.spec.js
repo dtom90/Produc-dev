@@ -7,13 +7,14 @@ const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
-const { activity, completedDate } = generateActivity()
+const { log, day1Duration, day2Duration, completedDate } = generateActivity()
+const allDuration = moment.duration(day1Duration + day2Duration)
 
 describe('SelectedTask', () => {
   
   describe('All Activity', () => {
     
-    const wrapper = shallowMount(Activity, { propsData: { activity } })
+    const wrapper = shallowMount(Activity, { propsData: { log, timeSpent: allDuration } })
     
     it('renders the time spent on the task', () => {
       
@@ -21,15 +22,15 @@ describe('SelectedTask', () => {
       
     })
     
-    it('renders the task activity sequence in reverse-chronological order', () => {
+    it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toMatch(
-        'Completed:  ' + moment(activity[5].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Stopped:  ' + moment(activity[4].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Started:  ' + moment(activity[3].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Stopped:  ' + moment(activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Started:  ' + moment(activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Created:  ' + moment(activity[0].time).format(EXPECTED_DATETIME_FORMAT)
+      expect(wrapper.find('#activityLog').text()).toEqual(
+        'Completed:  ' + moment(log[5].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Stopped:  ' + moment(log[4].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Started:  ' + moment(log[3].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Stopped:  ' + moment(log[2].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Started:  ' + moment(log[1].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Created:  ' + moment(log[0].time).format(EXPECTED_DATETIME_FORMAT)
       )
       
     })
@@ -42,7 +43,8 @@ describe('SelectedTask', () => {
     
     const wrapper = shallowMount(Activity, { propsData: {
       day: day.format(EXPECTED_DAY_KEY_FORMAT),
-      activity: activity.slice(0, 3)
+      log: log.slice(0, 3),
+      timeSpent: day1Duration
     } })
     
     it('renders the day', () => {
@@ -57,12 +59,12 @@ describe('SelectedTask', () => {
       
     })
     
-    it('renders the task activity sequence in reverse-chronological order', () => {
+    it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toMatch(
-        'Stopped:  ' + moment(activity[2].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Started:  ' + moment(activity[1].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Created:  ' + moment(activity[0].time).format(EXPECTED_DATETIME_FORMAT)
+      expect(wrapper.find('#activityLog').text()).toEqual(
+        'Stopped:  ' + moment(log[2].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Started:  ' + moment(log[1].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Created:  ' + moment(log[0].time).format(EXPECTED_DATETIME_FORMAT)
       )
       
     })
@@ -75,7 +77,8 @@ describe('SelectedTask', () => {
     
     const wrapper = shallowMount(Activity, { propsData: {
       day: day.format(EXPECTED_DAY_KEY_FORMAT),
-      activity: activity.slice(3, 6)
+      log: log.slice(3, 6),
+      timeSpent: day2Duration
     } })
     
     it('renders the day', () => {
@@ -90,12 +93,12 @@ describe('SelectedTask', () => {
       
     })
     
-    it('renders the task activity sequence in reverse-chronological order', () => {
+    it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toMatch(
-        'Completed:  ' + moment(activity[5].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Stopped:  ' + moment(activity[4].time).format(EXPECTED_DATETIME_FORMAT) +
-        'Started:  ' + moment(activity[3].time).format(EXPECTED_DATETIME_FORMAT)
+      expect(wrapper.find('#activityLog').text()).toEqual(
+        'Completed:  ' + moment(log[5].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Stopped:  ' + moment(log[4].time).format(EXPECTED_DATETIME_FORMAT) +
+        'Started:  ' + moment(log[3].time).format(EXPECTED_DATETIME_FORMAT)
       )
       
     })

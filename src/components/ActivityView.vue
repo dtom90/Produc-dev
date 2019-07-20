@@ -7,6 +7,9 @@
       Activity for: {{ tag }}
     </h3>
     
+    <!-- ActivityChart -->
+    <ActivityChart :chart-data="chartData" />
+    
     <!-- View Switch -->
     <ul
       id="viewType"
@@ -39,14 +42,16 @@
     <!-- Activity Data -->
     <Activity
       v-if="view === 'all'"
-      :activity="activityEvents"
+      :log="log"
+      :time-spent="calculateTimeSpent(log)"
     />
     <div v-if="view === 'daily'">
       <Activity
-        v-for="(events, day) in activityEvents"
+        v-for="(dayActivity, day) in dailyActivity.dailyActivity"
         :key="day"
         :day="day"
-        :activity="events"
+        :log="dayActivity.log"
+        :time-spent="dayActivity.timeSpent"
       />
     </div>
   </div>
@@ -54,17 +59,20 @@
 
 <script>
 import Activity from './Activity'
+import ActivityChart from './ActivityChart'
+import { eventTypes } from '@/store/constants'
 import moment from 'moment'
 
 export default {
   name: 'ActivityView',
   
   components: {
-    Activity
+    Activity,
+    ActivityChart
   },
   
   props: {
-    activity: {
+    log: {
       type: Array,
       default: function () {
         return []
@@ -78,30 +86,93 @@ export default {
     }
   },
   
-  data: () => ({
-    view: 'all'
-  }),
-  
-  computed: {
-  
-    activityEvents: function () {
-      if (this.view === 'all') {
-        return this.activity
-      } else {
-        const dayActivity = {}
-        let day
-        for (let event of this.activity) {
-          day = moment(event.time).format('YYYY-MM-DD')
-          if (day in dayActivity) {
-            dayActivity[day].push(event)
-          } else {
-            dayActivity[day] = [event]
-          }
-        }
-        return dayActivity
+  data: function () {
+    return {
+      view: 'all',
+      chartData: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Dataset 1',
+          backgroundColor: 'red',
+          borderColor: 'red',
+          borderWidth: 1,
+          data: [
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt()
+          ]
+        }, {
+          label: 'Dataset 2',
+          backgroundColor: 'blue',
+          borderColor: 'blue',
+          borderWidth: 1,
+          data: [
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt(),
+            this.getRandomInt()
+          ]
+        }]
       }
     }
+  },
+  
+  computed: {
     
+    dailyActivity: function () {
+      const chartData = {
+        labels: [],
+        datasets: {
+          label: 'Activity For This',
+          backgroundColor: 'blue',
+          data: []
+        }
+      }
+      const dailyActivity = {}
+      
+      let day
+      for (let event of this.log) {
+        day = moment(event.time).format('YYYY-MM-DD')
+        if (day in dailyActivity) {
+          dailyActivity[day].log.push(event)
+        } else {
+          dailyActivity[day] = { log: [event] }
+          chartData.labels.push(day)
+        }
+      }
+      
+      Object.keys(dailyActivity).forEach(day => {
+        dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
+      })
+
+      return { dailyActivity, chartData }
+    }
+    
+  },
+  
+  methods: {
+
+    calculateTimeSpent (log) {
+      return moment.duration(
+        log.filter((event, i) =>
+          (event.type === eventTypes.Started && i !== log.length - 1) ||
+                      event.type === eventTypes.Stopped)
+          .reduce((total, event) => event.type === eventTypes.Started
+            ? total - event.time
+            : total + event.time, 0)
+      )
+    },
+    
+    getRandomInt () {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    }
   }
 }
 </script>

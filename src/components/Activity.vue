@@ -3,7 +3,7 @@
     id="activityData"
     class="border"
   >
-    <!-- Time Spent on Task -->
+    <!-- Display Day -->
     <h4
       v-if="day"
       style="text-decoration: underline;"
@@ -12,15 +12,15 @@
     </h4>
     
     <!-- Time Spent on Task -->
-    <h4>Time Spent: {{ timeSpent }}</h4>
-
+    <h4>Time Spent: {{ timeSpent.humanize() }}</h4>
+    
     <!-- Task Activity Log -->
     <table
       id="activityLog"
       class="table"
     >
       <tr
-        v-for="(event, index) in descActivity"
+        v-for="(event, index) in descLog"
         :key="index"
       >
         <th>{{ eventNames[event.type] + (event.task ? ' ' + event.task : '') }}: </th>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { eventTypes, eventNames } from '@/store/constants'
+import { eventNames } from '@/store/constants'
 import moment from 'moment'
 
 export default {
@@ -42,9 +42,13 @@ export default {
       type: String,
       default: null
     },
-    activity: {
+    log: {
       type: Array,
       default: () => []
+    },
+    timeSpent: {
+      type: Object,
+      default: () => moment.duration()
     }
   },
   
@@ -54,19 +58,7 @@ export default {
       return moment(this.day, 'YYYY-MM-DD').format('ddd MMM DD')
     },
     
-    timeSpent: function () {
-      return moment.duration(
-        this.activity
-          .filter((event, i) =>
-            (event.type === eventTypes.Started && i !== this.activity.length - 1) ||
-            event.type === eventTypes.Stopped)
-          .reduce((total, event) => event.type === eventTypes.Started
-            ? total - event.time
-            : total + event.time, 0)
-      ).humanize()
-    },
-    
-    descActivity: function () { return this.activity.slice().reverse() },
+    descLog: function () { return this.log.slice().reverse() },
   
     eventNames: () => eventNames
     
