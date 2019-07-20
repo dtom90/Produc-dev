@@ -1,5 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import SelectedTask from '@/components/SelectedTask.vue'
+import Checkbox from '@/components/Checkbox.vue'
 import ActivityView from '@/components/ActivityView.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 import { newTask, taskWithActivity } from './fixtures'
@@ -34,6 +35,16 @@ describe('SelectedTask', () => {
       propsData: { task: task },
       localVue,
       store
+    })
+    
+    it('renders an unchecked checkbox', () => {
+      
+      const checkbox = wrapper.find(Checkbox)
+      expect(checkbox.props()).toEqual({
+        checked: false,
+        taskId: task.id
+      })
+      
     })
     
     it('renders the task name when passed', () => {
@@ -91,13 +102,6 @@ describe('SelectedTask', () => {
       
     })
     
-    it('calls completeTask when the checkbox is clicked', () => {
-      
-      wrapper.find('input[type="checkbox"]').trigger('click')
-      expect(mutations.completeTask).toHaveBeenCalledWith({}, task.id)
-      
-    })
-    
     it('renders a delete button for removing the task', () => {
       
       const deleteButton = wrapper.find('button.btn-danger')
@@ -142,6 +146,16 @@ describe('SelectedTask', () => {
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue
+    })
+    
+    it('renders a checked checkbox', () => {
+      
+      const checkbox = wrapper.find(Checkbox)
+      expect(checkbox.props()).toEqual({
+        checked: true,
+        taskId: task.id
+      })
+      
     })
     
     it('renders the task activity views', () => {
