@@ -39,8 +39,14 @@ const shouldBehaveLikeActivityView = function (wrapper) {
     expect(wrapper.vm.view).toBe('daily')
     
     const activityLogs = wrapper.findAll(Activity)
-    expect(activityLogs.at(0).props()).toEqual({ activity: activity.slice(0, 3), day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT) })
-    expect(activityLogs.at(1).props()).toEqual({ activity: activity.slice(3, 6), day: moment(completedDate).format(EXPECTED_DAY_KEY_FORMAT) })
+    expect(activityLogs.at(0).props()).toEqual({
+      activity: activity.slice(0, 3),
+      day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT)
+    })
+    expect(activityLogs.at(1).props()).toEqual({
+      activity: activity.slice(3, 6),
+      day: completedDate.format(EXPECTED_DAY_KEY_FORMAT)
+    })
     
   })
   

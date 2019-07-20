@@ -3,14 +3,13 @@ import moment from 'moment'
 
 export function generateActivity () {
   
-  const completedDate = new Date()
-  completedDate.setHours(12)
+  const completedDate = moment()
   
   return {
     activity: [
       {
         type: eventTypes.Created,
-        time: moment(completedDate).subtract(1, 'd')
+        time: moment(completedDate).subtract(1, 'd').valueOf()
       },
       {
         type: eventTypes.Started,
@@ -30,7 +29,7 @@ export function generateActivity () {
       },
       {
         type: eventTypes.Completed,
-        time: completedDate
+        time: completedDate.valueOf()
       }
     ],
     completedDate
@@ -46,7 +45,7 @@ export function newTask (includeTags = false) {
     name: 'new task 1',
     activity: [{
       type: eventTypes.Created,
-      time: Date.now()
+      time: moment.now()
     }],
     tags,
     completed: false
