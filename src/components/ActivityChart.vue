@@ -1,5 +1,6 @@
 <script>
 import { Bar } from 'vue-chartjs'
+import moment from 'moment'
 
 const chartOptions = {
   legend: {
@@ -16,6 +17,18 @@ const chartOptions = {
         stepSize: 1
       }
     }]
+  },
+  tooltips: {
+    callbacks: {
+      label: function (tooltipItem, data) {
+        let label = data.datasets[tooltipItem.datasetIndex].label || ''
+        if (label) {
+          label += ': '
+        }
+        label += moment.duration(tooltipItem.yLabel, 'minutes').humanize()
+        return label
+      }
+    }
   },
   responsive: true,
   maintainAspectRatio: true
@@ -46,7 +59,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-</style>

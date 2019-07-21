@@ -1,15 +1,39 @@
 import { shallowMount } from '@vue/test-utils'
-import ActivityView from '@/components/ActivityView.vue'
+import ActivityView from '@/components/ActivityView'
+import ActivityChart from '@/components/ActivityChart'
 import Log from '@/components/Log.vue'
 import { generateActivity } from './fixtures'
 import moment from 'moment'
 
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
+const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
 const allDuration = moment.duration(day1Duration + day2Duration)
+const day1 = moment(completedDate).subtract(1, 'd')
+const day2 = completedDate
 
-const shouldBehaveLikeActivityView = function (wrapper) {
+const shouldBehaveLikeActivityView = function (wrapper, element) {
+  
+  it('renders a title with the element name', () => {
+    
+    expect(wrapper.text()).toMatch('Activity for ' + element)
+    
+  })
+  
+  it('renders a chart of the activity', () => {
+    
+    const activityChart = wrapper.find(ActivityChart)
+    expect(activityChart.props('chartData')).toEqual({
+      labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
+      datasets: [{
+        label: 'Activity for ' + wrapper.props('element'),
+        backgroundColor: '#2020FF',
+        data: [day1Duration, day2Duration].map(dur => dur.asMinutes())
+      }]
+    })
+    
+  })
   
   it('renders the task log', () => {
     
@@ -42,12 +66,12 @@ const shouldBehaveLikeActivityView = function (wrapper) {
     const activityLogs = wrapper.findAll(Log)
     expect(activityLogs.at(0).props()).toEqual({
       log: log.slice(0, 3),
-      day: moment(completedDate).subtract(1, 'd').format(EXPECTED_DAY_KEY_FORMAT),
+      day: day1.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day1Duration
     })
     expect(activityLogs.at(1).props()).toEqual({
       log: log.slice(3, 6),
-      day: completedDate.format(EXPECTED_DAY_KEY_FORMAT),
+      day: day2.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day2Duration
     })
     
@@ -57,17 +81,11 @@ const shouldBehaveLikeActivityView = function (wrapper) {
 
 describe('ActivityView', () => {
   
-  describe('for task', () => {
+  describe('for default (task)', () => {
     
     const wrapper = shallowMount(ActivityView, { propsData: { log: log } })
   
-    it('does not render a title with the tag name', () => {
-    
-      expect(wrapper.text()).not.toMatch('Activity for:')
-    
-    })
-  
-    shouldBehaveLikeActivityView(wrapper)
+    shouldBehaveLikeActivityView(wrapper, 'Task')
     
   })
   
@@ -75,13 +93,7 @@ describe('ActivityView', () => {
     
     const wrapper = shallowMount(ActivityView, { propsData: { log: log, element: 'myTag' } })
     
-    it('renders a title with the tag name', () => {
-      
-      expect(wrapper.text()).toMatch('Activity for myTag')
-      
-    })
-  
-    shouldBehaveLikeActivityView(wrapper)
+    shouldBehaveLikeActivityView(wrapper, 'myTag')
     
   })
   

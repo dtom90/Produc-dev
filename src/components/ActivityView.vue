@@ -13,6 +13,8 @@
       :chart-data="dailyActivity.chartData"
     />
     
+    <br>
+    
     <!-- View Switch -->
     <ul
       id="viewType"
@@ -114,7 +116,7 @@ export default {
         labels: [],
         datasets: [{
           label: 'Activity for ' + this.element,
-          backgroundColor: 'blue',
+          backgroundColor: '#2020FF',
           data: []
         }]
       }
