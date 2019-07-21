@@ -119,7 +119,7 @@ export default {
     completedList: function () { return this.title === 'Done' },
     btnId: function () { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    sortingOptions: function () { return this.completedList ? [ 'Recent', 'Oldest' ] : [ 'Newest', 'Oldest' ] },
+    sortingOptions: function () { return this.completedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
     sortedTasks: function () { return this.sortOrder !== 'Oldest' ? this.tasks.slice().reverse() : this.tasks }
   },
   

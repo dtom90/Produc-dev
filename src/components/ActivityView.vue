@@ -90,7 +90,7 @@ export default {
       } else {
         const dayActivity = {}
         let day
-        for (let event of this.activity) {
+        for (const event of this.activity) {
           day = moment(event.time).format('YYYY-MM-DD')
           if (day in dayActivity) {
             dayActivity[day].push(event)
