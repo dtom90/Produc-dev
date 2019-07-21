@@ -1,6 +1,9 @@
 <script>
 import { Bar } from 'vue-chartjs'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import moment from 'moment'
+
+const displayFormat = (minutes) => moment.duration(minutes, 'minutes').humanize()
 
 const chartOptions = {
   legend: {
@@ -25,9 +28,18 @@ const chartOptions = {
         if (label) {
           label += ': '
         }
-        label += moment.duration(tooltipItem.yLabel, 'minutes').humanize()
+        label += displayFormat(tooltipItem.yLabel)
         return label
       }
+    }
+  },
+  plugins: {
+    datalabels: {
+      anchor: 'end',
+      align: 'start',
+      clip: true,
+      color: 'white',
+      formatter: value => displayFormat(value)
     }
   },
   responsive: true,
@@ -45,6 +57,10 @@ export default {
     height: {
       type: String,
       default: '200'
+    },
+    plugins: {
+      type: Array,
+      default: () => [ChartDataLabels]
     }
   },
 
