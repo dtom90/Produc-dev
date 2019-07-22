@@ -51,13 +51,17 @@ const mutations = {
     deleteElem(state.tags[payload.tag], payload.id)
   },
   
-  completeTask (state, id) {
-    const task = state.tasks.find(t => t.id === id)
-    task.completed = !task.completed
-    if (task.completed) {
+  completeTask (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (!task.completed) {
+      if (task.log[task.log.length - 1].type === eventTypes.Started) {
+        task.log.push(event(eventTypes.Stopped))
+      }
       task.log.push(event(eventTypes.Completed))
+      task.completed = true
     } else {
       task.log.pop()
+      task.completed = false
     }
   },
   

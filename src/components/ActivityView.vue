@@ -102,7 +102,7 @@ export default {
       let day
       
       // Create dailyActivity Object from this.log
-      for (let event of this.log) {
+      for (const event of this.log) {
         day = moment(event.time).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
@@ -135,13 +135,22 @@ export default {
   
   methods: {
     calculateTimeSpent (log) {
+      const intervals = []
+      let currentInterval = { Started: null, Stopped: null }
+      for (const event of log) {
+        if (event.type === eventTypes.Started) {
+          currentInterval.Started = event
+        } else if (event.type === eventTypes.Stopped) {
+          currentInterval.Stopped = event
+          if (currentInterval.Started) {
+            intervals.push(currentInterval)
+          }
+          currentInterval = { Started: null, Stopped: null }
+        }
+      }
+      
       return moment.duration(
-        log.filter((event, i) =>
-          (event.type === eventTypes.Started && i !== log.length - 1) ||
-                      event.type === eventTypes.Stopped)
-          .reduce((total, event) => event.type === eventTypes.Started
-            ? total - event.time
-            : total + event.time, 0)
+        intervals.reduce((total, interval) => total + interval.Stopped.time - interval.Started.time, 0)
       )
     }
   }

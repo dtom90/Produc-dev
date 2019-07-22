@@ -7,7 +7,8 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({
-  storage: window.localStorage
+  storage: window.localStorage,
+  reducer: state => ({ tasks: state.tasks, tags: state.tags })
 })
 
 const completedDate = task => task.log.filter(event => event.type === eventTypes.Completed)[0].time

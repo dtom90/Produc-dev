@@ -4,7 +4,7 @@
       :checked="checked"
       class="task-checkbox"
       type="checkbox"
-      @change="completeTask(taskId)"
+      @change="completeTask({id: taskId})"
     >
     <span class="check-custom" />
   </div>
