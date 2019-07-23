@@ -131,7 +131,7 @@ describe('SelectedTask', () => {
       expect(tags.at(1).text()).toMatch(task.tags[1])
   
       const removeTagBtn = tags.at(0).findAll('button').at(1)
-      expect(removeTagBtn.text()).toEqual('x')
+      expect(removeTagBtn.text()).toEqual('×')
       
       removeTagBtn.trigger('click')
       expect(mutations.removeTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: task.tags[0] })

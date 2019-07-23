@@ -169,7 +169,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Go back to task 2 and remove 'another tag'
     .click(todoTasks.withText(task2))
     .expect(tagsPresent()).eql(['my tag', 'another tag'])
-    .click(tag.withText('another tag').child('button').withText('x'))
+    .click(tag.withText('another tag').child('button').withText('×'))
     .expect(tagsPresent()).eql(['my tag'])
     
     // Expect option to reappear when input clicked
@@ -177,7 +177,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tagOptions()).eql(['another tag'])
     
     // Remove the other tag and then expect both options to reappear
-    .click(tag.withText('my tag').child('button').withText('x'))
+    .click(tag.withText('my tag').child('button').withText('×'))
     .expect(tagsPresent()).eql([])
     .click(tagInput)
     .expect(tagOptions()).eql(['my tag', 'another tag'])

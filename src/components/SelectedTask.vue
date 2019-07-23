@@ -111,41 +111,40 @@
           class="tag btn-group"
         >
           <button
-            :class="'tag-name btn btn-primary' + (selectedTag === tag ? ' active' : '')"
-            @click="showTag(tag)"
+            class="tag-name btn btn-primary"
+            data-toggle="modal"
+            data-target="#activityModal"
+            @click="selectedTag = tag"
           >
             {{ tag }}
           </button>
           <button
-            class="btn btn-primary"
+            class="tag-close btn btn-primary"
             @click="removeTag(tag)"
           >
-            x
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
       </div>
-
+      
+      <!-- Activity Modal -->
+      <ActivityModal
+        :tag="selectedTag"
+      />
+      
       <br>
       
-      <div v-if="!selectedTag">
-        <!-- Countdown Timer -->
-        <Countdown
-          v-if="!task.completed"
-          :task-id="task.id"
-        />
-        <br>
-
-        <!-- Activity Views -->
-        <ActivityView
-          :element="task.name"
-          :log="task.log"
-        />
-      </div>
-
+      <!-- Countdown Timer -->
+      <Countdown
+        v-if="!task.completed"
+        :task-id="task.id"
+      />
+      <br>
+      
+      <!-- Activity View -->
       <ActivityView
-        v-if="selectedTag"
-        :element="selectedTag"
-        :log="tagActivity(selectedTag)"
+        :element="task.name"
+        :log="task.log"
       />
     </div>
   </div>
@@ -155,6 +154,7 @@
 import Checkbox from './Checkbox'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
+import ActivityModal from './ActivityModal'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -164,7 +164,8 @@ export default {
   components: {
     Checkbox,
     Countdown,
-    ActivityView
+    ActivityView,
+    ActivityModal
   },
   
   props: {
@@ -189,14 +190,14 @@ export default {
     editing: false,
     newTag: '',
     tagOptions: [],
-    selectedTag: null
+    selectedTag: null,
+    showActivity: false
   }),
   
   computed: {
     
     ...mapGetters([
-      'availableTags',
-      'tagActivity'
+      'availableTags'
     ])
     
   },
@@ -218,14 +219,6 @@ export default {
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = []
-    },
-    
-    showTag: function (tag) {
-      if (this.selectedTag && this.selectedTag === tag) {
-        this.selectedTag = null
-      } else {
-        this.selectedTag = tag
-      }
     },
     
     removeTag: function (tag) {
@@ -275,6 +268,10 @@ export default {
     
     .tag {
         margin-left: 20px;
+    }
+    
+    .tag-close {
+      font-weight: 700;
     }
 
     .dropleft .btn {
