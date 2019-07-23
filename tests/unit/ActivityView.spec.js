@@ -85,7 +85,7 @@ describe('ActivityView', () => {
     
     const wrapper = shallowMount(ActivityView, { propsData: { log: log } })
   
-    shouldBehaveLikeActivityView(wrapper, 'Task')
+    shouldBehaveLikeActivityView(wrapper, '')
     
   })
   

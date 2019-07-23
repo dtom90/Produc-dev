@@ -77,15 +77,15 @@ export default {
   },
   
   props: {
+    element: {
+      type: String,
+      default: ''
+    },
     log: {
       type: Array,
       default: function () {
         return []
       }
-    },
-    element: {
-      type: String,
-      default: 'Task'
     }
   },
   
