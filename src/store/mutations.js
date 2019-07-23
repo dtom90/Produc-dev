@@ -20,7 +20,7 @@ const mutations = {
       name: newTaskName,
       tags: [],
       completed: false,
-      activity: [event(eventTypes.Created)]
+      log: [event(eventTypes.Created)]
     }
     state.tasks.push(newTask)
     state.selectedTask = newTask
@@ -32,7 +32,7 @@ const mutations = {
   
   addTaskEvent (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    task.activity.push(event(payload.type))
+    task.log.push(event(payload.type))
   },
   
   addTaskTag (state, payload) {
@@ -51,13 +51,17 @@ const mutations = {
     deleteElem(state.tags[payload.tag], payload.id)
   },
   
-  completeTask (state, id) {
-    const task = state.tasks.find(t => t.id === id)
-    task.completed = !task.completed
-    if (task.completed) {
-      task.activity.push(event(eventTypes.Completed))
+  completeTask (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (!task.completed) {
+      if (task.log[task.log.length - 1].type === eventTypes.Started) {
+        task.log.push(event(eventTypes.Stopped))
+      }
+      task.log.push(event(eventTypes.Completed))
+      task.completed = true
     } else {
-      task.activity.pop()
+      task.log.pop()
+      task.completed = false
     }
   },
   

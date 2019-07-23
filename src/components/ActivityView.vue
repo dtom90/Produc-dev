@@ -3,9 +3,17 @@
     id="panel"
     class="border-top"
   >
-    <h3 v-if="tag">
-      Activity for: {{ tag }}
+    <h3>
+      Activity for <strong>{{ element }}</strong>
     </h3>
+    
+    <!-- ActivityChart -->
+    <ActivityChart
+      id="activity-chart"
+      :chart-data="dailyActivity.chartData"
+    />
+    
+    <br>
     
     <!-- View Switch -->
     <ul
@@ -37,71 +45,114 @@
     </ul>
 
     <!-- Activity Data -->
-    <Activity
+    <Log
       v-if="view === 'all'"
-      :activity="activityEvents"
+      :log="log"
+      :time-spent="calculateTimeSpent(log)"
     />
     <div v-if="view === 'daily'">
-      <Activity
-        v-for="(events, day) in activityEvents"
+      <Log
+        v-for="(dayActivity, day) in dailyActivity.dailyActivity"
         :key="day"
         :day="day"
-        :activity="events"
+        :log="dayActivity.log"
+        :time-spent="dayActivity.timeSpent"
       />
     </div>
   </div>
 </template>
 
 <script>
-import Activity from './Activity'
+import Log from './Log'
+import ActivityChart from './ActivityChart'
+import { eventTypes } from '@/store/constants'
 import moment from 'moment'
 
 export default {
   name: 'ActivityView',
   
   components: {
-    Activity
+    Log,
+    ActivityChart
   },
   
   props: {
-    activity: {
+    log: {
       type: Array,
       default: function () {
         return []
       }
     },
-    tag: {
+    element: {
       type: String,
-      default: function () {
-        return null
-      }
+      default: 'Task'
     }
   },
   
-  data: () => ({
-    view: 'all'
-  }),
+  data: function () {
+    return {
+      view: 'all'
+    }
+  },
   
   computed: {
-  
-    activityEvents: function () {
-      if (this.view === 'all') {
-        return this.activity
-      } else {
-        const dayActivity = {}
-        let day
-        for (const event of this.activity) {
-          day = moment(event.time).format('YYYY-MM-DD')
-          if (day in dayActivity) {
-            dayActivity[day].push(event)
-          } else {
-            dayActivity[day] = [event]
-          }
+    
+    dailyActivity: function () {
+      const dailyActivity = {}
+      let day
+      
+      // Create dailyActivity Object from this.log
+      for (const event of this.log) {
+        day = moment(event.time).format('YYYY-MM-DD')
+        if (day in dailyActivity) {
+          dailyActivity[day].log.push(event)
+        } else {
+          dailyActivity[day] = { log: [event] }
         }
-        return dayActivity
       }
+      
+      // Initialize chartData
+      const chartData = {
+        labels: [],
+        datasets: [{
+          label: 'Activity for ' + this.element,
+          backgroundColor: '#2020FF',
+          data: []
+        }]
+      }
+      
+      // Add time spent per day and add to chartData
+      Object.keys(dailyActivity).forEach(day => {
+        dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
+        chartData.labels.push(moment(day, 'YYYY-MM-DD').format('ddd MMM DD'))
+        chartData.datasets[0].data.push(dailyActivity[day].timeSpent.asMinutes())
+      })
+      
+      return { dailyActivity, chartData }
     }
     
+  },
+  
+  methods: {
+    calculateTimeSpent (log) {
+      const intervals = []
+      let currentInterval = { Started: null, Stopped: null }
+      for (const event of log) {
+        if (event.type === eventTypes.Started) {
+          currentInterval.Started = event
+        } else if (event.type === eventTypes.Stopped) {
+          currentInterval.Stopped = event
+          if (currentInterval.Started) {
+            intervals.push(currentInterval)
+          }
+          currentInterval = { Started: null, Stopped: null }
+        }
+      }
+      
+      return moment.duration(
+        intervals.reduce((total, interval) => total + interval.Stopped.time - interval.Started.time, 0)
+      )
+    }
   }
 }
 </script>

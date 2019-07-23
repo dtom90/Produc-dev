@@ -240,7 +240,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
     .expect(selectedSection.withText(task4).visible).ok()
-    .click(checkbox(task4))
+    .click(checkbox(task4)) // TODO: freezes here
     .expect(selectedSection.find('tr').textContent).match(eventNow('Completed'))
     .click(todoTasks.withText(task2))
     .expect(selectedSection.withText(task2).visible).ok()

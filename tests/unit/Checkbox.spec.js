@@ -40,7 +40,7 @@ describe('Checkbox', () => {
   
     const wrapper = checkboxWrapper()
     wrapper.find('input[type="checkbox"]').trigger('click')
-    expect(mutations.completeTask).toHaveBeenCalledWith({}, taskId)
+    expect(mutations.completeTask).toHaveBeenCalledWith({}, { id: taskId })
     
   })
   
