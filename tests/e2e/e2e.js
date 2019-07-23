@@ -181,7 +181,8 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tagsPresent()).eql([])
     .click(tagInput)
     .expect(tagOptions()).eql(['my tag', 'another tag'])
-    .click(doneSection.find('h3').withText('Done'))
+    .click(tagOption.withText('my tag'))
+    .expect(tagsPresent()).eql(['my tag'])
     
     // Press the countdown play button and expect the countdown to decrement
     .expect(selectedSection.find('p').withText('25:00').visible).ok()
@@ -192,10 +193,25 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
     .expect(selectedSection.find('p').withText('24:58').visible).ok()
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
+    
+    // Try to modify timer during countdown, should fail
     .click(selectedSection.find('p').withText('24:58'))
     .expect(selectedSection.find('input[type="number"]').exists).notOk()
     .expect(selectedSection.find('p').withText('24:57').visible).ok()
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
+    .expect(selectedSection.find('p').withText('24:56').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1496 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedSection.find('p').withText('24:55').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1495 / 1500).toPrecision(6)}turn;`)
+    
+    // Click a tag, timer should not stop
+    .click(tag.withText('my tag'))
+    .expect(Selector('h3').withText('Activity for my tag').visible).ok()
+    .expect(selectedSection.find('p').withText('24:54').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1494 / 1500).toString()}turn;`)
+    .expect(selectedSection.find('p').withText('24:53').visible).ok()
+    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1493 / 1500).toString()}turn;`)
+    
     .click(selectedSection.find('button').child('svg[data-icon="pause"]'))
     .expect(selectedSection.find('tr').textContent).match(eventNow('Stopped'))
     .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
@@ -240,7 +256,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
     .expect(selectedSection.withText(task4).visible).ok()
-    .click(checkbox(task4)) // TODO: freezes here
+    .click(checkbox(task4))
     .expect(selectedSection.find('tr').textContent).match(eventNow('Completed'))
     .click(todoTasks.withText(task2))
     .expect(selectedSection.withText(task2).visible).ok()
