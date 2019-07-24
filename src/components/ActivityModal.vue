@@ -31,6 +31,7 @@
         <div class="modal-body">
           <ActivityView
             v-if="tag"
+            id="tagActivity"
             :element="tag"
             :log="tagActivity(tag)"
           />

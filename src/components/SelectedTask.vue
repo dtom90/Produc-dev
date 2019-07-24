@@ -143,6 +143,7 @@
       
       <!-- Activity View -->
       <ActivityView
+        id="taskActivity"
         :element="task.name"
         :log="task.log"
       />

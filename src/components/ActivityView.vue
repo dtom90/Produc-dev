@@ -1,7 +1,7 @@
 <template>
   <div
-    id="panel"
-    class="border-top"
+    :id="id"
+    class="activity-view border-top"
   >
     <h3>
       Activity for <strong>{{ element }}</strong>
@@ -77,6 +77,10 @@ export default {
   },
   
   props: {
+    id: {
+      type: String,
+      default: 'taskActivity'
+    },
     element: {
       type: String,
       default: ''
@@ -159,7 +163,7 @@ export default {
 
 <style scoped>
 
-  #panel {
+  .activity-view {
     padding: 20px;
   }
   

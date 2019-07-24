@@ -56,7 +56,7 @@ describe('SelectedTask', () => {
     it('renders the task log', () => {
       
       const renderedActivity = wrapper.find(ActivityView)
-      expect(renderedActivity.props()).toEqual({ log: task.log, element: task.name })
+      expect(renderedActivity.props()).toEqual({ log: task.log, id: 'taskActivity', element: task.name })
       
     })
     
@@ -161,7 +161,7 @@ describe('SelectedTask', () => {
     it('renders the task activity views', () => {
     
       const renderedActivity = wrapper.find(ActivityView)
-      expect(renderedActivity.props()).toEqual({ log: task.log, element: task.name })
+      expect(renderedActivity.props()).toEqual({ log: task.log, id: 'taskActivity', element: task.name })
     
     })
     
