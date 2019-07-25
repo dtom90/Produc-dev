@@ -33,6 +33,7 @@ const checkbox = selectedSection.find('input').withAttribute('type', 'checkbox')
 const menuButton = selectedSection.find('button').child('svg.fa-ellipsis-v')
 const saveButton = () => selectedSection.find('button').find('svg.fa-save')
 const deleteButton = taskName => selectedSection.withText(taskName).find('button').find('svg.fa-trash-alt')
+const tagAddButton = selectedSection.find('button').child('svg.fa-plus')
 const tagInput = selectedSection.find('input[placeholder="add new tag"]')
 const tag = selectedSection.find('.tag')
 const tagOption = selectedSection.find('button.tag-option')
@@ -112,7 +113,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Add a tag to task 1
     .expect(tagsPresent()).eql([])
-    .click(tagInput)
+    .click(tagAddButton)
     .expect(tagOptions()).eql([])
     .typeText(tagInput, 'my tag')
     .pressKey('enter')
@@ -126,13 +127,12 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Add the previous tag to task 2
     .expect(tagsPresent()).eql([])
-    .click(tagInput)
+    .click(tagAddButton)
     .expect(tagOptions()).eql(['my tag'])
     .click(tagOption.withText('my tag'))
     .expect(tagsPresent()).eql(['my tag'])
     
     // Add another tag to task 2
-    .click(tagInput)
     .expect(tagOptions()).eql([])
     .typeText(tagInput, 'another tag')
     .pressKey('enter')
@@ -161,7 +161,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Add the previous tag to task 3
     .expect(tagsPresent()).eql([])
-    .click(tagInput)
+    .click(tagAddButton)
     .expect(tagOptions()).eql(['my tag', 'another tag'])
     .click(tagOption.withText('another tag'))
     .pressKey('enter')
@@ -174,13 +174,13 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tagsPresent()).eql(['my tag'])
     
     // Expect option to reappear when input clicked
-    .click(tagInput)
+    .click(tagAddButton)
     .expect(tagOptions()).eql(['another tag'])
     
     // Remove the other tag and then expect both options to reappear
     .click(tag.withText('my tag').child('button').withText('×'))
     .expect(tagsPresent()).eql([])
-    .click(tagInput)
+    .click(tagAddButton)
     .expect(tagOptions()).eql(['my tag', 'another tag'])
     .click(tagOption.withText('my tag'))
     .expect(tagsPresent()).eql(['my tag'])

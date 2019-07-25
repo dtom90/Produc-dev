@@ -34,7 +34,8 @@ describe('SelectedTask', () => {
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue,
-      store
+      store,
+      attachToDocument: true
     })
     
     it('renders an unchecked checkbox', () => {
@@ -79,26 +80,37 @@ describe('SelectedTask', () => {
     })
     
     it('renders an renders an input field for adding tags to the task', () => {
-    
+      
+      let addTagInput = wrapper.find('#addTagInput')
+      const addTagButton = wrapper.find('#addTagButton')
+      
       expect(wrapper.text()).toMatch('Tags:')
-      expect(wrapper.find('input[type="text"]#add-tag').attributes('placeholder')).toBe('add new tag')
-      expect(wrapper.findAll('.tag').length).toBe(0)
+      expect(addTagButton.find(FontAwesomeIcon).attributes('icon')).toBe('plus')
+      expect(addTagInput.exists()).toBe(false)
+      
+      addTagButton.trigger('click')
+      addTagInput = wrapper.find('#addTagInput')
+      expect(addTagInput.isVisible()).toBe(true)
+      expect(addTagInput.attributes('placeholder')).toBe('add new tag')
+      wrapper.vm.$nextTick(() => {
+        expect(wrapper.find('#addTagInput').element).toBe(document.activeElement)
+      })
       
     })
-
+    
     it('allows the user to add new tags to the task', () => {
-
+      
       expect(wrapper.findAll('.tag').length).toBe(0)
-
-      const textInput = wrapper.find('#add-tag')
-
-      textInput.setValue('some tag')
-      expect(textInput.element.value).toBe('some tag')
+      
+      const addTagInput = wrapper.find('#addTagInput')
+      
+      addTagInput.setValue('some tag')
+      expect(addTagInput.element.value).toBe('some tag')
       expect(wrapper.vm.newTag).toBe('some tag')
       
-      textInput.trigger('keyup.enter')
+      addTagInput.trigger('keyup.enter')
       expect(mutations.addTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: 'some tag' })
-      expect(textInput.element.value).toBe('')
+      expect(addTagInput.element.value).toBe('')
       
     })
     

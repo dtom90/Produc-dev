@@ -70,41 +70,14 @@
         </div>
       </div>
       
-      <!-- Tags List -->
+      <!-- Tags Section -->
       <div
         id="tagZone"
         class="form-inline"
       >
         <label class="col-sm-2">Tags:</label>
-        <div
-          id="tagDropdown"
-        >
-          <div
-            id="tagDropdownMenu"
-            class="btn-group-vertical"
-            @blur="tagOptions = []"
-          >
-            <button
-              v-for="tag in tagOptions"
-              :key="tag"
-              class="tag-option btn btn-light"
-              @click="addTag(tag)"
-            >
-              {{ tag }}
-            </button>
-          </div>
-        </div>
-        <input
-          id="add-tag"
-          v-model="newTag"
-          type="text"
-          class="form-control"
-          placeholder="add new tag"
-          @input="tagInputChange"
-          @focus="tagInputChange"
-          @blur="clickOutside"
-          @keyup.enter="addTag(newTag)"
-        >
+        
+        <!-- Tags -->
         <div
           v-for="tag in task.tags"
           :key="tag"
@@ -124,6 +97,58 @@
           >
             <span aria-hidden="true">&times;</span>
           </button>
+        </div>
+        
+        <!-- Tag Input -->
+        <div
+          id="newTag"
+          class="d-flex"
+        >
+          <button
+            id="addTagButton"
+            class="btn btn-light"
+            @click="addTagButton"
+          >
+            <font-awesome-icon
+              v-if="!showTagInput"
+              icon="plus"
+            />
+            <font-awesome-icon
+              v-if="showTagInput"
+              icon="times"
+            />
+          </button>
+          <div
+            id="tagDropdown"
+          >
+            <div
+              id="tagDropdownMenu"
+              class="btn-group-vertical"
+              @blur="tagOptions = []"
+            >
+              <button
+                v-for="tag in tagOptions"
+                :key="tag"
+                class="tag-option btn btn-light"
+                @click="addTag(tag)"
+              >
+                {{ tag }}
+              </button>
+            </div>
+          </div>
+          <input
+            v-if="showTagInput"
+            id="addTagInput"
+            ref="addTagInput"
+            v-model="newTag"
+            type="text"
+            class="form-control"
+            placeholder="add new tag"
+            @input="tagInputChange"
+            @focus="tagInputChange"
+            @blur="clickOutside"
+            @keyup.enter="addTag(newTag)"
+          >
         </div>
       </div>
       
@@ -192,7 +217,7 @@ export default {
     newTag: '',
     tagOptions: [],
     selectedTag: null,
-    showActivity: false
+    showTagInput: false
   }),
   
   computed: {
@@ -211,6 +236,15 @@ export default {
       'deleteTask'
     ]),
     
+    addTagButton: function () {
+      this.showTagInput = !this.showTagInput
+      if (this.showTagInput) {
+        this.$nextTick(() => {
+          this.$refs.addTagInput.focus()
+        })
+      }
+    },
+    
     tagInputChange: function () {
       this.tagOptions = this.availableTags(this.task.id, this.newTag)
     },
@@ -220,6 +254,7 @@ export default {
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = []
+      this.$refs.addTagInput.focus()
     },
     
     removeTag: function (tag) {
@@ -229,8 +264,11 @@ export default {
     
     clickOutside: function (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
-             event.relatedTarget.classList.contains('tag-option'))) {
+            event.relatedTarget.classList.contains('tag-option'))) {
         this.tagOptions = []
+        if (!(event.relatedTarget && event.relatedTarget.id === 'addTagButton')) {
+          this.showTagInput = false
+        }
       }
     }
     
@@ -253,7 +291,7 @@ export default {
        margin-top: 20px;
     }
     
-    #add-tag {
+    #addTagInput {
         max-width: 160px;
     }
     
@@ -263,12 +301,12 @@ export default {
 
     #tagDropdownMenu {
         position: absolute;
-        top: 20px;
+        top: 42px;
         z-index: 4;
     }
     
     .tag {
-        margin-left: 20px;
+        margin-right: 20px;
     }
     
     .tag-close {

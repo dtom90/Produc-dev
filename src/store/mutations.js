@@ -36,13 +36,16 @@ const mutations = {
   },
   
   addTaskTag (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (!(payload.tag in state.tags)) {
-      state.tags[payload.tag] = [task.id]
-    } else {
-      addElem(state.tags[payload.tag], task.id)
+    const newTag = payload.tag.trim()
+    if (newTag) {
+      const task = state.tasks.find(t => t.id === payload.id)
+      if (!(newTag in state.tags)) {
+        state.tags[newTag] = [task.id]
+      } else {
+        addElem(state.tags[newTag], task.id)
+      }
+      addElem(task.tags, newTag)
     }
-    addElem(task.tags, payload.tag)
   },
   
   removeTaskTag (state, payload) {
