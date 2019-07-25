@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import VuexPersist from 'vuex-persist'
 import { eventTypes } from './constants'
 import mutations from './mutations'
+import state from './state'
 
 Vue.use(Vuex)
 
@@ -15,13 +16,13 @@ const completedDate = task => task.log.filter(event => event.type === eventTypes
 
 export default new Vuex.Store({
   
-  state: {
-    tasks: [],
-    tags: {},
-    selectedTask: null
-  },
+  state,
   
   getters: {
+    selectedTask (state) {
+      return state.tasks.find(t => t.id === state.selectedTask)
+    },
+    
     incompleteTasks (state) {
       const incompleteTasks = state.tasks.filter(t => !t.completed)
       return state.incompleteOrder === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
@@ -47,4 +48,4 @@ export default new Vuex.Store({
   
 })
 
-export { mutations }
+export { state, mutations }

@@ -1,26 +1,40 @@
 import { expect } from 'chai'
-import { mutations } from '@/store'
+import { state, mutations } from '@/store'
 import { eventTypes } from '@/store/constants'
 
-const { addTaskEvent, addTaskTag } = mutations
+const { addTask, addTaskEvent, addTaskTag } = mutations
 
 describe('mutations', () => {
   
-  let state
+  let myState
+  let createdEvent
   let origState
   
   beforeEach(() => {
     
-    state = {
-      tasks: [
-        { id: 0, tags: [], log: [] },
-        { id: 1, tags: [], log: [] },
-        { id: 2, tags: [], log: [] }
-      ],
-      tags: {},
-      selectedTask: null
-    }
-    origState = JSON.parse(JSON.stringify(state))
+    myState = JSON.parse(JSON.stringify(state))
+    addTask(myState, { name: 'my first task' })
+    createdEvent = { type: eventTypes.Created, time: Date.now() }
+    origState = JSON.parse(JSON.stringify(myState))
+    
+  })
+  
+  describe('addTask', () => {
+  
+    it('should add a task to the state', () => {
+      
+      expect(myState.tasks).to.deep.equal([
+        {
+          id: 0,
+          name: 'my first task',
+          tags: [],
+          completed: false,
+          log: [createdEvent]
+        }
+      ])
+      expect(myState.selectedTask).to.equal(0)
+      
+    })
     
   })
   
@@ -28,49 +42,44 @@ describe('mutations', () => {
     
     it('should add valid task events to the task', () => {
       
-      addTaskEvent(state, {
-        id: 0,
-        type: eventTypes.Created
-      })
-      const createdEvent = { type: eventTypes.Created, time: Date.now() }
-      expect(state.tasks[0].log).to.deep.equal([createdEvent])
-  
-      addTaskEvent(state, {
+      const createdEvent = myState.tasks[0].log[0]
+      
+      addTaskEvent(myState, {
         id: 0,
         type: eventTypes.Started
       })
       const startedEvent = { type: eventTypes.Started, time: Date.now() }
-      expect(state.tasks[0].log).to.deep.equal([createdEvent, startedEvent])
-  
-      addTaskEvent(state, {
+      expect(myState.tasks[0].log).to.deep.equal([createdEvent, startedEvent])
+      
+      addTaskEvent(myState, {
         id: 0,
         type: eventTypes.Stopped
       })
       const stoppedEvent = { type: eventTypes.Stopped, time: Date.now() }
-      expect(state.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent])
-  
-      addTaskEvent(state, {
+      expect(myState.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent])
+      
+      addTaskEvent(myState, {
         id: 0,
         type: eventTypes.Completed
       })
       const completedEvent = { type: eventTypes.Completed, time: Date.now() }
-      expect(state.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent, completedEvent])
+      expect(myState.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent, completedEvent])
       
     })
   
     it('should not add invalid task events', () => {
   
-      addTaskEvent(state, {
+      addTaskEvent(myState, {
         id: 0,
         type: -1
       })
-      expect(state).to.deep.equal(origState)
+      expect(myState).to.deep.equal(origState)
       
-      addTaskEvent(state, {
+      addTaskEvent(myState, {
         id: -1,
         type: 0
       })
-      expect(state).to.deep.equal(origState)
+      expect(myState).to.deep.equal(origState)
       
     })
     
@@ -80,47 +89,55 @@ describe('mutations', () => {
     
     it('should add tags to multiple tasks correctly', () => {
       
-      addTaskTag(state, { id: 0, tag: 'new tag a' })
-      expect(state.tags).to.deep.equal({ 'new tag a': [0] })
-      expect(state.tasks[0].tags).to.deep.equal(['new tag a'])
+      addTask(myState, { name: 'my second task' })
+      addTask(myState, { name: 'my third task' })
       
-      addTaskTag(state, { id: 0, tag: 'new tag b' })
-      expect(state.tags).to.deep.equal({ 'new tag a': [0], 'new tag b': [0] })
-      expect(state.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
+      addTaskTag(myState, { id: 0, tag: 'new tag a' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a'])
       
-      addTaskTag(state, { id: 1, tag: 'new tag b' })
-      expect(state.tags).to.deep.equal({ 'new tag a': [0], 'new tag b': [0, 1] })
-      expect(state.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
-      expect(state.tasks[1].tags).to.deep.equal(['new tag b'])
+      addTaskTag(myState, { id: 0, tag: 'new tag b' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0], 'new tag b': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       
-      addTaskTag(state, { id: 2, tag: 'new tag a' })
-      expect(state.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0, 1] })
-      expect(state.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
-      expect(state.tasks[1].tags).to.deep.equal(['new tag b'])
-      expect(state.tasks[2].tags).to.deep.equal(['new tag a'])
+      addTaskTag(myState, { id: 1, tag: 'new tag b' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0], 'new tag b': [0, 1] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
+      expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
+      
+      addTaskTag(myState, { id: 2, tag: 'new tag a' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0, 1] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
+      expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
+      expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
       
       // expect duplicate key to fail
-      addTaskTag(state, { id: 2, tag: 'new tag a' })
-      expect(state.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0, 1] })
-      expect(state.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
-      expect(state.tasks[1].tags).to.deep.equal(['new tag b'])
-      expect(state.tasks[2].tags).to.deep.equal(['new tag a'])
+      addTaskTag(myState, { id: 2, tag: 'new tag a' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0, 1] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
+      expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
+      expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
+      
+    })
+    
+    it('should not add tags to nonexistent tasks', () => {
+  
+      addTaskTag(myState, { id: -1, tag: 'new tag' })
+      expect(myState).to.deep.equal(origState)
       
     })
     
     it('should skip blank tags and trim ending and leading whitespace', () => {
       
-      addTaskTag(state, { id: 0, tag: '' })
-      expect(state.tags).to.deep.equal({})
-      expect(state.tasks[0].tags).to.deep.equal([])
+      addTaskTag(myState, { id: 0, tag: '' })
+      expect(myState).to.deep.equal(origState)
       
-      addTaskTag(state, { id: 0, tag: ' ' })
-      expect(state.tags).to.deep.equal({})
-      expect(state.tasks[0].tags).to.deep.equal([])
+      addTaskTag(myState, { id: 0, tag: ' ' })
+      expect(myState).to.deep.equal(origState)
   
-      addTaskTag(state, { id: 0, tag: ' a tag ' })
-      expect(state.tags).to.deep.equal({ 'a tag': [0] })
-      expect(state.tasks[0].tags).to.deep.equal(['a tag'])
+      addTaskTag(myState, { id: 0, tag: ' a new tag ' })
+      expect(myState.tags).to.deep.equal({ 'a new tag': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['a new tag'])
       
     })
     

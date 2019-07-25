@@ -14,20 +14,20 @@ const deleteElem = (arr, elem) => {
 
 const mutations = {
   
-  addTask (state, newTaskName) {
+  addTask (state, payload) {
     const newTask = {
       id: state.tasks.length,
-      name: newTaskName,
+      name: payload.name,
       tags: [],
       completed: false,
       log: [event(eventTypes.Created)]
     }
     state.tasks.push(newTask)
-    state.selectedTask = newTask
+    state.selectedTask = newTask.id
   },
   
   selectTask (state, id) {
-    state.selectedTask = state.tasks.find(t => t.id === id)
+    state.selectedTask = id
   },
   
   addTaskEvent (state, payload) {
@@ -43,12 +43,14 @@ const mutations = {
     const newTag = payload.tag.trim()
     if (newTag) {
       const task = state.tasks.find(t => t.id === payload.id)
-      if (!(newTag in state.tags)) {
-        state.tags[newTag] = [task.id]
-      } else {
-        addElem(state.tags[newTag], task.id)
+      if (task) {
+        if (!(newTag in state.tags)) {
+          state.tags[newTag] = [task.id]
+        } else {
+          addElem(state.tags[newTag], task.id)
+        }
+        addElem(task.tags, newTag)
       }
-      addElem(task.tags, newTag)
     }
   },
   

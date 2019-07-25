@@ -29,7 +29,7 @@
 <script>
 import TaskList from './components/TaskList.vue'
 import SelectedTask from './components/SelectedTask.vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   
@@ -42,11 +42,8 @@ export default {
 
   computed: {
     
-    ...mapState([
-      'selectedTask'
-    ]),
-    
     ...mapGetters([
+      'selectedTask',
       'incompleteTasks',
       'completedTasks'
     ])
