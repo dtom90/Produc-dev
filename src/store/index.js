@@ -8,8 +8,7 @@ import state from './state'
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({
-  storage: window.localStorage,
-  reducer: state => ({ tasks: state.tasks, tags: state.tags })
+  storage: window.localStorage
 })
 
 const completedDate = task => task.log.filter(event => event.type === eventTypes.Completed)[0].time
@@ -20,7 +19,7 @@ export default new Vuex.Store({
   
   getters: {
     selectedTask (state) {
-      return state.tasks.find(t => t.id === state.selectedTask)
+      return state.tasks.find(t => t.id === state.selectedTaskID)
     },
     
     incompleteTasks (state) {

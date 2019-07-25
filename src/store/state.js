@@ -1,7 +1,7 @@
 const state = {
   tasks: [],
   tags: {},
-  selectedTask: null
+  selectedTaskID: null
 }
 
 export default state

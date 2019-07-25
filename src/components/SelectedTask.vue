@@ -197,18 +197,7 @@ export default {
   props: {
     task: {
       type: Object,
-      default: function () {
-        return {
-          id: 1,
-          name: 'new task 1',
-          createdDate: Date.now(),
-          log: [{
-            type: 0,
-            time: Date.now()
-          }],
-          completed: false
-        }
-      }
+      default: () => null
     }
   },
   

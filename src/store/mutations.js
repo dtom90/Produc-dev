@@ -23,11 +23,11 @@ const mutations = {
       log: [event(eventTypes.Created)]
     }
     state.tasks.push(newTask)
-    state.selectedTask = newTask.id
+    state.selectedTaskID = newTask.id
   },
   
   selectTask (state, id) {
-    state.selectedTask = id
+    state.selectedTaskID = id
   },
   
   addTaskEvent (state, payload) {

@@ -27,17 +27,17 @@ const todoList = todoSection.find('.task-list')
 const todoTasks = todoList.find('.task')
 
 // Selected Task selectors
-const selectedSection = Selector('#selected-task')
-const selectedTaskName = selectedSection.find('#task-name')
-const checkbox = selectedSection.find('input').withAttribute('type', 'checkbox')
-const menuButton = selectedSection.find('button').child('svg.fa-ellipsis-v')
-const saveButton = () => selectedSection.find('button').find('svg.fa-save')
-const deleteButton = taskName => selectedSection.withText(taskName).find('button').find('svg.fa-trash-alt')
-const tagAddButton = selectedSection.find('button').child('svg.fa-plus')
-const tagInput = selectedSection.find('input[placeholder="add new tag"]')
-const tag = selectedSection.find('.tag')
-const tagOption = selectedSection.find('button.tag-option')
-const activitySection = selectedSection.find('#taskActivity')
+const selectedTaskSection = Selector('#selected-task-section')
+const selectedTaskName = selectedTaskSection.find('#task-name')
+const checkbox = selectedTaskSection.find('input').withAttribute('type', 'checkbox')
+const menuButton = selectedTaskSection.find('button').child('svg.fa-ellipsis-v')
+const saveButton = () => selectedTaskSection.find('button').find('svg.fa-save')
+const deleteButton = taskName => selectedTaskSection.withText(taskName).find('button').find('svg.fa-trash-alt')
+const tagAddButton = selectedTaskSection.find('button').child('svg.fa-plus')
+const tagInput = selectedTaskSection.find('input[placeholder="add new tag"]')
+const tag = selectedTaskSection.find('.tag')
+const tagOption = selectedTaskSection.find('button.tag-option')
+const activitySection = selectedTaskSection.find('#taskActivity')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Done')
@@ -55,7 +55,7 @@ const tasksPresent = ClientFunction(list => {
 })
 
 const tagsPresent = ClientFunction(() => {
-  const tags = document.querySelectorAll('.section#selected-task .tag > .tag-name')
+  const tags = document.querySelectorAll('#selected-task-section .tag > .tag-name')
   return Array.apply(null, tags).map(tag => tag.innerText)
 })
 
@@ -97,6 +97,9 @@ const eventNow = (type) => {
 // then create a test and place your code there
 test('Create, Complete and Delete Tasks to Test Functionality', async t => {
   await t
+    
+    // Expect an empty Selected Task section
+    .expect(selectedTaskName.exists).notOk()
     
     // Expect an empty To Do List
     .expect(todoSection.find('h3').withText('To Do').exists).ok()
@@ -145,19 +148,19 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(activitySection.find('tr').textContent).match(eventNow('Created'))
     
     // Adjust the timer and expect the dial to remain still
-    .expect(selectedSection.find('p').withText('25:00').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
-    .click(selectedSection.find('p').withText('25:00'))
-    .expect(selectedSection.find('input[type="number"]').visible).ok()
-    .expect(selectedSection.find('button > svg.fa-save').visible).ok()
-    .typeText(selectedSection.find('#edit-wrapper input'), '12', { replace: true })
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
-    .click(selectedSection.find('button > svg.fa-save'))
-    .expect(selectedSection.find('p').withText('12:00').visible).ok()
-    .click(selectedSection.find('p').withText('12:00'))
-    .typeText(selectedSection.find('#edit-wrapper input'), '25', { replace: true })
+    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedTaskSection.find('p').withText('25:00'))
+    .expect(selectedTaskSection.find('input[type="number"]').visible).ok()
+    .expect(selectedTaskSection.find('button > svg.fa-save').visible).ok()
+    .typeText(selectedTaskSection.find('#edit-wrapper input'), '12', { replace: true })
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedTaskSection.find('button > svg.fa-save'))
+    .expect(selectedTaskSection.find('p').withText('12:00').visible).ok()
+    .click(selectedTaskSection.find('p').withText('12:00'))
+    .typeText(selectedTaskSection.find('#edit-wrapper input'), '25', { replace: true })
     .pressKey('enter')
-    .expect(selectedSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
     
     // Add the previous tag to task 3
     .expect(tagsPresent()).eql([])
@@ -186,42 +189,42 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tagsPresent()).eql(['my tag'])
     
     // Press the countdown play button and expect the countdown to decrement
-    .expect(selectedSection.find('p').withText('25:00').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
-    .click(selectedSection.find('button > svg.fa-play'))
+    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .click(selectedTaskSection.find('button > svg.fa-play'))
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
-    .expect(selectedSection.find('p').withText('24:59').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
-    .expect(selectedSection.find('p').withText('24:58').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:59').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
     
     // Try to modify timer during countdown, should fail
-    .click(selectedSection.find('p').withText('24:58'))
-    .expect(selectedSection.find('input[type="number"]').exists).notOk()
-    .expect(selectedSection.find('p').withText('24:57').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
-    .expect(selectedSection.find('p').withText('24:56').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1496 / 1500).toPrecision(6)}turn;`)
-    .expect(selectedSection.find('p').withText('24:55').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1495 / 1500).toPrecision(6)}turn;`)
+    .click(selectedTaskSection.find('p').withText('24:58'))
+    .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
+    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1496 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1495 / 1500).toPrecision(6)}turn;`)
     
     // Click a tag, should show tag activity modal, timer should not stop
     .click(tag.withText('my tag'))
     .expect(Selector('h3').withText('Activity for my tag').visible).ok()
-    .expect(selectedSection.find('p').withText('24:54').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1494 / 1500).toString()}turn;`)
-    .expect(selectedSection.find('p').withText('24:53').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1493 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1494 / 1500).toString()}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1493 / 1500).toPrecision(6)}turn;`)
     .click(Selector('button').withText('Close'))
     
     // Pause the timer, should stop
-    .expect(selectedSection.find('p').withText('24:52').visible).ok()
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1492 / 1500).toPrecision(6)}turn;`)
-    .click(selectedSection.find('button').child('svg[data-icon="pause"]'))
+    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1492 / 1500).toPrecision(6)}turn;`)
+    .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
     .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
-    .expect(selectedSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1492 / 1500).toPrecision(6)}turn;`)
-    .expect(selectedSection.find('p').withText('24:52').visible).ok()
-    .expect(selectedSection.find('p').withText('24:51').exists).notOk()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1492 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
     
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
@@ -246,11 +249,11 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(selectedTaskName.textContent).eql(task5)
   
     // Start timer and switch tasks midway
-    .expect(selectedSection.find('p').withText('24:52').visible).ok()
-    .click(selectedSection.find('button > svg.fa-play'))
+    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .click(selectedTaskSection.find('button > svg.fa-play'))
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
-    .expect(selectedSection.find('p').withText('24:51').visible).ok()
-    .expect(selectedSection.find('p').withText('24:50').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
     .click(todoTasks.withText(task4))
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .click(todoTasks.withText(task5))
@@ -260,11 +263,11 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
-    .expect(selectedSection.withText(task4).visible).ok()
+    .expect(selectedTaskSection.withText(task4).visible).ok()
     .click(checkbox(task4))
     .expect(activitySection.find('tr').textContent).match(eventNow('Completed'))
     .click(todoTasks.withText(task2))
-    .expect(selectedSection.withText(task2).visible).ok()
+    .expect(selectedTaskSection.withText(task2).visible).ok()
     .click(checkbox(task2))
     .expect(activitySection.find('tr').textContent).match(eventNow('Completed'))
     .expect(tasksPresent(todoList)).eql([task1, task3, task5])
@@ -290,12 +293,12 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Modify task 3 in the Active section
     .click(todoTasks.withText(task3))
-    .expect(selectedSection.withText(task3).visible).ok()
-    .click(selectedSection.find('span').withText(task3))
-    .expect(selectedSection.find('input.edit-task').value).eql(task3)
-    .typeText(selectedSection.find('input.edit-task'), ' modified', { caretPos: 3 })
+    .expect(selectedTaskSection.withText(task3).visible).ok()
+    .click(selectedTaskSection.find('span').withText(task3))
+    .expect(selectedTaskSection.find('input.edit-task').value).eql(task3)
+    .typeText(selectedTaskSection.find('input.edit-task'), ' modified', { caretPos: 3 })
     .pressKey('enter')
-    .expect(selectedSection.withText(task3mod).visible).ok()
+    .expect(selectedTaskSection.withText(task3mod).visible).ok()
     .expect(tasksPresent(todoList)).eql([task1, task3mod, task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
@@ -329,10 +332,10 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Modify task 2 in the completed list
     .click(doneTasks.withText(task2))
-    .expect(selectedSection.withText(task2).visible).ok()
-    .click(selectedSection.find('span').withText(task2))
-    .expect(selectedSection.find('input.edit-task').value).eql(task2)
-    .typeText(selectedSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
+    .expect(selectedTaskSection.withText(task2).visible).ok()
+    .click(selectedTaskSection.find('span').withText(task2))
+    .expect(selectedTaskSection.find('input.edit-task').value).eql(task2)
+    .typeText(selectedTaskSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
     .click(saveButton())
     .expect(tasksPresent(todoList)).eql([task5])
     .expect(tasksPresent(doneList)).ok([task2mod, task4])

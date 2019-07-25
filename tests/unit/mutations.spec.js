@@ -32,7 +32,7 @@ describe('mutations', () => {
           log: [createdEvent]
         }
       ])
-      expect(myState.selectedTask).to.equal(0)
+      expect(myState.selectedTaskID).to.equal(0)
       
     })
     

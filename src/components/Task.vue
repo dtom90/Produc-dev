@@ -39,11 +39,11 @@ export default {
   computed: {
     
     ...mapState([
-      'selectedTask'
+      'selectedTaskID'
     ]),
     
     active: function () {
-      return this.selectedTask === this.task ? ' active' : ''
+      return this.selectedTaskID === this.task.id ? ' active' : ''
     }
   },
   
