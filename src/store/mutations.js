@@ -1,4 +1,4 @@
-import { eventTypes } from './constants'
+import { eventTypes, eventCodes } from './constants'
 
 const event = type => ({ type, time: Date.now() })
 
@@ -31,8 +31,12 @@ const mutations = {
   },
   
   addTaskEvent (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    task.log.push(event(payload.type))
+    if (payload.type in eventCodes) {
+      const task = state.tasks.find(t => t.id === payload.id)
+      if (task) {
+        task.log.push(event(payload.type))
+      }
+    }
   },
   
   addTaskTag (state, payload) {

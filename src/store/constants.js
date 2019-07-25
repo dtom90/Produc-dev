@@ -7,3 +7,4 @@ const eventMapping = {
 
 export const eventTypes = eventMapping
 export const eventNames = Object.keys(eventMapping)
+export const eventCodes = Object.values(eventMapping)

@@ -1,27 +1,82 @@
 import { expect } from 'chai'
 import { mutations } from '@/store'
+import { eventTypes } from '@/store/constants'
 
-const { addTaskTag } = mutations
+const { addTaskEvent, addTaskTag } = mutations
 
 describe('mutations', () => {
   
-  describe('addTaskTag', () => {
+  let state
+  let origState
+  
+  beforeEach(() => {
     
-    let state
+    state = {
+      tasks: [
+        { id: 0, tags: [], log: [] },
+        { id: 1, tags: [], log: [] },
+        { id: 2, tags: [], log: [] }
+      ],
+      tags: {},
+      selectedTask: null
+    }
+    origState = JSON.parse(JSON.stringify(state))
     
-    beforeEach(() => {
+  })
+  
+  describe('addTaskEvent', () => {
+    
+    it('should add valid task events to the task', () => {
       
-      state = {
-        tasks: [
-          { id: 0, tags: [] },
-          { id: 1, tags: [] },
-          { id: 2, tags: [] }
-        ],
-        tags: {},
-        selectedTask: null
-      }
+      addTaskEvent(state, {
+        id: 0,
+        type: eventTypes.Created
+      })
+      const createdEvent = { type: eventTypes.Created, time: Date.now() }
+      expect(state.tasks[0].log).to.deep.equal([createdEvent])
+  
+      addTaskEvent(state, {
+        id: 0,
+        type: eventTypes.Started
+      })
+      const startedEvent = { type: eventTypes.Started, time: Date.now() }
+      expect(state.tasks[0].log).to.deep.equal([createdEvent, startedEvent])
+  
+      addTaskEvent(state, {
+        id: 0,
+        type: eventTypes.Stopped
+      })
+      const stoppedEvent = { type: eventTypes.Stopped, time: Date.now() }
+      expect(state.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent])
+  
+      addTaskEvent(state, {
+        id: 0,
+        type: eventTypes.Completed
+      })
+      const completedEvent = { type: eventTypes.Completed, time: Date.now() }
+      expect(state.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent, completedEvent])
       
     })
+  
+    it('should not add invalid task events', () => {
+  
+      addTaskEvent(state, {
+        id: 0,
+        type: -1
+      })
+      expect(state).to.deep.equal(origState)
+      
+      addTaskEvent(state, {
+        id: -1,
+        type: 0
+      })
+      expect(state).to.deep.equal(origState)
+      
+    })
+    
+  })
+  
+  describe('addTaskTag', () => {
     
     it('should add tags to multiple tasks correctly', () => {
       
