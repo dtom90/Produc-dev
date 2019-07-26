@@ -1,6 +1,3 @@
-import { eventTypes, eventCodes } from './constants'
-
-const event = type => ({ type, time: Date.now() })
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -15,26 +12,44 @@ const deleteElem = (arr, elem) => {
 const mutations = {
   
   addTask (state, payload) {
-    const newTask = {
-      id: state.tasks.length,
-      name: payload.name,
-      tags: [],
-      completed: false,
-      log: [event(eventTypes.Created)]
+    if (payload.name) {
+      const newTask = {
+        id: state.tasks.length,
+        name: payload.name,
+        tags: [],
+        created: Date.now(),
+        log: [],
+        completed: null
+      }
+      state.tasks.push(newTask)
+      state.selectedTaskID = newTask.id
     }
-    state.tasks.push(newTask)
-    state.selectedTaskID = newTask.id
   },
   
   selectTask (state, id) {
     state.selectedTaskID = id
   },
   
-  addTaskEvent (state, payload) {
-    if (payload.type in eventCodes) {
-      const task = state.tasks.find(t => t.id === payload.id)
-      if (task) {
-        task.log.push(event(payload.type))
+  startTask (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (task) {
+      if (task.log.length === 0 || task.log[task.log.length - 1].stopped !== null) {
+        task.log.push({
+          started: Date.now(),
+          stopped: null
+        })
+      } else {
+        task.log[task.log.length - 1].started = Date.now()
+      }
+    }
+  },
+  
+  stopTask (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (task && task.log.length > 0) {
+      const lastInterval = task.log[task.log.length - 1]
+      if (lastInterval.stopped === null) {
+        lastInterval.stopped = Date.now()
       }
     }
   },
@@ -63,14 +78,9 @@ const mutations = {
   completeTask (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     if (!task.completed) {
-      if (task.log[task.log.length - 1].type === eventTypes.Started) {
-        task.log.push(event(eventTypes.Stopped))
-      }
-      task.log.push(event(eventTypes.Completed))
-      task.completed = true
+      task.completed = Date.now()
     } else {
-      task.log.pop()
-      task.completed = false
+      task.completed = null
     }
   },
   

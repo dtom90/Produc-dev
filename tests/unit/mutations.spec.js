@@ -1,26 +1,25 @@
 import { expect } from 'chai'
 import { state, mutations } from '@/store'
-import { eventTypes } from '@/store/constants'
 
-const { addTask, addTaskEvent, addTaskTag } = mutations
+const { addTask, addTaskTag, startTask, stopTask, completeTask } = mutations
 
 describe('mutations', () => {
   
   let myState
-  let createdEvent
+  let createdTime
   let origState
   
   beforeEach(() => {
     
     myState = JSON.parse(JSON.stringify(state))
     addTask(myState, { name: 'my first task' })
-    createdEvent = { type: eventTypes.Created, time: Date.now() }
+    createdTime = Date.now()
     origState = JSON.parse(JSON.stringify(myState))
     
   })
   
   describe('addTask', () => {
-  
+    
     it('should add a task to the state', () => {
       
       expect(myState.tasks).to.deep.equal([
@@ -28,57 +27,100 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
-          completed: false,
-          log: [createdEvent]
+          created: createdTime,
+          log: [],
+          completed: null
         }
       ])
       expect(myState.selectedTaskID).to.equal(0)
       
     })
     
-  })
+    it('should not add a blank task to the state', () => {
   
-  describe('addTaskEvent', () => {
-    
-    it('should add valid task events to the task', () => {
-      
-      const createdEvent = myState.tasks[0].log[0]
-      
-      addTaskEvent(myState, {
-        id: 0,
-        type: eventTypes.Started
-      })
-      const startedEvent = { type: eventTypes.Started, time: Date.now() }
-      expect(myState.tasks[0].log).to.deep.equal([createdEvent, startedEvent])
-      
-      addTaskEvent(myState, {
-        id: 0,
-        type: eventTypes.Stopped
-      })
-      const stoppedEvent = { type: eventTypes.Stopped, time: Date.now() }
-      expect(myState.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent])
-      
-      addTaskEvent(myState, {
-        id: 0,
-        type: eventTypes.Completed
-      })
-      const completedEvent = { type: eventTypes.Completed, time: Date.now() }
-      expect(myState.tasks[0].log).to.deep.equal([createdEvent, startedEvent, stoppedEvent, completedEvent])
+      addTask(myState, { name: '' })
+      expect(myState.tasks).to.deep.equal([
+        {
+          id: 0,
+          name: 'my first task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: null
+        }
+      ])
       
     })
+    
+  })
   
-    it('should not add invalid task events', () => {
+  describe('startTask', () => {
+    
+    it('should start and stop the task', () => {
+      
+      startTask(myState, { id: 0 })
+      const firstInterval = { started: Date.now(), stopped: null }
+      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
   
-      addTaskEvent(myState, {
-        id: 0,
-        type: -1
+      stopTask(myState, { id: 0 })
+      firstInterval.stopped = Date.now()
+      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      
+    })
+    
+    it('should overwrite the latest start time if called twice', () => {
+      
+      myState.tasks[0].log.push({
+        started: Date.now() - 10000,
+        stopped: null
       })
+  
+      startTask(myState, { id: 0 })
+      const firstInterval = { started: Date.now(), stopped: null }
+      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      
+    })
+    
+    it('should not add to invalid tasks', () => {
+  
+      startTask(myState, { id: -1 })
       expect(myState).to.deep.equal(origState)
       
-      addTaskEvent(myState, {
-        id: -1,
-        type: 0
-      })
+    })
+    
+  })
+  
+  describe('stopTask', () => {
+  
+    it('should stop the task', () => {
+      
+      const firstInterval = { started: Date.now() - 10000, stopped: null }
+      myState.tasks[0].log.push(firstInterval)
+      
+      stopTask(myState, { id: 0 })
+      
+      firstInterval.stopped = Date.now()
+      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      
+    })
+    
+    it('should ignore the second stop time if called twice', () => {
+      
+      const latestInterval = {
+        started: Date.now() - 30000,
+        stopped: Date.now() - 10000
+      }
+      myState.tasks[0].log.push(latestInterval)
+      
+      stopTask(myState, { id: 0 })
+      
+      expect(myState.tasks[0].log).to.deep.equal([latestInterval])
+      
+    })
+    
+    it('should not add to invalid tasks', () => {
+      
+      stopTask(myState, { id: -1 })
       expect(myState).to.deep.equal(origState)
       
     })
@@ -138,6 +180,27 @@ describe('mutations', () => {
       addTaskTag(myState, { id: 0, tag: ' a new tag ' })
       expect(myState.tags).to.deep.equal({ 'a new tag': [0] })
       expect(myState.tasks[0].tags).to.deep.equal(['a new tag'])
+      
+    })
+    
+  })
+  
+  describe('completeTask', () => {
+    
+    it('should mark the task as complete', () => {
+      
+      completeTask(myState, { id: 0 })
+      const completedTime = Date.now()
+      expect(myState.tasks).to.deep.equal([
+        {
+          id: 0,
+          name: 'my first task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: completedTime
+        }
+      ])
       
     })
     

@@ -1,8 +1,6 @@
 const eventMapping = {
-  Created: 0,
   Started: 1,
-  Stopped: 2,
-  Completed: 3
+  Stopped: 2
 }
 
 export const eventTypes = eventMapping

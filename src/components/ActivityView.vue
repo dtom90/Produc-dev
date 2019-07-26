@@ -65,7 +65,6 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
-import { eventTypes } from '@/store/constants'
 import moment from 'moment'
 
 export default {
@@ -107,7 +106,7 @@ export default {
       
       // Create dailyActivity Object from this.log
       for (const event of this.log) {
-        day = moment(event.time).format('YYYY-MM-DD')
+        day = moment(event.started).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
         } else {
@@ -139,22 +138,8 @@ export default {
   
   methods: {
     calculateTimeSpent (log) {
-      const intervals = []
-      let currentInterval = { Started: null, Stopped: null }
-      for (const event of log) {
-        if (event.type === eventTypes.Started) {
-          currentInterval.Started = event
-        } else if (event.type === eventTypes.Stopped) {
-          currentInterval.Stopped = event
-          if (currentInterval.Started) {
-            intervals.push(currentInterval)
-          }
-          currentInterval = { Started: null, Stopped: null }
-        }
-      }
-      
       return moment.duration(
-        intervals.reduce((total, interval) => total + interval.Stopped.time - interval.Started.time, 0)
+        log.reduce((total, interval) => total + interval.stopped - interval.started, 0)
       )
     }
   }

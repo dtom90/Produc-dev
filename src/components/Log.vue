@@ -23,8 +23,8 @@
         v-for="(event, index) in descLog"
         :key="index"
       >
-        <th>{{ eventNames[event.type] + (event.task ? ' ' + event.task : '') }}: </th>
-        <td>{{ displayDateTime(event.time) }}</td>
+        <td>Started {{ displayDateTime(event.started) }}</td>
+        <td>Stopped {{ displayDateTime(event.stopped) }}</td>
       </tr>
     </table>
   </div>
@@ -59,7 +59,7 @@ export default {
     },
     
     descLog: function () { return this.log.slice().reverse() },
-  
+    
     eventNames: () => eventNames
     
   },

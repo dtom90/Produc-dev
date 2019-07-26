@@ -65,12 +65,12 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
     const activityLogs = wrapper.findAll(Log)
     expect(activityLogs.at(0).props()).toEqual({
-      log: log.slice(0, 3),
+      log: [log[0]],
       day: day1.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day1Duration
     })
     expect(activityLogs.at(1).props()).toEqual({
-      log: log.slice(3, 6),
+      log: [log[1]],
       day: day2.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day2Duration
     })
@@ -81,11 +81,11 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
 
 describe('ActivityView', () => {
   
-  describe('for default (task)', () => {
+  describe('for task', () => {
     
-    const wrapper = shallowMount(ActivityView, { propsData: { log: log } })
+    const wrapper = shallowMount(ActivityView, { propsData: { log: log, element: 'My Task' } })
   
-    shouldBehaveLikeActivityView(wrapper, '')
+    shouldBehaveLikeActivityView(wrapper, 'My Task')
     
   })
   
