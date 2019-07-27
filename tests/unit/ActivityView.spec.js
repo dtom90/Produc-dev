@@ -35,6 +35,18 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
   })
   
+  it('should calculate time spent even when an interval is running', () => {
+    
+    const startedTask = shallowMount(ActivityView, {
+      propsData: {
+        log: [{ started: Date.now(), stopped: null }],
+        element: 'My Task'
+      }
+    })
+    expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0))
+    
+  })
+  
   it('renders the task log', () => {
     
     const renderedActivity = wrapper.find(Log)

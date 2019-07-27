@@ -23,15 +23,21 @@
         v-for="(event, index) in descLog"
         :key="index"
       >
-        <td>Started {{ displayDateTime(event.started) }}</td>
-        <td>Stopped {{ displayDateTime(event.stopped) }}</td>
+        <td>
+          <span>Started {{ displayDateTime(event.started) }}</span>
+        </td>
+        <td v-if="event.stopped">
+          <font-awesome-icon icon="arrow-right" />
+        </td>
+        <td v-if="event.stopped">
+          <span>Stopped {{ displayDateTime(event.stopped) }}</span>
+        </td>
       </tr>
     </table>
   </div>
 </template>
 
 <script>
-import { eventNames } from '@/store/constants'
 import moment from 'moment'
 
 export default {
@@ -58,9 +64,7 @@ export default {
       return moment(this.day, 'YYYY-MM-DD').format('ddd MMM DD')
     },
     
-    descLog: function () { return this.log.slice().reverse() },
-    
-    eventNames: () => eventNames
+    descLog: function () { return this.log.slice().reverse() }
     
   },
   

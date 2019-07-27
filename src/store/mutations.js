@@ -12,10 +12,11 @@ const deleteElem = (arr, elem) => {
 const mutations = {
   
   addTask (state, payload) {
-    if (payload.name) {
+    const taskName = payload.name.trim()
+    if (taskName) {
       const newTask = {
         id: state.tasks.length,
-        name: payload.name,
+        name: taskName,
         tags: [],
         created: Date.now(),
         log: [],

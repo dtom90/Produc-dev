@@ -1,4 +1,3 @@
-import { eventTypes } from '@/store/constants'
 import moment from 'moment'
 
 export function generateActivity () {
@@ -34,11 +33,9 @@ export function newTask (includeTags = false) {
   return {
     id: 1,
     name: 'new task 1',
-    log: [{
-      type: eventTypes.Created,
-      time: moment.now()
-    }],
     tags,
+    created: moment.now(),
+    log: [],
     completed: false
   }
   

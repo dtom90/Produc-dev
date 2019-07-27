@@ -37,18 +37,12 @@ describe('mutations', () => {
     })
     
     it('should not add a blank task to the state', () => {
-  
+      
       addTask(myState, { name: '' })
-      expect(myState.tasks).to.deep.equal([
-        {
-          id: 0,
-          name: 'my first task',
-          tags: [],
-          created: createdTime,
-          log: [],
-          completed: null
-        }
-      ])
+      expect(myState).to.deep.equal(origState)
+  
+      addTask(myState, { name: ' ' })
+      expect(myState).to.deep.equal(origState)
       
     })
     

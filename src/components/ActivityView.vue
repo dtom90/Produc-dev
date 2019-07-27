@@ -139,7 +139,8 @@ export default {
   methods: {
     calculateTimeSpent (log) {
       return moment.duration(
-        log.reduce((total, interval) => total + interval.stopped - interval.started, 0)
+        log.filter(interval => interval.stopped && interval.started)
+          .reduce((total, interval) => total + interval.stopped - interval.started, 0)
       )
     }
   }
