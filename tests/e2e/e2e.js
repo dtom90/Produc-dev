@@ -88,9 +88,9 @@ const eventNow = (type) => {
   const oneMinAgo = moment(now).subtract(1, 'minute')
   const oneMinAhead = moment(now).add(1, 'minute')
   return new RegExp([
-    `${type}: ${oneMinAgo.format('ddd MMM DD, h:mm a')}`,
-    `${type}: ${now.format('ddd MMM DD, h:mm a')}`,
-    `${type}: ${oneMinAhead.format('ddd MMM DD, h:mm a')}`
+    `${type} ${oneMinAgo.format('ddd MMM DD, h:mm a')}`,
+    `${type} ${now.format('ddd MMM DD, h:mm a')}`,
+    `${type} ${oneMinAhead.format('ddd MMM DD, h:mm a')}`
   ].join('|'))
 }
 
@@ -112,7 +112,6 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task1])
     .expect(selectedTaskName.textContent).eql(task1)
-    .expect(activitySection.find('tr').textContent).match(eventNow('Created'))
     
     // Add a tag to task 1
     .expect(tagsPresent()).eql([])
@@ -126,7 +125,6 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task2).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task2, task1])
     .expect(selectedTaskName.textContent).eql(task2)
-    .expect(activitySection.find('tr').textContent).match(eventNow('Created'))
     
     // Add the previous tag to task 2
     .expect(tagsPresent()).eql([])
@@ -145,7 +143,6 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task3, task2, task1])
     .expect(selectedTaskName.textContent).eql(task3)
-    .expect(activitySection.find('tr').textContent).match(eventNow('Created'))
     
     // Adjust the timer and expect the dial to remain still
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
@@ -259,17 +256,15 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(todoTasks.withText(task5))
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
     .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Stopped'))
-    .expect(activitySection.find('tr').nth(2).textContent).match(eventNow('Started'))
+    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Started'))
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
     .expect(selectedTaskSection.withText(task4).visible).ok()
     .click(checkbox(task4))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Completed'))
     .click(todoTasks.withText(task2))
     .expect(selectedTaskSection.withText(task2).visible).ok()
     .click(checkbox(task2))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Completed'))
     .expect(tasksPresent(todoList)).eql([task1, task3, task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
