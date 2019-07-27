@@ -16,37 +16,29 @@
     <br>
     
     <!-- View Switch -->
-    <ul
+    <div
       id="viewType"
-      class="nav nav-pills d-flex justify-content-center"
+      class="d-flex justify-content-center"
     >
-      <li
-        id="allView"
-        class="nav-item"
+      <button
+        id="fullView"
+        :class="'btn btn-light nav-link' + (view === 'full' ? ' active' : '')"
+        @click="setView('full')"
       >
-        <a
-          class="nav-link active"
-          data-toggle="tab"
-          href="#"
-          @click="view = 'all'"
-        >All Activity</a>
-      </li>
-      <li
+        Full Log
+      </button>
+      <button
         id="dailyView"
-        class="nav-item"
+        :class="'btn btn-light nav-link' + (view === 'daily' ? ' active' : '')"
+        @click="setView('daily')"
       >
-        <a
-          class="nav-link"
-          data-toggle="tab"
-          href="#"
-          @click="view = 'daily'"
-        >Daily Activity</a>
-      </li>
-    </ul>
+        Daily Log
+      </button>
+    </div>
 
     <!-- Activity Data -->
     <Log
-      v-if="view === 'all'"
+      v-if="view === 'full'"
       :log="log"
       :time-spent="calculateTimeSpent(log)"
     />
@@ -94,7 +86,7 @@ export default {
   
   data: function () {
     return {
-      view: 'all'
+      view: null
     }
   },
   
@@ -142,6 +134,14 @@ export default {
         log.filter(interval => interval.stopped && interval.started)
           .reduce((total, interval) => total + interval.stopped - interval.started, 0)
       )
+    },
+    
+    setView (type) {
+      if (this.view === type) {
+        this.view = null
+      } else {
+        this.view = type
+      }
     }
   }
 }

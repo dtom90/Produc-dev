@@ -47,8 +47,9 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
   })
   
-  it('renders the task log', () => {
+  it('renders the task full task log when button clicked', () => {
     
+    wrapper.find('#fullView').trigger('click')
     const renderedActivity = wrapper.find(Log)
     expect(renderedActivity.props()).toEqual({ log: log, day: null, timeSpent: allDuration })
     
@@ -56,21 +57,21 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
   
   it('renders "All Activity" and "Daily Activity" display options', () => {
     
-    const allViewBtn = wrapper.find('#allView')
-    expect(allViewBtn.text()).toBe('All Activity')
-    expect(allViewBtn.find('a').classes()).toContain('active')
+    const fullViewBtn = wrapper.find('#fullView')
+    expect(fullViewBtn.text()).toBe('Full Log')
+    expect(fullViewBtn.classes()).toContain('active')
     
     const dailyViewBtn = wrapper.find('#dailyView')
-    expect(dailyViewBtn.text()).toBe('Daily Activity')
-    expect(dailyViewBtn.find('a').classes()).not.toContain('active')
+    expect(dailyViewBtn.text()).toBe('Daily Log')
+    expect(dailyViewBtn.classes()).not.toContain('active')
     
   })
   
   it('renders the daily task logs', async () => {
     
-    expect(wrapper.vm.view).toBe('all')
+    expect(wrapper.vm.view).toBe('full')
     
-    const dailyViewBtn = wrapper.find('#dailyView > a')
+    const dailyViewBtn = wrapper.find('#dailyView')
     dailyViewBtn.trigger('click')
     
     expect(wrapper.vm.view).toBe('daily')
@@ -96,7 +97,7 @@ describe('ActivityView', () => {
   describe('for task', () => {
     
     const wrapper = shallowMount(ActivityView, { propsData: { log: log, element: 'My Task' } })
-  
+    
     shouldBehaveLikeActivityView(wrapper, 'My Task')
     
   })
