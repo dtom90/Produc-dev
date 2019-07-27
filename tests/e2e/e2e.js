@@ -1,11 +1,18 @@
-import { Selector, ClientFunction } from 'testcafe' // first import testcafe selectors
+import { t, Selector, ClientFunction } from 'testcafe' // first import TestCafé selectors
 import moment from 'moment'
 
 const hostname = 'localhost'
 const port = process.env.PORT || '8080'
 
-fixture`Produc-dev`
-  .page`http://${hostname}:${port}`
+const handleErrorsAndWarnings = async function () {
+  const { error, warn } = await t.getBrowserConsoleMessages()
+  await t.expect(error[0]).notOk()
+  await t.expect(warn[0]).notOk()
+}
+
+fixture(`Produc-dev`)
+  .page(`http://${hostname}:${port}`)
+  .afterEach(() => handleErrorsAndWarnings())
 
 // Tasks
 const task1 = 'The first task'
@@ -96,6 +103,7 @@ const eventNow = (type) => {
 
 // then create a test and place your code there
 test('Create, Complete and Delete Tasks to Test Functionality', async t => {
+  await handleErrorsAndWarnings()
   await t
     
     // Expect an empty Selected Task section
