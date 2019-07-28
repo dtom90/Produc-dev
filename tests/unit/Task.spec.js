@@ -1,6 +1,8 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Task from '@/components/Task.vue'
+import Checkbox from '@/components/Checkbox.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { newTask, taskWithActivity } from './fixtures'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
@@ -16,7 +18,8 @@ const store = new Vuex.Store({
 })
 
 const taskName = 'new task 1'
-const task = { id: 1, name: taskName }
+const task = newTask()
+const completedTask = taskWithActivity()
 let wrapper
 
 describe('Task', () => {
@@ -33,6 +36,32 @@ describe('Task', () => {
     
     const li = wrapper.find('li')
     expect(li.text()).toMatch(taskName)
+    
+  })
+  
+  it('renders an unchecked checkbox for the task', () => {
+  
+    const checkbox = wrapper.find(Checkbox)
+    expect(checkbox.props()).toEqual({
+      checked: false,
+      taskId: task.id
+    })
+    
+  })
+  
+  it('renders a checked checkbox for the completed task', () => {
+    
+    const completedWrapper = shallowMount(Task, {
+      propsData: { task: completedTask },
+      localVue,
+      store
+    })
+    
+    const checkbox = completedWrapper.find(Checkbox)
+    expect(checkbox.props()).toEqual({
+      checked: true,
+      taskId: task.id
+    })
     
   })
   

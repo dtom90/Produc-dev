@@ -85,10 +85,11 @@ const mutations = {
     }
   },
   
-  deleteTask (state, id) {
-    const index = state.tasks.findIndex(t => t.id === id)
+  deleteTask (state, payload) {
+    const index = state.tasks.findIndex(t => t.id === payload.id)
     const task = state.tasks[index]
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
+      task.tags.forEach(tag => deleteElem(state.tags[tag], payload.id))
       state.tasks.splice(index, 1)
     }
   },
@@ -96,6 +97,7 @@ const mutations = {
   clearTasks (state) {
     const completedTasks = state.tasks.filter(t => t.completed)
     if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
+      state.tasks.filter(t => t.completed).forEach(task => task.tags.forEach(tag => deleteElem(state.tags[tag], task.id)))
       state.tasks = state.tasks.filter(t => !t.completed)
     }
   }

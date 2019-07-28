@@ -18,8 +18,8 @@ export default {
   
   props: {
     checked: {
-      type: Number,
-      default: 0
+      type: Boolean,
+      default: false
     },
     taskId: {
       type: Number,

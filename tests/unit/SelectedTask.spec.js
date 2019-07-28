@@ -119,7 +119,7 @@ describe('SelectedTask', () => {
       const deleteButton = wrapper.find('button.btn-danger')
       expect(deleteButton.find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
       deleteButton.trigger('click')
-      expect(mutations.deleteTask).toHaveBeenCalledWith({}, task.id)
+      expect(mutations.deleteTask).toHaveBeenCalledWith({}, { id: task.id })
       
     })
     

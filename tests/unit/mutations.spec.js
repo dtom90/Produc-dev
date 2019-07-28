@@ -1,7 +1,9 @@
 import { expect } from 'chai'
 import { state, mutations } from '@/store'
 
-const { addTask, addTaskTag, startTask, stopTask, completeTask } = mutations
+const { addTask, addTaskTag, removeTaskTag, startTask, stopTask, completeTask, deleteTask } = mutations
+
+window.confirm = function () { return true }
 
 describe('mutations', () => {
   
@@ -123,7 +125,7 @@ describe('mutations', () => {
   
   describe('addTaskTag', () => {
     
-    it('should add tags to multiple tasks correctly', () => {
+    it('should add and remove tags to/from multiple tasks correctly', () => {
       
       addTask(myState, { name: 'my second task' })
       addTask(myState, { name: 'my third task' })
@@ -153,6 +155,30 @@ describe('mutations', () => {
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
       expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
+      
+      removeTaskTag(myState, { id: 1, tag: 'new tag b' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
+      expect(myState.tasks[1].tags).to.deep.equal([])
+      expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
+  
+      removeTaskTag(myState, { id: 0, tag: 'new tag a' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [2], 'new tag b': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag b'])
+      expect(myState.tasks[1].tags).to.deep.equal([])
+      expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
+  
+      removeTaskTag(myState, { id: 2, tag: 'new tag a' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [], 'new tag b': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag b'])
+      expect(myState.tasks[1].tags).to.deep.equal([])
+      expect(myState.tasks[2].tags).to.deep.equal([])
+  
+      removeTaskTag(myState, { id: 0, tag: 'new tag b' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [], 'new tag b': [] })
+      expect(myState.tasks[0].tags).to.deep.equal([])
+      expect(myState.tasks[1].tags).to.deep.equal([])
+      expect(myState.tasks[2].tags).to.deep.equal([])
       
     })
     
@@ -195,6 +221,22 @@ describe('mutations', () => {
           completed: completedTime
         }
       ])
+      
+    })
+    
+  })
+  
+  describe('deleteTask', () => {
+    
+    it('should delete the task and any tag references to that task', () => {
+      
+      addTaskTag(myState, { id: 0, tag: 'new tag a' })
+      expect(myState.tags).to.deep.equal({ 'new tag a': [0] })
+      expect(myState.tasks[0].tags).to.deep.equal(['new tag a'])
+      
+      deleteTask(myState, { id: 0 })
+      expect(myState.tasks).to.deep.equal([])
+      expect(myState.tags).to.deep.equal({ 'new tag a': [] })
       
     })
     

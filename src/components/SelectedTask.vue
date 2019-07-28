@@ -10,7 +10,7 @@
         <div class="d-flex flex-grow-1 align-items-center justify-content-center">
           <!--  Checkbox  -->
           <Checkbox
-            :checked="task.completed"
+            :checked="checked"
             :task-id="task.id"
           />
 
@@ -61,7 +61,7 @@
               <button
                 type="button"
                 class="btn btn-danger"
-                @click="deleteTask(task.id)"
+                @click="deleteTask({id: task.id})"
               >
                 <font-awesome-icon icon="trash-alt" />
               </button>
@@ -213,7 +213,11 @@ export default {
     
     ...mapGetters([
       'availableTags'
-    ])
+    ]),
+    
+    checked: function () {
+      return this.task.completed !== null
+    }
     
   },
   

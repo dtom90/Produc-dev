@@ -36,7 +36,7 @@ export function newTask (includeTags = false) {
     tags,
     created: moment.now(),
     log: [],
-    completed: false
+    completed: null
   }
   
 }
@@ -45,7 +45,7 @@ export function taskWithActivity () {
   
   const task = newTask()
   task.log = generateActivity().log
-  task.completed = true
+  task.completed = moment.now()
   return task
   
 }

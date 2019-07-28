@@ -19,7 +19,7 @@ function checkboxWrapper (checked = false) {
   
   return shallowMount(Checkbox, {
     propsData: {
-      checked: checked ? Date.now() : null,
+      checked,
       taskId
     },
     localVue,
