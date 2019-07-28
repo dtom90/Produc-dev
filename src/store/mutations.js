@@ -15,7 +15,7 @@ const mutations = {
     const taskName = payload.name.trim()
     if (taskName) {
       const newTask = {
-        id: state.tasks.length,
+        id: state.nextTaskID,
         name: taskName,
         tags: [],
         created: Date.now(),
@@ -23,6 +23,7 @@ const mutations = {
         completed: null
       }
       state.tasks.push(newTask)
+      state.nextTaskID += 1
       state.selectedTaskID = newTask.id
     }
   },

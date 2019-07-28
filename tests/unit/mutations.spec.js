@@ -48,6 +48,71 @@ describe('mutations', () => {
       
     })
     
+    it('should add a unique task ID', () => {
+  
+      addTask(myState, { name: 'my second task' })
+      addTask(myState, { name: 'my third task' })
+  
+      expect(myState.tasks).to.deep.equal([
+        {
+          id: 0,
+          name: 'my first task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: null
+        },
+        {
+          id: 1,
+          name: 'my second task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: null
+        },
+        {
+          id: 2,
+          name: 'my third task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: null
+        }
+      ])
+      
+      deleteTask(myState, { id: 1 })
+      addTask(myState, { name: 'my fourth task' })
+      const fourthCreatedTime = Date.now()
+      
+      expect(myState.tasks).to.deep.equal([
+        {
+          id: 0,
+          name: 'my first task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: null
+        },
+        {
+          id: 2,
+          name: 'my third task',
+          tags: [],
+          created: createdTime,
+          log: [],
+          completed: null
+        },
+        {
+          id: 3,
+          name: 'my fourth task',
+          tags: [],
+          created: fourthCreatedTime,
+          log: [],
+          completed: null
+        }
+      ])
+      
+    })
+    
   })
   
   describe('startTask', () => {
