@@ -3,6 +3,7 @@ import moment from 'moment'
 
 const hostname = 'localhost'
 const port = process.env.PORT || '8080'
+const path = process.env.BASE_URL || ''
 
 const handleErrorsAndWarnings = async function () {
   const { error, warn } = await t.getBrowserConsoleMessages()
@@ -11,7 +12,7 @@ const handleErrorsAndWarnings = async function () {
 }
 
 fixture(`Produc-dev`)
-  .page(`http://${hostname}:${port}`)
+  .page(`http://${hostname}:${port}${path}`)
   .afterEach(() => handleErrorsAndWarnings())
 
 // Tasks
@@ -103,6 +104,7 @@ const eventNow = (type) => {
 
 // then create a test and place your code there
 test('Create, Complete and Delete Tasks to Test Functionality', async t => {
+  console.log(`http://${hostname}:${port}${path}`)
   await handleErrorsAndWarnings()
   await t
     
