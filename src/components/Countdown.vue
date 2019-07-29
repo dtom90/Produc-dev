@@ -58,7 +58,6 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { eventTypes } from '@/store/constants'
 
 export default {
   
@@ -79,7 +78,7 @@ export default {
   }),
   
   computed: {
-
+    
     totalTime () {
       return this.timerMinutes * 60
     },
@@ -87,7 +86,7 @@ export default {
     playPauseIcon () {
       return this.countingDown ? 'pause' : 'play'
     },
-
+    
     cssProps () {
       return {
         '--rotation-factor': (this.secondsRemaining / this.totalTime).toString() + 'turn'
@@ -103,18 +102,12 @@ export default {
     }
     
   },
-
+  
   watch: {
     taskId: function (newId, oldId) {
       if (this.countingDown) {
-        this.addTaskEvent({
-          id: oldId,
-          type: eventTypes.Stopped
-        })
-        this.addTaskEvent({
-          id: newId,
-          type: eventTypes.Started
-        })
+        this.stopTask({ id: oldId })
+        this.startTask({ id: newId })
       }
     }
   },
@@ -125,34 +118,29 @@ export default {
   },
   
   methods: {
-
+    
     ...mapMutations([
-      'addTaskEvent'
+      'startTask',
+      'stopTask'
     ]),
     
-    start () {
+    startTimer () {
       this.timer.start()
-      this.addTaskEvent({
-        id: this.taskId,
-        type: eventTypes.Started
-      })
+      this.startTask({ id: this.taskId })
       this.countingDown = true
     },
     
-    stop () {
-      this.addTaskEvent({
-        id: this.taskId,
-        type: eventTypes.Stopped
-      })
+    stopTimer () {
+      this.stopTask({ id: this.taskId })
       this.countingDown = false
     },
-  
+    
     toggleTimer () {
       if (this.countingDown) {
         this.timer.pause()
-        this.stop()
+        this.stopTimer()
       } else {
-        this.start()
+        this.startTimer()
       }
     },
     
@@ -160,7 +148,7 @@ export default {
       if (this.secondsRemaining > 1) {
         this.secondsRemaining -= 1
       } else {
-        this.stop()
+        this.stopTimer()
         this.timer.clear()
         this.secondsRemaining = this.totalTime
       }

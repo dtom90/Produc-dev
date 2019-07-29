@@ -1,34 +1,31 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersist from 'vuex-persist'
-import { eventTypes } from './constants'
 import mutations from './mutations'
+import state from './state'
 
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({
-  storage: window.localStorage,
-  reducer: state => ({ tasks: state.tasks, tags: state.tags })
+  storage: window.localStorage
 })
-
-const completedDate = task => task.log.filter(event => event.type === eventTypes.Completed)[0].time
 
 export default new Vuex.Store({
   
-  state: {
-    tasks: [],
-    tags: {},
-    selectedTask: null
-  },
+  state,
   
   getters: {
+    selectedTask (state) {
+      return state.tasks.find(t => t.id === state.selectedTaskID)
+    },
+    
     incompleteTasks (state) {
       const incompleteTasks = state.tasks.filter(t => !t.completed)
       return state.incompleteOrder === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
     },
     
     completedTasks (state) {
-      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => completedDate(a) - completedDate(b))
+      const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => a.completed - b.completed)
       return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
     },
     
@@ -47,4 +44,4 @@ export default new Vuex.Store({
   
 })
 
-export { mutations }
+export { state, mutations }

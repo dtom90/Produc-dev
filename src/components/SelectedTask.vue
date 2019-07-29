@@ -10,7 +10,7 @@
         <div class="d-flex flex-grow-1 align-items-center justify-content-center">
           <!--  Checkbox  -->
           <Checkbox
-            :checked="task.completed"
+            :checked="checked"
             :task-id="task.id"
           />
 
@@ -61,7 +61,7 @@
               <button
                 type="button"
                 class="btn btn-danger"
-                @click="deleteTask(task.id)"
+                @click="deleteTask({id: task.id})"
               >
                 <font-awesome-icon icon="trash-alt" />
               </button>
@@ -70,82 +70,107 @@
         </div>
       </div>
       
-      <!-- Tags List -->
+      <!-- Tags Section -->
       <div
         id="tagZone"
         class="form-inline"
       >
         <label class="col-sm-2">Tags:</label>
-        <div
-          id="tagDropdown"
-        >
-          <div
-            id="tagDropdownMenu"
-            class="btn-group-vertical"
-            @blur="tagOptions = []"
-          >
-            <button
-              v-for="tag in tagOptions"
-              :key="tag"
-              class="tag-option btn btn-light"
-              @click="addTag(tag)"
-            >
-              {{ tag }}
-            </button>
-          </div>
-        </div>
-        <input
-          id="add-tag"
-          v-model="newTag"
-          type="text"
-          class="form-control"
-          placeholder="add new tag"
-          @input="tagInputChange"
-          @focus="tagInputChange"
-          @blur="clickOutside"
-          @keyup.enter="addTag(newTag)"
-        >
+        
+        <!-- Tags -->
         <div
           v-for="tag in task.tags"
           :key="tag"
           class="tag btn-group"
         >
           <button
-            :class="'tag-name btn btn-primary' + (selectedTag === tag ? ' active' : '')"
-            @click="showTag(tag)"
+            class="tag-name btn btn-primary"
+            data-toggle="modal"
+            data-target="#activityModal"
+            @click="selectedTag = tag"
           >
             {{ tag }}
           </button>
           <button
-            class="btn btn-primary"
+            class="tag-close btn btn-primary"
             @click="removeTag(tag)"
           >
-            x
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        
+        <!-- Tag Input -->
+        <div
+          id="newTag"
+          class="d-flex"
+        >
+          <button
+            id="addTagButton"
+            class="btn btn-light"
+            @click="addTagButton"
+          >
+            <font-awesome-icon
+              v-if="!showTagInput"
+              icon="plus"
+            />
+            <font-awesome-icon
+              v-if="showTagInput"
+              icon="times"
+            />
+          </button>
+          <div
+            id="tagDropdown"
+          >
+            <div
+              id="tagDropdownMenu"
+              class="btn-group-vertical"
+              @blur="tagOptions = []"
+            >
+              <button
+                v-for="tag in tagOptions"
+                :key="tag"
+                class="tag-option btn btn-light"
+                @click="addTag(tag)"
+              >
+                {{ tag }}
+              </button>
+            </div>
+          </div>
+          <input
+            v-if="showTagInput"
+            id="addTagInput"
+            ref="addTagInput"
+            v-model="newTag"
+            type="text"
+            class="form-control"
+            placeholder="add new tag"
+            @input="tagInputChange"
+            @focus="tagInputChange"
+            @blur="clickOutside"
+            @keyup.enter="addTag(newTag)"
+          >
+        </div>
       </div>
-
+      
+      <!-- Activity Modal -->
+      <ActivityModal
+        :tag="selectedTag"
+      />
+      
       <br>
       
-      <div v-if="!selectedTag">
-        <!-- Countdown Timer -->
-        <Countdown
-          v-if="!task.completed"
-          :task-id="task.id"
-        />
-        <br>
-
-        <!-- Activity Views -->
-        <ActivityView
-          :element="task.name"
-          :log="task.log"
-        />
-      </div>
-
+      <!-- Countdown Timer -->
+      <Countdown
+        v-if="!task.completed"
+        :task-id="task.id"
+      />
+      <br>
+      
+      <!-- Activity View -->
       <ActivityView
-        v-if="selectedTag"
-        :element="selectedTag"
-        :log="tagActivity(selectedTag)"
+        id="taskActivity"
+        :element="task.name"
+        :log="task.log"
       />
     </div>
   </div>
@@ -155,6 +180,7 @@
 import Checkbox from './Checkbox'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
+import ActivityModal from './ActivityModal'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -164,24 +190,14 @@ export default {
   components: {
     Checkbox,
     Countdown,
-    ActivityView
+    ActivityView,
+    ActivityModal
   },
   
   props: {
     task: {
       type: Object,
-      default: function () {
-        return {
-          id: 1,
-          name: 'new task 1',
-          createdDate: Date.now(),
-          log: [{
-            type: 0,
-            time: Date.now()
-          }],
-          completed: false
-        }
-      }
+      default: () => null
     }
   },
   
@@ -189,15 +205,19 @@ export default {
     editing: false,
     newTag: '',
     tagOptions: [],
-    selectedTag: null
+    selectedTag: null,
+    showTagInput: false
   }),
   
   computed: {
     
     ...mapGetters([
-      'availableTags',
-      'tagActivity'
-    ])
+      'availableTags'
+    ]),
+    
+    checked: function () {
+      return this.task.completed !== null
+    }
     
   },
   
@@ -209,6 +229,15 @@ export default {
       'deleteTask'
     ]),
     
+    addTagButton: function () {
+      this.showTagInput = !this.showTagInput
+      if (this.showTagInput) {
+        this.$nextTick(() => {
+          this.$refs.addTagInput.focus()
+        })
+      }
+    },
+    
     tagInputChange: function () {
       this.tagOptions = this.availableTags(this.task.id, this.newTag)
     },
@@ -218,14 +247,7 @@ export default {
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = []
-    },
-    
-    showTag: function (tag) {
-      if (this.selectedTag && this.selectedTag === tag) {
-        this.selectedTag = null
-      } else {
-        this.selectedTag = tag
-      }
+      this.$refs.addTagInput.focus()
     },
     
     removeTag: function (tag) {
@@ -235,8 +257,11 @@ export default {
     
     clickOutside: function (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
-             event.relatedTarget.classList.contains('tag-option'))) {
+            event.relatedTarget.classList.contains('tag-option'))) {
         this.tagOptions = []
+        if (!(event.relatedTarget && event.relatedTarget.id === 'addTagButton')) {
+          this.showTagInput = false
+        }
       }
     }
     
@@ -259,7 +284,7 @@ export default {
        margin-top: 20px;
     }
     
-    #add-tag {
+    #addTagInput {
         max-width: 160px;
     }
     
@@ -269,12 +294,16 @@ export default {
 
     #tagDropdownMenu {
         position: absolute;
-        top: 20px;
+        top: 42px;
         z-index: 4;
     }
     
     .tag {
-        margin-left: 20px;
+        margin-right: 20px;
+    }
+    
+    .tag-close {
+      font-weight: 700;
     }
 
     .dropleft .btn {

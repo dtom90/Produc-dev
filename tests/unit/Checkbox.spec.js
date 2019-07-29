@@ -18,7 +18,10 @@ const taskId = 0
 function checkboxWrapper (checked = false) {
   
   return shallowMount(Checkbox, {
-    propsData: { checked, taskId },
+    propsData: {
+      checked,
+      taskId
+    },
     localVue,
     store
   })

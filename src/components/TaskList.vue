@@ -133,7 +133,7 @@ export default {
       'clearTasks'
     ]),
     addNewTask () {
-      this.addTask(this.newTask)
+      this.addTask({ name: this.newTask })
       this.newTask = ''
     }
   }

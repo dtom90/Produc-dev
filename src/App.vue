@@ -11,7 +11,7 @@
     </div>
 
     <div
-      id="selected-task"
+      id="selected-task-section"
       class="section"
     >
       <SelectedTask :task="selectedTask" />
@@ -29,7 +29,7 @@
 <script>
 import TaskList from './components/TaskList.vue'
 import SelectedTask from './components/SelectedTask.vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   
@@ -42,11 +42,8 @@ export default {
 
   computed: {
     
-    ...mapState([
-      'selectedTask'
-    ]),
-    
     ...mapGetters([
+      'selectedTask',
       'incompleteTasks',
       'completedTasks'
     ])
@@ -74,7 +71,7 @@ export default {
     flex: 2;
   }
   
-  #selected-task {
+  #selected-task-section {
     flex: 3;
   }
   

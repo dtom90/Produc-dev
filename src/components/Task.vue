@@ -6,7 +6,7 @@
   >
     <div class="d-flex align-items-center">
       <Checkbox
-        :checked="task.completed"
+        :checked="checked"
         :task-id="task.id"
       />
       <span>{{ task.name }}</span>
@@ -39,11 +39,15 @@ export default {
   computed: {
     
     ...mapState([
-      'selectedTask'
+      'selectedTaskID'
     ]),
     
     active: function () {
-      return this.selectedTask === this.task ? ' active' : ''
+      return this.selectedTaskID === this.task.id ? ' active' : ''
+    },
+
+    checked: function () {
+      return this.task.completed !== null
     }
   },
   

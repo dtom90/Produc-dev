@@ -1,6 +1,3 @@
-import { eventTypes } from './constants'
-
-const event = type => ({ type, time: Date.now() })
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -14,35 +11,64 @@ const deleteElem = (arr, elem) => {
 
 const mutations = {
   
-  addTask (state, newTaskName) {
-    const newTask = {
-      id: state.tasks.length,
-      name: newTaskName,
-      tags: [],
-      completed: false,
-      log: [event(eventTypes.Created)]
+  addTask (state, payload) {
+    const taskName = payload.name.trim()
+    if (taskName) {
+      const newTask = {
+        id: state.nextTaskID,
+        name: taskName,
+        tags: [],
+        created: Date.now(),
+        log: [],
+        completed: null
+      }
+      state.tasks.push(newTask)
+      state.nextTaskID += 1
+      state.selectedTaskID = newTask.id
     }
-    state.tasks.push(newTask)
-    state.selectedTask = newTask
   },
   
   selectTask (state, id) {
-    state.selectedTask = state.tasks.find(t => t.id === id)
+    state.selectedTaskID = id
   },
   
-  addTaskEvent (state, payload) {
+  startTask (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    task.log.push(event(payload.type))
+    if (task) {
+      if (task.log.length === 0 || task.log[task.log.length - 1].stopped !== null) {
+        task.log.push({
+          started: Date.now(),
+          stopped: null
+        })
+      } else {
+        task.log[task.log.length - 1].started = Date.now()
+      }
+    }
+  },
+  
+  stopTask (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (task && task.log.length > 0) {
+      const lastInterval = task.log[task.log.length - 1]
+      if (lastInterval.stopped === null) {
+        lastInterval.stopped = Date.now()
+      }
+    }
   },
   
   addTaskTag (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (!(payload.tag in state.tags)) {
-      state.tags[payload.tag] = [task.id]
-    } else {
-      addElem(state.tags[payload.tag], task.id)
+    const newTag = payload.tag.trim()
+    if (newTag) {
+      const task = state.tasks.find(t => t.id === payload.id)
+      if (task) {
+        if (!(newTag in state.tags)) {
+          state.tags[newTag] = [task.id]
+        } else {
+          addElem(state.tags[newTag], task.id)
+        }
+        addElem(task.tags, newTag)
+      }
     }
-    addElem(task.tags, payload.tag)
   },
   
   removeTaskTag (state, payload) {
@@ -54,21 +80,17 @@ const mutations = {
   completeTask (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     if (!task.completed) {
-      if (task.log[task.log.length - 1].type === eventTypes.Started) {
-        task.log.push(event(eventTypes.Stopped))
-      }
-      task.log.push(event(eventTypes.Completed))
-      task.completed = true
+      task.completed = Date.now()
     } else {
-      task.log.pop()
-      task.completed = false
+      task.completed = null
     }
   },
   
-  deleteTask (state, id) {
-    const index = state.tasks.findIndex(t => t.id === id)
+  deleteTask (state, payload) {
+    const index = state.tasks.findIndex(t => t.id === payload.id)
     const task = state.tasks[index]
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
+      task.tags.forEach(tag => deleteElem(state.tags[tag], payload.id))
       state.tasks.splice(index, 1)
     }
   },
@@ -76,6 +98,7 @@ const mutations = {
   clearTasks (state) {
     const completedTasks = state.tasks.filter(t => t.completed)
     if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
+      state.tasks.filter(t => t.completed).forEach(task => task.tags.forEach(tag => deleteElem(state.tags[tag], task.id)))
       state.tasks = state.tasks.filter(t => !t.completed)
     }
   }

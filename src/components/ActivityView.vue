@@ -1,7 +1,7 @@
 <template>
   <div
-    id="panel"
-    class="border-top"
+    :id="id"
+    class="activity-view border-top"
   >
     <h3>
       Activity for <strong>{{ element }}</strong>
@@ -16,37 +16,29 @@
     <br>
     
     <!-- View Switch -->
-    <ul
+    <div
       id="viewType"
-      class="nav nav-pills d-flex justify-content-center"
+      class="d-flex justify-content-center"
     >
-      <li
-        id="allView"
-        class="nav-item"
+      <button
+        id="fullView"
+        :class="'btn btn-light nav-link' + (view === 'full' ? ' active' : '')"
+        @click="setView('full')"
       >
-        <a
-          class="nav-link active"
-          data-toggle="tab"
-          href="#"
-          @click="view = 'all'"
-        >All Activity</a>
-      </li>
-      <li
+        Full Log
+      </button>
+      <button
         id="dailyView"
-        class="nav-item"
+        :class="'btn btn-light nav-link' + (view === 'daily' ? ' active' : '')"
+        @click="setView('daily')"
       >
-        <a
-          class="nav-link"
-          data-toggle="tab"
-          href="#"
-          @click="view = 'daily'"
-        >Daily Activity</a>
-      </li>
-    </ul>
+        Daily Log
+      </button>
+    </div>
 
     <!-- Activity Data -->
     <Log
-      v-if="view === 'all'"
+      v-if="view === 'full'"
       :log="log"
       :time-spent="calculateTimeSpent(log)"
     />
@@ -65,7 +57,6 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
-import { eventTypes } from '@/store/constants'
 import moment from 'moment'
 
 export default {
@@ -77,21 +68,25 @@ export default {
   },
   
   props: {
+    id: {
+      type: String,
+      default: 'taskActivity'
+    },
+    element: {
+      type: String,
+      default: ''
+    },
     log: {
       type: Array,
       default: function () {
         return []
       }
-    },
-    element: {
-      type: String,
-      default: 'Task'
     }
   },
   
   data: function () {
     return {
-      view: 'all'
+      view: null
     }
   },
   
@@ -103,7 +98,7 @@ export default {
       
       // Create dailyActivity Object from this.log
       for (const event of this.log) {
-        day = moment(event.time).format('YYYY-MM-DD')
+        day = moment(event.started).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
         } else {
@@ -135,23 +130,18 @@ export default {
   
   methods: {
     calculateTimeSpent (log) {
-      const intervals = []
-      let currentInterval = { Started: null, Stopped: null }
-      for (const event of log) {
-        if (event.type === eventTypes.Started) {
-          currentInterval.Started = event
-        } else if (event.type === eventTypes.Stopped) {
-          currentInterval.Stopped = event
-          if (currentInterval.Started) {
-            intervals.push(currentInterval)
-          }
-          currentInterval = { Started: null, Stopped: null }
-        }
-      }
-      
       return moment.duration(
-        intervals.reduce((total, interval) => total + interval.Stopped.time - interval.Started.time, 0)
+        log.filter(interval => interval.stopped && interval.started)
+          .reduce((total, interval) => total + interval.stopped - interval.started, 0)
       )
+    },
+    
+    setView (type) {
+      if (this.view === type) {
+        this.view = null
+      } else {
+        this.view = type
+      }
     }
   }
 }
@@ -159,7 +149,7 @@ export default {
 
 <style scoped>
 
-  #panel {
+  .activity-view {
     padding: 20px;
   }
   
