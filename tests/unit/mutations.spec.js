@@ -15,7 +15,7 @@ describe('mutations', () => {
     
     myState = JSON.parse(JSON.stringify(state))
     addTask(myState, { name: 'my first task' })
-    createdTime = Date.now()
+    createdTime = myState.tasks[0].created
     origState = JSON.parse(JSON.stringify(myState))
     
   })
@@ -42,17 +42,17 @@ describe('mutations', () => {
       
       addTask(myState, { name: '' })
       expect(myState).to.deep.equal(origState)
-  
+      
       addTask(myState, { name: ' ' })
       expect(myState).to.deep.equal(origState)
       
     })
     
     it('should add a unique task ID', () => {
-  
+      
       addTask(myState, { name: 'my second task' })
       addTask(myState, { name: 'my third task' })
-  
+      
       expect(myState.tasks).to.deep.equal([
         {
           id: 0,
@@ -66,7 +66,7 @@ describe('mutations', () => {
           id: 1,
           name: 'my second task',
           tags: [],
-          created: createdTime,
+          created: myState.tasks[1].created,
           log: [],
           completed: null
         },
@@ -74,7 +74,7 @@ describe('mutations', () => {
           id: 2,
           name: 'my third task',
           tags: [],
-          created: createdTime,
+          created: myState.tasks[2].created,
           log: [],
           completed: null
         }
@@ -82,7 +82,6 @@ describe('mutations', () => {
       
       deleteTask(myState, { id: 1 })
       addTask(myState, { name: 'my fourth task' })
-      const fourthCreatedTime = Date.now()
       
       expect(myState.tasks).to.deep.equal([
         {
@@ -97,7 +96,7 @@ describe('mutations', () => {
           id: 2,
           name: 'my third task',
           tags: [],
-          created: createdTime,
+          created: myState.tasks[1].created,
           log: [],
           completed: null
         },
@@ -105,7 +104,7 @@ describe('mutations', () => {
           id: 3,
           name: 'my fourth task',
           tags: [],
-          created: fourthCreatedTime,
+          created: myState.tasks[2].created,
           log: [],
           completed: null
         }
@@ -120,24 +119,28 @@ describe('mutations', () => {
     it('should start and stop the task', () => {
       
       startTask(myState, { id: 0 })
-      const firstInterval = { started: Date.now(), stopped: null }
+      const started = Date.now()
+      const firstInterval = { started, stopped: null }
       expect(myState.tasks[0].log).to.deep.equal([firstInterval])
   
       stopTask(myState, { id: 0 })
-      firstInterval.stopped = Date.now()
-      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      expect(myState.tasks[0].log[0].stopped).not.to.equal(null)
       
     })
     
     it('should overwrite the latest start time if called twice', () => {
       
-      myState.tasks[0].log.push({
+      const firstInterval = {
         started: Date.now() - 10000,
         stopped: null
-      })
-  
+      }
+      myState.tasks[0].log.push(JSON.parse(JSON.stringify(firstInterval)))
+      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      
       startTask(myState, { id: 0 })
-      const firstInterval = { started: Date.now(), stopped: null }
+      
+      expect(myState.tasks[0].log).not.to.deep.equal([firstInterval])
+      firstInterval.started = myState.tasks[0].log[0].started
       expect(myState.tasks[0].log).to.deep.equal([firstInterval])
       
     })
@@ -160,8 +163,7 @@ describe('mutations', () => {
       
       stopTask(myState, { id: 0 })
       
-      firstInterval.stopped = Date.now()
-      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      expect(myState.tasks[0].log[0].stopped).not.to.equal(null)
       
     })
     
@@ -275,7 +277,6 @@ describe('mutations', () => {
     it('should mark the task as complete', () => {
       
       completeTask(myState, { id: 0 })
-      const completedTime = Date.now()
       expect(myState.tasks).to.deep.equal([
         {
           id: 0,
@@ -283,7 +284,7 @@ describe('mutations', () => {
           tags: [],
           created: createdTime,
           log: [],
-          completed: completedTime
+          completed: myState.tasks[0].completed
         }
       ])
       
