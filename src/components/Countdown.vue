@@ -29,13 +29,14 @@
               type="number"
               class="form-control"
               @input="secondsRemaining = totalTime"
-              @keyup.enter="editing = false"
+              @keyup.enter="updateMinutes"
             >
             <div class="input-group-append">
               <button
+                id="timer-save-button"
                 type="button"
                 class="btn btn-primary"
-                @click="editing = false"
+                @click="updateMinutes"
               >
                 <font-awesome-icon icon="save" />
               </button>
@@ -47,6 +48,7 @@
           id="play-pause-btn"
           type="button"
           class="btn btn-light btn-lg"
+          :disabled="editing === true"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -58,6 +60,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import CountdownTimer from './CountdownTimer'
 
 export default {
   
@@ -114,7 +117,7 @@ export default {
   
   mounted: function () {
     this.secondsRemaining = this.totalTime
-    this.timer = new Timer(this.decrementTimer)
+    this.timer = new CountdownTimer(this.totalTime, this.decrementTimer, this.finishTimer)
   },
   
   methods: {
@@ -123,6 +126,11 @@ export default {
       'startTask',
       'stopTask'
     ]),
+    
+    updateMinutes () {
+      this.timer.setSeconds(this.totalTime)
+      this.editing = false
+    },
     
     startTimer () {
       this.timer.start()
@@ -144,43 +152,15 @@ export default {
       }
     },
     
-    decrementTimer () {
-      if (this.secondsRemaining > 1) {
-        this.secondsRemaining -= 1
-      } else {
-        this.stopTimer()
-        this.timer.clear()
-        this.secondsRemaining = this.totalTime
-      }
+    decrementTimer (secondsRemaining) {
+      this.secondsRemaining = secondsRemaining
+    },
+    
+    finishTimer () {
+      this.stopTimer()
+      alert('Finished Working, Take a Break!')
+      this.secondsRemaining = this.totalTime
     }
-  }
-}
-
-function Timer (callback, interval = 1000) {
-  let timerId; let startTime; let remaining = interval
-  
-  this.id = () => timerId
-  
-  this.start = function () {
-    const t = this
-    clearTimeout(timerId)
-    startTime = Date.now()
-    timerId = setTimeout(function () { t.start() }, remaining)
-    if (remaining !== interval) {
-      remaining = interval
-    } else {
-      callback()
-    }
-  }
-
-  this.pause = function () {
-    clearTimeout(timerId)
-    remaining -= Date.now() - startTime
-  }
-  
-  this.clear = function () {
-    clearTimeout(timerId)
-    remaining = interval
   }
 }
 
