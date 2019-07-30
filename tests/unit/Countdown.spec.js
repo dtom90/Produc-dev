@@ -28,8 +28,9 @@ describe('Countdown', () => {
   
   it('renders a play button for the timer', () => {
     
-    expect(wrapper.find('#play-pause-btn').find(FontAwesomeIcon).isVisible()).toBe(true)
-    expect(wrapper.find('#play-pause-btn').find(FontAwesomeIcon).attributes('icon')).toBe('play')
+    const playPauseButton = wrapper.find('#play-pause-btn')
+    expect(playPauseButton.find(FontAwesomeIcon).isVisible()).toBe(true)
+    expect(playPauseButton.find(FontAwesomeIcon).attributes('icon')).toBe('play')
     
   })
   
@@ -51,6 +52,11 @@ describe('Countdown', () => {
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     expect(wrapper.find('input[type="number"]').element.value).toBe('25')
     
+    wrapper.find('#timer-save-button').trigger('click')
+    
+    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').text()).toBe('25:00')
+    expect(wrapper.find('input[type="number"]').exists()).toBe(false)
   })
   
   it('should call startTask when the play button is clicked, then stopTask when clicked again', () => {
