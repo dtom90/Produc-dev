@@ -61,6 +61,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import CountdownTimer from './CountdownTimer'
+import notifications from './notifications'
 
 export default {
   
@@ -118,6 +119,7 @@ export default {
   mounted: function () {
     this.secondsRemaining = this.totalTime
     this.timer = new CountdownTimer(this.totalTime, this.decrementTimer, this.finishTimer)
+    notifications.requestPermission()
   },
   
   methods: {
@@ -158,7 +160,7 @@ export default {
     
     finishTimer () {
       this.stopTimer()
-      alert('Finished Working, Take a Break!')
+      notifications.notify('Finished Working, Take a Break!')
       this.secondsRemaining = this.totalTime
     }
   }
