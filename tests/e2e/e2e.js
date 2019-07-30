@@ -72,7 +72,7 @@ const tagOptions = ClientFunction(() => {
   return Array.apply(null, tags).map(tag => tag.innerText)
 })
 
-const deleteHandler = ClientFunction((type, text) => {
+const dialogHandler = ClientFunction((type, text) => {
   switch (type) { /* eslint-disable no-throw-literal */
     case 'confirm':
       switch (text) { /* eslint-disable no-undef */
@@ -87,7 +87,14 @@ const deleteHandler = ClientFunction((type, text) => {
     case 'prompt':
       throw 'A prompt was invoked!'
     case 'alert':
-      throw 'An alert was invoked!'
+      switch (text) {
+        case 'Finished Working, Take a Break!':
+          return true
+        case 'Warning! Permissions to notify you have been denied! You may not tell when your Pomodoro timer ends.':
+          return true
+        default:
+          throw `An unexpected alert was invoked: "${text}"`
+      }
   }
 })
 
@@ -118,6 +125,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(doneTasks.count).eql(0)
     
     // Add task 1
+    .setNativeDialogHandler(dialogHandler)
     .typeText(newTaskInput, task1)
     .pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task1])
@@ -313,7 +321,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tasksPresent(doneList)).eql([task3mod, task2, task4])
     
     // Click task 5 delete button, expect confirmation popup, do not confirm
-    .setNativeDialogHandler(deleteHandler, { dependencies: { taskName: task5, deleteTask: false } })
+    .setNativeDialogHandler(dialogHandler, { dependencies: { taskName: task5, deleteTask: false } })
     .click(todoTasks.withText(task5))
     .click(menuButton)
     .click(deleteButton(task5))
@@ -328,7 +336,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Click task 1 delete button, expect confirmation popup, confirm delete
-    .setNativeDialogHandler(deleteHandler, { dependencies: { taskName: task1, deleteTask: true } })
+    .setNativeDialogHandler(dialogHandler, { dependencies: { taskName: task1, deleteTask: true } })
     .click(todoTasks.withText(task1))
     .click(menuButton)
     .click(deleteButton(task1))
@@ -346,7 +354,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tasksPresent(doneList)).ok([task2mod, task4])
     
     // Click the Clear button to clear all completed tasks
-    .setNativeDialogHandler(deleteHandler, { dependencies: { numCompletedTasks: 2, deleteTask: true } })
+    .setNativeDialogHandler(dialogHandler, { dependencies: { numCompletedTasks: 2, deleteTask: true } })
     .click(doneMenuButton)
     .click(clearAllButton)
     .expect(tasksPresent(todoList)).eql([task5])
@@ -357,7 +365,7 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(checkbox(task5))
     .expect(tasksPresent(todoList)).eql([])
     .expect(tasksPresent(doneList)).eql([task5])
-    .setNativeDialogHandler(deleteHandler, { dependencies: { numCompletedTasks: 9, deleteTask: false } })
+    .setNativeDialogHandler(dialogHandler, { dependencies: { numCompletedTasks: 9, deleteTask: false } })
     .click(doneMenuButton)
     .click(clearAllButton)
     .expect(tasksPresent(todoList)).eql([])
