@@ -4,6 +4,7 @@ import moment from 'moment'
 const hostname = 'localhost'
 const port = process.env.PORT || '8080'
 const path = process.env.BASE_URL || ''
+const page = `http://${hostname}:${port}${path}`
 
 const handleErrorsAndWarnings = async function () {
   const { error, warn } = await t.getBrowserConsoleMessages()
@@ -11,8 +12,10 @@ const handleErrorsAndWarnings = async function () {
   await t.expect(warn[0]).notOk()
 }
 
-fixture(`Produc-dev`)
-  .page(`http://${hostname}:${port}${path}`)
+const rotationFactor = turn => `--rotation-factor:${turn}turn; --countdown-color:red; --button-color:darkred;`
+
+fixture(`Testing Produc-dev at ${page}`)
+  .page(page)
   .afterEach(() => handleErrorsAndWarnings())
 
 // Tasks
@@ -111,7 +114,6 @@ const eventNow = (type) => {
 
 // then create a test and place your code there
 test('Create, Complete and Delete Tasks to Test Functionality', async t => {
-  console.log(`http://${hostname}:${port}${path}`)
   await handleErrorsAndWarnings()
   await t
     
@@ -164,12 +166,12 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Adjust the timer and expect the dial to remain still
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
     .click(selectedTaskSection.find('p').withText('25:00'))
     .expect(selectedTaskSection.find('input[type="number"]').visible).ok()
     .expect(selectedTaskSection.find('button > svg.fa-save').visible).ok()
     .typeText(selectedTaskSection.find('#edit-wrapper input'), '12', { replace: true })
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
     .click(selectedTaskSection.find('button > svg.fa-save'))
     .expect(selectedTaskSection.find('p').withText('12:00').visible).ok()
     .click(selectedTaskSection.find('p').withText('12:00'))
@@ -205,39 +207,39 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     
     // Press the countdown play button and expect the countdown to decrement
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql('--rotation-factor:1turn;')
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
     .click(selectedTaskSection.find('button > svg.fa-play'))
     .expect(selectedTaskSection.find('p').withText('24:59').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1499 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1499 / 1500).toPrecision(6)))
     .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1498 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1498 / 1500).toPrecision(6)))
     
     // Try to modify timer during countdown, should fail
     .click(selectedTaskSection.find('p').withText('24:58'))
     .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
     .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1497 / 1500).toString()}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1497 / 1500).toString()))
     .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1496 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1496 / 1500).toPrecision(6)))
     .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1495 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1495 / 1500).toPrecision(6)))
     
     // Click a tag, should show tag activity modal, timer should not stop
     .click(tag.withText('my tag'))
     .expect(Selector('h3').withText('Activity for my tag').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1494 / 1500).toString()}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1494 / 1500).toString()))
     .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1493 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1493 / 1500).toPrecision(6)))
     .click(Selector('button').withText('Close'))
     
     // Pause the timer, should stop
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1492 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
     .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
     .click(activitySection.find('button').withText('Full Log'))
     .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(`--rotation-factor:${(1492 / 1500).toPrecision(6)}turn;`)
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
     
