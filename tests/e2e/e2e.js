@@ -18,10 +18,6 @@ const rotationFactor = (turn, color = 'red') => {
   return `--rotation-factor:${turn}turn; --countdown-color:${countdownColor}; --button-color:${buttonColor};`
 }
 
-fixture(`Testing Produc-dev at ${page}`)
-  .page(page)
-  .afterEach(() => handleErrorsAndWarnings())
-
 // Tasks
 const task1 = 'The first task'
 const task2 = 'The second task'
@@ -116,46 +112,52 @@ const eventNow = (type) => {
   ].join('|'))
 }
 
-// then create a test and place your code there
-test('Create, Complete and Delete Tasks to Test Functionality', async t => {
-  await handleErrorsAndWarnings()
+fixture(`Testing Produc-dev at ${page}`)
+  .page(page)
+  .afterEach(() => handleErrorsAndWarnings())
+  .beforeEach(async t => {
+    await handleErrorsAndWarnings()
+    await t
+      
+      // Expect an empty Selected Task section
+      .expect(selectedTaskName.exists).notOk()
+      
+      // Expect an empty To Do List
+      .expect(todoSection.find('h3').withText('To Do').exists).ok()
+      .expect(todoSortButton.exists).ok()
+      .expect(todoTasks.count).eql(0)
+      .expect(doneTasks.count).eql(0)
+      
+      // Add task 1
+      .setNativeDialogHandler(dialogHandler)
+      .typeText(newTaskInput, task1)
+      .pressKey('enter')
+      .expect(tasksPresent(todoList)).eql([task1])
+      .expect(selectedTaskName.textContent).eql(task1)
+      
+      // Add a tag to task 1
+      .expect(tagsPresent()).eql([])
+      .click(tagAddButton)
+      .expect(tagOptions()).eql([])
+      .typeText(tagInput, 'my tag')
+      .pressKey('enter')
+      .expect(tagsPresent()).eql(['my tag'])
+      
+      // Add task 2
+      .typeText(newTaskInput, task2).pressKey('enter')
+      .expect(tasksPresent(todoList)).eql([task2, task1])
+      .expect(selectedTaskName.textContent).eql(task2)
+      
+      // Add the previous tag to task 2
+      .expect(tagsPresent()).eql([])
+      .click(tagAddButton)
+      .expect(tagOptions()).eql(['my tag'])
+      .click(tagOption.withText('my tag'))
+      .expect(tagsPresent()).eql(['my tag'])
+  })
+
+test('Create, Complete and Delete Tasks', async t => {
   await t
-    
-    // Expect an empty Selected Task section
-    .expect(selectedTaskName.exists).notOk()
-    
-    // Expect an empty To Do List
-    .expect(todoSection.find('h3').withText('To Do').exists).ok()
-    .expect(todoSortButton.exists).ok()
-    .expect(todoTasks.count).eql(0)
-    .expect(doneTasks.count).eql(0)
-    
-    // Add task 1
-    .setNativeDialogHandler(dialogHandler)
-    .typeText(newTaskInput, task1)
-    .pressKey('enter')
-    .expect(tasksPresent(todoList)).eql([task1])
-    .expect(selectedTaskName.textContent).eql(task1)
-    
-    // Add a tag to task 1
-    .expect(tagsPresent()).eql([])
-    .click(tagAddButton)
-    .expect(tagOptions()).eql([])
-    .typeText(tagInput, 'my tag')
-    .pressKey('enter')
-    .expect(tagsPresent()).eql(['my tag'])
-    
-    // Add task 2
-    .typeText(newTaskInput, task2).pressKey('enter')
-    .expect(tasksPresent(todoList)).eql([task2, task1])
-    .expect(selectedTaskName.textContent).eql(task2)
-    
-    // Add the previous tag to task 2
-    .expect(tagsPresent()).eql([])
-    .click(tagAddButton)
-    .expect(tagOptions()).eql(['my tag'])
-    .click(tagOption.withText('my tag'))
-    .expect(tagsPresent()).eql(['my tag'])
     
     // Add another tag to task 2
     .expect(tagOptions()).eql([])
@@ -167,21 +169,6 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task3).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task3, task2, task1])
     .expect(selectedTaskName.textContent).eql(task3)
-    
-    // Adjust the timer and expect the dial to remain still
-    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
-    .click(selectedTaskSection.find('p').withText('25:00'))
-    .expect(selectedTaskSection.find('input[type="number"]').visible).ok()
-    .expect(selectedTaskSection.find('button > svg.fa-save').visible).ok()
-    .typeText(selectedTaskSection.find('#edit-wrapper input'), '12', { replace: true })
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
-    .click(selectedTaskSection.find('button > svg.fa-save'))
-    .expect(selectedTaskSection.find('p').withText('12:00').visible).ok()
-    .click(selectedTaskSection.find('p').withText('12:00'))
-    .typeText(selectedTaskSection.find('#edit-wrapper input'), '25', { replace: true })
-    .pressKey('enter')
-    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
     
     // Add the previous tag to task 3
     .expect(tagsPresent()).eql([])
@@ -209,44 +196,6 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .click(tagOption.withText('my tag'))
     .expect(tagsPresent()).eql(['my tag'])
     
-    // Press the countdown play button and expect the countdown to decrement
-    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
-    .click(selectedTaskSection.find('button > svg.fa-play'))
-    .expect(selectedTaskSection.find('p').withText('24:59').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1499 / 1500).toPrecision(6)))
-    .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1498 / 1500).toPrecision(6)))
-    
-    // Try to modify timer during countdown, should fail
-    .click(selectedTaskSection.find('p').withText('24:58'))
-    .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
-    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1497 / 1500).toString()))
-    .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1496 / 1500).toPrecision(6)))
-    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1495 / 1500).toPrecision(6)))
-    
-    // Click a tag, should show tag activity modal, timer should not stop
-    .click(tag.withText('my tag'))
-    .expect(Selector('h3').withText('Activity for my tag').visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1494 / 1500).toString()))
-    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1493 / 1500).toPrecision(6)))
-    .click(Selector('button').withText('Close'))
-    
-    // Pause the timer, should stop
-    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
-    .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
-    .click(activitySection.find('button').withText('Full Log'))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
-    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
-    
     // Switch To Do list order from Oldest First to Newest First
     .expect(todoSortLabel.visible).notOk()
     .expect(todoSortSelect.visible).notOk()
@@ -268,19 +217,6 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .typeText(newTaskInput, task5).pressKey('enter')
     .expect(tasksPresent(todoList)).eql([task1, task2, task3, task4, task5])
     .expect(selectedTaskName.textContent).eql(task5)
-  
-    // Start timer and switch tasks midway
-    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
-    .click(selectedTaskSection.find('button > svg.fa-play'))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
-    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
-    .click(todoTasks.withText(task4))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
-    .click(todoTasks.withText(task5))
-    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
-    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Stopped'))
-    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Started'))
     
     // Complete tasks 4 and 2
     .click(todoTasks.withText(task4))
@@ -378,16 +314,8 @@ test('Create, Complete and Delete Tasks to Test Functionality', async t => {
     .expect(tasksPresent(doneList)).eql([])
 })
 
-test('Countdown funcitonality', async t => {
-  await handleErrorsAndWarnings()
+test('Countdown functionality', async t => {
   await t
-  
-  // Add task 1
-    .setNativeDialogHandler(dialogHandler)
-    .typeText(newTaskInput, task1)
-    .pressKey('enter')
-    .expect(tasksPresent(todoList)).eql([task1])
-    .expect(selectedTaskName.textContent).eql(task1)
     
     // Adjust the timer and expect the dial to remain still
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
@@ -414,6 +342,12 @@ test('Countdown funcitonality', async t => {
     .expect(selectedTaskSection.find('p').withText('0:01').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1 / 6).toPrecision(6)))
     
+    // Expect the activity log
+    .click(activitySection.find('button').withText('Full Log'))
+    .expect(activitySection.find('tr').count).eql(1)
+    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
+    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
+    
     // Expect the timer to switch to a rest timer
     .expect(selectedTaskSection.find('p').withText('5:00').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
@@ -425,4 +359,73 @@ test('Countdown funcitonality', async t => {
     .pressKey('enter')
     .expect(selectedTaskSection.find('p').withText('0:03').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
+    
+    // Run the rest timer
+    .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(selectedTaskSection.find('p').withText('0:03').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
+    .expect(selectedTaskSection.find('p').withText('0:02').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((2 / 3).toPrecision(6), 'green'))
+    .expect(selectedTaskSection.find('p').withText('0:01').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1 / 3).toPrecision(6), 'green'))
+    
+    // Expect the same activity log
+    .expect(activitySection.find('tr').count).eql(1)
+    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
+    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
+})
+
+test('Countdown modification and task switching', async t => {
+  await t
+    
+    // Press the countdown play button and expect the countdown to decrement
+    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
+    .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(selectedTaskSection.find('p').withText('24:59').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1499 / 1500).toPrecision(6)))
+    .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1498 / 1500).toPrecision(6)))
+    
+    // Try to modify timer during countdown, should fail
+    .click(selectedTaskSection.find('p').withText('24:58'))
+    .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
+    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1497 / 1500).toString()))
+    .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1496 / 1500).toPrecision(6)))
+    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1495 / 1500).toPrecision(6)))
+    
+    // Click a tag, should show tag activity modal, timer should not stop
+    .click(tag.withText('my tag'))
+    .expect(Selector('h3').withText('Activity for my tag').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1494 / 1500).toString()))
+    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1493 / 1500).toPrecision(6)))
+    .click(Selector('button').withText('Close'))
+    
+    // Pause the timer, should stop
+    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
+    .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
+    .click(activitySection.find('button').withText('Full Log'))
+    .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
+    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
+    
+    // Start timer and switch tasks midway
+    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
+    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
+    .click(todoTasks.withText(task1))
+    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
+    .click(todoTasks.withText(task2))
+    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
+    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Stopped'))
+    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Started'))
 })

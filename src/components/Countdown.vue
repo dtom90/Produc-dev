@@ -149,12 +149,16 @@ export default {
     
     startTimer () {
       this.timer.start()
-      this.startTask({ id: this.taskId })
+      if (this.active) {
+        this.startTask({ id: this.taskId })
+      }
       this.countingDown = true
     },
     
     stopTimer () {
-      this.stopTask({ id: this.taskId })
+      if (this.active) {
+        this.stopTask({ id: this.taskId })
+      }
       this.countingDown = false
     },
     
