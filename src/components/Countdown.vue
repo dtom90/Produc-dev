@@ -25,7 +25,16 @@
             class="input-group"
           >
             <input
+              v-if="active"
               v-model="timerMinutes"
+              type="number"
+              class="form-control"
+              @input="secondsRemaining = totalTime"
+              @keyup.enter="updateMinutes"
+            >
+            <input
+              v-if="!active"
+              v-model="restMinutes"
               type="number"
               class="form-control"
               @input="secondsRemaining = totalTime"
@@ -75,7 +84,9 @@ export default {
   },
   
   data: () => ({
+    active: true,
     timerMinutes: 25,
+    restMinutes: 5,
     secondsRemaining: 0,
     countingDown: false,
     editing: false
@@ -84,7 +95,7 @@ export default {
   computed: {
     
     totalTime () {
-      return this.timerMinutes * 60
+      return (this.active ? this.timerMinutes : this.restMinutes) * 60
     },
     
     playPauseIcon () {
@@ -93,7 +104,9 @@ export default {
     
     cssProps () {
       return {
-        '--rotation-factor': (this.secondsRemaining / this.totalTime).toString() + 'turn'
+        '--rotation-factor': (this.secondsRemaining / this.totalTime).toString() + 'turn',
+        '--countdown-color': this.active ? 'red' : 'darkseagreen',
+        '--button-color': this.active ? 'darkred' : 'green'
       }
     },
     
@@ -136,12 +149,16 @@ export default {
     
     startTimer () {
       this.timer.start()
-      this.startTask({ id: this.taskId })
+      if (this.active) {
+        this.startTask({ id: this.taskId })
+      }
       this.countingDown = true
     },
     
     stopTimer () {
-      this.stopTask({ id: this.taskId })
+      if (this.active) {
+        this.stopTask({ id: this.taskId })
+      }
       this.countingDown = false
     },
     
@@ -160,7 +177,13 @@ export default {
     
     finishTimer () {
       this.stopTimer()
-      notifications.notify('Finished Working, Take a Break!')
+      if (this.active) {
+        notifications.notify('Finished Working, Take a Break!')
+      } else {
+        notifications.notify('Finished Break, Time to Work!')
+      }
+      this.active = !this.active
+      this.timer = new CountdownTimer(this.totalTime, this.decrementTimer, this.finishTimer)
       this.secondsRemaining = this.totalTime
     }
   }
@@ -190,7 +213,7 @@ export default {
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  border: red 2px solid;
+  border: var(--countdown-color) 2px solid;
   background-color: white;
   transform: translate(90px, -8px);
 }
@@ -201,7 +224,7 @@ export default {
   height: 100%;
   padding-top: 35px;
   border-radius: 100px;
-  border: red 4px solid;
+  border: var(--countdown-color) 4px solid;
 }
 
 #timer-display {
@@ -220,7 +243,7 @@ export default {
 }
 
 #play-pause-btn {
-  color: darkred;
+  color: var(--button-color);
 }
 
 </style>

@@ -1,1 +1,1 @@
-window.alert = (msg) => { console.log(msg) }
+window.alert = (msg) => msg

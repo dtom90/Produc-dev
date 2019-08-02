@@ -20,10 +20,14 @@ const expectedTaskId = 5
 
 describe('Countdown', () => {
   
-  const wrapper = shallowMount(Countdown, {
-    localVue,
-    propsData: { taskId: expectedTaskId },
-    store
+  let wrapper
+  
+  beforeEach(() => {
+    wrapper = shallowMount(Countdown, {
+      localVue,
+      propsData: { taskId: expectedTaskId },
+      store
+    })
   })
   
   it('renders a play button for the timer', () => {
@@ -52,11 +56,19 @@ describe('Countdown', () => {
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     expect(wrapper.find('input[type="number"]').element.value).toBe('25')
     
-    wrapper.find('#timer-save-button').trigger('click')
+  })
+  
+  it('should not allow clicking play-pause-btn when editing the timer', () => {
     
-    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
-    expect(wrapper.find('#timer-display').text()).toBe('25:00')
-    expect(wrapper.find('input[type="number"]').exists()).toBe(false)
+    wrapper.find('#timer-display').trigger('click')
+    expect(wrapper.find('#timer-display').exists()).toBe(false)
+    expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('input[type="number"]').element.value).toBe('25')
+    
+    expect(wrapper.find('#play-pause-btn').attributes('disabled')).toBe('disabled')
+    wrapper.find('#play-pause-btn').trigger('click')
+    expect(mutations.startTask).not.toHaveBeenCalled()
+    
   })
   
   it('should call startTask when the play button is clicked, then stopTask when clicked again', () => {
