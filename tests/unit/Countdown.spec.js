@@ -71,13 +71,13 @@ describe('Countdown', () => {
     
   })
   
-  it('should call startTask when the play button is clicked, then stopTask when clicked again', () => {
+  it('should call startTask when the play button is clicked, but pausing should not call stopTask', () => {
     
     wrapper.find('#play-pause-btn').trigger('click')
     expect(mutations.startTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
     
     wrapper.find('#play-pause-btn').trigger('click')
-    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
+    expect(mutations.stopTask).not.toHaveBeenCalled()
     
   })
   

@@ -1,6 +1,7 @@
 export default class CountdownTimer {
   constructor (seconds, tickCallback, finishCallback) {
     this.totalSeconds = seconds
+    this.remainingSeconds = this.totalSeconds
     this.tickCallback = tickCallback
     this.finishCallback = finishCallback
     this.ID = null
@@ -8,11 +9,12 @@ export default class CountdownTimer {
   
   setSeconds (seconds) {
     this.totalSeconds = seconds
+    this.remainingSeconds = this.totalSeconds
   }
   
   start () {
     this.startTime = Date.now()
-    this.endTime = this.startTime + (this.totalSeconds * 1000)
+    this.endTime = this.startTime + (this.remainingSeconds * 1000)
     const t = this
     this.ID = setInterval(function () {
       const remainingMs = t.endTime - Date.now()
@@ -20,8 +22,8 @@ export default class CountdownTimer {
         t.clear()
         t.finishCallback()
       } else {
-        const remainingSeconds = Math.round(remainingMs / 1000)
-        t.tickCallback(remainingSeconds)
+        t.remainingSeconds = Math.round(remainingMs / 1000)
+        t.tickCallback(t.remainingSeconds)
       }
     }, 1000)
   }
@@ -32,8 +34,6 @@ export default class CountdownTimer {
   
   clear () {
     clearInterval(this.ID)
+    this.remainingSeconds = this.totalSeconds
   }
 }
-
-// const counter = new CountdownTimer(5, secs => console.log(secs), () => console.log('done'))
-// counter.start()

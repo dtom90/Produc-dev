@@ -14,8 +14,8 @@
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e:dev": "testcafe chrome tests/e2e --app \"yarn run dev\"",
-    "test:e2e:prod": "yarn run build:gh-pages && PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e --app \"yarn run serve:gh-pages\"",
+    "test:e2e:dev": "testcafe chrome tests/e2e -c 3 --selector-timeout 3000 --app \"yarn run dev\"",
+    "test:e2e:prod": "yarn run build:gh-pages && PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e -c 3 --selector-timeout 3000 --app \"yarn run serve:gh-pages\"",
     "test": "yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
   },
   "dependencies": {

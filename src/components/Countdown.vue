@@ -26,10 +26,10 @@
           >
             <input
               v-if="active"
-              v-model="timerMinutes"
+              v-model="activeMinutes"
               type="number"
               class="form-control"
-              @input="secondsRemaining = totalTime"
+              @input="secondsRemaining = timerSeconds"
               @keyup.enter="updateMinutes"
             >
             <input
@@ -37,7 +37,7 @@
               v-model="restMinutes"
               type="number"
               class="form-control"
-              @input="secondsRemaining = totalTime"
+              @input="secondsRemaining = timerSeconds"
               @keyup.enter="updateMinutes"
             >
             <div class="input-group-append">
@@ -84,18 +84,19 @@ export default {
   },
   
   data: () => ({
+    editing: false,
     active: true,
-    timerMinutes: 25,
-    restMinutes: 5,
-    secondsRemaining: 0,
+    timerStarted: false,
     countingDown: false,
-    editing: false
+    activeMinutes: 25,
+    restMinutes: 5,
+    secondsRemaining: 0
   }),
   
   computed: {
     
-    totalTime () {
-      return (this.active ? this.timerMinutes : this.restMinutes) * 60
+    timerSeconds () {
+      return (this.active ? this.activeMinutes : this.restMinutes) * 60
     },
     
     playPauseIcon () {
@@ -104,7 +105,7 @@ export default {
     
     cssProps () {
       return {
-        '--rotation-factor': (this.secondsRemaining / this.totalTime).toString() + 'turn',
+        '--rotation-factor': (this.secondsRemaining / this.timerSeconds).toString() + 'turn',
         '--countdown-color': this.active ? 'red' : 'darkseagreen',
         '--button-color': this.active ? 'darkred' : 'green'
       }
@@ -130,8 +131,8 @@ export default {
   },
   
   mounted: function () {
-    this.secondsRemaining = this.totalTime
-    this.timer = new CountdownTimer(this.totalTime, this.decrementTimer, this.finishTimer)
+    this.secondsRemaining = this.timerSeconds
+    this.timer = new CountdownTimer(this.timerSeconds, this.decrementTimer, this.finishTimer)
     notifications.requestPermission()
   },
   
@@ -143,30 +144,24 @@ export default {
     ]),
     
     updateMinutes () {
-      this.timer.setSeconds(this.totalTime)
+      this.timer.setSeconds(this.timerSeconds)
       this.editing = false
     },
     
     startTimer () {
       this.timer.start()
-      if (this.active) {
-        this.startTask({ id: this.taskId })
-      }
       this.countingDown = true
-    },
-    
-    stopTimer () {
-      if (this.active) {
-        this.stopTask({ id: this.taskId })
-      }
-      this.countingDown = false
     },
     
     toggleTimer () {
       if (this.countingDown) {
         this.timer.pause()
-        this.stopTimer()
+        this.countingDown = false
       } else {
+        if (!this.timerStarted && this.active) { // Mark when we started the timer if we're starting an active interval
+          this.startTask({ id: this.taskId })
+          this.timerStarted = true
+        }
         this.startTimer()
       }
     },
@@ -176,15 +171,19 @@ export default {
     },
     
     finishTimer () {
-      this.stopTimer()
+      this.countingDown = false
+      this.timerStarted = false
+      if (this.active) {
+        this.stopTask({ id: this.taskId })
+      }
+      this.active = !this.active
+      this.timer = new CountdownTimer(this.timerSeconds, this.decrementTimer, this.finishTimer)
+      this.secondsRemaining = this.timerSeconds
       if (this.active) {
         notifications.notify('Finished Working, Take a Break!')
       } else {
         notifications.notify('Finished Break, Time to Work!')
       }
-      this.active = !this.active
-      this.timer = new CountdownTimer(this.totalTime, this.decrementTimer, this.finishTimer)
-      this.secondsRemaining = this.totalTime
     }
   }
 }

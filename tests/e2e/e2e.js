@@ -342,15 +342,17 @@ test('Countdown functionality', async t => {
     .expect(selectedTaskSection.find('p').withText('0:01').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1 / 6).toPrecision(6)))
     
+    // Expect the timer to switch to a rest timer
+    .expect(selectedTaskSection.find('p').withText('5:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
+    
     // Expect the activity log
     .click(activitySection.find('button').withText('Full Log'))
     .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
     
-    // Expect the timer to switch to a rest timer
-    .expect(selectedTaskSection.find('p').withText('5:00').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
+    // Set rest timer to 3 seconds
     .click(selectedTaskSection.find('p').withText('5:00'))
     .expect(selectedTaskSection.find('input[type="number"]').visible).ok()
     .expect(selectedTaskSection.find('button > svg.fa-save').visible).ok()
@@ -378,10 +380,14 @@ test('Countdown functionality', async t => {
 test('Countdown modification and task switching', async t => {
   await t
     
+    // Toggle Full Log so we can monitor it
+    .click(activitySection.find('button').withText('Full Log'))
+    
     // Press the countdown play button and expect the countdown to decrement
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
     .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .expect(selectedTaskSection.find('p').withText('24:59').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1499 / 1500).toPrecision(6)))
     .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
@@ -406,12 +412,11 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1493 / 1500).toPrecision(6)))
     .click(Selector('button').withText('Close'))
     
-    // Pause the timer, should stop
+    // Pause the timer: countdown should stop, log should not be modified
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
     .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
-    .click(activitySection.find('button').withText('Full Log'))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
+    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
@@ -421,7 +426,9 @@ test('Countdown modification and task switching', async t => {
     .click(selectedTaskSection.find('button > svg.fa-play'))
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1491 / 1500).toString()))
     .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1490 / 1500).toPrecision(6)))
     .click(todoTasks.withText(task1))
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .click(todoTasks.withText(task2))
