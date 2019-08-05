@@ -120,7 +120,7 @@ describe('mutations', () => {
       
       startTask(myState, { id: 0 })
       const started = Date.now()
-      const firstInterval = { started, stopped: null }
+      const firstInterval = { started, stopped: null, timeSpent: null }
       expect(myState.tasks[0].log).to.deep.equal([firstInterval])
   
       stopTask(myState, { id: 0 })

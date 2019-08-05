@@ -34,7 +34,7 @@ describe('Log', () => {
       expect(wrapper.find('#activityLog').text()).toEqual(
         'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_DATETIME_FORMAT) +
-        'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT)
       )
       

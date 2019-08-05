@@ -32,6 +32,9 @@
         <td v-if="event.stopped">
           <span>Stopped {{ displayDateTime(event.stopped) }}</span>
         </td>
+        <td v-if="event.timeSpent">
+          <span>Time Spent: {{ displayTimeSpent(event.timeSpent) }}</span>
+        </td>
       </tr>
     </table>
   </div>
@@ -70,7 +73,9 @@ export default {
   
   methods: {
   
-    displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a')
+    displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a'),
+    
+    displayTimeSpent: timeSpent => moment.duration(timeSpent).humanize()
     
   }
 }

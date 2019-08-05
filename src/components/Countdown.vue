@@ -140,7 +140,8 @@ export default {
     
     ...mapMutations([
       'startTask',
-      'stopTask'
+      'stopTask',
+      'unpauseTask'
     ]),
     
     updateMinutes () {
@@ -148,34 +149,43 @@ export default {
       this.editing = false
     },
     
-    startTimer () {
-      this.timer.start()
-      this.countingDown = true
-    },
-    
     toggleTimer () {
       if (this.countingDown) {
         this.timer.pause()
-        this.countingDown = false
+        this.stopTimer()
       } else {
         if (!this.timerStarted && this.active) { // Mark when we started the timer if we're starting an active interval
           this.startTask({ id: this.taskId })
           this.timerStarted = true
+        } else if (this.active) {
+          this.unpauseTask({ id: this.taskId })
         }
         this.startTimer()
       }
+    },
+
+    startTimer () {
+      this.timer.start()
+      this.countingDown = true
     },
     
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
     },
     
-    finishTimer () {
+    stopTimer () {
       this.countingDown = false
-      this.timerStarted = false
       if (this.active) {
-        this.stopTask({ id: this.taskId })
+        this.stopTask({
+          id: this.taskId,
+          timeSpent: (this.timerSeconds - this.secondsRemaining) * 1000 })
       }
+    },
+    
+    finishTimer () {
+      this.secondsRemaining = 0
+      this.stopTimer()
+      this.timerStarted = false
       this.active = !this.active
       this.timer = new CountdownTimer(this.timerSeconds, this.decrementTimer, this.finishTimer)
       this.secondsRemaining = this.timerSeconds
