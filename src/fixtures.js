@@ -1,7 +1,6 @@
 import moment from 'moment'
 
 export function generateActivity () {
-  
   const completedDate = moment()
   
   const log = [
@@ -29,7 +28,6 @@ export function generateActivity () {
 }
 
 export function newTask (includeTags = false) {
-  
   const tags = includeTags ? ['one tag', 'another tag'] : []
   
   return {
@@ -40,14 +38,11 @@ export function newTask (includeTags = false) {
     log: [],
     completed: null
   }
-  
 }
 
 export function taskWithActivity () {
-  
   const task = newTask()
   task.log = generateActivity().log
   task.completed = moment.now()
   return task
-  
 }
