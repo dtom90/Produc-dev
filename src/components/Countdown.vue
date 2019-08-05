@@ -29,7 +29,7 @@
               v-model="activeMinutes"
               type="number"
               class="form-control"
-              @input="secondsRemaining = timerSeconds"
+              @input="secondsRemaining = totalSeconds"
               @keyup.enter="updateMinutes"
             >
             <input
@@ -37,7 +37,7 @@
               v-model="restMinutes"
               type="number"
               class="form-control"
-              @input="secondsRemaining = timerSeconds"
+              @input="secondsRemaining = totalSeconds"
               @keyup.enter="updateMinutes"
             >
             <div class="input-group-append">
@@ -95,7 +95,7 @@ export default {
   
   computed: {
     
-    timerSeconds () {
+    totalSeconds () {
       return (this.active ? this.activeMinutes : this.restMinutes) * 60
     },
     
@@ -105,7 +105,7 @@ export default {
     
     cssProps () {
       return {
-        '--rotation-factor': (this.secondsRemaining / this.timerSeconds).toString() + 'turn',
+        '--rotation-factor': (this.secondsRemaining / this.totalSeconds).toString() + 'turn',
         '--countdown-color': this.active ? 'red' : 'darkseagreen',
         '--button-color': this.active ? 'darkred' : 'green'
       }
@@ -131,8 +131,8 @@ export default {
   },
   
   mounted: function () {
-    this.secondsRemaining = this.timerSeconds
-    this.timer = new CountdownTimer(this.timerSeconds, this.decrementTimer, this.finishTimer)
+    this.secondsRemaining = this.totalSeconds
+    this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
     notifications.requestPermission()
   },
   
@@ -145,7 +145,7 @@ export default {
     ]),
     
     updateMinutes () {
-      this.timer.setSeconds(this.timerSeconds)
+      this.timer.setSeconds(this.totalSeconds)
       this.editing = false
     },
     
@@ -178,7 +178,7 @@ export default {
       if (this.active) {
         this.stopTask({
           id: this.taskId,
-          timeSpent: (this.timerSeconds - this.secondsRemaining) * 1000 })
+          timeSpent: (this.totalSeconds - this.secondsRemaining) * 1000 })
       }
     },
     
@@ -187,8 +187,8 @@ export default {
       this.stopTimer()
       this.timerStarted = false
       this.active = !this.active
-      this.timer = new CountdownTimer(this.timerSeconds, this.decrementTimer, this.finishTimer)
-      this.secondsRemaining = this.timerSeconds
+      this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
+      this.secondsRemaining = this.totalSeconds
       if (this.active) {
         notifications.notify('Finished Working, Take a Break!')
       } else {

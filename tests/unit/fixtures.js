@@ -7,16 +7,18 @@ export function generateActivity () {
   const log = [
     {
       started: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf(),
-      stopped: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf()
+      stopped: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf(),
+      timeSpent: moment.duration(22, 'm').asMilliseconds()
     },
     {
       started: moment(completedDate).subtract(30, 'm').valueOf(),
-      stopped: moment(completedDate).subtract(10, 'm').valueOf()
+      stopped: moment(completedDate).subtract(10, 'm').valueOf(),
+      timeSpent: moment.duration(15, 'm').asMilliseconds()
     }
   ]
   
-  const day1Duration = moment.duration(log[0].stopped - log[0].started)
-  const day2Duration = moment.duration(log[1].stopped - log[1].started)
+  const day1Duration = moment.duration(22, 'm')
+  const day2Duration = moment.duration(15, 'm')
   
   return {
     log,

@@ -22,7 +22,6 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
   })
   
   it('renders a chart of the activity', () => {
-    
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
       labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
