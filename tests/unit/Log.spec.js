@@ -25,7 +25,7 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch('Time Spent: an hour')
+      expect(wrapper.text()).toMatch('Time Spent: 37 minutes')
       
     })
     
@@ -34,8 +34,10 @@ describe('Log', () => {
       expect(wrapper.find('#activityLog').text()).toEqual(
         'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 15 minutes' +
         'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT)
+        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 22 minutes'
       )
       
     })
@@ -75,7 +77,7 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch('Time Spent: 25 minutes')
+      expect(wrapper.text()).toMatch('Time Spent: 22 minutes')
       
     })
     
@@ -83,7 +85,8 @@ describe('Log', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
         'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT)
+        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 22 minutes'
       )
       
     })
@@ -109,7 +112,7 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch('Time Spent: 20 minutes')
+      expect(wrapper.text()).toMatch('Time Spent: 15 minutes')
       
     })
     
@@ -117,7 +120,8 @@ describe('Log', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
         'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_DATETIME_FORMAT)
+        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 15 minutes'
       )
       
     })

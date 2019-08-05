@@ -38,11 +38,21 @@ const mutations = {
       if (task.log.length === 0 || task.log[task.log.length - 1].stopped !== null) {
         task.log.push({
           started: Date.now(),
-          stopped: null
+          stopped: null,
+          timeSpent: null
         })
       } else {
         task.log[task.log.length - 1].started = Date.now()
       }
+    }
+  },
+  
+  unpauseTask (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (task && task.log.length > 0) {
+      const lastInterval = task.log[task.log.length - 1]
+      lastInterval.stopped = null
+      lastInterval.timeSpent = null
     }
   },
   
@@ -52,6 +62,7 @@ const mutations = {
       const lastInterval = task.log[task.log.length - 1]
       if (lastInterval.stopped === null) {
         lastInterval.stopped = Date.now()
+        lastInterval.timeSpent = payload.timeSpent
       }
     }
   },
