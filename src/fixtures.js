@@ -5,13 +5,13 @@ export function generateActivity () {
   
   const log = [
     {
-      started: moment(completedDate).subtract(1, 'd').add(3, 'm').valueOf(),
-      stopped: moment(completedDate).subtract(1, 'd').add(28, 'm').valueOf(),
+      started: moment(completedDate).subtract(1, 'd').subtract(28, 'm').valueOf(),
+      stopped: moment(completedDate).subtract(1, 'd').subtract(3, 'm').valueOf(),
       timeSpent: moment.duration(22, 'm').asMilliseconds()
     },
     {
-      started: moment(completedDate).subtract(30, 'm').valueOf(),
-      stopped: moment(completedDate).subtract(10, 'm').valueOf(),
+      started: moment(completedDate).add(10, 'm').valueOf(),
+      stopped: moment(completedDate).add(30, 'm').valueOf(),
       timeSpent: moment.duration(15, 'm').asMilliseconds()
     }
   ]
