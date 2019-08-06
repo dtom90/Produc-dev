@@ -186,7 +186,6 @@ export default {
       this.secondsRemaining = 0
       this.stopTimer()
       this.timerStarted = false
-      this.active = !this.active
       this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
       this.secondsRemaining = this.totalSeconds
       if (this.active) {
@@ -194,6 +193,7 @@ export default {
       } else {
         notifications.notify('Finished Break, Time to Work!')
       }
+      this.active = !this.active
     }
   }
 }
