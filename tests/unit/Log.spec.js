@@ -7,6 +7,7 @@ import { generateActivity } from '@/fixtures'
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
+const EXPECTED_TIME_FORMAT = 'h:mm a'
 const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
@@ -33,10 +34,10 @@ describe('Log', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
         'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes' +
         'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
       )
       
@@ -84,8 +85,8 @@ describe('Log', () => {
     it('renders the task log in reverse-chronological order', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
-        'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT) +
+        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
       )
       
@@ -119,8 +120,8 @@ describe('Log', () => {
     it('renders the task log in reverse-chronological order', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
-        'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
-        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_DATETIME_FORMAT) +
+        'Started ' + moment(log[1].started).format(EXPECTED_TIME_FORMAT) +
+        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes'
       )
       
