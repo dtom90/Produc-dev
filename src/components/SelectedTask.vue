@@ -170,6 +170,7 @@
       <ActivityView
         id="taskActivity"
         class="border-top"
+        :task-id="task.id"
         :element="task.name"
         :log="task.log"
       />

@@ -1,8 +1,10 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Checkbox from '@/components/Checkbox.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
+localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
 const mutations = {

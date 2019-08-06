@@ -41,7 +41,11 @@
       v-if="view"
       class="border"
     >
-      <div style="position: relative">
+      <!-- Input to enter interval manually -->
+      <div
+        v-if="id === 'taskActivity'"
+        style="position: relative"
+      >
         <div style="position: absolute; right: 0">
           <button
             class="btn btn-light"
@@ -79,12 +83,14 @@
           </div>
           <button
             class="btn btn-primary"
-            @click="addInterval"
+            @click="addIntervalButtonClicked"
           >
             Add Interval
           </button>
         </div>
       </div>
+      
+      <!-- Log -->
       <Log
         v-if="view === 'full'"
         :log="log"
@@ -106,6 +112,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
+import { mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -120,6 +127,10 @@ export default {
     id: {
       type: String,
       default: 'taskActivity'
+    },
+    taskId: {
+      type: Number,
+      default: null
     },
     element: {
       type: String,
@@ -179,6 +190,9 @@ export default {
   },
   
   methods: {
+    
+    ...mapMutations(['addInterval']),
+    
     calculateTimeSpent (log) {
       return moment.duration(
         log.filter(interval => interval.timeSpent)
@@ -194,8 +208,11 @@ export default {
       }
     },
     
-    addInterval () {
-      console.log(this.$refs.intervalMinutesInput.value)
+    addIntervalButtonClicked () {
+      this.addInterval({
+        id: this.taskId,
+        timeSpent: this.$refs.intervalMinutesInput.value * 60000 // convert minutes to ms
+      })
     }
   }
 }
