@@ -1,7 +1,7 @@
 <template>
   <div
     :id="id"
-    class="activity-view border-top"
+    class="activity-view"
   >
     <h3>
       Activity for <strong>{{ element }}</strong>
