@@ -37,19 +37,68 @@
     </div>
 
     <!-- Activity Data -->
-    <Log
-      v-if="view === 'full'"
-      :log="log"
-      :time-spent="calculateTimeSpent(log)"
-    />
-    <div v-if="view === 'daily'">
+    <div
+      v-if="view"
+      class="border"
+    >
+      <div style="position: relative">
+        <div style="position: absolute; right: 0">
+          <button
+            class="btn btn-light"
+            @click="showIntervalInput = !showIntervalInput"
+          >
+            <font-awesome-icon
+              v-if="!showIntervalInput"
+              icon="plus"
+            />
+            <font-awesome-icon
+              v-if="showIntervalInput"
+              icon="times"
+            />
+          </button>
+        </div>
+        <div
+          v-if="showIntervalInput"
+          style="position: absolute; left: 100%"
+        >
+          <div
+            class="input-group"
+            style="width: 140px"
+          >
+            <input
+              ref="intervalMinutesInput"
+              type="number"
+              value="25"
+              class="form-control"
+            >
+            <div class="input-group-append">
+              <span
+                class="input-group-text"
+              >minutes</span>
+            </div>
+          </div>
+          <button
+            class="btn btn-primary"
+            @click="addInterval"
+          >
+            Add Interval
+          </button>
+        </div>
+      </div>
       <Log
-        v-for="(dayActivity, day) in dailyActivity.dailyActivity"
-        :key="day"
-        :day="day"
-        :log="dayActivity.log"
-        :time-spent="dayActivity.timeSpent"
+        v-if="view === 'full'"
+        :log="log"
+        :time-spent="calculateTimeSpent(log)"
       />
+      <div v-if="view === 'daily'">
+        <Log
+          v-for="(dayActivity, day) in dailyActivity.dailyActivity"
+          :key="day"
+          :day="day"
+          :log="dayActivity.log"
+          :time-spent="dayActivity.timeSpent"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -86,7 +135,8 @@ export default {
   
   data: function () {
     return {
-      view: null
+      view: null,
+      showIntervalInput: false
     }
   },
   
@@ -142,6 +192,10 @@ export default {
       } else {
         this.view = type
       }
+    },
+    
+    addInterval () {
+      console.log(this.$refs.intervalMinutesInput.value)
     }
   }
 }
