@@ -24,13 +24,13 @@
         :key="index"
       >
         <td>
-          <span>Started {{ displayDateTime(event.started) }}</span>
+          <span>Started {{ day ? displayTime(event.started) : displayDateTime(event.started) }}</span>
         </td>
         <td v-if="event.stopped">
           <font-awesome-icon icon="arrow-right" />
         </td>
         <td v-if="event.stopped">
-          <span>Stopped {{ displayDateTime(event.stopped) }}</span>
+          <span>Stopped {{ displayTime(event.stopped) }}</span>
         </td>
         <td v-if="event.timeSpent">
           <span>Time Spent: {{ displayTimeSpent(event.timeSpent) }}</span>
@@ -72,7 +72,9 @@ export default {
   },
   
   methods: {
-  
+    
+    displayTime: date => moment(date).format('h:mm a'),
+    
     displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a'),
     
     displayTimeSpent: timeSpent => moment.duration(timeSpent).humanize()

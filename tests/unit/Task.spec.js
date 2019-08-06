@@ -2,7 +2,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import Task from '@/components/Task.vue'
 import Checkbox from '@/components/Checkbox.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { newTask, taskWithActivity } from './fixtures'
+import { newTask, taskWithActivity } from '@/fixtures'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()

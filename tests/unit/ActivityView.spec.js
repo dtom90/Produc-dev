@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import ActivityView from '@/components/ActivityView'
 import ActivityChart from '@/components/ActivityChart'
 import Log from '@/components/Log.vue'
-import { generateActivity } from './fixtures'
+import { generateActivity } from '@/fixtures'
 import moment from 'moment'
 
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
@@ -24,11 +24,11 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
   it('renders a chart of the activity', () => {
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
-      labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
+      labels: [day2, day1].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
       datasets: [{
         label: 'Activity for ' + wrapper.props('element'),
         backgroundColor: '#2020FF',
-        data: [day1Duration, day2Duration].map(dur => dur.asMinutes())
+        data: [day2Duration, day1Duration].map(dur => dur.asMinutes())
       }]
     })
     
@@ -77,14 +77,14 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
     const activityLogs = wrapper.findAll(Log)
     expect(activityLogs.at(0).props()).toEqual({
-      log: [log[0]],
-      day: day1.format(EXPECTED_DAY_KEY_FORMAT),
-      timeSpent: day1Duration
-    })
-    expect(activityLogs.at(1).props()).toEqual({
       log: [log[1]],
       day: day2.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day2Duration
+    })
+    expect(activityLogs.at(1).props()).toEqual({
+      log: [log[0]],
+      day: day1.format(EXPECTED_DAY_KEY_FORMAT),
+      timeSpent: day1Duration
     })
     
   })

@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import VuexPersist from 'vuex-persist'
 import mutations from './mutations'
 import state from './state'
+// import { taskWithActivity } from '../fixtures'
+// state.tasks.push(taskWithActivity())
 
 Vue.use(Vuex)
 

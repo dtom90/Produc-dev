@@ -1,7 +1,7 @@
 <template>
   <div
     :id="id"
-    class="activity-view border-top"
+    class="activity-view"
   >
     <h3>
       Activity for <strong>{{ element }}</strong>
@@ -97,7 +97,7 @@ export default {
       let day
       
       // Create dailyActivity Object from this.log
-      for (const event of this.log) {
+      for (const event of this.log.slice().reverse()) {
         day = moment(event.started).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
