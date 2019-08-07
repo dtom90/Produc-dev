@@ -1,3 +1,4 @@
+import getters from './getters'
 import moment from 'moment'
 
 const addElem = (arr, elem) => {
@@ -27,6 +28,10 @@ const mutations = {
       state.nextTaskID += 1
       state.selectedTaskID = newTask.id
     }
+  },
+  
+  updateIncompleteTasks (state, payload) {
+    state.tasks = payload.concat(getters.completedTasks(state))
   },
   
   selectTask (state, id) {
