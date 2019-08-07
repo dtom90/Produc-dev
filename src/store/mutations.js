@@ -1,3 +1,4 @@
+import moment from 'moment'
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -64,6 +65,19 @@ const mutations = {
         lastInterval.stopped = Date.now()
         lastInterval.timeSpent = payload.timeSpent
       }
+    }
+  },
+  
+  addInterval (state, payload) {
+    const task = state.tasks.find(t => t.id === payload.id)
+    if (task) {
+      const interval = {
+        started: null,
+        stopped: moment.now(),
+        timeSpent: payload.timeSpent
+      }
+      interval.started = moment(interval.stopped) - moment.duration(interval.timeSpent, 'ms')
+      task.log.push(interval)
     }
   },
   

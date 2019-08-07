@@ -37,19 +37,74 @@
     </div>
 
     <!-- Activity Data -->
-    <Log
-      v-if="view === 'full'"
-      :log="log"
-      :time-spent="calculateTimeSpent(log)"
-    />
-    <div v-if="view === 'daily'">
+    <div
+      v-if="view"
+      class="border"
+    >
+      <!-- Input to enter interval manually -->
+      <div
+        v-if="id === 'taskActivity'"
+        style="position: relative"
+      >
+        <div style="position: absolute; right: 0">
+          <button
+            class="btn btn-light"
+            @click="showIntervalInput = !showIntervalInput"
+          >
+            <font-awesome-icon
+              v-if="!showIntervalInput"
+              icon="plus"
+            />
+            <font-awesome-icon
+              v-if="showIntervalInput"
+              icon="times"
+            />
+          </button>
+        </div>
+        <div
+          v-if="showIntervalInput"
+          style="position: absolute; left: 100%"
+        >
+          <div
+            class="input-group"
+            style="width: 140px"
+          >
+            <input
+              ref="intervalMinutesInput"
+              type="number"
+              value="25"
+              class="form-control"
+            >
+            <div class="input-group-append">
+              <span
+                class="input-group-text"
+              >minutes</span>
+            </div>
+          </div>
+          <button
+            class="btn btn-primary"
+            @click="addIntervalButtonClicked"
+          >
+            Add Interval
+          </button>
+        </div>
+      </div>
+      
+      <!-- Log -->
       <Log
-        v-for="(dayActivity, day) in dailyActivity.dailyActivity"
-        :key="day"
-        :day="day"
-        :log="dayActivity.log"
-        :time-spent="dayActivity.timeSpent"
+        v-if="view === 'full'"
+        :log="log"
+        :time-spent="calculateTimeSpent(log)"
       />
+      <div v-if="view === 'daily'">
+        <Log
+          v-for="(dayActivity, day) in dailyActivity.dailyActivity"
+          :key="day"
+          :day="day"
+          :log="dayActivity.log"
+          :time-spent="dayActivity.timeSpent"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +112,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
+import { mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -72,6 +128,10 @@ export default {
       type: String,
       default: 'taskActivity'
     },
+    taskId: {
+      type: Number,
+      default: null
+    },
     element: {
       type: String,
       default: ''
@@ -86,7 +146,8 @@ export default {
   
   data: function () {
     return {
-      view: null
+      view: null,
+      showIntervalInput: false
     }
   },
   
@@ -129,6 +190,9 @@ export default {
   },
   
   methods: {
+    
+    ...mapMutations(['addInterval']),
+    
     calculateTimeSpent (log) {
       return moment.duration(
         log.filter(interval => interval.timeSpent)
@@ -142,6 +206,13 @@ export default {
       } else {
         this.view = type
       }
+    },
+    
+    addIntervalButtonClicked () {
+      this.addInterval({
+        id: this.taskId,
+        timeSpent: this.$refs.intervalMinutesInput.value * 60000 // convert minutes to ms
+      })
     }
   }
 }

@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="activityData"
-    class="border"
-  >
+  <div id="activityData">
     <!-- Display Day -->
     <h4
       v-if="day"
