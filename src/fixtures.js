@@ -10,14 +10,24 @@ export function generateActivity () {
       timeSpent: moment.duration(22, 'm').asMilliseconds()
     },
     {
+      started: moment(completedDate).subtract(1, 'd').valueOf(),
+      stopped: moment(completedDate).subtract(1, 'd').add(25, 'm').valueOf(),
+      timeSpent: moment.duration(25, 'm').asMilliseconds()
+    },
+    {
       started: moment(completedDate).add(10, 'm').valueOf(),
       stopped: moment(completedDate).add(30, 'm').valueOf(),
       timeSpent: moment.duration(15, 'm').asMilliseconds()
+    },
+    {
+      started: moment(completedDate).add(35, 'm').valueOf(),
+      stopped: moment(completedDate).add(60, 'm').valueOf(),
+      timeSpent: moment.duration(25, 'm').asMilliseconds()
     }
   ]
   
-  const day1Duration = moment.duration(22, 'm')
-  const day2Duration = moment.duration(15, 'm')
+  const day1Duration = moment.duration(47, 'm')
+  const day2Duration = moment.duration(40, 'm')
   
   return {
     log,

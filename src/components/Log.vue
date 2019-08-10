@@ -17,7 +17,7 @@
       class="table"
     >
       <tr
-        v-for="(event, index) in descLog"
+        v-for="(event, index) in log"
         :key="index"
       >
         <td>
@@ -62,9 +62,7 @@ export default {
     
     displayDay: function () {
       return moment(this.day, 'YYYY-MM-DD').format('ddd MMM DD')
-    },
-    
-    descLog: function () { return this.log.slice().reverse() }
+    }
     
   },
   

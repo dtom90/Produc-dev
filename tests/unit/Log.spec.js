@@ -20,22 +20,28 @@ describe('Log', () => {
   describe('Full Log', () => {
     
     const wrapper = shallowMount(Log, {
-      propsData: { log, timeSpent: allDuration },
+      propsData: { log: log.slice().reverse(), timeSpent: allDuration },
       localVue
     })
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch('Time Spent: 37 minutes')
+      expect(wrapper.text()).toMatch(allDuration.humanize())
       
     })
     
     it('renders the task log in reverse-chronological order', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
+        'Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 25 minutes' +
+        'Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 15 minutes' +
         'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes' +
+        ' Time Spent: 25 minutes' +
         'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
@@ -100,7 +106,7 @@ describe('Log', () => {
     
     const wrapper = shallowMount(Log, { propsData: {
       day: day.format(EXPECTED_DAY_KEY_FORMAT),
-      log: [log[1]],
+      log: [log[3], log[2]],
       timeSpent: day2Duration
     },
     localVue })
@@ -113,15 +119,18 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch('Time Spent: 15 minutes')
+      expect(wrapper.text()).toMatch(day2Duration.humanize())
       
     })
     
     it('renders the task log in reverse-chronological order', () => {
       
       expect(wrapper.find('#activityLog').text()).toEqual(
-        'Started ' + moment(log[1].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
+        'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
+        '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 25 minutes' +
+        'Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
+        '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes'
       )
       
