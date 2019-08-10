@@ -29,13 +29,8 @@ const task5 = 'The fifth task'
 
 // To Do List selectors
 const todoSection = Selector('.section').withText('To Do')
-const todoSortButton = todoSection.find('button').child('svg.fa-ellipsis-v')
-const todoSortLabel = todoSortButton.parent().find('label').withText('First')
-const todoSortSelect = todoSortButton.parent().find('select')
-const todoSortOption = todoSortSelect.child('option')
 const newTaskInput = Selector('input').withAttribute('placeholder', 'enter new task')
-const todoList = todoSection.find('.task-list')
-const todoTasks = todoList.find('.task')
+const todoTasks = todoSection.find('.task')
 
 // Selected Task selectors
 const selectedTaskSection = Selector('#selected-task-section')
@@ -125,7 +120,6 @@ fixture(`Testing Produc-dev at ${page}`)
       
       // Expect an empty To Do List
       .expect(todoSection.find('h3').withText('To Do').exists).ok()
-      .expect(todoSortButton.exists).ok()
       .expect(todoTasks.count).eql(0)
       .expect(doneTasks.count).eql(0)
       
@@ -133,7 +127,7 @@ fixture(`Testing Produc-dev at ${page}`)
       .setNativeDialogHandler(dialogHandler)
       .typeText(newTaskInput, task1)
       .pressKey('enter')
-      .expect(tasksPresent(todoList)).eql([task1])
+      .expect(tasksPresent(todoSection)).eql([task1])
       .expect(selectedTaskName.textContent).eql(task1)
       
       // Add a tag to task 1
@@ -146,7 +140,7 @@ fixture(`Testing Produc-dev at ${page}`)
       
       // Add task 2
       .typeText(newTaskInput, task2).pressKey('enter')
-      .expect(tasksPresent(todoList)).eql([task2, task1])
+      .expect(tasksPresent(todoSection)).eql([task1, task2])
       .expect(selectedTaskName.textContent).eql(task2)
       
       // Add the previous tag to task 2
@@ -168,7 +162,7 @@ test('Create, Complete and Delete Tasks', async t => {
     
     // Add task 3
     .typeText(newTaskInput, task3).pressKey('enter')
-    .expect(tasksPresent(todoList)).eql([task3, task2, task1])
+    .expect(tasksPresent(todoSection)).eql([task1, task2, task3])
     .expect(selectedTaskName.textContent).eql(task3)
     
     // Add the previous tag to task 3
@@ -197,26 +191,14 @@ test('Create, Complete and Delete Tasks', async t => {
     .click(tagOption.withText('my tag'))
     .expect(tagsPresent()).eql(['my tag'])
     
-    // Switch To Do list order from Oldest First to Newest First
-    .expect(todoSortLabel.visible).notOk()
-    .expect(todoSortSelect.visible).notOk()
-    .click(todoSortButton)
-    .expect(todoSortLabel.visible).ok()
-    .expect(todoSortSelect.visible).ok()
-    .expect(todoSortSelect.value).eql('Newest')
-    .click(todoSortSelect)
-    .click(todoSortOption.withText('Oldest'))
-    .expect(todoSortSelect.value).eql('Oldest')
-    .expect(tasksPresent(todoList)).eql([task1, task2, task3])
-    
     // Add task 4
     .typeText(newTaskInput, task4).pressKey('enter')
-    .expect(tasksPresent(todoList)).eql([task1, task2, task3, task4])
+    .expect(tasksPresent(todoSection)).eql([task1, task2, task3, task4])
     .expect(selectedTaskName.textContent).eql(task4)
     
     // Add task 5
     .typeText(newTaskInput, task5).pressKey('enter')
-    .expect(tasksPresent(todoList)).eql([task1, task2, task3, task4, task5])
+    .expect(tasksPresent(todoSection)).eql([task1, task2, task3, task4, task5])
     .expect(selectedTaskName.textContent).eql(task5)
     
     // Complete tasks 4 and 2
@@ -226,7 +208,7 @@ test('Create, Complete and Delete Tasks', async t => {
     .click(todoTasks.withText(task2))
     .expect(selectedTaskSection.withText(task2).visible).ok()
     .click(checkbox(task2))
-    .expect(tasksPresent(todoList)).eql([task1, task3, task5])
+    .expect(tasksPresent(todoSection)).eql([task1, task3, task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Switch completed list order from Oldest First to Newest First
@@ -255,12 +237,12 @@ test('Create, Complete and Delete Tasks', async t => {
     .typeText(selectedTaskSection.find('input.edit-task'), ' modified', { caretPos: 3 })
     .pressKey('enter')
     .expect(selectedTaskSection.withText(task3mod).visible).ok()
-    .expect(tasksPresent(todoList)).eql([task1, task3mod, task5])
+    .expect(tasksPresent(todoSection)).eql([task1, task3mod, task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Mark task 3 as complete
     .click(checkbox(task3mod))
-    .expect(tasksPresent(todoList)).eql([task1, task5])
+    .expect(tasksPresent(todoSection)).eql([task1, task5])
     .expect(tasksPresent(doneList)).eql([task3mod, task2, task4])
     
     // Click task 5 delete button, expect confirmation popup, do not confirm
@@ -268,14 +250,14 @@ test('Create, Complete and Delete Tasks', async t => {
     .click(todoTasks.withText(task5))
     .click(menuButton)
     .click(deleteButton(task5))
-    .expect(tasksPresent(todoList)).eql([task1, task5])
+    .expect(tasksPresent(todoSection)).eql([task1, task5])
     .expect(tasksPresent(doneList)).eql([task3mod, task2, task4])
     
     // Click task 3 delete button, expect no confirmation popup
     .click(doneTasks.withText(task3mod))
     .click(menuButton)
     .click(deleteButton(task3mod))
-    .expect(tasksPresent(todoList)).eql([task1, task5])
+    .expect(tasksPresent(todoSection)).eql([task1, task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Click task 1 delete button, expect confirmation popup, confirm delete
@@ -283,7 +265,7 @@ test('Create, Complete and Delete Tasks', async t => {
     .click(todoTasks.withText(task1))
     .click(menuButton)
     .click(deleteButton(task1))
-    .expect(tasksPresent(todoList)).eql([task5])
+    .expect(tasksPresent(todoSection)).eql([task5])
     .expect(tasksPresent(doneList)).eql([task2, task4])
     
     // Modify task 2 in the completed list
@@ -293,25 +275,25 @@ test('Create, Complete and Delete Tasks', async t => {
     .expect(selectedTaskSection.find('input.edit-task').value).eql(task2)
     .typeText(selectedTaskSection.find('input.edit-task'), 'completed ', { caretPos: 11 })
     .click(saveButton())
-    .expect(tasksPresent(todoList)).eql([task5])
+    .expect(tasksPresent(todoSection)).eql([task5])
     .expect(tasksPresent(doneList)).ok([task2mod, task4])
     
     // Click the Clear button to clear all completed tasks
     .setNativeDialogHandler(dialogHandler, { dependencies: { numCompletedTasks: 2, deleteTask: true } })
     .click(doneMenuButton)
     .click(clearAllButton)
-    .expect(tasksPresent(todoList)).eql([task5])
+    .expect(tasksPresent(todoSection)).eql([task5])
     .expect(tasksPresent(doneList)).eql([])
     
     // Complete task 5, click the Clear button, expect no popup
     .click(todoTasks.withText(task5))
     .click(checkbox(task5))
-    .expect(tasksPresent(todoList)).eql([])
+    .expect(tasksPresent(todoSection)).eql([])
     .expect(tasksPresent(doneList)).eql([task5])
     .setNativeDialogHandler(dialogHandler, { dependencies: { numCompletedTasks: 9, deleteTask: false } })
     .click(doneMenuButton)
     .click(clearAllButton)
-    .expect(tasksPresent(todoList)).eql([])
+    .expect(tasksPresent(todoSection)).eql([])
     .expect(tasksPresent(doneList)).eql([])
 })
 

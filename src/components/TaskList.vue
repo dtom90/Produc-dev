@@ -6,9 +6,12 @@
       <h3 class="title">
         {{ title }}
       </h3>
-
+      
       <!-- TaskList Settings Button -->
-      <div class="dropright">
+      <div
+        v-if="isCompletedList"
+        class="dropright"
+      >
         <button
           :id="btnId"
           class="btn btn-light"
@@ -38,12 +41,8 @@
               >First</label>
             </div>
           </div>
-          <div
-            v-if="isCompletedList"
-            class="dropdown-divider"
-          />
+          <div class="dropdown-divider" />
           <button
-            v-if="isCompletedList"
             id="clear-btn"
             class="btn btn-danger"
             @click="clearTasks"
@@ -53,7 +52,7 @@
         </div>
       </div>
     </div>
-
+    
     <!-- New Task Input Field -->
     <input
       v-if="!isCompletedList"
@@ -64,7 +63,7 @@
       placeholder="enter new task"
       @keyup.enter="addNewTask"
     >
-
+    
     <!-- Incomplete Tasks -->
     <draggable
       v-if="!isCompletedList"
@@ -142,7 +141,7 @@ export default {
       }
     },
     completedTaskList: function () {
-      return this.sortOrder !== 'Oldest'
+      return this.completedTasks && this.sortOrder !== 'Oldest'
         ? this.completedTasks.slice().reverse()
         : this.completedTasks
     }
