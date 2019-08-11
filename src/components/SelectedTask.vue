@@ -45,6 +45,7 @@
         <div class="dropleft">
           <button
             class="btn btn-light"
+            title="Task options"
             data-toggle="dropdown"
           >
             <font-awesome-icon icon="ellipsis-v" />
@@ -54,6 +55,7 @@
               <button
                 type="button"
                 class="btn btn-warning"
+                title="Edit task name"
                 @click="editing = true"
               >
                 <font-awesome-icon icon="pencil-alt" />
@@ -61,6 +63,7 @@
               <button
                 type="button"
                 class="btn btn-danger"
+                title="Delete task"
                 @click="deleteTask({id: task.id})"
               >
                 <font-awesome-icon icon="trash-alt" />
@@ -87,12 +90,14 @@
             class="tag-name btn btn-primary"
             data-toggle="modal"
             data-target="#activityModal"
+            title="View tag activity"
             @click="selectedTag = tag"
           >
             {{ tag }}
           </button>
           <button
             class="tag-close btn btn-primary"
+            title="Remove tag from task"
             @click="removeTag(tag)"
           >
             <span aria-hidden="true">&times;</span>
@@ -107,6 +112,7 @@
           <button
             id="addTagButton"
             class="btn btn-light"
+            :title="showTagInput ? 'Cancel' : 'Add new tag'"
             @click="addTagButton"
           >
             <font-awesome-icon

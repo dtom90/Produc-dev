@@ -4,6 +4,7 @@
       :checked="checked"
       class="task-checkbox"
       type="checkbox"
+      :title="'Mark task ' + (checked ? 'in' : '') + 'complete'"
       @change="completeTask({id: taskId})"
     >
     <span class="check-custom" />

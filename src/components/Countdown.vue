@@ -8,6 +8,7 @@
       <button
         id="skip-btn"
         class="btn btn-light"
+        title="Skip current interval"
         @click="finishTimer"
       >
         <font-awesome-icon icon="times" />
@@ -66,6 +67,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing === true"
+          :title="(countingDown ? 'Pause' : 'Start') + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -217,11 +219,11 @@ export default {
 
 #skip-btn {
   position: absolute;
-  right: -20px;
-  width: 36px;
-  height: 36px;
-  border: var(--countdown-color) 1px solid;
-  border-radius: 18px;
+  right: -38px;
+  width: 38px;
+  height: 38px;
+  border: var(--countdown-color) 2px solid;
+  border-radius: 19px;
   color: var(--button-color)
 }
 

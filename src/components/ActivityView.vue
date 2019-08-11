@@ -23,6 +23,7 @@
       <button
         id="dailyView"
         :class="'btn btn-light nav-link' + (logVisible ? ' active' : '')"
+        :title="(logVisible ? 'Hide' : 'Show') + ' activity log'"
         @click="toggleLog"
       >
         Activity Log
@@ -42,6 +43,7 @@
         <div style="position: absolute; right: 0">
           <button
             class="btn btn-light"
+            :title="showIntervalInput ? 'Cancel' : 'Add interval manually'"
             @click="showIntervalInput = !showIntervalInput"
           >
             <font-awesome-icon
