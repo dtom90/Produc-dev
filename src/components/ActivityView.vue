@@ -15,30 +15,23 @@
     
     <br>
     
-    <!-- View Switch -->
+    <!-- Log View Switch -->
     <div
       id="viewType"
       class="d-flex justify-content-center"
     >
       <button
-        id="fullView"
-        :class="'btn btn-light nav-link' + (view === 'full' ? ' active' : '')"
-        @click="setView('full')"
-      >
-        Full Log
-      </button>
-      <button
         id="dailyView"
-        :class="'btn btn-light nav-link' + (view === 'daily' ? ' active' : '')"
-        @click="setView('daily')"
+        :class="'btn btn-light nav-link' + (logVisible ? ' active' : '')"
+        @click="toggleLog"
       >
-        Daily Log
+        Activity Log
       </button>
     </div>
 
     <!-- Activity Data -->
     <div
-      v-if="view"
+      v-if="logVisible"
       class="border"
     >
       <!-- Input to enter interval manually -->
@@ -92,19 +85,12 @@
       
       <!-- Log -->
       <Log
-        v-if="view === 'full'"
-        :log="descendingLog"
-        :time-spent="calculateTimeSpent(log)"
+        v-for="(dayActivity, day) in dailyActivity.dailyActivity"
+        :key="day"
+        :day="day"
+        :log="dayActivity.log"
+        :time-spent="dayActivity.timeSpent"
       />
-      <div v-if="view === 'daily'">
-        <Log
-          v-for="(dayActivity, day) in dailyActivity.dailyActivity"
-          :key="day"
-          :day="day"
-          :log="dayActivity.log"
-          :time-spent="dayActivity.timeSpent"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -146,7 +132,7 @@ export default {
   
   data: function () {
     return {
-      view: null,
+      logVisible: false,
       showIntervalInput: false
     }
   },
@@ -202,12 +188,8 @@ export default {
       )
     },
     
-    setView (type) {
-      if (this.view === type) {
-        this.view = null
-      } else {
-        this.view = type
-      }
+    toggleLog () {
+      this.logVisible = !this.logVisible
     },
     
     addIntervalButtonClicked () {

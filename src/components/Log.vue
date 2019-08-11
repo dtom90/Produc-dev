@@ -9,7 +9,7 @@
     </h4>
     
     <!-- Time Spent on Task -->
-    <h4>Time Spent: {{ timeSpent.humanize() }}</h4>
+    <h5>Time Spent: {{ timeSpent.humanize() }}</h5>
     
     <!-- Task Activity Log -->
     <table
