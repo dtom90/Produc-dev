@@ -6,9 +6,12 @@
       <h3 class="title">
         {{ title }}
       </h3>
-
+      
       <!-- TaskList Settings Button -->
-      <div class="dropright">
+      <div
+        v-if="isCompletedList"
+        class="dropright"
+      >
         <button
           :id="btnId"
           class="btn btn-light"
@@ -38,12 +41,8 @@
               >First</label>
             </div>
           </div>
-          <div
-            v-if="completedList"
-            class="dropdown-divider"
-          />
+          <div class="dropdown-divider" />
           <button
-            v-if="completedList"
             id="clear-btn"
             class="btn btn-danger"
             @click="clearTasks"
@@ -53,10 +52,10 @@
         </div>
       </div>
     </div>
-
+    
     <!-- New Task Input Field -->
     <input
-      v-if="!completedList"
+      v-if="!isCompletedList"
       id="new-task"
       v-model="newTask"
       type="text"
@@ -64,11 +63,28 @@
       placeholder="enter new task"
       @keyup.enter="addNewTask"
     >
-
-    <!-- TaskList -->
-    <ul class="task-list list-group">
+    
+    <!-- Incomplete Tasks -->
+    <draggable
+      v-if="!isCompletedList"
+      v-model="incompleteTaskList"
+    >
+      <transition-group>
+        <Task
+          v-for="task in incompleteTaskList"
+          :key="task.id"
+          :task="task"
+        />
+      </transition-group>
+    </draggable>
+    
+    <!-- Completed Tasks -->
+    <ul
+      v-if="isCompletedList"
+      class="task-list list-group"
+    >
       <Task
-        v-for="task in sortedTasks"
+        v-for="task in completedTaskList"
         :key="task.id"
         :task="task"
       />
@@ -78,7 +94,8 @@
 
 <script>
 import Task from './Task.vue'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import draggable from 'vuedraggable'
 import $ from 'jquery'
 
 $(document).on('click', '.title-section .dropdown-menu', function (e) {
@@ -90,23 +107,14 @@ export default {
   name: 'TaskList',
   
   components: {
-    Task
+    Task,
+    draggable
   },
   
   props: {
     title: {
       type: String,
       default: 'To Do'
-    },
-    tasks: {
-      type: Array,
-      default: function () {
-        return [
-          { id: 1, name: 'new task 1' },
-          { id: 2, name: 'new task 2' },
-          { id: 3, name: 'new task 3' }
-        ]
-      }
     }
   },
   
@@ -116,11 +124,27 @@ export default {
   }),
   
   computed: {
-    completedList: function () { return this.title === 'Done' },
-    btnId: function () { return this.completedList ? 'completedSettingsButton' : 'todoSettingsButton' },
+    ...mapGetters([
+      'incompleteTasks',
+      'completedTasks'
+    ]),
+    isCompletedList: function () { return this.title === 'Done' },
+    btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    sortingOptions: function () { return this.completedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
-    sortedTasks: function () { return this.sortOrder !== 'Oldest' ? this.tasks.slice().reverse() : this.tasks }
+    sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
+    incompleteTaskList: {
+      get () {
+        return this.incompleteTasks
+      },
+      set (value) {
+        this.updateIncompleteTasks(value)
+      }
+    },
+    completedTaskList: function () {
+      return this.completedTasks && this.sortOrder !== 'Oldest'
+        ? this.completedTasks.slice().reverse()
+        : this.completedTasks
+    }
   },
   
   mounted: function () {
@@ -130,7 +154,8 @@ export default {
   methods: {
     ...mapMutations([
       'addTask',
-      'clearTasks'
+      'clearTasks',
+      'updateIncompleteTasks'
     ]),
     addNewTask () {
       this.addTask({ name: this.newTask })

@@ -6,7 +6,6 @@
     <div class="section task-list">
       <TaskList
         title="To Do"
-        :tasks="incompleteTasks"
       />
     </div>
 
@@ -20,7 +19,6 @@
     <div class="section task-list">
       <TaskList
         title="Done"
-        :tasks="completedTasks"
       />
     </div>
   </div>

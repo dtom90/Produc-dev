@@ -8,23 +8,29 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const mutations = {
-  addTask: jest.fn(),
-  clearTasks: jest.fn()
-}
-
-const store = new Vuex.Store({
-  mutations
-})
-
 const tasks = [
   { id: 1, name: 'new task 1' },
   { id: 2, name: 'new task 2' },
   { id: 3, name: 'new task 3' }
 ]
 
+const getters = {
+  incompleteTasks: jest.fn(),
+  completedTasks: () => tasks
+}
+
+const mutations = {
+  addTask: jest.fn(),
+  clearTasks: jest.fn()
+}
+
+const store = new Vuex.Store({
+  getters,
+  mutations
+})
+
 const titles = [
-  ['To Do', ['Newest', 'Oldest']],
+  ['To Do', []],
   ['Done', ['Recent', 'Oldest']]
 ]
 
@@ -32,11 +38,8 @@ describe('TaskList', () => {
   
   describe.each(titles)('%s', (title, expectedSortingOptions) => {
     
-    // Expect title to default to 'To Do List'
-    const titleProps = title === 'To Do List' ? {} : { title }
-    
     const wrapper = shallowMount(TaskList, {
-      propsData: Object.assign(titleProps, { tasks: tasks }),
+      propsData: { title },
       localVue,
       store
     })
@@ -45,12 +48,6 @@ describe('TaskList', () => {
       
       expect(wrapper.props().title).toBe(title)
       expect(wrapper.find('h3').text()).toBe(title)
-      
-    })
-    
-    it('should have tasks loaded into props', () => {
-      
-      expect(wrapper.props().tasks).toBe(tasks)
       
     })
     
@@ -66,34 +63,38 @@ describe('TaskList', () => {
     
     it(`should default sorting to ${expectedSortingOptions[0]}-first order`, () => {
       
-      const sortOrder = expectedSortingOptions[0]
-      
-      expect(wrapper.vm.sortOrder).toBe(sortOrder)
-      
-      const renderedTasks = wrapper.findAll(Task)
-      expect(renderedTasks.length).toBe(tasks.length)
-      renderedTasks.wrappers.forEach((renderedTask, i) => {
-        const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
-        expect(renderedTask.props().task.name).toMatch(tasks[index].name)
-      })
+      if (expectedSortingOptions.length > 0) {
+        const sortOrder = expectedSortingOptions[0]
+  
+        expect(wrapper.vm.sortOrder).toBe(sortOrder)
+  
+        const renderedTasks = wrapper.findAll(Task)
+        expect(renderedTasks.length).toBe(tasks.length)
+        renderedTasks.wrappers.forEach((renderedTask, i) => {
+          const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
+          expect(renderedTask.props().task.name).toMatch(tasks[index].name)
+        })
+      }
       
     })
     
     it(`should sort in ${expectedSortingOptions[1]}-first order`, () => {
-      
-      const sortOrder = expectedSortingOptions[1]
-      
-      wrapper.setData({
-        sortOrder: sortOrder
-      })
-      expect(wrapper.vm.sortOrder).toBe(sortOrder)
-      
-      const renderedTasks = wrapper.findAll(Task)
-      expect(renderedTasks.length).toBe(tasks.length)
-      renderedTasks.wrappers.forEach((renderedTask, i) => {
-        const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
-        expect(renderedTask.props().task.name).toMatch(tasks[index].name)
-      })
+  
+      if (expectedSortingOptions.length > 1) {
+        const sortOrder = expectedSortingOptions[1]
+  
+        wrapper.setData({
+          sortOrder: sortOrder
+        })
+        expect(wrapper.vm.sortOrder).toBe(sortOrder)
+  
+        const renderedTasks = wrapper.findAll(Task)
+        expect(renderedTasks.length).toBe(tasks.length)
+        renderedTasks.wrappers.forEach((renderedTask, i) => {
+          const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
+          expect(renderedTask.props().task.name).toMatch(tasks[index].name)
+        })
+      }
       
     })
     

@@ -21,14 +21,14 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
   })
   
-  it('renders a chart of the activity', () => {
+  it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
-      labels: [day2, day1].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
+      labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
       datasets: [{
         label: 'Activity for ' + wrapper.props('element'),
         backgroundColor: '#2020FF',
-        data: [day2Duration, day1Duration].map(dur => dur.asMinutes())
+        data: [day1Duration, day2Duration].map(dur => dur.asMinutes())
       }]
     })
     
@@ -50,7 +50,7 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
     wrapper.find('#fullView').trigger('click')
     const renderedActivity = wrapper.find(Log)
-    expect(renderedActivity.props()).toEqual({ log: log, day: null, timeSpent: allDuration })
+    expect(renderedActivity.props()).toEqual({ log: log.slice().reverse(), day: null, timeSpent: allDuration })
     
   })
   
@@ -66,7 +66,7 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
   })
   
-  it('renders the daily task logs', async () => {
+  it('renders the daily task logs in descending chronological order', async () => {
     
     expect(wrapper.vm.view).toBe('full')
     
@@ -77,12 +77,12 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
     const activityLogs = wrapper.findAll(Log)
     expect(activityLogs.at(0).props()).toEqual({
-      log: [log[1]],
+      log: [log[3], log[2]],
       day: day2.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day2Duration
     })
     expect(activityLogs.at(1).props()).toEqual({
-      log: [log[0]],
+      log: [log[1], log[0]],
       day: day1.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day1Duration
     })

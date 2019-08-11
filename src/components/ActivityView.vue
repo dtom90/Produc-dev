@@ -93,7 +93,7 @@
       <!-- Log -->
       <Log
         v-if="view === 'full'"
-        :log="log"
+        :log="descendingLog"
         :time-spent="calculateTimeSpent(log)"
       />
       <div v-if="view === 'daily'">
@@ -153,12 +153,14 @@ export default {
   
   computed: {
     
+    descendingLog: function () { return this.log.slice().reverse() },
+    
     dailyActivity: function () {
       const dailyActivity = {}
       let day
       
       // Create dailyActivity Object from this.log
-      for (const event of this.log.slice().reverse()) {
+      for (const event of this.descendingLog) {
         day = moment(event.started).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
@@ -180,8 +182,8 @@ export default {
       // Add time spent per day and add to chartData
       Object.keys(dailyActivity).forEach(day => {
         dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
-        chartData.labels.push(moment(day, 'YYYY-MM-DD').format('ddd MMM DD'))
-        chartData.datasets[0].data.push(dailyActivity[day].timeSpent.asMinutes())
+        chartData.labels.unshift(moment(day, 'YYYY-MM-DD').format('ddd MMM DD'))
+        chartData.datasets[0].data.unshift(dailyActivity[day].timeSpent.asMinutes())
       })
       
       return { dailyActivity, chartData }
