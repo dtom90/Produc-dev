@@ -15,6 +15,7 @@
         <button
           :id="btnId"
           class="btn btn-light"
+          title="List options"
           data-toggle="dropdown"
         >
           <font-awesome-icon icon="ellipsis-v" />
@@ -45,6 +46,7 @@
           <button
             id="clear-btn"
             class="btn btn-danger"
+            title="Delete all list tasks"
             @click="clearTasks"
           >
             Clear All

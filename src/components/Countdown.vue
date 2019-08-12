@@ -5,6 +5,15 @@
     :style="cssProps"
   >
     <div id="dial-container">
+      <button
+        id="skip-btn"
+        class="btn btn-light"
+        title="Skip current interval"
+        @click="finishTimer"
+      >
+        <font-awesome-icon icon="times" />
+      </button>
+      
       <div id="countdown-button-rotator">
         <div id="countdown-button" />
       </div>
@@ -58,6 +67,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing === true"
+          :title="(countingDown ? 'Pause' : 'Start') + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -86,7 +96,7 @@ export default {
   data: () => ({
     editing: false,
     active: true,
-    timerStarted: false,
+    activeIntervalStarted: false,
     countingDown: false,
     activeMinutes: 25,
     restMinutes: 5,
@@ -152,28 +162,24 @@ export default {
     toggleTimer () {
       if (this.countingDown) {
         this.timer.pause()
-        this.stopTimer()
+        this.endInterval()
       } else {
-        if (!this.timerStarted && this.active) { // Mark when we started the timer if we're starting an active interval
+        if (!this.activeIntervalStarted && this.active) { // Mark when we started the timer if we're starting an active interval
           this.startTask({ id: this.taskId })
-          this.timerStarted = true
+          this.activeIntervalStarted = true
         } else if (this.active) {
           this.unpauseTask({ id: this.taskId })
         }
-        this.startTimer()
+        this.timer.start()
+        this.countingDown = true
       }
     },
 
-    startTimer () {
-      this.timer.start()
-      this.countingDown = true
-    },
-    
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
     },
     
-    stopTimer () {
+    endInterval () {
       this.countingDown = false
       if (this.active) {
         this.stopTask({
@@ -182,11 +188,14 @@ export default {
       }
     },
     
-    finishTimer () {
-      this.secondsRemaining = 0
-      this.stopTimer()
-      this.timerStarted = false
+    finishTimer (secondsRemaining = null) {
+      this.timer.clear()
+      if (typeof secondsRemaining === 'number') {
+        this.secondsRemaining = secondsRemaining
+      }
+      this.endInterval()
       if (this.active) {
+        this.activeIntervalStarted = false
         notifications.notify('Finished Working, Take a Break!')
       } else {
         notifications.notify('Finished Break, Time to Work!')
@@ -206,6 +215,16 @@ export default {
   position: relative;
   width: 200px;
   height: 200px;
+}
+
+#skip-btn {
+  position: absolute;
+  right: -38px;
+  width: 38px;
+  height: 38px;
+  border: var(--countdown-color) 2px solid;
+  border-radius: 19px;
+  color: var(--button-color)
 }
 
 #countdown-button-rotator {

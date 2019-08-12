@@ -18,11 +18,10 @@ export default class CountdownTimer {
     const t = this
     this.ID = setInterval(function () {
       const remainingMs = t.endTime - Date.now()
-      if (remainingMs <= 200) {
-        t.clear()
-        t.finishCallback()
+      t.remainingSeconds = Math.round(remainingMs / 1000)
+      if (t.remainingSeconds <= 0) {
+        t.finishCallback(t.remainingSeconds)
       } else {
-        t.remainingSeconds = Math.round(remainingMs / 1000)
         t.tickCallback(t.remainingSeconds)
       }
     }, 1000)

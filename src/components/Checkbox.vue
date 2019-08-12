@@ -4,6 +4,7 @@
       :checked="checked"
       class="task-checkbox"
       type="checkbox"
+      :title="'Mark task ' + (checked ? 'in' : '') + 'complete'"
       @change="completeTask({id: taskId})"
     >
     <span class="check-custom" />
@@ -41,14 +42,16 @@ export default {
     $checkbox-size: 2.2rem;
 
     .checkbox-container {
-        margin-right: 30px;
         position: relative;
+        min-width: $checkbox-size;
         width: $checkbox-size;
         height: $checkbox-size;
+        margin-right: 20px;
     }
 
     .checkbox-container > * {
         position: absolute;
+        left: 0;
         width: $checkbox-size;
         height: $checkbox-size;
     }

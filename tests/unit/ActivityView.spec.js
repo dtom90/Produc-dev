@@ -1,17 +1,22 @@
-import { shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import ActivityView from '@/components/ActivityView'
 import ActivityChart from '@/components/ActivityChart'
 import Log from '@/components/Log.vue'
+import { FontAwesomeIcon } from '@/font-awesome-icons'
 import { generateActivity } from '@/fixtures'
 import moment from 'moment'
+import Vuex from 'vuex'
 
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
-const allDuration = moment.duration(day1Duration + day2Duration)
 const day1 = moment(completedDate).subtract(1, 'd')
 const day2 = completedDate
+
+const localVue = createLocalVue()
+localVue.component('font-awesome-icon', FontAwesomeIcon)
+localVue.use(Vuex)
 
 const shouldBehaveLikeActivityView = function (wrapper, element) {
   
@@ -46,34 +51,22 @@ const shouldBehaveLikeActivityView = function (wrapper, element) {
     
   })
   
-  it('renders the task full task log when button clicked', () => {
+  it('renders "Activity Log" display button', () => {
     
-    wrapper.find('#fullView').trigger('click')
-    const renderedActivity = wrapper.find(Log)
-    expect(renderedActivity.props()).toEqual({ log: log.slice().reverse(), day: null, timeSpent: allDuration })
-    
-  })
-  
-  it('renders "All Activity" and "Daily Activity" display options', () => {
-    
-    const fullViewBtn = wrapper.find('#fullView')
-    expect(fullViewBtn.text()).toBe('Full Log')
-    expect(fullViewBtn.classes()).toContain('active')
-    
-    const dailyViewBtn = wrapper.find('#dailyView')
-    expect(dailyViewBtn.text()).toBe('Daily Log')
-    expect(dailyViewBtn.classes()).not.toContain('active')
+    const viewLogSwitch = wrapper.find('#viewLogSwitch')
+    expect(viewLogSwitch.text()).toBe('Activity Log')
     
   })
   
-  it('renders the daily task logs in descending chronological order', async () => {
+  it('renders the daily task logs in descending chronological order when "Activity Log" clicked', async () => {
     
-    expect(wrapper.vm.view).toBe('full')
+    expect(wrapper.vm.logVisible).toBe(false)
     
-    const dailyViewBtn = wrapper.find('#dailyView')
-    dailyViewBtn.trigger('click')
+    const viewLogSwitch = wrapper.find('#viewLogSwitch')
+    viewLogSwitch.trigger('click')
+    expect(viewLogSwitch.classes()).toContain('active')
     
-    expect(wrapper.vm.view).toBe('daily')
+    expect(wrapper.vm.logVisible).toBe(true)
     
     const activityLogs = wrapper.findAll(Log)
     expect(activityLogs.at(0).props()).toEqual({
@@ -95,7 +88,10 @@ describe('ActivityView', () => {
   
   describe('for task', () => {
     
-    const wrapper = shallowMount(ActivityView, { propsData: { log: log, element: 'My Task' } })
+    const wrapper = shallowMount(ActivityView, {
+      propsData: { log: log, element: 'My Task' },
+      localVue
+    })
     
     shouldBehaveLikeActivityView(wrapper, 'My Task')
     
@@ -103,7 +99,10 @@ describe('ActivityView', () => {
   
   describe('for tag', () => {
     
-    const wrapper = shallowMount(ActivityView, { propsData: { log: log, element: 'myTag' } })
+    const wrapper = shallowMount(ActivityView, {
+      propsData: { log: log, element: 'myTag' },
+      localVue
+    })
     
     shouldBehaveLikeActivityView(wrapper, 'myTag')
     

@@ -8,7 +8,7 @@
     aria-hidden="true"
   >
     <div
-      class="modal-dialog"
+      class="modal-dialog modal-lg"
       role="document"
     >
       <div class="modal-content">

@@ -9,7 +9,7 @@
     </h4>
     
     <!-- Time Spent on Task -->
-    <h4>Time Spent: {{ timeSpent.humanize() }}</h4>
+    <h5>Time Spent: {{ timeSpent.humanize() }}</h5>
     
     <!-- Task Activity Log -->
     <table
@@ -20,6 +20,9 @@
         v-for="(event, index) in log"
         :key="index"
       >
+        <td v-if="event.task">
+          <span>{{ event.task }}</span>
+        </td>
         <td>
           <span>Started {{ day ? displayTime(event.started) : displayDateTime(event.started) }}</span>
         </td>

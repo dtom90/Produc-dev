@@ -100,7 +100,7 @@ const eventNow = (type) => {
   const now = moment().local()
   const oneMinAgo = moment(now).subtract(1, 'minute')
   const oneMinAhead = moment(now).add(1, 'minute')
-  const format = (type === 'Started' ? 'ddd MMM DD, ' : '') + 'h:mm a'
+  const format = 'h:mm a'
   return new RegExp([
     `${type} ${oneMinAgo.format(format)}`,
     `${type} ${now.format(format)}`,
@@ -330,7 +330,7 @@ test('Countdown functionality', async t => {
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
     
     // Expect the activity log
-    .click(activitySection.find('button').withText('Full Log'))
+    .click(activitySection.find('button').withText('Activity Log'))
     .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
@@ -364,8 +364,8 @@ test('Countdown functionality', async t => {
 test('Countdown modification and task switching', async t => {
   await t
     
-    // Toggle Full Log so we can monitor it
-    .click(activitySection.find('button').withText('Full Log'))
+    // Toggle Activity Log so we can monitor it
+    .click(activitySection.find('button').withText('Activity Log'))
     
     // Press the countdown play button and expect the countdown to decrement
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
