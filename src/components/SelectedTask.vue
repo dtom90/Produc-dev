@@ -7,7 +7,10 @@
       <br>
       <!--  Main Section (Flex Grow)  -->
       <div class="d-flex">
-        <div class="d-flex flex-grow-1 align-items-center justify-content-center">
+        <div
+          id="checkbox-name-section"
+          class="d-flex flex-grow-1 align-items-center justify-content-center"
+        >
           <!--  Checkbox  -->
           <Checkbox
             :checked="checked"
@@ -278,11 +281,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-    #task-name-container {
-        margin-left: 5px;
+    
+    #checkbox-name-section {
+        margin-left: 20px;
+      flex: 1;
     }
-
+    
     #task-name {
         font-weight: 600;
         font-size: xx-large;

@@ -20,6 +20,9 @@
         v-for="(event, index) in log"
         :key="index"
       >
+        <td v-if="event.task">
+          {{ event.task }}
+        </td>
         <td>
           <span>Started {{ day ? displayTime(event.started) : displayDateTime(event.started) }}</span>
         </td>

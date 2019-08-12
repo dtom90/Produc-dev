@@ -9,7 +9,7 @@
         :checked="checked"
         :task-id="task.id"
       />
-      <span>{{ task.name }}</span>
+      <span class="task-name">{{ task.name }}</span>
     </div>
   </li>
 </template>
@@ -61,5 +61,8 @@ export default {
 </script>
 
 <style scoped>
-
+.task-name {
+  flex: 1;
+  text-align: left;
+}
 </style>

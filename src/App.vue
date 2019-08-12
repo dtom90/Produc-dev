@@ -66,11 +66,11 @@ export default {
   }
   
   .task-list {
-    flex: 2;
+    flex: 1;
   }
   
   #selected-task-section {
-    flex: 3;
+    flex: 2;
   }
   
 </style>
