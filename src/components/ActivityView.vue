@@ -21,7 +21,7 @@
       class="d-flex justify-content-center"
     >
       <button
-        id="dailyView"
+        id="viewLogSwitch"
         :class="'btn btn-light nav-link' + (logVisible ? ' active' : '')"
         :title="(logVisible ? 'Hide' : 'Show') + ' activity log'"
         @click="toggleLog"

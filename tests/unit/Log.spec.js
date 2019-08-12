@@ -17,7 +17,7 @@ const allDuration = moment.duration(day1Duration + day2Duration)
 
 describe('Log', () => {
   
-  describe('Full Log', () => {
+  describe('Activity Log', () => {
     
     const wrapper = shallowMount(Log, {
       propsData: { log: log.slice().reverse(), timeSpent: allDuration },
@@ -36,13 +36,13 @@ describe('Log', () => {
         'Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        'Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes' +
-        'Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        'Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
       )
@@ -129,9 +129,63 @@ describe('Log', () => {
         'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        'Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
+        ' Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes'
+      )
+      
+    })
+    
+  })
+  
+  describe('Tag Log', () => {
+    
+    const taskName = 'new task 1'
+    const tagLog = log.slice().reverse().map(interval => Object.assign({ task: taskName }, interval))
+    const wrapper = shallowMount(Log, {
+      propsData: { log: tagLog, timeSpent: allDuration },
+      localVue
+    })
+    
+    it('renders the time spent on the task', () => {
+      
+      expect(wrapper.text()).toMatch(allDuration.humanize())
+      
+    })
+    
+    it('renders the task log in reverse-chronological order', () => {
+      
+      expect(wrapper.find('#activityLog').text()).toEqual(
+        taskName +
+        ' Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 25 minutes' +
+        taskName +
+        ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 15 minutes' +
+        taskName +
+        ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 25 minutes' +
+        taskName +
+        ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
+        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 22 minutes'
+      )
+      
+    })
+    
+    it('does not render a stopped time when the interval is running', () => {
+      
+      const startedTime = moment.now()
+      const startedWrapper = shallowMount(Log, { propsData: {
+        log: [{ started: startedTime, stopped: null }], timeSpent: moment.duration(0)
+      },
+      localVue })
+      
+      expect(startedWrapper.find('#activityLog').text()).toEqual(
+        'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT)
       )
       
     })
