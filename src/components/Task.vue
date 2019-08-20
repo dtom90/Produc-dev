@@ -10,6 +10,11 @@
         :task-id="task.id"
       />
       <span class="task-name">{{ task.name }}</span>
+      <font-awesome-icon
+        v-if="displayCountdownIndicator"
+        id="indicatorIcon"
+        icon="clock"
+      />
     </div>
   </li>
 </template>
@@ -39,7 +44,8 @@ export default {
   computed: {
     
     ...mapState([
-      'selectedTaskID'
+      'selectedTaskID',
+      'activeTaskID'
     ]),
     
     active: function () {
@@ -48,6 +54,10 @@ export default {
 
     checked: function () {
       return this.task.completed !== null
+    },
+    
+    displayCountdownIndicator: function () {
+      return this.activeTaskID === this.task.id
     }
   },
   
@@ -64,5 +74,11 @@ export default {
 .task-name {
   flex: 1;
   text-align: left;
+}
+
+#indicatorIcon {
+  color: red;
+  width: 2rem;
+  height: 2rem;
 }
 </style>

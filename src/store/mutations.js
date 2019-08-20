@@ -61,6 +61,7 @@ const mutations = {
       lastInterval.stopped = null
       lastInterval.timeSpent = null
     }
+    state.activeTaskID = task.id
   },
   
   stopTask (state, payload) {
