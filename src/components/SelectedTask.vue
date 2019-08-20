@@ -169,10 +169,12 @@
       <br>
       
       <!-- Countdown Timer -->
-      <Countdown
-        v-if="!task.completed"
-        :task-id="task.id"
-      />
+      <keep-alive>
+        <Countdown
+          v-if="!task.completed && (!activeTaskID || activeTaskID === task.id)"
+          :task-id="task.id"
+        />
+      </keep-alive>
       <br>
       
       <!-- Activity View -->
@@ -192,7 +194,7 @@ import Checkbox from './Checkbox'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
 import ActivityModal from './ActivityModal'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   
@@ -221,6 +223,10 @@ export default {
   }),
   
   computed: {
+    
+    ...mapState([
+      'activeTaskID'
+    ]),
     
     ...mapGetters([
       'availableTags'

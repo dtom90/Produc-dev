@@ -131,14 +131,14 @@ export default {
     
   },
   
-  watch: {
-    taskId: function (newId, oldId) {
-      if (this.countingDown) {
-        this.stopTask({ id: oldId })
-        this.startTask({ id: newId })
-      }
-    }
-  },
+  // watch: {
+  //   taskId: function (newId, oldId) {
+  //     if (this.countingDown) {
+  //       this.stopTask({ id: oldId })
+  //       this.startTask({ id: newId })
+  //     }
+  //   }
+  // },
   
   mounted: function () {
     this.secondsRemaining = this.totalSeconds
@@ -151,7 +151,8 @@ export default {
     ...mapMutations([
       'startTask',
       'stopTask',
-      'unpauseTask'
+      'unpauseTask',
+      'endTask'
     ]),
     
     updateMinutes () {
@@ -194,6 +195,7 @@ export default {
         this.secondsRemaining = secondsRemaining
       }
       this.endInterval()
+      this.endTask()
       if (this.active) {
         this.activeIntervalStarted = false
         notifications.notify('Finished Working, Take a Break!')

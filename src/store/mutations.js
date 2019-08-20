@@ -50,6 +50,7 @@ const mutations = {
       } else {
         task.log[task.log.length - 1].started = Date.now()
       }
+      state.activeTaskID = task.id
     }
   },
   
@@ -71,6 +72,11 @@ const mutations = {
         lastInterval.timeSpent = payload.timeSpent
       }
     }
+    state.activeTaskID = null
+  },
+  
+  endTask (state) {
+    state.activeTaskID = null
   },
   
   addInterval (state, payload) {
