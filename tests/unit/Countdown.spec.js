@@ -9,7 +9,8 @@ localVue.use(Vuex)
 
 const mutations = {
   startTask: jest.fn(),
-  stopTask: jest.fn()
+  stopTask: jest.fn(),
+  endTask: jest.fn()
 }
 
 const store = new Vuex.Store({
@@ -111,6 +112,7 @@ describe('Countdown', () => {
     expect(wrapper.vm.secondsRemaining).toBe(1)
     await delay(1000)
     expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId, timeSpent: 6000 })
+    expect(mutations.endTask).toHaveBeenCalledWith({}, undefined)
     
   }, 30000)
   
