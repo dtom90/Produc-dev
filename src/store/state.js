@@ -3,7 +3,8 @@ const state = {
   tags: {},
   nextTaskID: 0,
   selectedTaskID: null,
-  activeTaskID: null
+  activeTaskID: null,
+  running: false
 }
 
 export default state

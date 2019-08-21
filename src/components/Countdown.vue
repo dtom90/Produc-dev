@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import CountdownTimer from './CountdownTimer'
 import notifications from './notifications'
 
@@ -105,6 +105,10 @@ export default {
   
   computed: {
     
+    ...mapState([
+      'activeTaskID'
+    ]),
+    
     totalSeconds () {
       return (this.active ? this.activeMinutes : this.restMinutes) * 60
     },
@@ -130,15 +134,6 @@ export default {
     }
     
   },
-  
-  // watch: {
-  //   taskId: function (newId, oldId) {
-  //     if (this.countingDown) {
-  //       this.stopTask({ id: oldId })
-  //       this.startTask({ id: newId })
-  //     }
-  //   }
-  // },
   
   mounted: function () {
     this.secondsRemaining = this.totalSeconds
@@ -169,7 +164,11 @@ export default {
           this.startTask({ id: this.taskId })
           this.activeIntervalStarted = true
         } else if (this.active) {
-          this.unpauseTask({ id: this.taskId })
+          if (this.activeTaskID !== this.taskId) {
+            this.startTask({ id: this.taskId })
+          } else {
+            this.unpauseTask({ id: this.taskId })
+          }
         }
         this.timer.start()
         this.countingDown = true

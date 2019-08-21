@@ -47,10 +47,11 @@ const mutations = {
           stopped: null,
           timeSpent: null
         })
+        state.activeTaskID = task.id
       } else {
         task.log[task.log.length - 1].started = Date.now()
       }
-      state.activeTaskID = task.id
+      state.running = true
     }
   },
   
@@ -61,7 +62,7 @@ const mutations = {
       lastInterval.stopped = null
       lastInterval.timeSpent = null
     }
-    state.activeTaskID = task.id
+    state.running = true
   },
   
   stopTask (state, payload) {
@@ -73,7 +74,7 @@ const mutations = {
         lastInterval.timeSpent = payload.timeSpent
       }
     }
-    state.activeTaskID = null
+    state.running = false
   },
   
   endTask (state) {

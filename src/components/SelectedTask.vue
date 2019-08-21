@@ -171,7 +171,7 @@
       <!-- Countdown Timer -->
       <keep-alive>
         <Countdown
-          v-if="!task.completed && (!activeTaskID || activeTaskID === task.id)"
+          v-if="!task.completed && (!running || activeTaskID === task.id)"
           :task-id="task.id"
         />
       </keep-alive>
@@ -225,7 +225,8 @@ export default {
   computed: {
     
     ...mapState([
-      'activeTaskID'
+      'activeTaskID',
+      'running'
     ]),
     
     ...mapGetters([
