@@ -19,7 +19,7 @@ const getters = {
   tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
     const task = state.tasks.find(t => t.id === taskID)
     return task.log.map(event => Object.assign({ task: task.name }, event))
-  }).flat().sort((a, b) => a.time - b.time)
+  }).flat().sort((a, b) => a.started - b.started)
 }
 
 export default getters
