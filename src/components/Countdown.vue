@@ -164,11 +164,7 @@ export default {
           this.startTask({ id: this.taskId })
           this.activeIntervalStarted = true
         } else if (this.active) {
-          if (this.activeTaskID !== this.taskId) {
-            this.startTask({ id: this.taskId })
-          } else {
-            this.unpauseTask({ id: this.taskId })
-          }
+          this.startTask({ id: this.taskId })
         }
         this.timer.start()
         this.countingDown = true
@@ -182,9 +178,7 @@ export default {
     endInterval () {
       this.countingDown = false
       if (this.active) {
-        this.stopTask({
-          id: this.taskId,
-          timeSpent: (this.totalSeconds - this.secondsRemaining) * 1000 })
+        this.stopTask({ id: this.taskId })
       }
     },
     

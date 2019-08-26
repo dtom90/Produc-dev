@@ -82,7 +82,7 @@ describe('Countdown', () => {
     expect(mutations.startTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
     
     wrapper.find('#play-pause-btn').trigger('click')
-    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId, timeSpent: 0 })
+    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
     
   })
   
@@ -111,7 +111,7 @@ describe('Countdown', () => {
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(1)
     await delay(1000)
-    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId, timeSpent: 6000 })
+    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
     expect(mutations.endTask).toHaveBeenCalledWith({}, undefined)
     
   }, 30000)
