@@ -128,20 +128,17 @@ describe('mutations', () => {
       
     })
     
-    it('should overwrite the latest start time if called twice', () => {
+    it('should not overwrite the latest start time if called twice', () => {
       
-      const firstInterval = {
-        started: Date.now() - 10000,
-        stopped: null
-      }
+      const firstInterval = { started: Date.now() - 10000, stopped: null, timeSpent: null }
       myState.tasks[0].log.push(JSON.parse(JSON.stringify(firstInterval)))
       expect(myState.tasks[0].log).to.deep.equal([firstInterval])
       
       startTask(myState, { id: 0 })
       
-      expect(myState.tasks[0].log).not.to.deep.equal([firstInterval])
-      firstInterval.started = myState.tasks[0].log[0].started
-      expect(myState.tasks[0].log).to.deep.equal([firstInterval])
+      expect(myState.tasks[0].log).to.deep.equal([firstInterval, {
+        started: myState.tasks[0].log[1].started, stopped: null, timeSpent: null
+      }])
       
     })
     

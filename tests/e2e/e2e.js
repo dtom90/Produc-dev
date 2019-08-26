@@ -400,23 +400,37 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
     .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
+    .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
+    .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1492 / 1500).toPrecision(6)))
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
     
-    // Start timer and switch tasks midway
+    // Start timer again
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(activitySection.find('tr').count).eql(2)
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
+    .expect(activitySection.find('tr').textContent).notMatch(eventNow('Stopped'))
     .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1491 / 1500).toString()))
     .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1490 / 1500).toPrecision(6)))
+    
+    // Switch to task 1, expect no timer
     .click(todoTasks.withText(task1))
-    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
+    .expect(selectedTaskSection.find('#countdown-container').exists).notOk()
+    .expect(activitySection.find('tr').exists).notOk()
+    
+    // Switch back to task 2, expect timer again
     .click(todoTasks.withText(task2))
-    .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
-    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Stopped'))
-    .expect(activitySection.find('tr').nth(1).textContent).match(eventNow('Started'))
+    .expect(selectedTaskSection.find('#countdown-container').exists).ok()
+    .expect(activitySection.find('tr').count).eql(2)
+    .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
+    .expect(activitySection.find('tr').textContent).notMatch(eventNow('Stopped'))
+    .expect(selectedTaskSection.find('p').withText('24:48').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1488 / 1500).toString()))
+    .expect(selectedTaskSection.find('p').withText('24:47').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1487 / 1500).toPrecision(6)))
 })

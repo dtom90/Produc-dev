@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import CountdownTimer from './CountdownTimer'
 import notifications from './notifications'
 
@@ -104,6 +104,10 @@ export default {
   }),
   
   computed: {
+    
+    ...mapState([
+      'activeTaskID'
+    ]),
     
     totalSeconds () {
       return (this.active ? this.activeMinutes : this.restMinutes) * 60
@@ -131,15 +135,6 @@ export default {
     
   },
   
-  watch: {
-    taskId: function (newId, oldId) {
-      if (this.countingDown) {
-        this.stopTask({ id: oldId })
-        this.startTask({ id: newId })
-      }
-    }
-  },
-  
   mounted: function () {
     this.secondsRemaining = this.totalSeconds
     this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
@@ -151,7 +146,8 @@ export default {
     ...mapMutations([
       'startTask',
       'stopTask',
-      'unpauseTask'
+      'unpauseTask',
+      'endTask'
     ]),
     
     updateMinutes () {
@@ -168,7 +164,7 @@ export default {
           this.startTask({ id: this.taskId })
           this.activeIntervalStarted = true
         } else if (this.active) {
-          this.unpauseTask({ id: this.taskId })
+          this.startTask({ id: this.taskId })
         }
         this.timer.start()
         this.countingDown = true
@@ -182,9 +178,7 @@ export default {
     endInterval () {
       this.countingDown = false
       if (this.active) {
-        this.stopTask({
-          id: this.taskId,
-          timeSpent: (this.totalSeconds - this.secondsRemaining) * 1000 })
+        this.stopTask({ id: this.taskId })
       }
     },
     
@@ -194,6 +188,7 @@ export default {
         this.secondsRemaining = secondsRemaining
       }
       this.endInterval()
+      this.endTask()
       if (this.active) {
         this.activeIntervalStarted = false
         notifications.notify('Finished Working, Take a Break!')
