@@ -2,6 +2,7 @@
   "name": "produc-dev",
   "version": "0.1.0",
   "private": true,
+  "main" : "app.js",
   "description": "An app for productive developers",
   "author": {
     "name": "David Thomason",
@@ -11,14 +12,18 @@
     "appId": "produc.dev",
     "mac": {
       "category": "your.app.category.type"
-    }
+    },
+    "files": [
+      "dist/**/*",
+      "app.js"
+    ]
   },
   "scripts": {
     "dev": "vue-cli-service serve",
     "dev:electron": "vue-cli-service serve & sleep 5 && NODE_ENV=DEV electron app.js",
     "build:web": "vue-cli-service build",
-    "build:gh-pages": "vue-cli-service build --mode gh-pages",
-    "build:electron": "vue-cli-service build --mode electron --dest dist-electron",
+    "build:gh-pages": "vue-cli-service build --mode gh-pages --dest dist-gh-pages",
+    "build:electron": "vue-cli-service build --mode electron && electron-builder",
     "serve:web": "node serve.js",
     "serve:gh-pages": "BASE_URL=/Produc-dev/ node serve.js",
     "serve:electron": "electron app.js",
