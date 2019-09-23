@@ -14,9 +14,11 @@
       "category": "your.app.category.type"
     },
     "files": [
-      "dist/**/*",
-      "app.js"
-    ]
+      "package.json",
+      "electron.js",
+      "dist-electron/**/*"
+    ],
+    "extends": null
   },
   "scripts": {
     "dev:web": "vue-cli-service serve",
