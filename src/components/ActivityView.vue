@@ -58,7 +58,7 @@
         </div>
         <div
           v-if="showIntervalInput"
-          style="position: absolute; left: 100%"
+          style="position: absolute; right: 37px;"
         >
           <div
             class="input-group"
