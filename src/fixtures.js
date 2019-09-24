@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 export function generateActivity () {
-  const completedDate = moment()
+  const completedDate = moment().set({ hour: 12, minute: 0, second: 0 })
   
   const log = [
     {
