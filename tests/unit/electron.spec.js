@@ -19,7 +19,7 @@ test('Window Loads Properly', async () => {
   expect(height).toBeGreaterThan(0)
   // App is loaded properly
   expect(
-    /Welcome to Your Vue\.js (\+ TypeScript )?App/.test(
+    /To Do/.test(
       await client.getHTML('#app')
     )
   ).toBe(true)
