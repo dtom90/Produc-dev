@@ -22,7 +22,7 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github_token: $GH_TOKEN
-    local_dir: dist-web
+    local_dir: dist_gh_pages
     on:
       repo: dtom90/Produc-dev
       branch: master
