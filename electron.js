@@ -6,7 +6,7 @@ let url
 if (process.env.NODE_ENV === 'DEV') {
   url = 'http://localhost:8080/'
 } else {
-  url = `file://${process.cwd()}/dist-electron/index.html`
+  url = `file://${process.cwd()}/dist_electron/build/index.html`
 }
 
 function createWindow () {

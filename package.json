@@ -17,16 +17,16 @@
     
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",
-    "web:serve": "node serve.js",
+    "web:serve": "node web.js",
     "web:prod": "yarn run web:build && yarn run web:serve",
     
     "gh_pages:build": "vue-cli-service build --mode gh_pages --dest dist_gh_pages",
-    "gh_pages:serve": "BASE_URL=/Produc-dev/ node serve.js",
+    "gh_pages:serve": "BASE_URL=/Produc-dev/ node web.js",
     "gh_pages:prod": "yarn run gh_pages:build && yarn run gh_pages:serve",
     
     "electron:dev": "vue-cli-service electron:serve",
     "electron:build": "vue-cli-service build --mode electron --dest dist_electron/build",
-    "electron:serve": "electron app.js",
+    "electron:serve": "electron electron.js",
     "electron:prod": "yarn run electron:build && yarn run electron:serve",
     "electron:pack": "vue-cli-service electron:build",
     "postinstall": "electron-builder install-app-deps",
