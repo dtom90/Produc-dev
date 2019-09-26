@@ -7,12 +7,6 @@
     "name": "David Thomason",
     "url": "https://davidthomason.com/"
   },
-  "build": {
-    "appId": "produc.dev",
-    "mac": {
-      "category": "your.app.category.type"
-    }
-  },
   "scripts": {
     
     "web:dev": "vue-cli-service serve",
