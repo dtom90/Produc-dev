@@ -15,7 +15,7 @@ cache:
 addons:
   chrome: stable
 
-before_deploy:
+after_success:
   - if [ -n "$TRAVIS_TAG" ]; then yarn run electron:pack; fi
 
 deploy:
