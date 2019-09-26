@@ -21,7 +21,7 @@ before_deploy:
 deploy:
   - provider: pages
     skip_cleanup: true
-    github_token: $GITHUB_TOKEN
+    github_token: $GH_TOKEN
     local_dir: dist-web
     on:
       repo: dtom90/Produc-dev
@@ -32,8 +32,8 @@ deploy:
     file_glob: true
     file:
       - dist_electron/latest-mac.yml
-      - dist_electron/produc-dev-*.dmg
-      - dist_electron/produc-dev-*-mac.zip
+      - dist_electron/Produc-dev-*.dmg
+      - dist_electron/Produc-dev-*-mac.zip
     skip_cleanup: true
     on:
       repo: dtom90/Produc-dev
