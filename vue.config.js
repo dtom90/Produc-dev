@@ -8,6 +8,7 @@ module.exports = {
     electronBuilder: {
       builderOptions: {
         appId: 'produc.dev',
+        productName: 'Produc-dev',
         mac: {
           category: 'your.app.category.type'
         }

@@ -1,12 +1,14 @@
 {
   "name": "produc-dev",
-  "version": "0.1.0",
-  "private": true,
   "description": "An app for productive developers",
+  "homepage": "https://github.com/dtom90/Produc-dev",
+  "repository": "https://github.com/dtom90/Produc-dev",
   "author": {
     "name": "David Thomason",
     "url": "https://davidthomason.com/"
   },
+  "private": true,
+  "version": "0.1.0",
   "scripts": {
     
     "web:dev": "vue-cli-service serve",
