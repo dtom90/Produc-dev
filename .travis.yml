@@ -26,15 +26,3 @@ deploy:
     on:
       repo: dtom90/Produc-dev
       branch: master
-  - provider: releases
-    api_key:
-      secure: gP8aTJ29a4SFHGBcYkEDtZw7dpOPaRO7h55lwJhKzt70uDuiemgaAS2/+rZUw4MDve8Ve/WnnCI/uLxrEr/T29QQ5A1Dthl/lcGpYJZHLizN7inrbh88FFIb8d+xn01ITBhS+WcASnMt85wx+/zlZVk9Ev+6nZ7CGH0E4zs4quu76dQETA4sUVS2uQNEfEyz2OZdeBmaW6HdQ06nNvFF98LJOjppqDFlEFOAkm7y1q44wj9IOuasucm8Mi9f6GyPWR5eHm8WcB8ZJhiZbKSk2yfHSdjbalxQ+RF3NmETB947N/V7zOFG6G7OnBfAlFEeJd7mBZmOj3L/R5uda2QFmh4IpX4m7mqU9asoSS+1g2eNb1WDnNJ09hcqMMXB0vw+dIv/jyBOkU9yYW9DxGGvJ4LSXXo2iHG3t+F2lcAJ9odvasOT2E+qz6f4FTPkA+hfXuLtdd6RyAW1EDunV6IqFtrCMVjBcXszpBRTIQDAKRX6h9Cvsc6bAFSppf8r/aoAAM3mCY6datfWHTiet+vpso5wmcVbJ6CKX3QMs6IfQq47NFstKj4ofwK/1tU5DcdvM78bCA+5jZjjXa2MP98tPWpaQpGHn61mZYMOlzpeHehrMCd5Luk8kX1qniOO2Y8qMqG0O1mic7nkA2Gtemxx6+O0NrbXasbTaGGHVOeqAOM=
-    file_glob: true
-    file:
-      - dist_electron/latest-mac.yml
-      - dist_electron/Produc-dev-*.dmg
-      - dist_electron/Produc-dev-*-mac.zip
-    skip_cleanup: true
-    on:
-      repo: dtom90/Produc-dev
-      tags: true
