@@ -184,15 +184,22 @@ export default {
     
     finishTimer (secondsRemaining = null) {
       this.timer.clear()
+      let notify = true
       if (typeof secondsRemaining === 'number') {
         this.secondsRemaining = secondsRemaining
+      } else {
+        if (secondsRemaining instanceof MouseEvent) {
+          notify = false
+        }
       }
       this.endInterval()
       this.endTask()
       if (this.active) {
         this.activeIntervalStarted = false
-        notifications.notify('Finished Working, Take a Break!')
-      } else {
+        if (notify) {
+          notifications.notify('Finished Working, Take a Break!')
+        }
+      } else if (notify) {
         notifications.notify('Finished Break, Time to Work!')
       }
       this.active = !this.active
