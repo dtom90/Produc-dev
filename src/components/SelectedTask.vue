@@ -83,29 +83,8 @@
       >
         <label class="col-sm-2">Tags:</label>
         
-        <!-- Tags -->
-        <div
-          v-for="tag in task.tags"
-          :key="tag"
-          class="tag btn-group"
-        >
-          <button
-            class="tag-name btn btn-primary"
-            data-toggle="modal"
-            data-target="#activityModal"
-            title="View tag activity"
-            @click="selectedTag = tag"
-          >
-            {{ tag }}
-          </button>
-          <button
-            class="tag-close btn btn-primary"
-            title="Remove tag from task"
-            @click="removeTag(tag)"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        <!-- Tag List -->
+        <TagList :tags="task.tags" />
         
         <!-- Tag Input -->
         <div
@@ -191,6 +170,7 @@
 
 <script>
 import Checkbox from './Checkbox'
+import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
 import ActivityModal from './ActivityModal'
@@ -202,6 +182,7 @@ export default {
   
   components: {
     Checkbox,
+    TagList,
     Countdown,
     ActivityView,
     ActivityModal
@@ -315,14 +296,6 @@ export default {
         position: absolute;
         top: 42px;
         z-index: 4;
-    }
-    
-    .tag {
-        margin-right: 20px;
-    }
-    
-    .tag-close {
-      font-weight: 700;
     }
 
     .dropleft .btn {
