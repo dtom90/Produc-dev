@@ -25,4 +25,4 @@ deploy:
     local_dir: dist_gh_pages
     on:
       repo: dtom90/Produc-dev
-      branch: master
+      branch: develop
