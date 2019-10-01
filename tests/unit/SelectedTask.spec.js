@@ -1,6 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import SelectedTask from '@/components/SelectedTask.vue'
 import Checkbox from '@/components/Checkbox.vue'
+import TagList from '@/components/TagList.vue'
 import ActivityView from '@/components/ActivityView.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 import { newTask, taskWithActivity } from '@/fixtures'
@@ -17,7 +18,6 @@ const getters = {
 const mutations = {
   addTaskTag: jest.fn(),
   removeTaskTag: jest.fn(),
-  completeTask: jest.fn(),
   deleteTask: jest.fn()
 }
 
@@ -133,20 +133,18 @@ describe('SelectedTask', () => {
       localVue,
       store
     })
-  
-    it('allows the user to remove tags from the task', () => {
+    
+    it('renders a TagList', () => {
       
-      const tags = wrapper.findAll('.tag')
-      
-      expect(tags.length).toBe(2)
-      expect(tags.at(0).text()).toMatch(task.tags[0])
-      expect(tags.at(1).text()).toMatch(task.tags[1])
-  
-      const removeTagBtn = tags.at(0).findAll('button').at(1)
-      expect(removeTagBtn.text()).toEqual('×')
-      
-      removeTagBtn.trigger('click')
-      expect(mutations.removeTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: task.tags[0] })
+      const tagList = wrapper.find(TagList)
+      expect(tagList.props()).toEqual(
+        expect.objectContaining({
+          tags: task.tags,
+          selectText: 'View tag activity',
+          modal: true,
+          removeText: 'Remove tag from task'
+        })
+      )
       
     })
     
