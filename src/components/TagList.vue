@@ -7,17 +7,18 @@
     >
       <button
         class="tag-name btn btn-primary"
-        data-toggle="modal"
-        data-target="#activityModal"
-        title="View tag activity"
-        @click="selectedTag = tag"
+        :data-toggle="modal? 'modal' : null"
+        :data-target="modal? '#activityModal' : null"
+        :title="selectText"
+        @click="selectTag(tag)"
       >
         {{ tag }}
       </button>
       <button
+        v-if="removeTag"
         class="tag-close btn btn-primary"
-        title="Remove tag from task"
-        @click="removeTag(tag)"
+        :title="removeText"
+        @click.stop="removeTag(tag)"
       >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -32,6 +33,26 @@ export default {
     tags: {
       type: Array,
       default: () => []
+    },
+    selectText: {
+      type: String,
+      default: 'View tag activity'
+    },
+    selectTag: {
+      type: Function,
+      default: () => null
+    },
+    modal: {
+      type: Boolean,
+      default: false
+    },
+    removeText: {
+      type: String,
+      default: 'Remove tag from task'
+    },
+    removeTag: {
+      type: Function,
+      default: null
     }
   }
 }

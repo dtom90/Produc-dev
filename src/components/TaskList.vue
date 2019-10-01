@@ -9,7 +9,6 @@
       
       <!-- TaskList Settings Button -->
       <div
-        v-if="isCompletedList"
         class="dropright"
       >
         <button
@@ -18,9 +17,31 @@
           title="List options"
           data-toggle="dropdown"
         >
-          <font-awesome-icon icon="ellipsis-v" />
+          <font-awesome-icon :icon="isCompletedList ? 'ellipsis-v' : 'filter'" />
         </button>
-        <div class="dropdown-menu">
+        <div
+          v-if="!isCompletedList"
+          id="filter-menu"
+          class="dropdown-menu"
+        >
+          <div class="d-flex">
+            <TagList
+              v-if="selectedTag !== null"
+              :tags="[selectedTag]"
+              :remove-tag="removeTagFilter"
+              remove-text="Clear Filter"
+            />
+            <TagList
+              v-if="selectedTag === null"
+              :tags="allTags"
+              :select-tag="selectTagFilter"
+            />
+          </div>
+        </div>
+        <div
+          v-if="isCompletedList"
+          class="dropdown-menu"
+        >
           <div class="input-group">
             <select
               :id="selectId"
@@ -96,6 +117,7 @@
 
 <script>
 import Task from './Task.vue'
+import TagList from './TagList.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 import $ from 'jquery'
@@ -110,6 +132,7 @@ export default {
   
   components: {
     Task,
+    TagList,
     draggable
   },
   
@@ -122,13 +145,16 @@ export default {
   
   data: () => ({
     newTask: '',
-    sortOrder: 'Oldest'
+    sortOrder: 'Oldest',
+    selectedTag: null
   }),
   
   computed: {
     ...mapGetters([
       'incompleteTasks',
-      'completedTasks'
+      'completedTasks',
+      'selectedTask',
+      'allTags'
     ]),
     isCompletedList: function () { return this.title === 'Done' },
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
@@ -136,7 +162,9 @@ export default {
     sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
     incompleteTaskList: {
       get () {
-        return this.incompleteTasks
+        return this.selectedTag
+          ? this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
+          : this.incompleteTasks
       },
       set (value) {
         this.updateIncompleteTasks(value)
@@ -157,11 +185,21 @@ export default {
     ...mapMutations([
       'addTask',
       'clearTasks',
-      'updateIncompleteTasks'
+      'updateIncompleteTasks',
+      'selectTask'
     ]),
     addNewTask () {
       this.addTask({ name: this.newTask })
       this.newTask = ''
+    },
+    selectTagFilter (tag) {
+      this.selectedTag = tag
+      if (!this.selectedTask.tags.includes(this.selectedTag)) {
+        this.selectTask(this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))[0].id)
+      }
+    },
+    removeTagFilter () {
+      this.selectedTag = null
     }
   }
   
@@ -185,6 +223,10 @@ export default {
 
   .title-section > button {
     margin-bottom: 0.5rem;
+  }
+  
+  #filter-menu {
+    padding: 8px;
   }
 
 </style>

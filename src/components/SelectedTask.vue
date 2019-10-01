@@ -84,7 +84,12 @@
         <label class="col-sm-2">Tags:</label>
         
         <!-- Tag List -->
-        <TagList :tags="task.tags" />
+        <TagList
+          :tags="task.tags"
+          :select-tag="selectTag"
+          :modal="true"
+          :remove-tag="removeTag"
+        />
         
         <!-- Tag Input -->
         <div
@@ -112,7 +117,6 @@
             <div
               id="tagDropdownMenu"
               class="btn-group-vertical"
-              @blur="tagOptions = []"
             >
               <button
                 v-for="tag in tagOptions"
@@ -247,6 +251,10 @@ export default {
       this.tagInputChange()
       this.tagOptions = []
       this.$refs.addTagInput.focus()
+    },
+
+    selectTag: function (tag) {
+      this.selectedTag = tag
     },
     
     removeTag: function (tag) {

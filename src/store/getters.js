@@ -13,6 +13,8 @@ const getters = {
     return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
   },
   
+  allTags: state => Object.keys(state.tags),
+  
   availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
     tag.startsWith(snip) && !state.tags[tag].includes(id)),
   
