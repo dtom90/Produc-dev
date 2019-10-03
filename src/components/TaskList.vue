@@ -24,19 +24,17 @@
           id="filter-menu"
           class="dropdown-menu"
         >
-          <div class="d-flex">
-            <TagList
-              v-if="selectedTag !== null"
-              :tags="[selectedTag]"
-              :remove-tag="removeTagFilter"
-              remove-text="Clear Filter"
-            />
-            <TagList
-              v-if="selectedTag === null"
-              :tags="allTags"
-              :select-tag="selectTagFilter"
-            />
-          </div>
+          <TagList
+            v-if="selectedTag !== null"
+            :tags="[selectedTag]"
+            :remove-tag="removeTagFilter"
+            remove-text="Clear Filter"
+          />
+          <TagList
+            v-if="selectedTag === null"
+            :tags="allTags"
+            :select-tag="selectTagFilter"
+          />
         </div>
         <div
           v-if="isCompletedList"
