@@ -1,5 +1,6 @@
 import getters from './getters'
 import moment from 'moment'
+import Vue from 'vue'
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -86,7 +87,7 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
-          state.tags[newTag] = [task.id]
+          Vue.set(state.tags, newTag, [task.id])
         } else {
           addElem(state.tags[newTag], task.id)
         }

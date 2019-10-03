@@ -304,6 +304,7 @@ export default {
         position: absolute;
         top: 42px;
         z-index: 4;
+        width: 160px;
     }
 
     .dropleft .btn {
