@@ -8,7 +8,7 @@
     <div
       v-for="tag in tags"
       :key="tag"
-      :class="'tag btn-group' + (taskTags ? '' : ' small-spacing')"
+      class="tag btn-group"
     >
       <button
         class="tag-name btn btn-primary"
