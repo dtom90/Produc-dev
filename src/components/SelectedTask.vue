@@ -77,72 +77,13 @@
       </div>
       
       <!-- Tags Section -->
-      <div
-        id="tagZone"
-        class="form-inline"
-      >
-        <label class="col-sm-2">Tags:</label>
-        
-        <!-- Tag List -->
-        <TagList
-          :tags="task.tags"
-          :select-tag="selectTag"
-          :modal="true"
-          :remove-tag="removeTag"
-        />
-        
-        <!-- Tag Input -->
-        <div
-          id="newTag"
-          class="d-flex"
-        >
-          <button
-            id="addTagButton"
-            class="btn btn-light"
-            :title="showTagInput ? 'Cancel' : 'Add new tag'"
-            @click="addTagButton"
-          >
-            <font-awesome-icon
-              v-if="!showTagInput"
-              icon="plus"
-            />
-            <font-awesome-icon
-              v-if="showTagInput"
-              icon="times"
-            />
-          </button>
-          <div
-            id="tagDropdown"
-          >
-            <div
-              id="tagDropdownMenu"
-              class="btn-group-vertical"
-            >
-              <button
-                v-for="tag in tagOptions"
-                :key="tag"
-                class="tag-option btn btn-light"
-                @click="addTag(tag)"
-              >
-                {{ tag }}
-              </button>
-            </div>
-          </div>
-          <input
-            v-if="showTagInput"
-            id="addTagInput"
-            ref="addTagInput"
-            v-model="newTag"
-            type="text"
-            class="form-control"
-            placeholder="add new tag"
-            @input="tagInputChange"
-            @focus="tagInputChange"
-            @blur="clickOutside"
-            @keyup.enter="addTag(newTag)"
-          >
-        </div>
-      </div>
+      <TagList
+        :tags="task.tags"
+        :task-id="task.id"
+        :select-tag="selectTag"
+        :modal="true"
+        :remove-tag="removeTag"
+      />
       
       <!-- Activity Modal -->
       <ActivityModal
@@ -178,7 +119,7 @@ import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
 import ActivityModal from './ActivityModal'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   
@@ -212,10 +153,6 @@ export default {
     ...mapState([
       'activeTaskID',
       'running'
-    ]),
-    
-    ...mapGetters([
-      'availableTags'
     ]),
     
     checked: function () {
@@ -286,24 +223,6 @@ export default {
     #task-name {
         font-weight: 600;
         font-size: xx-large;
-    }
-    
-    #tagZone > * {
-       margin-top: 20px;
-    }
-    
-    #addTagInput {
-        max-width: 160px;
-    }
-    
-    #tagDropdown {
-        position: relative;
-    }
-
-    #tagDropdownMenu {
-        position: absolute;
-        top: 42px;
-        z-index: 4;
     }
 
     .dropleft .btn {

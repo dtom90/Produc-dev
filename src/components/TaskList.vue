@@ -24,19 +24,17 @@
           id="filter-menu"
           class="dropdown-menu"
         >
-          <div class="d-flex">
-            <TagList
-              v-if="selectedTag !== null"
-              :tags="[selectedTag]"
-              :remove-tag="removeTagFilter"
-              remove-text="Clear Filter"
-            />
-            <TagList
-              v-if="selectedTag === null"
-              :tags="allTags"
-              :select-tag="selectTagFilter"
-            />
-          </div>
+          <TagList
+            v-if="selectedTag !== null"
+            :tags="[selectedTag]"
+            :remove-tag="removeTagFilter"
+            remove-text="Clear Filter"
+          />
+          <TagList
+            v-if="selectedTag === null"
+            :tags="allTags"
+            :select-tag="selectTagFilter"
+          />
         </div>
         <div
           v-if="isCompletedList"
@@ -118,7 +116,7 @@
 <script>
 import Task from './Task.vue'
 import TagList from './TagList.vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 import $ from 'jquery'
 
@@ -145,11 +143,13 @@ export default {
   
   data: () => ({
     newTask: '',
-    sortOrder: 'Oldest',
-    selectedTag: null
+    sortOrder: 'Oldest'
   }),
   
   computed: {
+    ...mapState([
+      'selectedTag'
+    ]),
     ...mapGetters([
       'incompleteTasks',
       'completedTasks',
@@ -171,9 +171,12 @@ export default {
       }
     },
     completedTaskList: function () {
-      return this.completedTasks && this.sortOrder !== 'Oldest'
-        ? this.completedTasks.slice().reverse()
+      const filteredTasks = this.selectedTag
+        ? this.completedTasks.filter(task => task.tags.includes(this.selectedTag))
         : this.completedTasks
+      return filteredTasks && this.sortOrder !== 'Oldest'
+        ? filteredTasks.slice().reverse()
+        : filteredTasks
     }
   },
   
@@ -186,6 +189,7 @@ export default {
       'addTask',
       'clearTasks',
       'updateIncompleteTasks',
+      'selectTag',
       'selectTask'
     ]),
     addNewTask () {
@@ -193,13 +197,13 @@ export default {
       this.newTask = ''
     },
     selectTagFilter (tag) {
-      this.selectedTag = tag
+      this.selectTag({ tag })
       if (!this.selectedTask.tags.includes(this.selectedTag)) {
         this.selectTask(this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))[0].id)
       }
     },
     removeTagFilter () {
-      this.selectedTag = null
+      this.selectTag({ tag: null })
     }
   }
   

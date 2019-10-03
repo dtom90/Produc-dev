@@ -11,18 +11,11 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const getters = {
-  availableTags: () => jest.fn()
-}
-
 const mutations = {
-  addTaskTag: jest.fn(),
-  removeTaskTag: jest.fn(),
   deleteTask: jest.fn()
 }
 
 const store = new Vuex.Store({
-  getters,
   mutations
 })
 
@@ -77,41 +70,6 @@ describe('SelectedTask', () => {
     
       expect(wrapper.find('button.btn-warning').find(FontAwesomeIcon).attributes('icon')).toBe('pencil-alt')
     
-    })
-    
-    it('renders an renders an input field for adding tags to the task', () => {
-      
-      let addTagInput = wrapper.find('#addTagInput')
-      const addTagButton = wrapper.find('#addTagButton')
-      
-      expect(wrapper.text()).toMatch('Tags:')
-      expect(addTagButton.find(FontAwesomeIcon).attributes('icon')).toBe('plus')
-      expect(addTagInput.exists()).toBe(false)
-      
-      addTagButton.trigger('click')
-      addTagInput = wrapper.find('#addTagInput')
-      expect(addTagInput.isVisible()).toBe(true)
-      expect(addTagInput.attributes('placeholder')).toBe('add new tag')
-      wrapper.vm.$nextTick(() => {
-        expect(wrapper.find('#addTagInput').element).toBe(document.activeElement)
-      })
-      
-    })
-    
-    it('allows the user to add new tags to the task', () => {
-      
-      expect(wrapper.findAll('.tag').length).toBe(0)
-      
-      const addTagInput = wrapper.find('#addTagInput')
-      
-      addTagInput.setValue('some tag')
-      expect(addTagInput.element.value).toBe('some tag')
-      expect(wrapper.vm.newTag).toBe('some tag')
-      
-      addTagInput.trigger('keyup.enter')
-      expect(mutations.addTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: 'some tag' })
-      expect(addTagInput.element.value).toBe('')
-      
     })
     
     it('renders a delete button for removing the task', () => {
