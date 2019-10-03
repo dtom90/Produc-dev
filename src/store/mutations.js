@@ -20,13 +20,16 @@ const mutations = {
       const newTask = {
         id: state.nextTaskID,
         name: taskName,
-        tags: [],
+        tags: state.selectedTag !== null ? [state.selectedTag] : [],
         created: Date.now(),
         log: [],
         completed: null
       }
       state.tasks.push(newTask)
       state.nextTaskID += 1
+      if (state.selectedTag !== null) {
+        Vue.set(state.tags, state.selectedTag, [newTask.id])
+      }
       state.selectedTaskID = newTask.id
     }
   },

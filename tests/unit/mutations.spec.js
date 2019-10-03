@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { state, mutations } from '@/store'
 
-const { addTask, addTaskTag, removeTaskTag, startTask, stopTask, completeTask, deleteTask } = mutations
+const { addTask, addTaskTag, selectTag, removeTaskTag, startTask, stopTask, completeTask, deleteTask } = mutations
 
 window.confirm = function () { return true }
 
@@ -264,6 +264,20 @@ describe('mutations', () => {
       addTaskTag(myState, { id: 0, tag: ' a new tag ' })
       expect(myState.tags).to.deep.equal({ 'a new tag': [0] })
       expect(myState.tasks[0].tags).to.deep.equal(['a new tag'])
+      
+    })
+    
+    it('should add a task with selectedTag', () => {
+      
+      expect(myState.selectedTag).to.equal(null)
+      selectTag(myState, { tag: 'new tag a' })
+      expect(myState.selectedTag).to.equal('new tag a')
+      
+      addTask(myState, { name: 'my tagged task' })
+      const taggedTask = myState.tasks.filter(t => t.name === 'my tagged task')[0]
+      expect(taggedTask.tags).to.deep.equal(['new tag a'])
+      expect(myState.tags).to.deep.equal({ 'new tag a': [taggedTask.id] })
+      expect(myState.selectedTaskID).to.equal(taggedTask.id)
       
     })
     
