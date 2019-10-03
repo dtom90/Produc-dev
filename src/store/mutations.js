@@ -96,6 +96,10 @@ const mutations = {
     }
   },
   
+  selectTag (state, payload) {
+    state.selectedTag = payload.tag
+  },
+  
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     deleteElem(task.tags, payload.tag)
