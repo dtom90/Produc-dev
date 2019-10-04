@@ -24,6 +24,37 @@
           id="filter-menu"
           class="dropdown-menu"
         >
+          <p>Insert New Tasks:</p>
+          <div
+            class="btn-group btn-group-toggle custom-icons"
+          >
+            <label :class="'btn btn-light' + (insertAt === 'Top' ? ' active' : '')">
+              <input
+                id="insert-top"
+                v-model="insertAt"
+                type="radio"
+                value="Top"
+              >
+              <img
+                src="add_to_top.svg"
+                alt="Add to Top"
+              >
+            </label>
+            <label :class="'btn btn-light' + (insertAt === 'Bottom' ? ' active' : '')">
+              <input
+                id="insert-bottom"
+                v-model="insertAt"
+                type="radio"
+                value="Bottom"
+              >
+              <img
+                src="add_to_bottom.svg"
+                alt="Add to Bottom"
+              >
+            </label>
+          </div>
+          <p>{{ insertAt }} of List</p>
+          <div class="dropdown-divider" />
           <TagList
             v-if="selectedTag !== null"
             :tags="[selectedTag]"
@@ -143,6 +174,7 @@ export default {
   
   data: () => ({
     newTask: '',
+    insertAt: 'Bottom',
     sortOrder: 'Oldest'
   }),
   
@@ -193,7 +225,7 @@ export default {
       'selectTask'
     ]),
     addNewTask () {
-      this.addTask({ name: this.newTask })
+      this.addTask({ name: this.newTask, topInsert: this.insertAt === 'Top' })
       this.newTask = ''
     },
     selectTagFilter (tag) {
@@ -231,6 +263,11 @@ export default {
   
   #filter-menu {
     padding: 8px;
+  }
+  
+  .custom-icons img {
+    width: 1.5em;
+    height: 1.5em;
   }
 
 </style>

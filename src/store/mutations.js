@@ -25,7 +25,11 @@ const mutations = {
         log: [],
         completed: null
       }
-      state.tasks.push(newTask)
+      if (payload.topInsert) {
+        state.tasks.unshift(newTask)
+      } else {
+        state.tasks.push(newTask)
+      }
       state.nextTaskID += 1
       if (state.selectedTag !== null) {
         Vue.set(state.tags, state.selectedTag, [newTask.id])
