@@ -28,24 +28,24 @@
           <div
             class="btn-group btn-group-toggle custom-icons"
           >
-            <label :class="'btn btn-light' + (insertAt === 'top' ? ' active' : '')">
+            <label :class="'btn btn-light' + (insertAt === 'Top' ? ' active' : '')">
               <input
                 id="insert-top"
                 v-model="insertAt"
                 type="radio"
-                value="top"
+                value="Top"
               >
               <img
                 src="add_to_top.svg"
                 alt="Add to Top"
               >
             </label>
-            <label :class="'btn btn-light' + (insertAt === 'bottom' ? ' active' : '')">
+            <label :class="'btn btn-light' + (insertAt === 'Bottom' ? ' active' : '')">
               <input
                 id="insert-bottom"
                 v-model="insertAt"
                 type="radio"
-                value="bottom"
+                value="Bottom"
               >
               <img
                 src="add_to_bottom.svg"
@@ -53,6 +53,7 @@
               >
             </label>
           </div>
+          <p>{{ insertAt }} of List</p>
           <div class="dropdown-divider" />
           <TagList
             v-if="selectedTag !== null"
@@ -173,7 +174,7 @@ export default {
   
   data: () => ({
     newTask: '',
-    insertAt: 'top',
+    insertAt: 'Bottom',
     sortOrder: 'Oldest'
   }),
   
@@ -224,7 +225,7 @@ export default {
       'selectTask'
     ]),
     addNewTask () {
-      this.addTask({ name: this.newTask, topInsert: this.insertAt === 'top' })
+      this.addTask({ name: this.newTask, topInsert: this.insertAt === 'Top' })
       this.newTask = ''
     },
     selectTagFilter (tag) {
