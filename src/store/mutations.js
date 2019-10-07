@@ -21,6 +21,7 @@ const mutations = {
         id: state.nextTaskID,
         name: taskName,
         tags: state.selectedTag !== null ? [state.selectedTag] : [],
+        notes: '',
         created: Date.now(),
         log: [],
         completed: null
