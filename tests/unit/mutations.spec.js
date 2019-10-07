@@ -29,6 +29,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: null
@@ -58,6 +59,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: null
@@ -66,6 +68,7 @@ describe('mutations', () => {
           id: 1,
           name: 'my second task',
           tags: [],
+          notes: '',
           created: myState.tasks[1].created,
           log: [],
           completed: null
@@ -74,6 +77,7 @@ describe('mutations', () => {
           id: 2,
           name: 'my third task',
           tags: [],
+          notes: '',
           created: myState.tasks[2].created,
           log: [],
           completed: null
@@ -88,6 +92,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: null
@@ -96,6 +101,7 @@ describe('mutations', () => {
           id: 2,
           name: 'my third task',
           tags: [],
+          notes: '',
           created: myState.tasks[1].created,
           log: [],
           completed: null
@@ -104,6 +110,7 @@ describe('mutations', () => {
           id: 3,
           name: 'my fourth task',
           tags: [],
+          notes: '',
           created: myState.tasks[2].created,
           log: [],
           completed: null
@@ -293,6 +300,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: myState.tasks[0].completed

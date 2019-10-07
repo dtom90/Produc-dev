@@ -20,23 +20,23 @@
           <!--  Task Name & Field (when editing)  -->
           <div id="task-name-container">
             <span
-              v-if="!editing"
+              v-if="!editingName"
               id="task-name"
-              @click="editing = true"
+              @click="editingName = true"
             >{{ task.name }}</span>
             <div
-              v-if="editing"
+              v-if="editingName"
               class="d-flex align-items-center"
             >
               <input
                 v-model="task.name"
                 class="edit-task"
-                @keyup.enter="editing = false"
+                @keyup.enter="editingName = false"
               >
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="editing = false"
+                @click="editingName = false"
               >
                 <font-awesome-icon icon="save" />
               </button>
@@ -59,7 +59,7 @@
                 type="button"
                 class="btn btn-warning"
                 title="Edit task name"
-                @click="editing = true"
+                @click="editingName = true"
               >
                 <font-awesome-icon icon="pencil-alt" />
               </button>
@@ -84,6 +84,45 @@
         :modal="true"
         :remove-tag="removeTag"
       />
+
+      <!-- Notes Section -->
+      <div
+        id="notes-section"
+        class="d-flex align-items-center"
+      >
+        <span id="notes-label">Notes: </span>
+
+        <!-- Display Mode -->
+        <span
+          v-if="task.notes && !editingNotes"
+          class="flex-grow-1"
+          @click="editingNotes = true"
+        >{{ task.notes }}</span>
+        <button
+          v-if="!editingNotes"
+          type="button"
+          class="btn btn-light"
+          title="Edit task name"
+          @click="editingNotes = true"
+        >
+          <font-awesome-icon icon="pencil-alt" />
+        </button>
+        
+        <!-- Editing Mode -->
+        <textarea
+          v-if="editingNotes"
+          v-model="task.notes"
+          class="form-control"
+        />
+        <button
+          v-if="editingNotes"
+          type="button"
+          class="btn btn-primary"
+          @click="editingNotes = false"
+        >
+          <font-awesome-icon icon="save" />
+        </button>
+      </div>
       
       <!-- Activity Modal -->
       <ActivityModal
@@ -141,7 +180,8 @@ export default {
   },
   
   data: () => ({
-    editing: false,
+    editingName: false,
+    editingNotes: false,
     newTag: '',
     tagOptions: [],
     selectedTag: null,
@@ -224,7 +264,15 @@ export default {
         font-weight: 600;
         font-size: xx-large;
     }
-
+    
+    #notes-section {
+      padding: 10px;
+    }
+    
+    #notes-label {
+      padding-right: 15px;
+    }
+    
     .dropleft .btn {
         margin: 8px;
     }
