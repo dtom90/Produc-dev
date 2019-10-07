@@ -54,7 +54,10 @@
             <font-awesome-icon icon="ellipsis-v" />
           </button>
           <div class="dropdown-menu">
-            <div class="flex-column">
+            <div
+              id="selected-task-menu"
+              class="d-flex"
+            >
               <button
                 type="button"
                 class="btn btn-warning"
@@ -257,7 +260,7 @@ export default {
     
     #checkbox-name-section {
         margin-left: 20px;
-      flex: 1;
+        flex: 1;
     }
     
     #task-name {
@@ -265,12 +268,16 @@ export default {
         font-size: xx-large;
     }
     
+    #selected-task-menu {
+      justify-content: space-evenly;
+    }
+    
     #notes-section {
-      padding: 10px;
+        padding: 10px;
     }
     
     #notes-label {
-      padding-right: 15px;
+        padding-right: 15px;
     }
     
     .dropleft .btn {

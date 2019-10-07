@@ -3,7 +3,7 @@
     :id="taskTags ? 'taskTags' : 'filterTags'"
     class="form-inline"
   >
-    <label>{{ taskTags ? '' : 'Filter' + (filtered ? 'ing on ' : ' ' ) }}Tag{{ filtered ? '' : 's' }}:</label>
+    <label>{{ taskTags ? '' : 'Filter' + (filtered ? 'ing' : '' ) + ' on ' }}Tag{{ taskTags ? 's' : '' }}:</label>
     
     <div
       v-for="tag in tags"

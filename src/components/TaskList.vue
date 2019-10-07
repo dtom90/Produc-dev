@@ -17,18 +17,23 @@
           title="List options"
           data-toggle="dropdown"
         >
-          <font-awesome-icon :icon="isCompletedList ? 'ellipsis-v' : 'filter'" />
+          <font-awesome-icon icon="ellipsis-v" />
         </button>
         <div
           v-if="!isCompletedList"
           id="filter-menu"
           class="dropdown-menu"
         >
-          <p>Insert New Tasks:</p>
+          <div style="margin-bottom: 10px;">
+            Add New Tasks To:
+          </div>
           <div
             class="btn-group btn-group-toggle custom-icons"
           >
-            <label :class="'btn btn-light' + (insertAt === 'Top' ? ' active' : '')">
+            <label
+              :class="'btn btn-light' + (insertAt === 'Top' ? ' active' : '')"
+              title="Top of List"
+            >
               <input
                 id="insert-top"
                 v-model="insertAt"
@@ -40,7 +45,10 @@
                 alt="Add to Top"
               >
             </label>
-            <label :class="'btn btn-light' + (insertAt === 'Bottom' ? ' active' : '')">
+            <label
+              :class="'btn btn-light' + (insertAt === 'Bottom' ? ' active' : '')"
+              title="Bottom of List"
+            >
               <input
                 id="insert-bottom"
                 v-model="insertAt"
@@ -53,7 +61,6 @@
               >
             </label>
           </div>
-          <p>{{ insertAt }} of List</p>
           <div class="dropdown-divider" />
           <TagList
             v-if="selectedTag !== null"
