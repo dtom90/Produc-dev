@@ -26,7 +26,7 @@ const mutations = {
         log: [],
         completed: null
       }
-      if (payload.topInsert) {
+      if (state.insertAtTop) {
         state.tasks.unshift(newTask)
       } else {
         state.tasks.push(newTask)
@@ -37,6 +37,10 @@ const mutations = {
       }
       state.selectedTaskID = newTask.id
     }
+  },
+  
+  setTopInsert (state, payload) {
+    state.insertAtTop = payload
   },
   
   updateIncompleteTasks (state, payload) {

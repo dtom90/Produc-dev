@@ -31,14 +31,14 @@
             class="btn-group btn-group-toggle custom-icons"
           >
             <label
-              :class="'btn btn-light' + (insertAt === 'Top' ? ' active' : '')"
+              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
               title="Top of List"
             >
               <input
                 id="insert-top"
-                v-model="insertAt"
                 type="radio"
                 value="Top"
+                @click="setTopInsert(true)"
               >
               <img
                 src="add_to_top.svg"
@@ -46,14 +46,14 @@
               >
             </label>
             <label
-              :class="'btn btn-light' + (insertAt === 'Bottom' ? ' active' : '')"
+              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
               title="Bottom of List"
             >
               <input
                 id="insert-bottom"
-                v-model="insertAt"
                 type="radio"
                 value="Bottom"
+                @click="setTopInsert(false)"
               >
               <img
                 src="add_to_bottom.svg"
@@ -181,13 +181,13 @@ export default {
   
   data: () => ({
     newTask: '',
-    insertAt: 'Bottom',
     sortOrder: 'Oldest'
   }),
   
   computed: {
     ...mapState([
-      'selectedTag'
+      'selectedTag',
+      'insertAtTop'
     ]),
     ...mapGetters([
       'incompleteTasks',
@@ -226,13 +226,14 @@ export default {
   methods: {
     ...mapMutations([
       'addTask',
+      'setTopInsert',
       'clearTasks',
       'updateIncompleteTasks',
       'selectTag',
       'selectTask'
     ]),
     addNewTask () {
-      this.addTask({ name: this.newTask, topInsert: this.insertAt === 'Top' })
+      this.addTask({ name: this.newTask })
       this.newTask = ''
     },
     selectTagFilter (tag) {

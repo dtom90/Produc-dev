@@ -107,7 +107,7 @@ describe('TaskList', () => {
         taskInput.setValue('new task 4')
         taskInput.trigger('keyup.enter')
   
-        expect(mutations.addTask).toHaveBeenCalledWith({}, { name: 'new task 4', topInsert: false })
+        expect(mutations.addTask).toHaveBeenCalledWith({}, { name: 'new task 4' })
         expect(taskInput.element.value).toBe('')
       }
       
