@@ -24,6 +24,18 @@
           id="filter-menu"
           class="dropdown-menu"
         >
+          <TagList
+            v-if="selectedTag !== null"
+            :tags="[selectedTag]"
+            :remove-tag="removeTagFilter"
+            remove-text="Clear Filter"
+          />
+          <TagList
+            v-if="selectedTag === null"
+            :tags="allTags"
+            :select-tag="selectTagFilter"
+          />
+          <div class="dropdown-divider" />
           <div style="margin-bottom: 10px;">
             Add New Tasks To:
           </div>
@@ -61,18 +73,6 @@
               >
             </label>
           </div>
-          <div class="dropdown-divider" />
-          <TagList
-            v-if="selectedTag !== null"
-            :tags="[selectedTag]"
-            :remove-tag="removeTagFilter"
-            remove-text="Clear Filter"
-          />
-          <TagList
-            v-if="selectedTag === null"
-            :tags="allTags"
-            :select-tag="selectTagFilter"
-          />
         </div>
         <div
           v-if="isCompletedList"
