@@ -9,6 +9,10 @@ import state from './state'
 // import { taskWithActivity } from '../fixtures'
 // state.tasks.push(taskWithActivity())
 
+// // Load state from sample file
+// import sample1 from '../fixtures/sample1'
+// const state = sample1
+
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({

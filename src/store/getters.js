@@ -18,10 +18,9 @@ const getters = {
   availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
     tag.startsWith(snip) && !state.tags[tag].includes(id)),
   
-  tagActivity: state => tag => [...state.tags[tag]].map(taskID => {
-    const task = state.tasks.find(t => t.id === taskID)
-    return task.log.map(event => Object.assign({ task: task.name }, event))
-  }).flat().sort((a, b) => a.started - b.started)
+  tagActivity: state => tag => state.tasks.filter(task => task.tags.includes(tag))
+    .map(task => task.log.map(event => Object.assign({ task: task.name }, event)))
+    .flat().sort((a, b) => a.started - b.started)
 }
 
 export default getters
