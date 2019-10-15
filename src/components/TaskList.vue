@@ -9,7 +9,6 @@
       
       <!-- TaskList Settings Button -->
       <div
-        v-if="isCompletedList"
         class="dropright"
       >
         <button
@@ -20,7 +19,65 @@
         >
           <font-awesome-icon icon="ellipsis-v" />
         </button>
-        <div class="dropdown-menu">
+        <div
+          v-if="!isCompletedList"
+          id="filter-menu"
+          class="dropdown-menu"
+        >
+          <TagList
+            v-if="selectedTag !== null"
+            :tags="[selectedTag]"
+            :remove-tag="removeTagFilter"
+            remove-text="Clear Filter"
+          />
+          <TagList
+            v-if="selectedTag === null"
+            :tags="allTags"
+            :select-tag="selectTagFilter"
+          />
+          <div class="dropdown-divider" />
+          <div style="margin-bottom: 10px;">
+            Add New Tasks To:
+          </div>
+          <div
+            class="btn-group btn-group-toggle custom-icons"
+          >
+            <label
+              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
+              title="Top of List"
+            >
+              <input
+                id="insert-top"
+                type="radio"
+                value="Top"
+                @click="setTopInsert(true)"
+              >
+              <img
+                src="add_to_top.svg"
+                alt="Add to Top"
+              >
+            </label>
+            <label
+              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
+              title="Bottom of List"
+            >
+              <input
+                id="insert-bottom"
+                type="radio"
+                value="Bottom"
+                @click="setTopInsert(false)"
+              >
+              <img
+                src="add_to_bottom.svg"
+                alt="Add to Bottom"
+              >
+            </label>
+          </div>
+        </div>
+        <div
+          v-if="isCompletedList"
+          class="dropdown-menu"
+        >
           <div class="input-group">
             <select
               :id="selectId"
@@ -96,7 +153,8 @@
 
 <script>
 import Task from './Task.vue'
-import { mapGetters, mapMutations } from 'vuex'
+import TagList from './TagList.vue'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 import $ from 'jquery'
 
@@ -110,6 +168,7 @@ export default {
   
   components: {
     Task,
+    TagList,
     draggable
   },
   
@@ -126,9 +185,15 @@ export default {
   }),
   
   computed: {
+    ...mapState([
+      'selectedTag',
+      'insertAtTop'
+    ]),
     ...mapGetters([
       'incompleteTasks',
-      'completedTasks'
+      'completedTasks',
+      'selectedTask',
+      'allTags'
     ]),
     isCompletedList: function () { return this.title === 'Done' },
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
@@ -136,16 +201,21 @@ export default {
     sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
     incompleteTaskList: {
       get () {
-        return this.incompleteTasks
+        return this.selectedTag
+          ? this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
+          : this.incompleteTasks
       },
       set (value) {
         this.updateIncompleteTasks(value)
       }
     },
     completedTaskList: function () {
-      return this.completedTasks && this.sortOrder !== 'Oldest'
-        ? this.completedTasks.slice().reverse()
+      const filteredTasks = this.selectedTag
+        ? this.completedTasks.filter(task => task.tags.includes(this.selectedTag))
         : this.completedTasks
+      return filteredTasks && this.sortOrder !== 'Oldest'
+        ? filteredTasks.slice().reverse()
+        : filteredTasks
     }
   },
   
@@ -156,12 +226,29 @@ export default {
   methods: {
     ...mapMutations([
       'addTask',
+      'setTopInsert',
       'clearTasks',
-      'updateIncompleteTasks'
+      'updateIncompleteTasks',
+      'selectTag',
+      'selectTask'
     ]),
     addNewTask () {
       this.addTask({ name: this.newTask })
       this.newTask = ''
+    },
+    selectTagFilter (tag) {
+      this.selectTag({ tag })
+      if (!this.selectedTask.tags.includes(this.selectedTag)) {
+        const tasksWithTag = this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
+        if (tasksWithTag.length > 0) {
+          this.selectTask(tasksWithTag[0].id)
+        } else {
+          this.selectTask(null)
+        }
+      }
+    },
+    removeTagFilter () {
+      this.selectTag({ tag: null })
     }
   }
   
@@ -185,6 +272,15 @@ export default {
 
   .title-section > button {
     margin-bottom: 0.5rem;
+  }
+  
+  #filter-menu {
+    padding: 8px;
+  }
+  
+  .custom-icons img {
+    width: 1.5em;
+    height: 1.5em;
   }
 
 </style>

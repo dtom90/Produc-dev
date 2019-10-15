@@ -16,7 +16,8 @@ const tasks = [
 
 const getters = {
   incompleteTasks: jest.fn(),
-  completedTasks: () => tasks
+  completedTasks: () => tasks,
+  allTags: jest.fn()
 }
 
 const mutations = {

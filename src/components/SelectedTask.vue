@@ -20,23 +20,23 @@
           <!--  Task Name & Field (when editing)  -->
           <div id="task-name-container">
             <span
-              v-if="!editing"
+              v-if="!editingName"
               id="task-name"
-              @click="editing = true"
+              @click="editingName = true"
             >{{ task.name }}</span>
             <div
-              v-if="editing"
+              v-if="editingName"
               class="d-flex align-items-center"
             >
               <input
                 v-model="task.name"
                 class="edit-task"
-                @keyup.enter="editing = false"
+                @keyup.enter="editingName = false"
               >
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="editing = false"
+                @click="editingName = false"
               >
                 <font-awesome-icon icon="save" />
               </button>
@@ -54,12 +54,15 @@
             <font-awesome-icon icon="ellipsis-v" />
           </button>
           <div class="dropdown-menu">
-            <div class="flex-column">
+            <div
+              id="selected-task-menu"
+              class="d-flex"
+            >
               <button
                 type="button"
                 class="btn btn-warning"
                 title="Edit task name"
-                @click="editing = true"
+                @click="editingName = true"
               >
                 <font-awesome-icon icon="pencil-alt" />
               </button>
@@ -77,88 +80,51 @@
       </div>
       
       <!-- Tags Section -->
+      <TagList
+        :tags="task.tags"
+        :task-id="task.id"
+        :select-tag="selectTag"
+        :modal="true"
+        :remove-tag="removeTag"
+      />
+
+      <!-- Notes Section -->
       <div
-        id="tagZone"
-        class="form-inline"
+        id="notes-section"
+        class="d-flex align-items-center"
       >
-        <label class="col-sm-2">Tags:</label>
-        
-        <!-- Tags -->
-        <div
-          v-for="tag in task.tags"
-          :key="tag"
-          class="tag btn-group"
+        <span id="notes-label">Notes: </span>
+
+        <!-- Display Mode -->
+        <span
+          v-if="task.notes && !editingNotes"
+          class="flex-grow-1"
+          @click="editingNotes = true"
+        >{{ task.notes }}</span>
+        <button
+          v-if="!editingNotes"
+          type="button"
+          class="btn btn-light"
+          title="Edit task name"
+          @click="editingNotes = true"
         >
-          <button
-            class="tag-name btn btn-primary"
-            data-toggle="modal"
-            data-target="#activityModal"
-            title="View tag activity"
-            @click="selectedTag = tag"
-          >
-            {{ tag }}
-          </button>
-          <button
-            class="tag-close btn btn-primary"
-            title="Remove tag from task"
-            @click="removeTag(tag)"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+          <font-awesome-icon icon="pencil-alt" />
+        </button>
         
-        <!-- Tag Input -->
-        <div
-          id="newTag"
-          class="d-flex"
+        <!-- Editing Mode -->
+        <textarea
+          v-if="editingNotes"
+          v-model="task.notes"
+          class="form-control"
+        />
+        <button
+          v-if="editingNotes"
+          type="button"
+          class="btn btn-primary"
+          @click="editingNotes = false"
         >
-          <button
-            id="addTagButton"
-            class="btn btn-light"
-            :title="showTagInput ? 'Cancel' : 'Add new tag'"
-            @click="addTagButton"
-          >
-            <font-awesome-icon
-              v-if="!showTagInput"
-              icon="plus"
-            />
-            <font-awesome-icon
-              v-if="showTagInput"
-              icon="times"
-            />
-          </button>
-          <div
-            id="tagDropdown"
-          >
-            <div
-              id="tagDropdownMenu"
-              class="btn-group-vertical"
-              @blur="tagOptions = []"
-            >
-              <button
-                v-for="tag in tagOptions"
-                :key="tag"
-                class="tag-option btn btn-light"
-                @click="addTag(tag)"
-              >
-                {{ tag }}
-              </button>
-            </div>
-          </div>
-          <input
-            v-if="showTagInput"
-            id="addTagInput"
-            ref="addTagInput"
-            v-model="newTag"
-            type="text"
-            class="form-control"
-            placeholder="add new tag"
-            @input="tagInputChange"
-            @focus="tagInputChange"
-            @blur="clickOutside"
-            @keyup.enter="addTag(newTag)"
-          >
-        </div>
+          <font-awesome-icon icon="save" />
+        </button>
       </div>
       
       <!-- Activity Modal -->
@@ -191,10 +157,11 @@
 
 <script>
 import Checkbox from './Checkbox'
+import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
 import ActivityModal from './ActivityModal'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   
@@ -202,6 +169,7 @@ export default {
   
   components: {
     Checkbox,
+    TagList,
     Countdown,
     ActivityView,
     ActivityModal
@@ -215,7 +183,8 @@ export default {
   },
   
   data: () => ({
-    editing: false,
+    editingName: false,
+    editingNotes: false,
     newTag: '',
     tagOptions: [],
     selectedTag: null,
@@ -227,10 +196,6 @@ export default {
     ...mapState([
       'activeTaskID',
       'running'
-    ]),
-    
-    ...mapGetters([
-      'availableTags'
     ]),
     
     checked: function () {
@@ -267,6 +232,10 @@ export default {
       this.tagOptions = []
       this.$refs.addTagInput.focus()
     },
+
+    selectTag: function (tag) {
+      this.selectedTag = tag
+    },
     
     removeTag: function (tag) {
       this.removeTaskTag({ id: this.task.id, tag })
@@ -291,7 +260,7 @@ export default {
     
     #checkbox-name-section {
         margin-left: 20px;
-      flex: 1;
+        flex: 1;
     }
     
     #task-name {
@@ -299,32 +268,18 @@ export default {
         font-size: xx-large;
     }
     
-    #tagZone > * {
-       margin-top: 20px;
+    #selected-task-menu {
+      justify-content: space-evenly;
     }
     
-    #addTagInput {
-        max-width: 160px;
+    #notes-section {
+        padding: 10px;
     }
     
-    #tagDropdown {
-        position: relative;
-    }
-
-    #tagDropdownMenu {
-        position: absolute;
-        top: 42px;
-        z-index: 4;
+    #notes-label {
+        padding-right: 15px;
     }
     
-    .tag {
-        margin-right: 20px;
-    }
-    
-    .tag-close {
-      font-weight: 700;
-    }
-
     .dropleft .btn {
         margin: 8px;
     }

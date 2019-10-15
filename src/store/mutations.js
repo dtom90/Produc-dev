@@ -1,5 +1,6 @@
 import getters from './getters'
 import moment from 'moment'
+import Vue from 'vue'
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -19,15 +20,27 @@ const mutations = {
       const newTask = {
         id: state.nextTaskID,
         name: taskName,
-        tags: [],
+        tags: state.selectedTag !== null ? [state.selectedTag] : [],
+        notes: '',
         created: Date.now(),
         log: [],
         completed: null
       }
-      state.tasks.push(newTask)
+      if (state.insertAtTop) {
+        state.tasks.unshift(newTask)
+      } else {
+        state.tasks.push(newTask)
+      }
       state.nextTaskID += 1
+      if (state.selectedTag !== null) {
+        Vue.set(state.tags, state.selectedTag, [newTask.id])
+      }
       state.selectedTaskID = newTask.id
     }
+  },
+  
+  setTopInsert (state, payload) {
+    state.insertAtTop = payload
   },
   
   updateIncompleteTasks (state, payload) {
@@ -86,13 +99,17 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
-          state.tags[newTag] = [task.id]
+          Vue.set(state.tags, newTag, [task.id])
         } else {
           addElem(state.tags[newTag], task.id)
         }
         addElem(task.tags, newTag)
       }
     }
+  },
+  
+  selectTag (state, payload) {
+    state.selectedTag = payload.tag
   },
   
   removeTaskTag (state, payload) {

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { state, mutations } from '@/store'
 
-const { addTask, addTaskTag, removeTaskTag, startTask, stopTask, completeTask, deleteTask } = mutations
+const { addTask, addTaskTag, selectTag, removeTaskTag, startTask, stopTask, completeTask, deleteTask } = mutations
 
 window.confirm = function () { return true }
 
@@ -29,6 +29,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: null
@@ -58,6 +59,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: null
@@ -66,6 +68,7 @@ describe('mutations', () => {
           id: 1,
           name: 'my second task',
           tags: [],
+          notes: '',
           created: myState.tasks[1].created,
           log: [],
           completed: null
@@ -74,6 +77,7 @@ describe('mutations', () => {
           id: 2,
           name: 'my third task',
           tags: [],
+          notes: '',
           created: myState.tasks[2].created,
           log: [],
           completed: null
@@ -88,6 +92,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: null
@@ -96,6 +101,7 @@ describe('mutations', () => {
           id: 2,
           name: 'my third task',
           tags: [],
+          notes: '',
           created: myState.tasks[1].created,
           log: [],
           completed: null
@@ -104,6 +110,7 @@ describe('mutations', () => {
           id: 3,
           name: 'my fourth task',
           tags: [],
+          notes: '',
           created: myState.tasks[2].created,
           log: [],
           completed: null
@@ -267,6 +274,20 @@ describe('mutations', () => {
       
     })
     
+    it('should add a task with selectedTag', () => {
+      
+      expect(myState.selectedTag).to.equal(null)
+      selectTag(myState, { tag: 'new tag a' })
+      expect(myState.selectedTag).to.equal('new tag a')
+      
+      addTask(myState, { name: 'my tagged task' })
+      const taggedTask = myState.tasks.filter(t => t.name === 'my tagged task')[0]
+      expect(taggedTask.tags).to.deep.equal(['new tag a'])
+      expect(myState.tags).to.deep.equal({ 'new tag a': [taggedTask.id] })
+      expect(myState.selectedTaskID).to.equal(taggedTask.id)
+      
+    })
+    
   })
   
   describe('completeTask', () => {
@@ -279,6 +300,7 @@ describe('mutations', () => {
           id: 0,
           name: 'my first task',
           tags: [],
+          notes: '',
           created: createdTime,
           log: [],
           completed: myState.tasks[0].completed
