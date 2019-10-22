@@ -8,10 +8,16 @@
     </h3>
     
     <!-- ActivityChart -->
-    <ActivityChart
-      id="activity-chart"
-      :chart-data="dailyActivity.chartData"
-    />
+    <div
+      ref="chartWrapper"
+      class="chart-wrapper"
+    >
+      <ActivityChart
+        ref="activityChart"
+        :chart-data="dailyActivity.chartData"
+        :styles="chartStyles"
+      />
+    </div>
     
     <br>
     
@@ -175,9 +181,29 @@ export default {
       })
       
       return { dailyActivity, chartData }
+    },
+    
+    chartWidth () {
+      return 50 + this.dailyActivity.chartData.labels.length * 100
+    },
+    
+    chartStyles () {
+      return {
+        width: `${this.chartWidth}px`,
+        height: '400px',
+        position: 'relative'
+      }
     }
     
   },
+  
+  // updated () {
+  //   this.$ready(() => {
+  //     const container = this.$refs.chartWrapper
+  //     console.log(container.clientWidth)
+  //     container.scrollLeft = this.chartWidth
+  //   })
+  // },
   
   methods: {
     
@@ -205,9 +231,15 @@ export default {
 </script>
 
 <style scoped>
-
+  
   .activity-view {
     padding: 20px;
+  }
+  
+  .chart-wrapper {
+    border: red 1px solid;
+    max-width: 600px;
+    overflow-x: auto;
   }
   
 </style>

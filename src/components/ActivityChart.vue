@@ -43,7 +43,7 @@ const chartOptions = {
     }
   },
   responsive: true,
-  maintainAspectRatio: true
+  maintainAspectRatio: false
 }
 
 export default {
@@ -53,10 +53,6 @@ export default {
     chartData: {
       type: Object,
       default: () => ({})
-    },
-    height: {
-      type: String,
-      default: '200'
     },
     plugins: {
       type: Array,
