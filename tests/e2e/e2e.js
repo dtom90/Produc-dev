@@ -434,3 +434,33 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('p').withText('24:47').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1487 / 1500).toPrecision(6)))
 })
+
+test('Try to delete a running task', async t => {
+  await t
+  
+  // Press the countdown play button and expect the countdown to decrement
+    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1))
+    .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(selectedTaskSection.find('p').withText('24:59').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1499 / 1500).toPrecision(6)))
+    .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1498 / 1500).toPrecision(6)))
+    
+    // Switch to task 1, expect no timer
+    .click(todoTasks.withText(task1))
+    .expect(selectedTaskSection.find('#countdown-container').exists).notOk()
+    
+    // Click task 1 delete button, expect confirmation popup, confirm delete
+    .expect(tasksPresent(todoSection)).eql([task1, task2])
+    .setNativeDialogHandler(dialogHandler, { dependencies: { taskName: task1, deleteTask: true } })
+    .click(menuButton)
+    .click(deleteButton(task1))
+    .expect(tasksPresent(todoSection)).eql([task2])
+    
+    // Expect to switch back to task 2 and timer to still be running
+    .expect(selectedTaskSection.withText(task2).visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
+})

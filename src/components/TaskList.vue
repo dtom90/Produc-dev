@@ -238,7 +238,7 @@ export default {
     },
     selectTagFilter (tag) {
       this.selectTag({ tag })
-      if (!this.selectedTask.tags.includes(this.selectedTag)) {
+      if (this.selectedTask && !this.selectedTask.tags.includes(this.selectedTag)) {
         const tasksWithTag = this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
         if (tasksWithTag.length > 0) {
           this.selectTask(tasksWithTag[0].id)

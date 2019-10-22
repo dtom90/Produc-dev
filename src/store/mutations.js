@@ -133,6 +133,12 @@ const mutations = {
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
       task.tags.forEach(tag => deleteElem(state.tags[tag], payload.id))
       state.tasks.splice(index, 1)
+      if (state.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
+        state.activeTaskID = null
+        state.running = false
+      } else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
+        state.selectedTaskID = state.activeTaskID
+      }
     }
   },
   
