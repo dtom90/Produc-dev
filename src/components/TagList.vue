@@ -227,6 +227,18 @@ export default {
       width: 160px;
     }
     
+    .tag > button {
+      color: white;
+      text-shadow:
+              0 0 3px rgba(0,0,0,0.4),
+              0 0 13px rgba(0,0,0,0.1),
+              0 0 23px rgba(0,0,0,0.1);
+    }
+    
+    .tag > button:hover {
+      color: lightgrey;
+    }
+    
     .tag-close {
       font-weight: 700;
     }

@@ -16,7 +16,7 @@ const getters = {
   allTags: state => Object.keys(state.tags),
   
   availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
-    tag.startsWith(snip) && !state.tags[tag].includes(id)),
+    tag.startsWith(snip) && !state.tasks[id].tags.includes(tag)),
   
   tagActivity: state => tag => state.tasks.filter(task => task.tags.includes(tag))
     .map(task => task.log.map(event => Object.assign({ task: task.name }, event)))
