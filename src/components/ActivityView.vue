@@ -183,16 +183,14 @@ export default {
       return { dailyActivity, chartData }
     },
     
-    chartWidth () {
-      return 50 + this.dailyActivity.chartData.labels.length * 100
-    },
-    
     chartStyles () {
-      return {
-        width: `${this.chartWidth}px`,
+      const width = 50 + this.dailyActivity.chartData.labels.length * 100
+      
+      return width > 600 ? {
+        width: `${width}px`,
         height: '400px',
         position: 'relative'
-      }
+      } : {}
     }
     
   },
@@ -229,7 +227,6 @@ export default {
   }
   
   .chart-wrapper {
-    border: red 1px solid;
     max-width: 600px;
     overflow-x: auto;
   }

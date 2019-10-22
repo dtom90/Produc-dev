@@ -42,6 +42,13 @@ const chartOptions = {
       formatter: value => displayFormat(value)
     }
   },
+  animation: {
+    onComplete: function (event) {
+      const canvas = event.chart.canvas
+      const chartWrapper = canvas.parentElement.parentElement
+      chartWrapper.scrollLeft = canvas.clientWidth
+    }
+  },
   responsive: true,
   maintainAspectRatio: false
 }
