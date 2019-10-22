@@ -43,6 +43,7 @@
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "chartjs-plugin-datalabels": "^0.6.0",
+    "color-manager": "https://github.com/dtom90/color-manager",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
     "sass": "^1.21.0",

@@ -11,7 +11,8 @@
       class="tag btn-group"
     >
       <button
-        class="tag-name btn btn-primary"
+        class="tag-name btn"
+        :style="`backgroundColor: ${tagColor[tag]}`"
         :data-toggle="modal? 'modal' : null"
         :data-target="modal? '#activityModal' : null"
         :title="selectText"
@@ -21,7 +22,8 @@
       </button>
       <button
         v-if="removeTag"
-        class="tag-close btn btn-primary"
+        class="tag-close btn"
+        :style="`backgroundColor: ${tagColor[tag]}`"
         :title="removeText"
         @click.stop="removeTag(tag)"
       >
@@ -85,7 +87,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'TagList',
@@ -128,6 +130,11 @@ export default {
   }),
   
   computed: {
+    
+    ...mapState({
+      tagColor: 'tags'
+    }),
+    
     ...mapGetters([
       'availableTags'
     ]),

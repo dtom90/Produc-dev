@@ -1,6 +1,6 @@
 import getters from './getters'
 import moment from 'moment'
-import Vue from 'vue'
+import colorManager from 'color-manager'
 
 const addElem = (arr, elem) => {
   if (!(arr.includes(elem))) {
@@ -32,9 +32,6 @@ const mutations = {
         state.tasks.push(newTask)
       }
       state.nextTaskID += 1
-      if (state.selectedTag !== null) {
-        Vue.set(state.tags, state.selectedTag, [newTask.id])
-      }
       state.selectedTaskID = newTask.id
     }
   },
@@ -99,9 +96,7 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
-          Vue.set(state.tags, newTag, [task.id])
-        } else {
-          addElem(state.tags[newTag], task.id)
+          state.tags[newTag] = colorManager.getRandomColor()
         }
         addElem(task.tags, newTag)
       }
@@ -115,7 +110,6 @@ const mutations = {
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     deleteElem(task.tags, payload.tag)
-    deleteElem(state.tags[payload.tag], payload.id)
   },
   
   completeTask (state, payload) {
@@ -131,7 +125,6 @@ const mutations = {
     const index = state.tasks.findIndex(t => t.id === payload.id)
     const task = state.tasks[index]
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
-      task.tags.forEach(tag => deleteElem(state.tags[tag], payload.id))
       state.tasks.splice(index, 1)
       if (state.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
         state.activeTaskID = null
@@ -145,7 +138,6 @@ const mutations = {
   clearTasks (state) {
     const completedTasks = state.tasks.filter(t => t.completed)
     if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
-      state.tasks.filter(t => t.completed).forEach(task => task.tags.forEach(tag => deleteElem(state.tags[tag], task.id)))
       state.tasks = state.tasks.filter(t => !t.completed)
     }
   }
