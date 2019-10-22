@@ -8,10 +8,16 @@
     </h3>
     
     <!-- ActivityChart -->
-    <ActivityChart
-      id="activity-chart"
-      :chart-data="dailyActivity.chartData"
-    />
+    <div
+      ref="chartWrapper"
+      class="chart-wrapper"
+    >
+      <ActivityChart
+        ref="activityChart"
+        :chart-data="dailyActivity.chartData"
+        :styles="chartStyles"
+      />
+    </div>
     
     <br>
     
@@ -29,7 +35,7 @@
         Activity Log
       </button>
     </div>
-
+    
     <!-- Activity Data -->
     <div
       v-if="logVisible"
@@ -175,6 +181,16 @@ export default {
       })
       
       return { dailyActivity, chartData }
+    },
+    
+    chartStyles () {
+      const width = 50 + this.dailyActivity.chartData.labels.length * 100
+      
+      return width > 600 ? {
+        width: `${width}px`,
+        height: '400px',
+        position: 'relative'
+      } : {}
     }
     
   },
@@ -205,9 +221,14 @@ export default {
 </script>
 
 <style scoped>
-
+  
   .activity-view {
     padding: 20px;
+  }
+  
+  .chart-wrapper {
+    max-width: 600px;
+    overflow-x: auto;
   }
   
 </style>

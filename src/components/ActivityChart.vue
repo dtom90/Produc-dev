@@ -42,8 +42,15 @@ const chartOptions = {
       formatter: value => displayFormat(value)
     }
   },
+  animation: {
+    onComplete: function (event) {
+      const canvas = event.chart.canvas
+      const chartWrapper = canvas.parentElement.parentElement
+      chartWrapper.scrollLeft = canvas.clientWidth
+    }
+  },
   responsive: true,
-  maintainAspectRatio: true
+  maintainAspectRatio: false
 }
 
 export default {
@@ -53,10 +60,6 @@ export default {
     chartData: {
       type: Object,
       default: () => ({})
-    },
-    height: {
-      type: String,
-      default: '200'
     },
     plugins: {
       type: Array,
