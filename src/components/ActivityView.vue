@@ -35,7 +35,7 @@
         Activity Log
       </button>
     </div>
-
+    
     <!-- Activity Data -->
     <div
       v-if="logVisible"
@@ -196,14 +196,6 @@ export default {
     }
     
   },
-  
-  // updated () {
-  //   this.$ready(() => {
-  //     const container = this.$refs.chartWrapper
-  //     console.log(container.clientWidth)
-  //     container.scrollLeft = this.chartWidth
-  //   })
-  // },
   
   methods: {
     
