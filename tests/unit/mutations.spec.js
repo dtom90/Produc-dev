@@ -279,9 +279,9 @@ describe('mutations', () => {
     
     it('should add a task with selectedTag', () => {
       
-      expect(myState.selectedTag).to.equal(null)
+      expect(myState.selectedTags).to.deep.equal([])
       selectTag(myState, { tag: 'new tag a' })
-      expect(myState.selectedTag).to.equal('new tag a')
+      expect(myState.selectedTags).to.deep.equal(['new tag a'])
       
       addTask(myState, { name: 'my tagged task' })
       const taggedTask = myState.tasks.filter(t => t.name === 'my tagged task')[0]

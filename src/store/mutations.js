@@ -3,16 +3,6 @@ import moment from 'moment'
 import Vue from 'vue'
 import colorManager from 'color-manager'
 
-const addElem = (arr, elem) => {
-  if (!(arr.includes(elem))) {
-    arr.push(elem)
-  }
-}
-
-const deleteElem = (arr, elem) => {
-  arr.splice(arr.indexOf(elem), 1)
-}
-
 const mutations = {
   
   addTask (state, payload) {
@@ -21,7 +11,7 @@ const mutations = {
       const newTask = {
         id: state.nextTaskID,
         name: taskName,
-        tags: state.selectedTag !== null ? [state.selectedTag] : [],
+        tags: state.selectedTags.length > 0 ? [...state.selectedTags] : [],
         notes: '',
         created: Date.now(),
         log: [],
@@ -99,7 +89,9 @@ const mutations = {
         if (!(newTag in state.tags)) {
           Vue.set(state.tags, newTag, colorManager.getRandomColor())
         }
-        addElem(task.tags, newTag)
+        if (!(task.tags.includes(newTag))) {
+          task.tags.push(newTag)
+        }
       }
     }
   },
@@ -109,12 +101,16 @@ const mutations = {
   },
   
   selectTag (state, payload) {
-    state.selectedTag = payload.tag
+    state.selectedTags.push(payload.tag)
+  },
+  
+  removeTag (state, payload) {
+    state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
   },
   
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    deleteElem(task.tags, payload.tag)
+    task.tags.splice(task.tags.indexOf(payload.tag), 1)
   },
   
   completeTask (state, payload) {

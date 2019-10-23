@@ -83,7 +83,7 @@
       <TagList
         :tags="task.tags"
         :task-id="task.id"
-        :select-tag="selectTag"
+        :select-tag="viewTag"
         :modal="true"
         :remove-tag="removeTag"
       />
@@ -132,7 +132,7 @@
       
       <!-- Activity Modal -->
       <ActivityModal
-        :tag="selectedTag"
+        :tag="modalTag"
       />
       
       <br>
@@ -192,7 +192,7 @@ export default {
     editingNotes: false,
     newTag: '',
     tagOptions: [],
-    selectedTag: null,
+    modalTag: null,
     showTagInput: false
   }),
   
@@ -242,8 +242,8 @@ export default {
       this.$refs.addTagInput.focus()
     },
 
-    selectTag: function (tag) {
-      this.selectedTag = tag
+    viewTag: function (tag) {
+      this.modalTag = tag
     },
     
     removeTag: function (tag) {

@@ -19,20 +19,21 @@
         >
           <font-awesome-icon icon="ellipsis-v" />
         </button>
+        
+        <!-- To Do List Menu -->
         <div
           v-if="!isCompletedList"
           id="filter-menu"
           class="dropdown-menu"
         >
           <TagList
-            v-if="selectedTag !== null"
-            :tags="[selectedTag]"
+            v-if="selectedTags.length > 0"
+            :tags="selectedTags"
             :remove-tag="removeTagFilter"
             remove-text="Clear Filter"
           />
           <TagList
-            v-if="selectedTag === null"
-            :tags="allTags"
+            :tags="unselectedTags"
             :select-tag="selectTagFilter"
           />
           <div class="dropdown-divider" />
@@ -74,6 +75,8 @@
             </label>
           </div>
         </div>
+        
+        <!-- Done List Menu -->
         <div
           v-if="isCompletedList"
           class="dropdown-menu"
@@ -186,14 +189,14 @@ export default {
   
   computed: {
     ...mapState([
-      'selectedTag',
+      'selectedTags',
       'insertAtTop'
     ]),
     ...mapGetters([
       'incompleteTasks',
       'completedTasks',
       'selectedTask',
-      'allTags'
+      'unselectedTags'
     ]),
     isCompletedList: function () { return this.title === 'Done' },
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
@@ -201,8 +204,8 @@ export default {
     sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
     incompleteTaskList: {
       get () {
-        return this.selectedTag
-          ? this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
+        return this.selectedTags.length > 0
+          ? this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
           : this.incompleteTasks
       },
       set (value) {
@@ -210,8 +213,8 @@ export default {
       }
     },
     completedTaskList: function () {
-      const filteredTasks = this.selectedTag
-        ? this.completedTasks.filter(task => task.tags.includes(this.selectedTag))
+      const filteredTasks = this.selectedTags.length > 0
+        ? this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         : this.completedTasks
       return filteredTasks && this.sortOrder !== 'Oldest'
         ? filteredTasks.slice().reverse()
@@ -230,16 +233,18 @@ export default {
       'clearTasks',
       'updateIncompleteTasks',
       'selectTag',
+      'removeTag',
       'selectTask'
     ]),
     addNewTask () {
       this.addTask({ name: this.newTask })
       this.newTask = ''
     },
-    selectTagFilter (tag) {
+    selectTagFilter (tag, e) {
+      e.stopPropagation()
       this.selectTag({ tag })
-      if (this.selectedTask && !this.selectedTask.tags.includes(this.selectedTag)) {
-        const tasksWithTag = this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
+      if (this.selectedTask && !this.selectedTags.some(tag => this.selectedTask.tags.includes(tag))) {
+        const tasksWithTag = this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         if (tasksWithTag.length > 0) {
           this.selectTask(tasksWithTag[0].id)
         } else {
@@ -247,8 +252,8 @@ export default {
         }
       }
     },
-    removeTagFilter () {
-      this.selectTag({ tag: null })
+    removeTagFilter (tag) {
+      this.removeTag({ tag })
     }
   }
   

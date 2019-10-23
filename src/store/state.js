@@ -6,7 +6,7 @@ const state = {
   insertAtTop: false,
   selectedTaskID: null,
   activeTaskID: null,
-  selectedTag: null,
+  selectedTags: [],
   running: false
 }
 

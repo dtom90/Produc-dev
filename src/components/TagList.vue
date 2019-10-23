@@ -16,7 +16,7 @@
         :data-toggle="modal? 'modal' : null"
         :data-target="modal? '#activityModal' : null"
         :title="selectText"
-        @click="selectTag(tag)"
+        @click="selectTag(tag, $event)"
       >
         {{ tag }}
       </button>
@@ -30,7 +30,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-
+    
     <!-- Tag Input -->
     <div
       v-if="taskTags"
