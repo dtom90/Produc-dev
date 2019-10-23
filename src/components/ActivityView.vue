@@ -190,7 +190,9 @@ export default {
         width: `${width}px`,
         height: '400px',
         position: 'relative'
-      } : {}
+      } : {
+        height: '400px'
+      }
     }
     
   },
