@@ -1,9 +1,13 @@
 <script>
 import { Bar } from 'vue-chartjs'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import moment from 'moment'
+import humanizeDuration from 'humanize-duration'
 
-const displayFormat = (minutes) => moment.duration(minutes, 'minutes').humanize()
+const displayFormat = (minutes) => humanizeDuration(minutes * 60000, {
+  units: ['d', 'h', 'm'],
+  round: true,
+  delimiter: ',\n'
+})
 
 const chartOptions = {
   legend: {

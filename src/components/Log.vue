@@ -9,7 +9,7 @@
     </h4>
     
     <!-- Time Spent on Task -->
-    <h5>Time Spent: {{ timeSpent.humanize() }}</h5>
+    <h5>Time Spent: {{ displayTimeSpent(timeSpent) }}</h5>
     
     <!-- Task Activity Log -->
     <table
@@ -42,6 +42,7 @@
 
 <script>
 import moment from 'moment'
+import humanizeDuration from 'humanize-duration'
 
 export default {
   name: 'Log',
@@ -75,7 +76,10 @@ export default {
     
     displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a'),
     
-    displayTimeSpent: timeSpent => moment.duration(timeSpent).humanize()
+    displayTimeSpent: timeSpent => humanizeDuration(timeSpent, {
+      units: ['d', 'h', 'm'],
+      round: true
+    })
     
   }
 }
