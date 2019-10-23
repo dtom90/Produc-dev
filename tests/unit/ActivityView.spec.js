@@ -18,13 +18,7 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const shouldBehaveLikeActivityView = function (wrapper, element) {
-  
-  it('renders a title with the element name', () => {
-    
-    expect(wrapper.text()).toMatch('Activity for ' + element)
-    
-  })
+const shouldBehaveLikeActivityView = function (wrapper) {
   
   it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
@@ -89,11 +83,17 @@ describe('ActivityView', () => {
   describe('for task', () => {
     
     const wrapper = shallowMount(ActivityView, {
-      propsData: { log: log, element: 'My Task' },
+      propsData: { log: log, element: 'My Task', taskId: 0 },
       localVue
     })
     
-    shouldBehaveLikeActivityView(wrapper, 'My Task')
+    it('renders a title with the element name', () => {
+      
+      expect(wrapper.text()).toMatch('Activity for My Task')
+      
+    })
+    
+    shouldBehaveLikeActivityView(wrapper)
     
   })
   
@@ -103,8 +103,14 @@ describe('ActivityView', () => {
       propsData: { log: log, element: 'myTag' },
       localVue
     })
+  
+    it('does not render a title with the element name', () => {
+      
+      expect(wrapper.text()).not.toMatch('Activity for My Task')
+      
+    })
     
-    shouldBehaveLikeActivityView(wrapper, 'myTag')
+    shouldBehaveLikeActivityView(wrapper)
     
   })
   

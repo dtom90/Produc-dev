@@ -389,7 +389,7 @@ test('Countdown modification and task switching', async t => {
     
     // Click a tag, should show tag activity modal, timer should not stop
     .click(tag.withText('my tag'))
-    .expect(Selector('h3').withText('Activity for my tag').visible).ok()
+    .expect(Selector('h3').withText('Activity for').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor((1494 / 1500).toString()))
     .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
