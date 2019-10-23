@@ -3,7 +3,7 @@
     :id="id"
     class="activity-view"
   >
-    <h3>
+    <h3 v-if="taskId">
       Activity for <strong>{{ element }}</strong>
     </h3>
     

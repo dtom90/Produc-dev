@@ -13,12 +13,20 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h5
-            id="exampleModalLabel"
-            class="modal-title"
-          >
-            Activity for {{ tag }}
-          </h5>
+          <div class="modal-title">
+            <h3
+              id="exampleModalLabel"
+            >
+              Activity for&nbsp;
+            </h3>
+            <button
+              class="btn tag-badge"
+              :style="`backgroundColor: ${tagColor[tag]}`"
+            >
+              {{ tag }}
+            </button>
+          </div>
+          
           <button
             type="button"
             class="close"
@@ -52,7 +60,7 @@
 
 <script>
 import ActivityView from './ActivityView'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'ActivityModal',
@@ -66,13 +74,41 @@ export default {
     }
   },
   computed: {
+
+    ...mapState({
+      tagColor: 'tags'
+    }),
+    
     ...mapGetters([
       'tagActivity'
     ])
+    
   }
 }
 </script>
 
 <style scoped>
+.modal-title {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.modal-title > h3 {
+  margin-top: .2rem;
+  margin-bottom: 0;
+}
+
+.tag-badge {
+  color: white;
+  text-shadow:
+          0 0 3px rgba(0,0,0,0.4),
+          0 0 13px rgba(0,0,0,0.1),
+          0 0 23px rgba(0,0,0,0.1);
+}
+
+.tag-badge:hover {
+  color: lightgrey;
+}
 
 </style>
