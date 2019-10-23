@@ -213,6 +213,10 @@ export default {
 
 <style scoped>
 
+#countdown-container {
+  text-align: center;
+}
+
 #dial-container {
   position: relative;
   width: 200px;

@@ -55,9 +55,12 @@ export default {
     font-size: 20px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+  }
+  
+  h3 {
+    text-align: center;
   }
 
   .section {

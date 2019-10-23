@@ -96,11 +96,14 @@
         <span id="notes-label">Notes: </span>
 
         <!-- Display Mode -->
+        <!-- eslint-disable vue/no-v-html -->
         <span
           v-if="task.notes && !editingNotes"
           class="flex-grow-1"
           @click="editingNotes = true"
-        >{{ task.notes }}</span>
+          v-html="displayNotes"
+        />
+        <!-- eslint-enable vue/no-v-html -->
         <button
           v-if="!editingNotes"
           type="button"
@@ -162,6 +165,8 @@ import Countdown from './Countdown'
 import ActivityView from './ActivityView'
 import ActivityModal from './ActivityModal'
 import { mapState, mapMutations } from 'vuex'
+import marked from 'marked'
+import DOMPurify from 'dompurify'
 
 export default {
   
@@ -200,6 +205,10 @@ export default {
     
     checked: function () {
       return this.task.completed !== null
+    },
+    
+    displayNotes: function () {
+      return marked(DOMPurify.sanitize(this.task.notes))
     }
     
   },
