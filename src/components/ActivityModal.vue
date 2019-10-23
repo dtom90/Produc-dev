@@ -13,12 +13,30 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h5
-            id="exampleModalLabel"
-            class="modal-title"
-          >
-            Activity for {{ tag }}
-          </h5>
+          <div class="modal-title">
+            <h3
+              id="exampleModalLabel"
+            >
+              Activity for&nbsp;
+            </h3>
+            <button
+              class="btn tag-badge"
+              :style="`backgroundColor: ${tagColor[tag]}`"
+              data-toggle="dropdown"
+            >
+              {{ tag }}
+            </button>
+            <div
+              id="tag-menu"
+              class="dropdown-menu"
+            >
+              <sketch-picker
+                :value="color"
+                @input="updateValue"
+              />
+            </div>
+          </div>
+          
           <button
             type="button"
             class="close"
@@ -52,27 +70,89 @@
 
 <script>
 import ActivityView from './ActivityView'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import Sketch from 'vue-color/src/components/Sketch.vue'
+import $ from 'jquery'
+
+$(document).on('click', '#tag-menu', function (e) {
+  e.stopPropagation()
+})
 
 export default {
   name: 'ActivityModal',
+  
   components: {
-    ActivityView
+    ActivityView,
+    'sketch-picker': Sketch
   },
+  
   props: {
     tag: {
       type: String,
       default: null
     }
   },
+  
+  data: () => ({
+    color: '#FFFFFF'
+  }),
+  
   computed: {
+
+    ...mapState({
+      tagColor: 'tags'
+    }),
+    
     ...mapGetters([
       'tagActivity'
     ])
+  },
+  
+  watch: {
+    tag: function (newVal) {
+      this.color = this.tagColor[newVal]
+    }
+  },
+  
+  methods: {
+    
+    ...mapMutations([
+      'setTagColor'
+    ]),
+    
+    updateValue (value) {
+      this.setTagColor({
+        tag: this.tag,
+        color: value.hex
+      })
+      this.color = this.tagColor[this.tag]
+    }
   }
 }
 </script>
 
 <style scoped>
+.modal-title {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.modal-title > h3 {
+  margin-top: .2rem;
+  margin-bottom: 0;
+}
+
+.tag-badge {
+  color: white;
+  text-shadow:
+          0 0 3px rgba(0,0,0,0.4),
+          0 0 13px rgba(0,0,0,0.1),
+          0 0 23px rgba(0,0,0,0.1);
+}
+
+.tag-badge:hover {
+  color: lightgrey;
+}
 
 </style>

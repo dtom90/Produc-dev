@@ -10,7 +10,6 @@
   "private": true,
   "version": "0.2.0",
   "scripts": {
-    
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",
     "web:serve": "node web.js",
@@ -28,13 +27,17 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     
+    "audit:critical": "yarn audit || test $? -lt 16",
+    
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     
     "test:unit": "vue-cli-service test:unit",
+    
     "test:e2e:dev": "testcafe chrome tests/e2e --selector-timeout 3000 --app \"yarn run web:dev\"",
     "test:e2e:prod": "yarn run gh_pages:build && PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e -c 3 --selector-timeout 3000 --app \"yarn run gh_pages:serve\"",
-    "test": "yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
+    
+    "test": "yarn audit:critical && yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -53,6 +56,7 @@
     "sass-loader": "^7.1.0",
     "vue": "^2.6.10",
     "vue-chartjs": "^3.4.2",
+    "vue-color": "^2.7.0",
     "vuedraggable": "^2.23.0",
     "vuex": "^3.1.1",
     "vuex-persist": "^2.0.1"
@@ -60,17 +64,17 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.2",
     "@vue/cli-plugin-eslint": "^3.9.2",
-    "@vue/cli-plugin-unit-jest": "^3.9.0",
+    "@vue/cli-plugin-unit-jest": "^3.12.1",
     "@vue/cli-service": "^3.9.3",
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^24.8.0",
     "electron": "^5.0.6",
-    "eslint": "^6.1.0",
+    "eslint": "^6.5.1",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^22.13.0",
-    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-node": "^9.2.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-testcafe": "^0.2.1",
