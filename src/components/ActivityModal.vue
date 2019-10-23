@@ -71,7 +71,7 @@
 <script>
 import ActivityView from './ActivityView'
 import { mapState, mapGetters, mapMutations } from 'vuex'
-import { Sketch } from 'vue-color'
+import Sketch from 'vue-color/src/components/Sketch.vue'
 import $ from 'jquery'
 
 $(document).on('click', '#tag-menu', function (e) {
