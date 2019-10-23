@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Log from '@/components/Log.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 import moment from 'moment'
+import humanizeDuration from 'humanize-duration'
 import { generateActivity } from '@/fixtures'
 
 const localVue = createLocalVue()
@@ -26,7 +27,10 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch(allDuration.humanize())
+      expect(wrapper.text()).toMatch(humanizeDuration(allDuration, {
+        units: ['d', 'h', 'm'],
+        round: true
+      }))
       
     })
     
@@ -119,7 +123,10 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch(day2Duration.humanize())
+      expect(wrapper.text()).toMatch(humanizeDuration(day2Duration, {
+        units: ['d', 'h', 'm'],
+        round: true
+      }))
       
     })
     
@@ -149,7 +156,10 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch(allDuration.humanize())
+      expect(wrapper.text()).toMatch(humanizeDuration(allDuration, {
+        units: ['d', 'h', 'm'],
+        round: true
+      }))
       
     })
     
