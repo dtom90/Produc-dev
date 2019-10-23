@@ -460,7 +460,7 @@ test('Try to delete a running task', async t => {
     
     // Expect to switch back to task 2 and timer to still be running
     .expect(selectedTaskSection.withText(task2).visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:52').with({ timeout: 6000 }).visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
 })
