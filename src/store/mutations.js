@@ -11,7 +11,7 @@ const mutations = {
       const newTask = {
         id: state.nextTaskID,
         name: taskName,
-        tags: state.selectedTags.length > 0 ? [...state.selectedTags] : [],
+        tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
         notes: '',
         created: Date.now(),
         log: [],
@@ -29,6 +29,10 @@ const mutations = {
   
   setTopInsert (state, payload) {
     state.insertAtTop = payload
+  },
+  
+  updateAddSelectedTags (state, newValue) {
+    state.addSelectedTags = newValue
   },
   
   updateIncompleteTasks (state, payload) {

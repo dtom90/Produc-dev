@@ -3,7 +3,13 @@
     :id="taskTags ? 'taskTags' : 'filterTags'"
     class="form-inline"
   >
-    <label>{{ taskTags ? '' : 'Filter' + (filtered ? 'ing' : '' ) + ' on ' }}Tag{{ taskTags ? 's' : '' }}:</label>
+    <h6
+      v-if="taskId === null"
+      style="width: 100%"
+    >
+      {{ label }}:
+    </h6>
+    <label v-if="taskId !==null">{{ label }}:</label>
     
     <div
       v-for="tag in tags"
@@ -99,6 +105,10 @@ export default {
     taskId: {
       type: Number,
       default: null
+    },
+    label: {
+      type: String,
+      default: 'Tags'
     },
     selectText: {
       type: String,
@@ -203,7 +213,8 @@ export default {
     }
 
     #filterTags > *:not(label) {
-      margin-top: 10px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       margin-right: 10px;
     }
 
@@ -237,6 +248,10 @@ export default {
     
     .tag > button:hover {
       color: lightgrey;
+    }
+    
+    .tag-name {
+      word-break: break-word;
     }
     
     .tag-close {

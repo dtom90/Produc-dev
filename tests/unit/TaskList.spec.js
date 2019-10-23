@@ -21,7 +21,7 @@ const state = {
 const getters = {
   incompleteTasks: jest.fn(),
   completedTasks: () => tasks,
-  unselectedTags: jest.fn()
+  unselectedTags: () => []
 }
 
 const mutations = {

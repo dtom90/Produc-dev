@@ -28,18 +28,40 @@
         >
           <TagList
             v-if="selectedTags.length > 0"
+            label="Filtering on"
             :tags="selectedTags"
             :remove-tag="removeTagFilter"
             remove-text="Clear Filter"
           />
+          <div
+            v-if="selectedTags.length > 0"
+            class="form-check form-check-inline"
+          >
+            <input
+              id="addTagsSelect"
+              v-model="toggleAddSelectedTags"
+              class="form-check-input"
+              type="checkbox"
+            >
+            <label
+              class="form-check-label"
+              for="addTagsSelect"
+            >Include in new tasks</label>
+          </div>
+          <div
+            v-if="selectedTags.length > 0 && unselectedTags.length > 0"
+            class="dropdown-divider"
+          />
           <TagList
+            v-if="unselectedTags.length > 0"
+            :label="selectedTags.length > 0 ? 'Add to filter' : 'Filter on'"
             :tags="unselectedTags"
             :select-tag="selectTagFilter"
           />
           <div class="dropdown-divider" />
-          <div style="margin-bottom: 10px;">
+          <h6 style="margin-bottom: 10px;">
             Add New Tasks To:
-          </div>
+          </h6>
           <div
             class="btn-group btn-group-toggle custom-icons"
           >
@@ -190,6 +212,7 @@ export default {
   computed: {
     ...mapState([
       'selectedTags',
+      'addSelectedTags',
       'insertAtTop'
     ]),
     ...mapGetters([
@@ -202,6 +225,14 @@ export default {
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
     sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
+    toggleAddSelectedTags: {
+      get () {
+        return this.addSelectedTags
+      },
+      set (value) {
+        this.updateAddSelectedTags(value)
+      }
+    },
     incompleteTaskList: {
       get () {
         return this.selectedTags.length > 0
@@ -230,6 +261,7 @@ export default {
     ...mapMutations([
       'addTask',
       'setTopInsert',
+      'updateAddSelectedTags',
       'clearTasks',
       'updateIncompleteTasks',
       'selectTag',
@@ -281,6 +313,11 @@ export default {
   
   #filter-menu {
     padding: 8px;
+    width: 200px;
+  }
+  
+  #filter-menu .form-check {
+    margin: 0;
   }
   
   .custom-icons img {

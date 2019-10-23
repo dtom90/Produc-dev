@@ -45,7 +45,7 @@
         </div>
 
         <!-- Menu Options -->
-        <div class="dropleft">
+        <div class="dropdown">
           <button
             class="btn btn-light"
             title="Task options"
@@ -53,7 +53,7 @@
           >
             <font-awesome-icon icon="ellipsis-v" />
           </button>
-          <div class="dropdown-menu">
+          <div class="dropdown-menu dropdown-menu-right">
             <div
               id="selected-task-menu"
               class="d-flex"
@@ -289,8 +289,12 @@ export default {
         padding-right: 15px;
     }
     
-    .dropleft .btn {
+    .dropdown .btn {
         margin: 8px;
+    }
+
+    .dropdown-menu {
+      min-width: 40px;
     }
 
     $play-btn-size: 75px;

@@ -4,6 +4,7 @@ const state = {
   tags: {},
   nextTaskID: 0,
   insertAtTop: false,
+  addSelectedTags: true,
   selectedTaskID: null,
   activeTaskID: null,
   selectedTags: [],
