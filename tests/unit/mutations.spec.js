@@ -202,51 +202,54 @@ describe('mutations', () => {
       addTask(myState, { name: 'my third task' })
       
       addTaskTag(myState, { id: 0, tag: 'new tag a' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0] })
+      expect(myState.tags).to.have.all.keys('new tag a')
+      expect(myState.tags['new tag a']).to.match(/#\w{6}/)
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a'])
       
       addTaskTag(myState, { id: 0, tag: 'new tag b' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0], 'new tag b': [0] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
+      expect(myState.tags['new tag b']).to.match(/#\w{6}/)
+      expect(myState.tags['new tag b']).not.to.equal(myState.tags['new tag a'])
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       
       addTaskTag(myState, { id: 1, tag: 'new tag b' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0], 'new tag b': [0, 1] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
       
       addTaskTag(myState, { id: 2, tag: 'new tag a' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0, 1] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
       expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
       
       // expect duplicate key to fail
       addTaskTag(myState, { id: 2, tag: 'new tag a' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0, 1] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal(['new tag b'])
       expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
       
       removeTaskTag(myState, { id: 1, tag: 'new tag b' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0, 2], 'new tag b': [0] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal([])
       expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
   
       removeTaskTag(myState, { id: 0, tag: 'new tag a' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [2], 'new tag b': [0] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal([])
       expect(myState.tasks[2].tags).to.deep.equal(['new tag a'])
   
       removeTaskTag(myState, { id: 2, tag: 'new tag a' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [], 'new tag b': [0] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag b'])
       expect(myState.tasks[1].tags).to.deep.equal([])
       expect(myState.tasks[2].tags).to.deep.equal([])
   
       removeTaskTag(myState, { id: 0, tag: 'new tag b' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [], 'new tag b': [] })
+      expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
       expect(myState.tasks[0].tags).to.deep.equal([])
       expect(myState.tasks[1].tags).to.deep.equal([])
       expect(myState.tasks[2].tags).to.deep.equal([])
@@ -269,7 +272,7 @@ describe('mutations', () => {
       expect(myState).to.deep.equal(origState)
   
       addTaskTag(myState, { id: 0, tag: ' a new tag ' })
-      expect(myState.tags).to.deep.equal({ 'a new tag': [0] })
+      expect(myState.tags).to.have.all.keys('a new tag')
       expect(myState.tasks[0].tags).to.deep.equal(['a new tag'])
       
     })
@@ -283,7 +286,6 @@ describe('mutations', () => {
       addTask(myState, { name: 'my tagged task' })
       const taggedTask = myState.tasks.filter(t => t.name === 'my tagged task')[0]
       expect(taggedTask.tags).to.deep.equal(['new tag a'])
-      expect(myState.tags).to.deep.equal({ 'new tag a': [taggedTask.id] })
       expect(myState.selectedTaskID).to.equal(taggedTask.id)
       
     })
@@ -316,12 +318,12 @@ describe('mutations', () => {
     it('should delete the task and any tag references to that task', () => {
       
       addTaskTag(myState, { id: 0, tag: 'new tag a' })
-      expect(myState.tags).to.deep.equal({ 'new tag a': [0] })
+      expect(myState.tags).to.have.all.keys('new tag a')
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a'])
       
       deleteTask(myState, { id: 0 })
       expect(myState.tasks).to.deep.equal([])
-      expect(myState.tags).to.deep.equal({ 'new tag a': [] })
+      expect(myState.tags).to.have.all.keys('new tag a')
       
     })
     
