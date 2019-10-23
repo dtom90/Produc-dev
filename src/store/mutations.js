@@ -104,6 +104,10 @@ const mutations = {
     }
   },
   
+  setTagColor (state, payload) {
+    Vue.set(state.tags, payload.tag, payload.color)
+  },
+  
   selectTag (state, payload) {
     state.selectedTag = payload.tag
   },

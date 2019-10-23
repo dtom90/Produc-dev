@@ -22,9 +22,19 @@
             <button
               class="btn tag-badge"
               :style="`backgroundColor: ${tagColor[tag]}`"
+              data-toggle="dropdown"
             >
               {{ tag }}
             </button>
+            <div
+              id="tag-menu"
+              class="dropdown-menu"
+            >
+              <sketch-picker
+                :value="color"
+                @input="updateValue"
+              />
+            </div>
           </div>
           
           <button
@@ -60,19 +70,33 @@
 
 <script>
 import ActivityView from './ActivityView'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import { Sketch } from 'vue-color'
+import $ from 'jquery'
+
+$(document).on('click', '#tag-menu', function (e) {
+  e.stopPropagation()
+})
 
 export default {
   name: 'ActivityModal',
+  
   components: {
-    ActivityView
+    ActivityView,
+    'sketch-picker': Sketch
   },
+  
   props: {
     tag: {
       type: String,
       default: null
     }
   },
+  
+  data: () => ({
+    color: '#FFFFFF'
+  }),
+  
   computed: {
 
     ...mapState({
@@ -82,7 +106,27 @@ export default {
     ...mapGetters([
       'tagActivity'
     ])
+  },
+  
+  watch: {
+    tag: function (newVal) {
+      this.color = this.tagColor[newVal]
+    }
+  },
+  
+  methods: {
     
+    ...mapMutations([
+      'setTagColor'
+    ]),
+    
+    updateValue (value) {
+      this.setTagColor({
+        tag: this.tag,
+        color: value.hex
+      })
+      this.color = this.tagColor[this.tag]
+    }
   }
 }
 </script>
