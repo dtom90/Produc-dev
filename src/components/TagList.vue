@@ -69,6 +69,7 @@
             v-for="tag in tagOptions"
             :key="tag"
             class="tag-option btn btn-light"
+            :style="`backgroundColor: ${tagColor[tag]}`"
             @click="addTag(tag)"
           >
             {{ tag }}
@@ -256,6 +257,19 @@ export default {
     
     .tag-close {
       font-weight: 700;
+    }
+    
+    .tag-option {
+      color: white;
+      text-shadow:
+              0 0 3px rgba(0,0,0,0.4),
+              0 0 13px rgba(0,0,0,0.1),
+              0 0 23px rgba(0,0,0,0.1);
+      word-break: break-word;
+    }
+    
+    .tag-option:hover {
+      color: lightgrey;
     }
     
 </style>
