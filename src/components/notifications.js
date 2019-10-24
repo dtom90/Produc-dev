@@ -1,6 +1,14 @@
 /* eslint-disable no-new */
 export default {
   
+  permission: function () {
+    if (!('Notification' in window)) { // Check if the browser supports notifications
+      return 'This browser does not support system notifications'
+    } else {
+      return Notification.permission
+    }
+  },
+  
   requestPermission: function () {
     if (!('Notification' in window)) { // Check if the browser supports notifications
       alert('This browser does not support system notifications')

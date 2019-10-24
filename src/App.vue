@@ -1,30 +1,38 @@
 <template>
   <div
     id="app"
-    class="container-fluid d-flex"
+    class="container-fluid"
   >
-    <div class="section task-list">
-      <TaskList
-        title="To Do"
-      />
-    </div>
-
-    <div
-      id="selected-task-section"
-      class="section"
-    >
-      <SelectedTask :task="selectedTask" />
-    </div>
+    <Settings />
     
-    <div class="section task-list">
-      <TaskList
-        title="Done"
-      />
+    <div
+      id="main-section"
+      class=" d-flex"
+    >
+      <div class="section task-list">
+        <TaskList
+          title="To Do"
+        />
+      </div>
+
+      <div
+        id="selected-task-section"
+        class="section"
+      >
+        <SelectedTask :task="selectedTask" />
+      </div>
+
+      <div class="section task-list">
+        <TaskList
+          title="Done"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Settings from './components/Settings'
 import TaskList from './components/TaskList.vue'
 import SelectedTask from './components/SelectedTask.vue'
 import { mapGetters } from 'vuex'
@@ -34,6 +42,7 @@ export default {
   name: 'App',
   
   components: {
+    Settings,
     TaskList,
     SelectedTask
   },
@@ -56,7 +65,11 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    margin-top: 60px;
+    padding: 15px;
+  }
+  
+  #main-section {
+    margin-top: 15px;
   }
   
   h3, h4, h5 {
