@@ -30,6 +30,7 @@
             v-if="selectedTags.length > 0"
             label="Filtering on"
             :tags="selectedTags"
+            :modal="true"
             :remove-tag="removeTagFilter"
             remove-text="Clear Filter"
           />

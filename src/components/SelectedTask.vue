@@ -83,7 +83,6 @@
       <TagList
         :tags="task.tags"
         :task-id="task.id"
-        :select-tag="viewTag"
         :modal="true"
         :remove-tag="removeTag"
       />
@@ -130,11 +129,6 @@
         </button>
       </div>
       
-      <!-- Activity Modal -->
-      <ActivityModal
-        :tag="modalTag"
-      />
-      
       <br>
       
       <!-- Countdown Timer -->
@@ -163,7 +157,6 @@ import Checkbox from './Checkbox'
 import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
-import ActivityModal from './ActivityModal'
 import { mapState, mapMutations } from 'vuex'
 import marked from 'marked'
 import DOMPurify from 'dompurify'
@@ -176,8 +169,7 @@ export default {
     Checkbox,
     TagList,
     Countdown,
-    ActivityView,
-    ActivityModal
+    ActivityView
   },
   
   props: {
@@ -192,7 +184,6 @@ export default {
     editingNotes: false,
     newTag: '',
     tagOptions: [],
-    modalTag: null,
     showTagInput: false
   }),
   
@@ -240,10 +231,6 @@ export default {
       this.tagInputChange()
       this.tagOptions = []
       this.$refs.addTagInput.focus()
-    },
-
-    viewTag: function (tag) {
-      this.modalTag = tag
     },
     
     removeTag: function (tag) {

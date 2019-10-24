@@ -22,7 +22,7 @@
         :data-toggle="modal? 'modal' : null"
         :data-target="modal? '#activityModal' : null"
         :title="selectText"
-        @click="selectTag(tag, $event)"
+        @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
       >
         {{ tag }}
       </button>
@@ -186,7 +186,11 @@ export default {
       this.tagOptions = []
       this.$refs.addTagInput.focus()
     },
-
+    
+    viewActivityModal: function (tag) {
+      this.$root.$children[0].modalTag = tag
+    },
+    
     clickOutside: function (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
               event.relatedTarget.classList.contains('tag-option'))) {

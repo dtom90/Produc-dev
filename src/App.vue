@@ -21,12 +21,16 @@
         title="Done"
       />
     </div>
+    
+    <!-- Activity Modal -->
+    <ActivityModal :tag="modalTag" />
   </div>
 </template>
 
 <script>
-import TaskList from './components/TaskList.vue'
-import SelectedTask from './components/SelectedTask.vue'
+import TaskList from './components/TaskList'
+import SelectedTask from './components/SelectedTask'
+import ActivityModal from './components/ActivityModal'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -35,9 +39,14 @@ export default {
   
   components: {
     TaskList,
-    SelectedTask
+    SelectedTask,
+    ActivityModal
   },
 
+  data: () => ({
+    modalTag: null
+  }),
+  
   computed: {
     
     ...mapGetters([
