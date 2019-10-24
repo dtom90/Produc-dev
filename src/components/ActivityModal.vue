@@ -13,6 +13,40 @@
     >
       <div class="modal-content">
         <div class="modal-header">
+          <!-- Menu Options -->
+          <div class="dropdown">
+            <button
+              class="btn btn-light"
+              title="Task options"
+              data-toggle="dropdown"
+            >
+              <font-awesome-icon icon="ellipsis-v" />
+            </button>
+            <div class="dropdown-menu">
+              <div
+                id="selected-task-menu"
+                class="d-flex"
+              >
+                <button
+                  type="button"
+                  class="btn btn-warning"
+                  title="Edit task name"
+                  @click="editingTagName = true"
+                >
+                  <font-awesome-icon icon="pencil-alt" />
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  title="Delete task"
+                  @click="deleteTag({tag})"
+                >
+                  <font-awesome-icon icon="trash-alt" />
+                </button>
+              </div>
+            </div>
+          </div>
+          
           <div class="modal-title">
             <h3
               id="exampleModalLabel"
@@ -94,7 +128,8 @@ export default {
   },
   
   data: () => ({
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    editingTagName: false
   }),
   
   computed: {
@@ -117,7 +152,8 @@ export default {
   methods: {
     
     ...mapMutations([
-      'setTagColor'
+      'setTagColor',
+      'deleteTag'
     ]),
     
     updateValue (value) {
@@ -153,6 +189,14 @@ export default {
 
 .tag-badge:hover {
   color: lightgrey;
+}
+
+.dropdown .btn {
+  margin: 8px;
+}
+
+.dropdown-menu {
+  min-width: 40px;
 }
 
 </style>

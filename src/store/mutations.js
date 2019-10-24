@@ -2,6 +2,7 @@ import getters from './getters'
 import moment from 'moment'
 import Vue from 'vue'
 import colorManager from 'color-manager'
+import $ from 'jquery'
 
 const mutations = {
   
@@ -123,6 +124,17 @@ const mutations = {
       task.completed = Date.now()
     } else {
       task.completed = null
+    }
+  },
+  
+  deleteTag (state, payload) {
+    if (confirm(`Are you sure you want to delete the tag "${payload.tag}"? All tasks with this tag will lose the tag.`)) {
+      state.tasks.forEach(task => {
+        task.tags = task.tags.filter(tag => tag !== payload.tag)
+      })
+      state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
+      Vue.delete(state.tags, payload.tag)
+      $('#activityModal').modal('hide')
     }
   },
   
