@@ -19,8 +19,13 @@ const getters = {
     tag.startsWith(snip) && !state.tasks[id].tags.includes(tag)),
   
   tagActivity: state => tag => state.tasks.filter(task => task.tags.includes(tag))
-    .map(task => task.log.map(event => Object.assign({ task: task.name }, event)))
-    .flat().sort((a, b) => a.started - b.started)
+    .map(task => {
+      const logEvents = task.log.map(event => Object.assign({ task: task.name }, event))
+      if (task.completed) {
+        logEvents.unshift({ task: task.name, completed: task.completed })
+      }
+      return logEvents
+    }).flat().sort((a, b) => ('started' in a ? a.started : a.completed) - ('started' in b ? b.started : b.completed))
 }
 
 export default getters

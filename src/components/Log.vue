@@ -23,7 +23,8 @@
         <td v-if="event.task">
           <span>{{ event.task }}</span>
         </td>
-        <td>
+        
+        <td v-if="event.started">
           <span>Started {{ day ? displayTime(event.started) : displayDateTime(event.started) }}</span>
         </td>
         <td v-if="event.stopped">
@@ -35,6 +36,13 @@
         <td v-if="event.timeSpent">
           <span>Time Spent: {{ displayTimeSpent(event.timeSpent) }}</span>
         </td>
+        
+        <td v-if="event.completed" />
+        <td v-if="event.completed" />
+        <td v-if="event.completed">
+          <span>Completed {{ displayTime(event.completed) }}</span>
+        </td>
+        <td v-if="event.completed" />
       </tr>
     </table>
   </div>

@@ -106,7 +106,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -147,15 +147,28 @@ export default {
   
   computed: {
     
+    ...mapState([
+      'tasks'
+    ]),
+    
     descendingLog: function () { return this.log.slice().reverse() },
     
     dailyActivity: function () {
       const dailyActivity = {}
       let day
       
+      if (this.taskId !== null) {
+        const task = this.tasks.filter(task => task.id === this.taskId)[0]
+        if (task.completed) {
+          day = moment(task.completed).format('YYYY-MM-DD')
+          dailyActivity[day] = { log: [{ completed: task.completed }] }
+        }
+      }
+      
       // Create dailyActivity Object from this.log
       for (const event of this.descendingLog) {
-        day = moment(event.started).format('YYYY-MM-DD')
+        const timestamp = 'started' in event ? event.started : event.completed
+        day = moment(timestamp).format('YYYY-MM-DD')
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
         } else {
