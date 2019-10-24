@@ -13,40 +13,6 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <!-- Menu Options -->
-          <div class="dropdown">
-            <button
-              class="btn btn-light"
-              title="Task options"
-              data-toggle="dropdown"
-            >
-              <font-awesome-icon icon="ellipsis-v" />
-            </button>
-            <div class="dropdown-menu">
-              <div
-                id="selected-task-menu"
-                class="d-flex"
-              >
-                <button
-                  type="button"
-                  class="btn btn-warning"
-                  title="Edit task name"
-                  @click="editingTagName = true"
-                >
-                  <font-awesome-icon icon="pencil-alt" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  title="Delete task"
-                  @click="deleteTag({tag})"
-                >
-                  <font-awesome-icon icon="trash-alt" />
-                </button>
-              </div>
-            </div>
-          </div>
-          
           <div class="modal-title">
             <h3
               id="exampleModalLabel"
@@ -64,10 +30,37 @@
               id="tag-menu"
               class="dropdown-menu"
             >
+              <div
+                class="d-flex align-items-center"
+              >
+                <input
+                  v-model="newTagName"
+                  class="edit-task"
+                  @keyup.enter="updateTagName"
+                >
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  @click="updateTagName"
+                >
+                  <font-awesome-icon icon="save" />
+                </button>
+              </div>
+              <div class="dropdown-divider" />
               <sketch-picker
                 :value="color"
-                @input="updateValue"
+                @input="updateTagColor"
               />
+              <div class="dropdown-divider" />
+              <button
+                id="delete-tag-btn"
+                type="button"
+                class="btn btn-danger"
+                title="Delete tag"
+                @click="deleteTag({tag})"
+              >
+                <font-awesome-icon icon="trash-alt" />
+              </button>
             </div>
           </div>
           
@@ -129,7 +122,7 @@ export default {
   
   data: () => ({
     color: '#FFFFFF',
-    editingTagName: false
+    newTagName: ''
   }),
   
   computed: {
@@ -144,8 +137,9 @@ export default {
   },
   
   watch: {
-    tag: function (newVal) {
-      this.color = this.tagColor[newVal]
+    tag: function (newTag) {
+      this.newTagName = newTag
+      this.color = this.tagColor[newTag]
     }
   },
   
@@ -153,10 +147,18 @@ export default {
     
     ...mapMutations([
       'setTagColor',
+      'renameTag',
       'deleteTag'
     ]),
     
-    updateValue (value) {
+    updateTagName () {
+      this.renameTag({
+        oldName: this.tag,
+        newName: this.newTagName
+      })
+    },
+    
+    updateTagColor (value) {
       this.setTagColor({
         tag: this.tag,
         color: value.hex
@@ -191,12 +193,12 @@ export default {
   color: lightgrey;
 }
 
-.dropdown .btn {
-  margin: 8px;
-}
-
 .dropdown-menu {
   min-width: 40px;
+}
+
+#delete-tag-btn {
+  margin-left: 8px;
 }
 
 </style>

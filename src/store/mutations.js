@@ -127,6 +127,25 @@ const mutations = {
     }
   },
   
+  renameTag (state, payload) {
+    if (payload.newName !== payload.oldName) {
+      if (payload.newName in state.tags) {
+        alert('Error: the new tag name you entered already exists. Please rename it to something else.')
+      } else {
+        state.tasks.forEach(task => {
+          task.tags = task.tags.map(tag => tag === payload.oldName ? payload.newName : tag)
+        })
+        state.tags[payload.newName] = state.tags[payload.oldName]
+        const idx = state.selectedTags.indexOf(payload.oldName)
+        if (idx >= 0) {
+          state.selectedTags[idx] = payload.newName
+        }
+        Vue.delete(state.tags, payload.oldName)
+        $('#activityModal').modal('hide')
+      }
+    }
+  },
+  
   deleteTag (state, payload) {
     if (confirm(`Are you sure you want to delete the tag "${payload.tag}"? All tasks with this tag will lose the tag.`)) {
       state.tasks.forEach(task => {
