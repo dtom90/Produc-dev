@@ -27,7 +27,7 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     
-    "audit:critical": "yarn audit || test $? -lt 16",
+    "audit:critical": "yarn audit --level high || test $? -lt 16",
     
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
