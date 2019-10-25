@@ -3,13 +3,14 @@ import ActivityView from '@/components/ActivityView'
 import ActivityChart from '@/components/ActivityChart'
 import Log from '@/components/Log.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
-import { generateActivity } from '@/fixtures'
+import { taskWithActivity, generateActivity } from '@/fixtures'
 import moment from 'moment'
 import Vuex from 'vuex'
 
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
+const task = taskWithActivity()
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
 const day1 = moment(completedDate).subtract(1, 'd')
 const day2 = completedDate
@@ -18,7 +19,9 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const shouldBehaveLikeActivityView = function (wrapper) {
+let wrapper
+
+const shouldBehaveLikeActivityView = function (type) {
   
   it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
@@ -63,8 +66,12 @@ const shouldBehaveLikeActivityView = function (wrapper) {
     expect(wrapper.vm.logVisible).toBe(true)
     
     const activityLogs = wrapper.findAll(Log)
+    const day2log = [log[3], log[2]]
+    if (type === 'task') {
+      day2log.unshift({ completed: task.completed })
+    }
     expect(activityLogs.at(0).props()).toEqual({
-      log: [log[3], log[2]],
+      log: day2log,
       day: day2.format(EXPECTED_DAY_KEY_FORMAT),
       timeSpent: day2Duration
     })
@@ -80,11 +87,24 @@ const shouldBehaveLikeActivityView = function (wrapper) {
 
 describe('ActivityView', () => {
   
+  // add the 2 lines below
+  let store
+  
   describe('for task', () => {
     
-    const wrapper = shallowMount(ActivityView, {
-      propsData: { log: log, element: 'My Task', taskId: 0 },
-      localVue
+    // add this before each
+    beforeEach(() => {
+      store = new Vuex.Store({
+        state: {
+          tasks: [task]
+        }
+      })
+      
+      wrapper = shallowMount(ActivityView, {
+        propsData: { log: log, element: 'My Task', taskId: 1 },
+        localVue,
+        store
+      })
     })
     
     it('renders a title with the element name', () => {
@@ -93,24 +113,27 @@ describe('ActivityView', () => {
       
     })
     
-    shouldBehaveLikeActivityView(wrapper)
+    shouldBehaveLikeActivityView('task')
     
   })
   
   describe('for tag', () => {
-    
-    const wrapper = shallowMount(ActivityView, {
-      propsData: { log: log, element: 'myTag' },
-      localVue
-    })
   
+    // add this before each
+    beforeEach(() => {
+      wrapper = shallowMount(ActivityView, {
+        propsData: { log: log, element: 'myTag' },
+        localVue
+      })
+    })
+    
     it('does not render a title with the element name', () => {
       
       expect(wrapper.text()).not.toMatch('Activity for My Task')
       
     })
     
-    shouldBehaveLikeActivityView(wrapper)
+    shouldBehaveLikeActivityView('tag')
     
   })
   

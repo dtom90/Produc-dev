@@ -40,13 +40,13 @@ describe('Log', () => {
         'Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
+        '     Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes' +
-        ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
+        '     Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
+        '     Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
       )
@@ -136,7 +136,7 @@ describe('Log', () => {
         'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        ' Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
+        '     Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes'
       )
@@ -169,15 +169,15 @@ describe('Log', () => {
         taskName +
         ' Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
+        ' Time Spent: 25 minutes    ' +
         taskName +
         ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes' +
+        ' Time Spent: 15 minutes    ' +
         taskName +
         ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
+        ' Time Spent: 25 minutes    ' +
         taskName +
         ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
