@@ -114,19 +114,23 @@
         </button>
         
         <!-- Editing Mode -->
-        <textarea
-          v-if="editingNotes"
-          v-model="task.notes"
-          class="form-control"
-        />
-        <button
-          v-if="editingNotes"
-          type="button"
-          class="btn btn-primary"
-          @click="editingNotes = false"
-        >
-          <font-awesome-icon icon="save" />
-        </button>
+        <div class="input-group">
+          <textarea
+            v-if="editingNotes"
+            v-model="task.notes"
+            class="form-control"
+          />
+          <div class="input-group-append">
+            <button
+              v-if="editingNotes"
+              type="button"
+              class="btn btn-primary"
+              @click="editingNotes = false"
+            >
+              <font-awesome-icon icon="save" />
+            </button>
+          </div>
+        </div>
       </div>
       
       <br>
