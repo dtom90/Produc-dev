@@ -122,6 +122,9 @@ const mutations = {
     const task = state.tasks.find(t => t.id === payload.id)
     if (!task.completed) {
       task.completed = Date.now()
+      if (task.id === state.activeTaskID && state.running) {
+        state.running = false
+      }
     } else {
       task.completed = null
     }

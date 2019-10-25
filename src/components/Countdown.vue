@@ -106,7 +106,7 @@ export default {
   computed: {
     
     ...mapState([
-      'activeTaskID'
+      'running'
     ]),
     
     totalSeconds () {
@@ -133,6 +133,16 @@ export default {
       return `${mins}:${secString}`
     }
     
+  },
+  
+  watch: {
+    running (newValue, oldValue) {
+      if (this.countingDown && oldValue === true && newValue === false) {
+        this.timer.pause()
+        this.endInterval()
+        this.endTask()
+      }
+    }
   },
   
   mounted: function () {
