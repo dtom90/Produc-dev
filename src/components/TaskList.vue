@@ -197,6 +197,7 @@
     <!-- Incomplete Tasks -->
     <draggable
       v-if="!isCompletedList"
+      id="incomplete-task-list"
       v-model="incompleteTaskList"
     >
       <transition-group>
@@ -346,6 +347,7 @@ export default {
 }
 </script>
 
+<!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
 <style scoped>
 
   #new-task {
@@ -396,4 +398,16 @@ export default {
     height: 1.5em;
   }
 
+  #incomplete-task-list .list-group-item:active
+  {
+    cursor: move !important;
+    cursor: -webkit-grabbing !important;
+    cursor:    -moz-grabbing !important;
+    cursor:         grabbing !important;
+  }
+  
+  #incomplete-task-list .list-group-item {
+    cursor: grab;
+  }
+  
 </style>
