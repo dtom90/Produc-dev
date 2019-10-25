@@ -47,7 +47,7 @@ const activitySection = selectedTaskSection.find('#taskActivity')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Done')
-const doneMenuButton = doneSection.find('button').child('svg.fa-ellipsis-v')
+const doneMenuButton = doneSection.find('#completedSettingsButton')
 const doneSortLabel = doneMenuButton.parent().find('label').withText('First')
 const doneSortSelect = doneMenuButton.parent().find('select')
 const doneSortOption = doneSortSelect.child('option')
