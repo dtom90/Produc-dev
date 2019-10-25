@@ -330,10 +330,13 @@ export default {
     selectTagFilter (tag, e) {
       e.stopPropagation()
       this.selectTag({ tag })
-      if (this.selectedTask && !this.selectedTags.some(tag => this.selectedTask.tags.includes(tag))) {
-        const tasksWithTag = this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
-        if (tasksWithTag.length > 0) {
-          this.selectTask(tasksWithTag[0].id)
+      if (!this.selectedTask || (this.selectedTask && !this.selectedTags.some(tag => this.selectedTask.tags.includes(tag)))) {
+        let tasksWithTag = this.incompleteTasks.find(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        if (!tasksWithTag) {
+          tasksWithTag = this.completedTasks.find(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        }
+        if (tasksWithTag) {
+          this.selectTask(tasksWithTag.id)
         } else {
           this.selectTask(null)
         }
