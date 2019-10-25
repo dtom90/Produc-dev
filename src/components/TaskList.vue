@@ -7,22 +7,22 @@
         {{ title }}
       </h3>
       
-      <!-- TaskList Settings Button -->
+      <!-- To Do List Filter Menu -->
       <div
-        class="dropright"
+        v-if="!isCompletedList"
+        class="dropright d-flex justify-content-end"
       >
         <button
-          :id="btnId"
+          id="filter-menu-button"
           class="btn btn-light"
+          :style="filterBtnStyle"
           title="List options"
           data-toggle="dropdown"
         >
-          <font-awesome-icon icon="ellipsis-v" />
+          <font-awesome-icon icon="filter" />
         </button>
-        
-        <!-- To Do List Menu -->
+
         <div
-          v-if="!isCompletedList"
           id="filter-menu"
           class="dropdown-menu"
         >
@@ -59,49 +59,24 @@
             :tags="unselectedTags"
             :select-tag="selectTagFilter"
           />
-          <div class="dropdown-divider" />
-          <h6 style="margin-bottom: 10px;">
-            Add New Tasks To:
-          </h6>
-          <div
-            class="btn-group btn-group-toggle custom-icons"
-          >
-            <label
-              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
-              title="Top of List"
-            >
-              <input
-                id="insert-top"
-                type="radio"
-                value="Top"
-                @click="setTopInsert(true)"
-              >
-              <img
-                src="add_to_top.svg"
-                alt="Add to Top"
-              >
-            </label>
-            <label
-              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
-              title="Bottom of List"
-            >
-              <input
-                id="insert-bottom"
-                type="radio"
-                value="Bottom"
-                @click="setTopInsert(false)"
-              >
-              <img
-                src="add_to_bottom.svg"
-                alt="Add to Bottom"
-              >
-            </label>
-          </div>
         </div>
+      </div>
+      
+      <!-- Done List Menu -->
+      <div
+        v-if="isCompletedList"
+        class="dropright"
+      >
+        <button
+          :id="btnId"
+          class="btn btn-light"
+          title="List options"
+          data-toggle="dropdown"
+        >
+          <font-awesome-icon :icon="sortOrder === 'Oldest' ? 'caret-down' : 'caret-up'" />
+        </button>
         
-        <!-- Done List Menu -->
         <div
-          v-if="isCompletedList"
           class="dropdown-menu"
         >
           <div class="input-group">
@@ -138,16 +113,86 @@
       </div>
     </div>
     
-    <!-- New Task Input Field -->
-    <input
+    <div
       v-if="!isCompletedList"
-      id="new-task"
-      v-model="newTask"
-      type="text"
-      class="form-control"
-      placeholder="enter new task"
-      @keyup.enter="addNewTask"
+      id="todo-input-section"
     >
+      <!-- New Task Input Field -->
+      <input
+        id="new-task"
+        v-model="newTask"
+        type="text"
+        class="form-control"
+        placeholder="enter new task"
+        @keyup.enter="addNewTask"
+      >
+
+      <!-- To Do List Add Position Menu -->
+      <div
+        class="dropright custom-icons"
+      >
+        <button
+          id="add-position-menu-button"
+          class="btn btn-light"
+          title="List options"
+          data-toggle="dropdown"
+        >
+          <img
+            v-if="insertAtTop"
+            src="add_to_top.svg"
+            alt="Add to Top"
+          >
+          <img
+            v-if="!insertAtTop"
+            src="add_to_bottom.svg"
+            alt="Add to Bottom"
+          >
+        </button>
+        
+        <div
+          id="add-position-menu"
+          class="dropdown-menu"
+        >
+          <h6 style="margin-bottom: 10px;">
+            Add New Tasks To:
+          </h6>
+          <div
+            class="btn-group btn-group-toggle"
+          >
+            <label
+              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
+              title="Top of List"
+            >
+              <input
+                id="insert-top"
+                type="radio"
+                value="Top"
+                @click="setTopInsert(true)"
+              >
+              <img
+                src="add_to_top.svg"
+                alt="Add to Top"
+              >
+            </label>
+            <label
+              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
+              title="Bottom of List"
+            >
+              <input
+                id="insert-bottom"
+                type="radio"
+                value="Bottom"
+                @click="setTopInsert(false)"
+              >
+              <img
+                src="add_to_bottom.svg"
+                alt="Add to Bottom"
+              >
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <!-- Incomplete Tasks -->
     <draggable
@@ -216,6 +261,9 @@ export default {
       'addSelectedTags',
       'insertAtTop'
     ]),
+    ...mapState({
+      tagColor: 'tags'
+    }),
     ...mapGetters([
       'incompleteTasks',
       'completedTasks',
@@ -226,6 +274,11 @@ export default {
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
     sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
+    filterBtnStyle: function () {
+      return this.selectedTags.length > 0 ? {
+        backgroundColor: this.tagColor[this.selectedTags[0]]
+      } : {}
+    },
     toggleAddSelectedTags: {
       get () {
         return this.addSelectedTags
@@ -309,6 +362,23 @@ export default {
   }
 
   .title-section > button {
+    margin-bottom: 0.5rem;
+  }
+  
+  #todo-input-section {
+    display: flex;
+  }
+
+  #todo-input-section > input {
+    flex: 1;
+  }
+  
+  #add-position-menu {
+    text-align: center;
+  }
+  
+  #filter-menu-button {
+    width: 50px;
     margin-bottom: 0.5rem;
   }
   
