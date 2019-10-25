@@ -183,7 +183,7 @@ export default {
       this.addTaskTag({ id: this.taskId, tag: newTag })
       this.newTag = ''
       this.tagInputChange()
-      this.tagOptions = []
+      this.tagOptions = this.availableTags(this.taskId, this.newTag)
       this.$refs.addTagInput.focus()
     },
     

@@ -81,7 +81,7 @@
       
       <!-- Tags Section -->
       <TagList
-        :tags="task.tags"
+        :tags="taskTags"
         :task-id="task.id"
         :modal="true"
         :remove-tag="removeTag"
@@ -191,11 +191,17 @@ export default {
     
     ...mapState([
       'activeTaskID',
-      'running'
+      'running',
+      'tags'
     ]),
     
     checked: function () {
       return this.task.completed !== null
+    },
+    
+    taskTags: function () {
+      const tags = Object.keys(this.tags)
+      return this.task.tags.slice().sort((a, b) => tags.indexOf(a) - tags.indexOf(b))
     },
     
     displayNotes: function () {
