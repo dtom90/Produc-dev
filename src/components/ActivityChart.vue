@@ -47,6 +47,7 @@ const chartOptions = {
     }
   },
   animation: {
+    duration: 0,
     onComplete: function (event) {
       const canvas = event.chart.canvas
       const chartWrapper = canvas.parentElement.parentElement
