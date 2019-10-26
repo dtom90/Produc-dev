@@ -19,11 +19,13 @@
 
           <!--  Task Name & Field (when editing)  -->
           <div id="task-name-container">
-            <span
+            <div
               v-if="!editingName"
               id="task-name"
               @click="editingName = true"
-            >{{ task.name }}</span>
+            >
+              {{ task.name }}
+            </div>
             <div
               v-if="editingName"
               class="d-flex align-items-center"
@@ -279,6 +281,7 @@ export default {
     #task-name {
         font-weight: 600;
         font-size: xx-large;
+        text-align: center;
     }
     
     #selected-task-menu {
