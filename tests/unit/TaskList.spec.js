@@ -15,6 +15,7 @@ const tasks = [
 ]
 
 const state = {
+  tags: {},
   selectedTags: []
 }
 
