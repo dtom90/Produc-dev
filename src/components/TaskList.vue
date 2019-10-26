@@ -18,6 +18,8 @@
           :style="filterBtnStyle"
           title="Filter on tags"
           data-toggle="dropdown"
+          data-tooltip="tooltip"
+          data-placement="right"
           :disabled="Object.keys(tagColor).length === 0"
         >
           <font-awesome-icon icon="filter" />
@@ -135,8 +137,10 @@
         <button
           id="add-position-menu-button"
           class="btn btn-light"
-          title="List options"
+          title="New task placement"
           data-toggle="dropdown"
+          data-tooltip="tooltip"
+          data-placement="right"
         >
           <img
             v-if="insertAtTop"
@@ -230,6 +234,10 @@ import TagList from './TagList.vue'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 import $ from 'jquery'
+
+$(function () {
+  $('[data-tooltip="tooltip"]').tooltip()
+})
 
 $(document).on('click', '.title-section .dropdown-menu', function (e) {
   e.stopPropagation()
