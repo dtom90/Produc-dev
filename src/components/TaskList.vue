@@ -7,8 +7,65 @@
         {{ title }}
       </h3>
       
-      <!-- TaskList Settings Button -->
+      <!-- To Do List Filter Menu -->
       <div
+        v-if="!isCompletedList"
+        class="dropright d-flex justify-content-end"
+      >
+        <button
+          id="filter-menu-button"
+          class="btn btn-light"
+          :style="filterBtnStyle"
+          title="Filter on tags"
+          data-toggle="dropdown"
+          :disabled="Object.keys(tagColor).length === 0"
+        >
+          <font-awesome-icon icon="filter" />
+        </button>
+
+        <div
+          id="filter-menu"
+          class="dropdown-menu"
+        >
+          <TagList
+            v-if="selectedTags.length > 0"
+            label="Filtering on"
+            :tags="selectedTags"
+            :modal="true"
+            :remove-tag="removeTagFilter"
+            remove-text="Clear Filter"
+          />
+          <div
+            v-if="selectedTags.length > 0"
+            class="form-check form-check-inline"
+          >
+            <input
+              id="addTagsSelect"
+              v-model="toggleAddSelectedTags"
+              class="form-check-input"
+              type="checkbox"
+            >
+            <label
+              class="form-check-label"
+              for="addTagsSelect"
+            >Include in new tasks</label>
+          </div>
+          <div
+            v-if="selectedTags.length > 0 && unselectedTags.length > 0"
+            class="dropdown-divider"
+          />
+          <TagList
+            v-if="unselectedTags.length > 0"
+            :label="selectedTags.length > 0 ? 'Add to filter' : 'Filter on'"
+            :tags="unselectedTags"
+            :select-tag="selectTagFilter"
+          />
+        </div>
+      </div>
+      
+      <!-- Done List Menu -->
+      <div
+        v-if="isCompletedList"
         class="dropright"
       >
         <button
@@ -17,65 +74,10 @@
           title="List options"
           data-toggle="dropdown"
         >
-          <font-awesome-icon icon="ellipsis-v" />
+          <font-awesome-icon :icon="sortOrder === 'Oldest' ? 'caret-up' : 'caret-down'" />
         </button>
+        
         <div
-          v-if="!isCompletedList"
-          id="filter-menu"
-          class="dropdown-menu"
-        >
-          <TagList
-            v-if="selectedTag !== null"
-            :tags="[selectedTag]"
-            :remove-tag="removeTagFilter"
-            remove-text="Clear Filter"
-          />
-          <TagList
-            v-if="selectedTag === null"
-            :tags="allTags"
-            :select-tag="selectTagFilter"
-          />
-          <div class="dropdown-divider" />
-          <div style="margin-bottom: 10px;">
-            Add New Tasks To:
-          </div>
-          <div
-            class="btn-group btn-group-toggle custom-icons"
-          >
-            <label
-              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
-              title="Top of List"
-            >
-              <input
-                id="insert-top"
-                type="radio"
-                value="Top"
-                @click="setTopInsert(true)"
-              >
-              <img
-                src="add_to_top.svg"
-                alt="Add to Top"
-              >
-            </label>
-            <label
-              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
-              title="Bottom of List"
-            >
-              <input
-                id="insert-bottom"
-                type="radio"
-                value="Bottom"
-                @click="setTopInsert(false)"
-              >
-              <img
-                src="add_to_bottom.svg"
-                alt="Add to Bottom"
-              >
-            </label>
-          </div>
-        </div>
-        <div
-          v-if="isCompletedList"
           class="dropdown-menu"
         >
           <div class="input-group">
@@ -112,20 +114,91 @@
       </div>
     </div>
     
-    <!-- New Task Input Field -->
-    <input
+    <div
       v-if="!isCompletedList"
-      id="new-task"
-      v-model="newTask"
-      type="text"
-      class="form-control"
-      placeholder="enter new task"
-      @keyup.enter="addNewTask"
+      id="todo-input-section"
     >
+      <!-- New Task Input Field -->
+      <input
+        id="new-task"
+        v-model="newTask"
+        type="text"
+        class="form-control"
+        placeholder="enter new task"
+        @keyup.enter="addNewTask"
+      >
+
+      <!-- To Do List Add Position Menu -->
+      <div
+        class="dropright custom-icons"
+      >
+        <button
+          id="add-position-menu-button"
+          class="btn btn-light"
+          title="List options"
+          data-toggle="dropdown"
+        >
+          <img
+            v-if="insertAtTop"
+            src="add_to_top.svg"
+            alt="Add to Top"
+          >
+          <img
+            v-if="!insertAtTop"
+            src="add_to_bottom.svg"
+            alt="Add to Bottom"
+          >
+        </button>
+        
+        <div
+          id="add-position-menu"
+          class="dropdown-menu"
+        >
+          <h6 style="margin-bottom: 10px;">
+            Add New Tasks To:
+          </h6>
+          <div
+            class="btn-group btn-group-toggle"
+          >
+            <label
+              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
+              title="Top of List"
+            >
+              <input
+                id="insert-top"
+                type="radio"
+                value="Top"
+                @click="setTopInsert(true)"
+              >
+              <img
+                src="add_to_top.svg"
+                alt="Add to Top"
+              >
+            </label>
+            <label
+              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
+              title="Bottom of List"
+            >
+              <input
+                id="insert-bottom"
+                type="radio"
+                value="Bottom"
+                @click="setTopInsert(false)"
+              >
+              <img
+                src="add_to_bottom.svg"
+                alt="Add to Bottom"
+              >
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <!-- Incomplete Tasks -->
     <draggable
       v-if="!isCompletedList"
+      id="incomplete-task-list"
       v-model="incompleteTaskList"
     >
       <transition-group>
@@ -181,28 +254,45 @@ export default {
   
   data: () => ({
     newTask: '',
-    sortOrder: 'Oldest'
+    sortingOptions: ['Recent', 'Oldest'],
+    sortOrder: 'Recent'
   }),
   
   computed: {
     ...mapState([
-      'selectedTag',
+      'selectedTags',
+      'addSelectedTags',
       'insertAtTop'
     ]),
+    ...mapState({
+      tagColor: 'tags'
+    }),
     ...mapGetters([
       'incompleteTasks',
       'completedTasks',
       'selectedTask',
-      'allTags'
+      'unselectedTags'
     ]),
     isCompletedList: function () { return this.title === 'Done' },
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
+    filterBtnStyle: function () {
+      return this.selectedTags.length > 0 ? {
+        backgroundColor: this.tagColor[this.selectedTags[0]]
+      } : {}
+    },
+    toggleAddSelectedTags: {
+      get () {
+        return this.addSelectedTags
+      },
+      set (value) {
+        this.updateAddSelectedTags(value)
+      }
+    },
     incompleteTaskList: {
       get () {
-        return this.selectedTag
-          ? this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
+        return this.selectedTags.length > 0
+          ? this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
           : this.incompleteTasks
       },
       set (value) {
@@ -210,8 +300,8 @@ export default {
       }
     },
     completedTaskList: function () {
-      const filteredTasks = this.selectedTag
-        ? this.completedTasks.filter(task => task.tags.includes(this.selectedTag))
+      const filteredTasks = this.selectedTags.length > 0
+        ? this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         : this.completedTasks
       return filteredTasks && this.sortOrder !== 'Oldest'
         ? filteredTasks.slice().reverse()
@@ -219,42 +309,45 @@ export default {
     }
   },
   
-  mounted: function () {
-    this.sortOrder = this.sortingOptions[0]
-  },
-  
   methods: {
     ...mapMutations([
       'addTask',
       'setTopInsert',
+      'updateAddSelectedTags',
       'clearTasks',
       'updateIncompleteTasks',
       'selectTag',
+      'removeTag',
       'selectTask'
     ]),
     addNewTask () {
       this.addTask({ name: this.newTask })
       this.newTask = ''
     },
-    selectTagFilter (tag) {
+    selectTagFilter (tag, e) {
+      e.stopPropagation()
       this.selectTag({ tag })
-      if (!this.selectedTask.tags.includes(this.selectedTag)) {
-        const tasksWithTag = this.incompleteTasks.filter(task => task.tags.includes(this.selectedTag))
-        if (tasksWithTag.length > 0) {
-          this.selectTask(tasksWithTag[0].id)
+      if (!this.selectedTask || (this.selectedTask && !this.selectedTags.some(tag => this.selectedTask.tags.includes(tag)))) {
+        let tasksWithTag = this.incompleteTasks.find(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        if (!tasksWithTag) {
+          tasksWithTag = this.completedTasks.find(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        }
+        if (tasksWithTag) {
+          this.selectTask(tasksWithTag.id)
         } else {
           this.selectTask(null)
         }
       }
     },
-    removeTagFilter () {
-      this.selectTag({ tag: null })
+    removeTagFilter (tag) {
+      this.removeTag({ tag })
     }
   }
   
 }
 </script>
 
+<!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
 <style scoped>
 
   #new-task {
@@ -274,8 +367,30 @@ export default {
     margin-bottom: 0.5rem;
   }
   
+  #todo-input-section {
+    display: flex;
+  }
+
+  #todo-input-section > input {
+    flex: 1;
+  }
+  
+  #add-position-menu {
+    text-align: center;
+  }
+  
+  #filter-menu-button {
+    width: 50px;
+    margin-bottom: 0.5rem;
+  }
+  
   #filter-menu {
     padding: 8px;
+    width: 200px;
+  }
+  
+  #filter-menu .form-check {
+    margin: 0;
   }
   
   .custom-icons img {
@@ -283,4 +398,16 @@ export default {
     height: 1.5em;
   }
 
+  #incomplete-task-list .list-group-item:active
+  {
+    cursor: move !important;
+    cursor: -webkit-grabbing !important;
+    cursor:    -moz-grabbing !important;
+    cursor:         grabbing !important;
+  }
+  
+  #incomplete-task-list .list-group-item {
+    cursor: grab;
+  }
+  
 </style>

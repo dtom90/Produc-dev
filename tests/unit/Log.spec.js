@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Log from '@/components/Log.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 import moment from 'moment'
+import humanizeDuration from 'humanize-duration'
 import { generateActivity } from '@/fixtures'
 
 const localVue = createLocalVue()
@@ -26,7 +27,10 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch(allDuration.humanize())
+      expect(wrapper.text()).toMatch(humanizeDuration(allDuration, {
+        units: ['d', 'h', 'm'],
+        round: true
+      }))
       
     })
     
@@ -36,13 +40,13 @@ describe('Log', () => {
         'Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
+        '     Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes' +
-        ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
+        '     Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
+        '     Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
       )
@@ -119,7 +123,10 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch(day2Duration.humanize())
+      expect(wrapper.text()).toMatch(humanizeDuration(day2Duration, {
+        units: ['d', 'h', 'm'],
+        round: true
+      }))
       
     })
     
@@ -129,7 +136,7 @@ describe('Log', () => {
         'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
-        ' Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
+        '     Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 15 minutes'
       )
@@ -149,7 +156,10 @@ describe('Log', () => {
     
     it('renders the time spent on the task', () => {
       
-      expect(wrapper.text()).toMatch(allDuration.humanize())
+      expect(wrapper.text()).toMatch(humanizeDuration(allDuration, {
+        units: ['d', 'h', 'm'],
+        round: true
+      }))
       
     })
     
@@ -159,15 +169,15 @@ describe('Log', () => {
         taskName +
         ' Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
+        ' Time Spent: 25 minutes    ' +
         taskName +
         ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes' +
+        ' Time Spent: 15 minutes    ' +
         taskName +
         ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
+        ' Time Spent: 25 minutes    ' +
         taskName +
         ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +

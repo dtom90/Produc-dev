@@ -2,10 +2,19 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import TagList from '@/components/TagList.vue'
 import { FontAwesomeIcon } from '@/font-awesome-icons'
 import Vuex from 'vuex'
+import colorManager from 'color-manager'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
+
+const tagValues = ['one tag', 'another tag']
+const state = {
+  tags: {
+    'one tag': colorManager.getRandomColor(),
+    'another tag': colorManager.getRandomColor()
+  }
+}
 
 const getters = {
   availableTags: () => jest.fn()
@@ -17,11 +26,11 @@ const mutations = {
 }
 
 const store = new Vuex.Store({
+  state,
   getters,
   mutations
 })
 
-const tagValues = ['one tag', 'another tag']
 const taskId = 0
 
 describe('TagList', () => {
@@ -82,7 +91,7 @@ describe('TagList', () => {
     expect(wrapper.vm.newTag).toBe('some tag')
     
     addTagInput.trigger('keyup.enter')
-    expect(mutations.addTaskTag).toHaveBeenCalledWith({}, { id: taskId, tag: 'some tag' })
+    expect(mutations.addTaskTag).toHaveBeenCalledWith(state, { id: taskId, tag: 'some tag' })
     expect(addTagInput.element.value).toBe('')
     
   })

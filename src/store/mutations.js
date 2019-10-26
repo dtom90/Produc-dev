@@ -1,16 +1,8 @@
 import getters from './getters'
 import moment from 'moment'
 import Vue from 'vue'
-
-const addElem = (arr, elem) => {
-  if (!(arr.includes(elem))) {
-    arr.push(elem)
-  }
-}
-
-const deleteElem = (arr, elem) => {
-  arr.splice(arr.indexOf(elem), 1)
-}
+import colorManager from 'color-manager'
+import $ from 'jquery'
 
 const mutations = {
   
@@ -20,7 +12,7 @@ const mutations = {
       const newTask = {
         id: state.nextTaskID,
         name: taskName,
-        tags: state.selectedTag !== null ? [state.selectedTag] : [],
+        tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
         notes: '',
         created: Date.now(),
         log: [],
@@ -32,15 +24,16 @@ const mutations = {
         state.tasks.push(newTask)
       }
       state.nextTaskID += 1
-      if (state.selectedTag !== null) {
-        Vue.set(state.tags, state.selectedTag, [newTask.id])
-      }
       state.selectedTaskID = newTask.id
     }
   },
   
   setTopInsert (state, payload) {
     state.insertAtTop = payload
+  },
+  
+  updateAddSelectedTags (state, newValue) {
+    state.addSelectedTags = newValue
   },
   
   updateIncompleteTasks (state, payload) {
@@ -99,31 +92,71 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
-          Vue.set(state.tags, newTag, [task.id])
-        } else {
-          addElem(state.tags[newTag], task.id)
+          Vue.set(state.tags, newTag, colorManager.getRandomColor())
         }
-        addElem(task.tags, newTag)
+        if (!(task.tags.includes(newTag))) {
+          task.tags.push(newTag)
+        }
       }
     }
   },
   
+  setTagColor (state, payload) {
+    Vue.set(state.tags, payload.tag, payload.color)
+  },
+  
   selectTag (state, payload) {
-    state.selectedTag = payload.tag
+    state.selectedTags.push(payload.tag)
+  },
+  
+  removeTag (state, payload) {
+    state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
   },
   
   removeTaskTag (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
-    deleteElem(task.tags, payload.tag)
-    deleteElem(state.tags[payload.tag], payload.id)
+    task.tags.splice(task.tags.indexOf(payload.tag), 1)
   },
   
   completeTask (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     if (!task.completed) {
       task.completed = Date.now()
+      if (task.id === state.activeTaskID && state.running) {
+        state.running = false
+      }
     } else {
       task.completed = null
+    }
+  },
+  
+  renameTag (state, payload) {
+    if (payload.newName !== payload.oldName) {
+      if (payload.newName in state.tags) {
+        alert('Error: the new tag name you entered already exists. Please rename it to something else.')
+      } else {
+        state.tasks.forEach(task => {
+          task.tags = task.tags.map(tag => tag === payload.oldName ? payload.newName : tag)
+        })
+        state.tags[payload.newName] = state.tags[payload.oldName]
+        const idx = state.selectedTags.indexOf(payload.oldName)
+        if (idx >= 0) {
+          state.selectedTags[idx] = payload.newName
+        }
+        Vue.delete(state.tags, payload.oldName)
+        $('#activityModal').modal('hide')
+      }
+    }
+  },
+  
+  deleteTag (state, payload) {
+    if (confirm(`Are you sure you want to delete the tag "${payload.tag}"? All tasks with this tag will lose the tag.`)) {
+      state.tasks.forEach(task => {
+        task.tags = task.tags.filter(tag => tag !== payload.tag)
+      })
+      state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
+      Vue.delete(state.tags, payload.tag)
+      $('#activityModal').modal('hide')
     }
   },
   
@@ -131,15 +164,19 @@ const mutations = {
     const index = state.tasks.findIndex(t => t.id === payload.id)
     const task = state.tasks[index]
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
-      task.tags.forEach(tag => deleteElem(state.tags[tag], payload.id))
       state.tasks.splice(index, 1)
+      if (state.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
+        state.activeTaskID = null
+        state.running = false
+      } else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
+        state.selectedTaskID = state.activeTaskID
+      }
     }
   },
   
   clearTasks (state) {
     const completedTasks = state.tasks.filter(t => t.completed)
     if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
-      state.tasks.filter(t => t.completed).forEach(task => task.tags.forEach(tag => deleteElem(state.tags[tag], task.id)))
       state.tasks = state.tasks.filter(t => !t.completed)
     }
   }

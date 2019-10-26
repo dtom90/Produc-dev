@@ -11,11 +11,14 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
+const state = { tags: {} }
+
 const mutations = {
   deleteTask: jest.fn()
 }
 
 const store = new Vuex.Store({
+  state,
   mutations
 })
 
@@ -77,7 +80,7 @@ describe('SelectedTask', () => {
       const deleteButton = wrapper.find('button.btn-danger')
       expect(deleteButton.find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
       deleteButton.trigger('click')
-      expect(mutations.deleteTask).toHaveBeenCalledWith({}, { id: task.id })
+      expect(mutations.deleteTask).toHaveBeenCalledWith(state, { id: task.id })
       
     })
     
@@ -113,7 +116,8 @@ describe('SelectedTask', () => {
     const task = taskWithActivity()
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
-      localVue
+      localVue,
+      store
     })
     
     it('renders a checked checkbox', () => {

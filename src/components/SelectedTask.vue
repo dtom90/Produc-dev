@@ -45,7 +45,7 @@
         </div>
 
         <!-- Menu Options -->
-        <div class="dropleft">
+        <div class="dropdown">
           <button
             class="btn btn-light"
             title="Task options"
@@ -53,7 +53,7 @@
           >
             <font-awesome-icon icon="ellipsis-v" />
           </button>
-          <div class="dropdown-menu">
+          <div class="dropdown-menu dropdown-menu-right">
             <div
               id="selected-task-menu"
               class="d-flex"
@@ -81,9 +81,8 @@
       
       <!-- Tags Section -->
       <TagList
-        :tags="task.tags"
+        :tags="taskTags"
         :task-id="task.id"
-        :select-tag="selectTag"
         :modal="true"
         :remove-tag="removeTag"
       />
@@ -96,11 +95,14 @@
         <span id="notes-label">Notes: </span>
 
         <!-- Display Mode -->
+        <!-- eslint-disable vue/no-v-html -->
         <span
           v-if="task.notes && !editingNotes"
+          id="display-notes"
           class="flex-grow-1"
-          @click="editingNotes = true"
-        >{{ task.notes }}</span>
+          v-html="displayNotes"
+        />
+        <!-- eslint-enable vue/no-v-html -->
         <button
           v-if="!editingNotes"
           type="button"
@@ -112,25 +114,24 @@
         </button>
         
         <!-- Editing Mode -->
-        <textarea
-          v-if="editingNotes"
-          v-model="task.notes"
-          class="form-control"
-        />
-        <button
-          v-if="editingNotes"
-          type="button"
-          class="btn btn-primary"
-          @click="editingNotes = false"
-        >
-          <font-awesome-icon icon="save" />
-        </button>
+        <div class="input-group">
+          <textarea
+            v-if="editingNotes"
+            v-model="task.notes"
+            class="form-control"
+          />
+          <div class="input-group-append">
+            <button
+              v-if="editingNotes"
+              type="button"
+              class="btn btn-primary"
+              @click="editingNotes = false"
+            >
+              <font-awesome-icon icon="save" />
+            </button>
+          </div>
+        </div>
       </div>
-      
-      <!-- Activity Modal -->
-      <ActivityModal
-        :tag="selectedTag"
-      />
       
       <br>
       
@@ -160,8 +161,16 @@ import Checkbox from './Checkbox'
 import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
-import ActivityModal from './ActivityModal'
 import { mapState, mapMutations } from 'vuex'
+import marked from 'marked'
+import DOMPurify from 'dompurify'
+
+const renderer = new marked.Renderer()
+const linkRenderer = renderer.link
+renderer.link = (href, title, text) => {
+  const html = linkRenderer.call(renderer, href, title, text)
+  return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
+}
 
 export default {
   
@@ -171,8 +180,7 @@ export default {
     Checkbox,
     TagList,
     Countdown,
-    ActivityView,
-    ActivityModal
+    ActivityView
   },
   
   props: {
@@ -187,7 +195,6 @@ export default {
     editingNotes: false,
     newTag: '',
     tagOptions: [],
-    selectedTag: null,
     showTagInput: false
   }),
   
@@ -195,11 +202,21 @@ export default {
     
     ...mapState([
       'activeTaskID',
-      'running'
+      'running',
+      'tags'
     ]),
     
     checked: function () {
       return this.task.completed !== null
+    },
+    
+    taskTags: function () {
+      const tags = Object.keys(this.tags)
+      return this.task.tags.slice().sort((a, b) => tags.indexOf(a) - tags.indexOf(b))
+    },
+    
+    displayNotes: function () {
+      return marked(DOMPurify.sanitize(this.task.notes), { renderer })
     }
     
   },
@@ -231,10 +248,6 @@ export default {
       this.tagInputChange()
       this.tagOptions = []
       this.$refs.addTagInput.focus()
-    },
-
-    selectTag: function (tag) {
-      this.selectedTag = tag
     },
     
     removeTag: function (tag) {
@@ -273,15 +286,23 @@ export default {
     }
     
     #notes-section {
-        padding: 10px;
+      padding: 15px 10px 10px;
     }
     
     #notes-label {
         padding-right: 15px;
     }
     
-    .dropleft .btn {
+    #display-notes {
+      padding-right: 15px;
+    }
+    
+    .dropdown .btn {
         margin: 8px;
+    }
+
+    .dropdown-menu {
+      min-width: 40px;
     }
 
     $play-btn-size: 75px;

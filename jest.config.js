@@ -19,6 +19,7 @@ module.exports = {
   testMatch: [
     '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
   ],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!vue-color).+\\.js$'],
   testURL: 'http://localhost/',
   setupFiles: ['<rootDir>/tests/unit/setup.js']
 }

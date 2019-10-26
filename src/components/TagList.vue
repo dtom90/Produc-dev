@@ -3,7 +3,13 @@
     :id="taskTags ? 'taskTags' : 'filterTags'"
     class="form-inline"
   >
-    <label>{{ taskTags ? '' : 'Filter' + (filtered ? 'ing' : '' ) + ' on ' }}Tag{{ taskTags ? 's' : '' }}:</label>
+    <h6
+      v-if="taskId === null"
+      style="width: 100%"
+    >
+      {{ label }}:
+    </h6>
+    <label v-if="taskId !==null">{{ label }}:</label>
     
     <div
       v-for="tag in tags"
@@ -11,24 +17,26 @@
       class="tag btn-group"
     >
       <button
-        class="tag-name btn btn-primary"
+        class="tag-name btn"
+        :style="`backgroundColor: ${tagColor[tag]}`"
         :data-toggle="modal? 'modal' : null"
         :data-target="modal? '#activityModal' : null"
         :title="selectText"
-        @click="selectTag(tag)"
+        @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
       >
         {{ tag }}
       </button>
       <button
         v-if="removeTag"
-        class="tag-close btn btn-primary"
+        class="tag-close btn"
+        :style="`backgroundColor: ${tagColor[tag]}`"
         :title="removeText"
         @click.stop="removeTag(tag)"
       >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-
+    
     <!-- Tag Input -->
     <div
       v-if="taskTags"
@@ -61,6 +69,7 @@
             v-for="tag in tagOptions"
             :key="tag"
             class="tag-option btn btn-light"
+            :style="`backgroundColor: ${tagColor[tag]}`"
             @click="addTag(tag)"
           >
             {{ tag }}
@@ -85,7 +94,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'TagList',
@@ -97,6 +106,10 @@ export default {
     taskId: {
       type: Number,
       default: null
+    },
+    label: {
+      type: String,
+      default: 'Tags'
     },
     selectText: {
       type: String,
@@ -128,6 +141,11 @@ export default {
   }),
   
   computed: {
+    
+    ...mapState({
+      tagColor: 'tags'
+    }),
+    
     ...mapGetters([
       'availableTags'
     ]),
@@ -165,10 +183,14 @@ export default {
       this.addTaskTag({ id: this.taskId, tag: newTag })
       this.newTag = ''
       this.tagInputChange()
-      this.tagOptions = []
+      this.tagOptions = this.availableTags(this.taskId, this.newTag)
       this.$refs.addTagInput.focus()
     },
-
+    
+    viewActivityModal: function (tag) {
+      this.$root.$children[0].modalTag = tag
+    },
+    
     clickOutside: function (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
               event.relatedTarget.classList.contains('tag-option'))) {
@@ -196,7 +218,8 @@ export default {
     }
 
     #filterTags > *:not(label) {
-      margin-top: 10px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       margin-right: 10px;
     }
 
@@ -220,8 +243,37 @@ export default {
       width: 160px;
     }
     
+    .tag > button {
+      color: white;
+      text-shadow:
+              0 0 3px rgba(0,0,0,0.4),
+              0 0 13px rgba(0,0,0,0.1),
+              0 0 23px rgba(0,0,0,0.1);
+    }
+    
+    .tag > button:hover {
+      color: lightgrey;
+    }
+    
+    .tag-name {
+      word-break: break-word;
+    }
+    
     .tag-close {
       font-weight: 700;
+    }
+    
+    .tag-option {
+      color: white;
+      text-shadow:
+              0 0 3px rgba(0,0,0,0.4),
+              0 0 13px rgba(0,0,0,0.1),
+              0 0 23px rgba(0,0,0,0.1);
+      word-break: break-word;
+    }
+    
+    .tag-option:hover {
+      color: lightgrey;
     }
     
 </style>

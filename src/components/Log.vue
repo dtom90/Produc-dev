@@ -9,7 +9,7 @@
     </h4>
     
     <!-- Time Spent on Task -->
-    <h5>Time Spent: {{ timeSpent.humanize() }}</h5>
+    <h5>Time Spent: {{ displayTimeSpent(timeSpent) }}</h5>
     
     <!-- Task Activity Log -->
     <table
@@ -23,7 +23,8 @@
         <td v-if="event.task">
           <span>{{ event.task }}</span>
         </td>
-        <td>
+        
+        <td v-if="event.started">
           <span>Started {{ day ? displayTime(event.started) : displayDateTime(event.started) }}</span>
         </td>
         <td v-if="event.stopped">
@@ -35,6 +36,13 @@
         <td v-if="event.timeSpent">
           <span>Time Spent: {{ displayTimeSpent(event.timeSpent) }}</span>
         </td>
+        
+        <td v-if="event.completed" />
+        <td v-if="event.completed" />
+        <td v-if="event.completed">
+          <span>Completed {{ displayTime(event.completed) }}</span>
+        </td>
+        <td v-if="event.completed" />
       </tr>
     </table>
   </div>
@@ -42,6 +50,7 @@
 
 <script>
 import moment from 'moment'
+import humanizeDuration from 'humanize-duration'
 
 export default {
   name: 'Log',
@@ -75,7 +84,10 @@ export default {
     
     displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a'),
     
-    displayTimeSpent: timeSpent => moment.duration(timeSpent).humanize()
+    displayTimeSpent: timeSpent => humanizeDuration(timeSpent, {
+      units: ['d', 'h', 'm'],
+      round: true
+    })
     
   }
 }
@@ -90,5 +102,6 @@ export default {
   #activityLog {
     margin-top: 20px;
     font-size: 16px;
+    text-align: center;
   }
 </style>
