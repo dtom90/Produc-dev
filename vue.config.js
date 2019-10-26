@@ -10,8 +10,13 @@ module.exports = {
         appId: 'produc.dev',
         productName: 'Produc-dev',
         mac: {
-          category: 'your.app.category.type'
-        }
+          category: 'public.app-category.productivity',
+          hardenedRuntime: true,
+          gatekeeperAssess: false,
+          entitlements: 'build/entitlements.mac.plist',
+          entitlementsInherit: 'build/entitlements.mac.plist'
+        },
+        afterSign: 'scripts/notarize.js'
       }
     }
   }
