@@ -16,8 +16,9 @@
           id="filter-menu-button"
           class="btn btn-light"
           :style="filterBtnStyle"
-          title="List options"
+          title="Filter on tags"
           data-toggle="dropdown"
+          :disabled="Object.keys(tagColor).length === 0"
         >
           <font-awesome-icon icon="filter" />
         </button>
