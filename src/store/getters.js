@@ -3,10 +3,7 @@ const getters = {
     return state.tasks.find(t => t.id === state.selectedTaskID)
   },
   
-  incompleteTasks (state) {
-    const incompleteTasks = state.tasks.filter(t => !t.completed)
-    return state.incompleteOrder === 'Newest' ? incompleteTasks.reverse() : incompleteTasks
-  },
+  incompleteTasks: state => state.tasks.filter(t => !t.completed),
   
   completedTasks (state) {
     const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => a.completed - b.completed)

@@ -73,7 +73,7 @@
           title="List options"
           data-toggle="dropdown"
         >
-          <font-awesome-icon :icon="sortOrder === 'Oldest' ? 'caret-down' : 'caret-up'" />
+          <font-awesome-icon :icon="sortOrder === 'Oldest' ? 'caret-up' : 'caret-down'" />
         </button>
         
         <div
@@ -253,7 +253,8 @@ export default {
   
   data: () => ({
     newTask: '',
-    sortOrder: 'Oldest'
+    sortingOptions: ['Recent', 'Oldest'],
+    sortOrder: 'Recent'
   }),
   
   computed: {
@@ -274,7 +275,6 @@ export default {
     isCompletedList: function () { return this.title === 'Done' },
     btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    sortingOptions: function () { return this.isCompletedList ? ['Recent', 'Oldest'] : ['Newest', 'Oldest'] },
     filterBtnStyle: function () {
       return this.selectedTags.length > 0 ? {
         backgroundColor: this.tagColor[this.selectedTags[0]]
@@ -306,10 +306,6 @@ export default {
         ? filteredTasks.slice().reverse()
         : filteredTasks
     }
-  },
-  
-  mounted: function () {
-    this.sortOrder = this.sortingOptions[0]
   },
   
   methods: {

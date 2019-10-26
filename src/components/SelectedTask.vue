@@ -98,8 +98,8 @@
         <!-- eslint-disable vue/no-v-html -->
         <span
           v-if="task.notes && !editingNotes"
+          id="display-notes"
           class="flex-grow-1"
-          @click="editingNotes = true"
           v-html="displayNotes"
         />
         <!-- eslint-enable vue/no-v-html -->
@@ -165,6 +165,13 @@ import { mapState, mapMutations } from 'vuex'
 import marked from 'marked'
 import DOMPurify from 'dompurify'
 
+const renderer = new marked.Renderer()
+const linkRenderer = renderer.link
+renderer.link = (href, title, text) => {
+  const html = linkRenderer.call(renderer, href, title, text)
+  return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
+}
+
 export default {
   
   name: 'SelectedTask',
@@ -209,7 +216,7 @@ export default {
     },
     
     displayNotes: function () {
-      return marked(DOMPurify.sanitize(this.task.notes))
+      return marked(DOMPurify.sanitize(this.task.notes), { renderer })
     }
     
   },
@@ -279,11 +286,15 @@ export default {
     }
     
     #notes-section {
-        padding: 10px;
+      padding: 15px 10px 10px;
     }
     
     #notes-label {
         padding-right: 15px;
+    }
+    
+    #display-notes {
+      padding-right: 15px;
     }
     
     .dropdown .btn {
