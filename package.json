@@ -14,9 +14,11 @@
     "web:build": "vue-cli-service build --dest dist_web",
     "web:serve": "node web.js",
     "web:prod": "yarn run web:build && yarn run web:serve",
+    
     "gh_pages:build": "vue-cli-service build --mode gh_pages --dest dist_gh_pages",
     "gh_pages:serve": "BASE_URL=/Produc-dev/ node web.js",
     "gh_pages:prod": "yarn run gh_pages:build && yarn run gh_pages:serve",
+    
     "electron:dev": "vue-cli-service electron:serve",
     "electron:build": "vue-cli-service build --mode electron --dest dist_electron/build",
     "electron:serve": "electron electron.js",
@@ -24,12 +26,17 @@
     "electron:pack": "vue-cli-service electron:build",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
+    
     "audit:critical": "yarn audit --level high || test $? -lt 16",
+    
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
+    
     "test:unit": "vue-cli-service test:unit",
+    
     "test:e2e:dev": "testcafe chrome tests/e2e --selector-timeout 3000 --app \"yarn run web:dev\"",
     "test:e2e:prod": "yarn run gh_pages:build && PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e -c 3 --selector-timeout 3000 --app \"yarn run gh_pages:serve\"",
+    
     "test": "yarn audit:critical && yarn run lint && yarn run test:unit && yarn run test:e2e:prod"
   },
   "dependencies": {

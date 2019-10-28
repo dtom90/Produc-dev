@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import TagList from '@/components/TagList.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import Vuex from 'vuex'
 import ColorManager from 'color-manager'
 

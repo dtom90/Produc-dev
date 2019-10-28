@@ -1,7 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import TaskList from '@/components/TaskList.vue'
 import Task from '@/components/Task.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()

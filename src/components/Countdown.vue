@@ -79,8 +79,8 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import CountdownTimer from './CountdownTimer'
-import notifications from './notifications'
+import CountdownTimer from '../lib/CountdownTimer'
+import notifications from '../lib/notifications'
 
 export default {
   

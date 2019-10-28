@@ -3,7 +3,7 @@ import SelectedTask from '@/components/SelectedTask.vue'
 import Checkbox from '@/components/Checkbox.vue'
 import TagList from '@/components/TagList.vue'
 import ActivityView from '@/components/ActivityView.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import { newTask, taskWithActivity } from '@/fixtures'
 import Vuex from 'vuex'
 

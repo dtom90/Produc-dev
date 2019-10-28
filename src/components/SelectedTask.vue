@@ -24,7 +24,7 @@
               id="task-name"
               @click="editingName = true"
             >
-              {{ task.name }}
+              <span>{{ task.name }}</span>
             </div>
             <div
               v-if="editingName"

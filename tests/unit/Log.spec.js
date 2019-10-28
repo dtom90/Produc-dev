@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Log from '@/components/Log.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import moment from 'moment'
 import humanizeDuration from 'humanize-duration'
 import { generateActivity } from '@/fixtures'
