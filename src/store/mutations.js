@@ -1,7 +1,7 @@
 import getters from './getters'
 import moment from 'moment'
 import Vue from 'vue'
-import colorManager from 'color-manager'
+import ColorManager from 'color-manager'
 import $ from 'jquery'
 
 const mutations = {
@@ -92,6 +92,7 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
+          const colorManager = new ColorManager(Object.values(state.tags))
           Vue.set(state.tags, newTag, colorManager.getRandomColor())
         }
         if (!(task.tags.includes(newTag))) {
