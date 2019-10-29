@@ -1,5 +1,5 @@
 <script>
-import { Bar } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs/src/BaseCharts'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import humanizeDuration from 'humanize-duration'
 

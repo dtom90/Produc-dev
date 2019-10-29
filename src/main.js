@@ -5,8 +5,10 @@ import App from './components/App.vue'
 import store from './store'
 
 // Boostrap
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import './styles/main.scss'
+
+import 'bootstrap/js/src/dropdown'
+import 'bootstrap/js/src/modal'
 
 // Font Awesome Icons
 import { FontAwesomeIcon } from './lib/font-awesome-icons'

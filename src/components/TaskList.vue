@@ -229,11 +229,6 @@ import Task from './Task.vue'
 import TagList from './TagList.vue'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
-import $ from 'jquery'
-
-$(document).on('click', '.title-section .dropdown-menu', function (e) {
-  e.stopPropagation()
-})
 
 export default {
   
