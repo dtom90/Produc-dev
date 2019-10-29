@@ -14,7 +14,7 @@
       >
         <button
           id="filter-menu-button"
-          class="btn btn-light"
+          :class="'btn btn-light' + (selectedTags.length > 0 ? ' filter-active' : '')"
           :style="filterBtnStyle"
           title="Filter on tags"
           data-toggle="dropdown"
@@ -382,6 +382,16 @@ export default {
   #filter-menu-button {
     width: 50px;
     margin-bottom: 0.5rem;
+  }
+  
+  .filter-active > svg {
+    color: white;
+    -webkit-filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .7));
+    filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .7));
+  }
+
+  .filter-active:hover > svg {
+    color: lightgrey;
   }
   
   #filter-menu {
