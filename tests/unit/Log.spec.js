@@ -3,7 +3,7 @@ import Log from '@/components/Log.vue'
 import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import moment from 'moment'
 import humanizeDuration from 'humanize-duration'
-import { generateActivity } from '@/fixtures'
+import { generateActivity } from '../fixtures'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)

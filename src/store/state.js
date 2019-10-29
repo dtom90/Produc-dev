@@ -13,11 +13,11 @@ const state = {
 }
 
 // // Load task with activity
-// import { taskWithActivity } from '../fixtures'
+// import { taskWithActivity } from '../../tests/fixtures'
 // state.tasks.push(taskWithActivity())
 
 // // Load state from sample file
-// import sample1 from '../fixtures/sample1'
+// import sample1 from '../../tests/fixtures/sample1'
 // const state = sample1
 
 export default state

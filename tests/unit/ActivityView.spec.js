@@ -3,7 +3,7 @@ import ActivityView from '@/components/ActivityView'
 import ActivityChart from '@/components/ActivityChart'
 import Log from '@/components/Log.vue'
 import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
-import { taskWithActivity, generateActivity } from '@/fixtures'
+import { taskWithActivity, generateActivity } from '../fixtures'
 import moment from 'moment'
 import Vuex from 'vuex'
 
