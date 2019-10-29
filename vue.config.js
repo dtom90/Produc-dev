@@ -1,25 +1,22 @@
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-module.exports = {
+const webpackConfig = {
   publicPath: process.env.BASE_URL
     ? process.env.BASE_URL
     : process.env.BUILD_ENV === 'electron'
       ? `${process.cwd()}/dist_electron/build/`
       : '/',
   configureWebpack: {
-    // plugins: [new BundleAnalyzerPlugin()],
+    plugins: [],
     resolve: {
       alias: {
-        jquery: 'jquery/src/jquery',
         moment: 'moment/src/moment',
-        moment$: 'moment/moment.js',
         vuedraggable: 'vuedraggable/src/vuedraggable'
       }
     },
     optimization: {
       splitChunks: {
-        // include all types of chunks
-        maxSize: 750000
+        minSize: 20000,
+        maxSize: 700000
       }
     }
   },
@@ -35,3 +32,10 @@ module.exports = {
     }
   }
 }
+
+if (process.env.ANALYZE_WEBPACK) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.configureWebpack.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = webpackConfig

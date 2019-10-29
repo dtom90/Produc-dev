@@ -12,6 +12,7 @@
   "scripts": {
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",
+    "web:build:analyze": "ANALYZE_WEBPACK=true vue-cli-service build --dest dist_web",
     "web:serve": "node web.js",
     "web:prod": "yarn run web:build && yarn run web:serve",
     
