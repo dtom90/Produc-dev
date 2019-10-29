@@ -116,9 +116,11 @@
         </button>
         
         <!-- Editing Mode -->
-        <div class="input-group">
+        <div
+          v-if="editingNotes"
+          class="input-group"
+        >
           <textarea
-            v-if="editingNotes"
             v-model="task.notes"
             class="form-control"
           />
@@ -297,7 +299,10 @@ export default {
     }
     
     #display-notes {
-      padding-right: 15px;
+      padding: 10px;
+      border: #e2e6ea 1px solid;
+      border-radius: 5px;
+      font-size: 18px;
     }
     
     .dropdown .btn {
