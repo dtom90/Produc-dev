@@ -8,7 +8,8 @@ const state = {
   selectedTaskID: null,
   activeTaskID: null,
   selectedTags: [],
-  running: false
+  running: false,
+  continueOnComplete: false
 }
 
 // // Load task with activity

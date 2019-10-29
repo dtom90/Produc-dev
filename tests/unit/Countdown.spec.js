@@ -43,7 +43,7 @@ describe('Countdown', () => {
   
   it('renders the default countdown time of 25 minutes', () => {
     
-    expect(wrapper.text()).toBe('25:00')
+    expect(wrapper.find('#timer-display').text()).toBe('25:00')
     
   })
   

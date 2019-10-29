@@ -36,6 +36,10 @@ const mutations = {
     state.addSelectedTags = newValue
   },
   
+  updateContinueOnComplete (state, newValue) {
+    state.continueOnComplete = newValue
+  },
+  
   updateIncompleteTasks (state, payload) {
     state.tasks = payload.concat(getters.completedTasks(state))
   },
