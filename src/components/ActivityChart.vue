@@ -76,4 +76,6 @@ export default {
     this.renderChart(this.chartData, chartOptions)
   }
 }
+
+export { chartOptions }
 </script>
