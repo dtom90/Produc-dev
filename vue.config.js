@@ -1,9 +1,22 @@
-module.exports = {
-  publicPath: process.env.BASE_URL
-    ? process.env.BASE_URL
-    : process.env.BUILD_ENV === 'electron'
-      ? `${process.cwd()}/dist_electron/build/`
-      : '/',
+const webpackConfig = {
+  publicPath: process.env.BASE_URL ? process.env.BASE_URL : '/',
+  configureWebpack: {
+    plugins: [],
+    resolve: {
+      alias: {
+        vuedraggable: 'vuedraggable/src/vuedraggable'
+      }
+    },
+    externals: {
+      moment: 'moment'
+    },
+    optimization: {
+      splitChunks: {
+        minSize: 20000,
+        maxSize: 700000
+      }
+    }
+  },
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
@@ -11,8 +24,16 @@ module.exports = {
         productName: 'Produc-dev',
         mac: {
           category: 'your.app.category.type'
-        }
+        },
+        publish: ['github']
       }
     }
   }
 }
+
+if (process.env.ANALYZE_WEBPACK) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.configureWebpack.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = webpackConfig

@@ -107,7 +107,7 @@
 import Log from './Log'
 import ActivityChart from './ActivityChart'
 import { mapState, mapMutations } from 'vuex'
-import moment from 'moment'
+import time from '../lib/time'
 
 export default {
   name: 'ActivityView',
@@ -116,6 +116,8 @@ export default {
     Log,
     ActivityChart
   },
+
+  mixins: [time],
   
   props: {
     id: {
@@ -160,7 +162,7 @@ export default {
       if (this.taskId !== null) {
         const task = this.tasks.filter(task => task.id === this.taskId)[0]
         if (task.completed) {
-          day = moment(task.completed).format('YYYY-MM-DD')
+          day = this.displayDateISO(task.completed)
           dailyActivity[day] = { log: [{ completed: task.completed }] }
         }
       }
@@ -168,7 +170,7 @@ export default {
       // Create dailyActivity Object from this.log
       for (const event of this.descendingLog) {
         const timestamp = 'started' in event ? event.started : event.completed
-        day = moment(timestamp).format('YYYY-MM-DD')
+        day = this.displayDateISO(timestamp)
         if (day in dailyActivity) {
           dailyActivity[day].log.push(event)
         } else {
@@ -189,8 +191,8 @@ export default {
       // Add time spent per day and add to chartData
       Object.keys(dailyActivity).forEach(day => {
         dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
-        chartData.labels.unshift(moment(day, 'YYYY-MM-DD').format('ddd MMM DD'))
-        chartData.datasets[0].data.unshift(dailyActivity[day].timeSpent.asMinutes())
+        chartData.labels.unshift(this.displayDateHuman(day))
+        chartData.datasets[0].data.unshift(this.msToMinutes(dailyActivity[day].timeSpent))
       })
       
       return { dailyActivity, chartData }
@@ -215,10 +217,8 @@ export default {
     ...mapMutations(['addInterval']),
     
     calculateTimeSpent (log) {
-      return moment.duration(
-        log.filter(interval => interval.timeSpent)
-          .reduce((total, interval) => total + interval.timeSpent, 0)
-      )
+      return log.filter(interval => interval.timeSpent)
+        .reduce((total, interval) => total + interval.timeSpent, 0)
     },
     
     toggleLog () {
@@ -228,7 +228,7 @@ export default {
     addIntervalButtonClicked () {
       this.addInterval({
         id: this.taskId,
-        timeSpent: this.$refs.intervalMinutesInput.value * 60000 // convert minutes to ms
+        timeSpent: this.minutesToMs(this.$refs.intervalMinutesInput.value)
       })
     }
   }
@@ -242,7 +242,7 @@ export default {
   }
   
   .chart-wrapper {
-    max-width: 600px;
+    width: 100%;
     overflow-x: auto;
   }
   

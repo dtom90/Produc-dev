@@ -31,6 +31,7 @@
         class="tag-close btn"
         :style="`backgroundColor: ${tagColor[tag]}`"
         :title="removeText"
+        aria-label="Close"
         @click.stop="removeTag(tag)"
       >
         <span aria-hidden="true">&times;</span>
@@ -257,10 +258,6 @@ export default {
     
     .tag-name {
       word-break: break-word;
-    }
-    
-    .tag-close {
-      font-weight: 700;
     }
     
     .tag-option {

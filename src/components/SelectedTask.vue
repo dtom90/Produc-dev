@@ -19,11 +19,13 @@
 
           <!--  Task Name & Field (when editing)  -->
           <div id="task-name-container">
-            <span
+            <div
               v-if="!editingName"
               id="task-name"
               @click="editingName = true"
-            >{{ task.name }}</span>
+            >
+              <span>{{ task.name }}</span>
+            </div>
             <div
               v-if="editingName"
               class="d-flex align-items-center"
@@ -114,9 +116,11 @@
         </button>
         
         <!-- Editing Mode -->
-        <div class="input-group">
+        <div
+          v-if="editingNotes"
+          class="input-group"
+        >
           <textarea
-            v-if="editingNotes"
             v-model="task.notes"
             class="form-control"
           />
@@ -279,6 +283,7 @@ export default {
     #task-name {
         font-weight: 600;
         font-size: xx-large;
+        text-align: center;
     }
     
     #selected-task-menu {
@@ -294,7 +299,10 @@ export default {
     }
     
     #display-notes {
-      padding-right: 15px;
+      padding: 10px;
+      border: #e2e6ea 1px solid;
+      border-radius: 5px;
+      font-size: 18px;
     }
     
     .dropdown .btn {

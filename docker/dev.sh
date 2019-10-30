@@ -5,18 +5,19 @@
 # - Source code is mapped from host
 # - Run with additional command to replace default command
 
-IMAGE_NAME=node:lts-alpine
+IMAGE_NAME=producdev-base
 CONTAINER_NAME=producdev-dev
 
+# shellcheck disable=SC2124
 CMD="$@"
-if [[ -z "$CMD" ]]; then CMD="yarn run dev"; fi
+if [[ -z "$CMD" ]]; then CMD="yarn run web:dev"; fi
 
 THIS_DIR=$(dirname "$0")
-cd "${THIS_DIR}/.."
+cd "${THIS_DIR}/.." || exit
 
 docker run -it --rm \
        -p 8080:8080 \
-       -v `pwd`:/app \
+       -v "$(pwd)":/app \
        -w /app \
        --name ${CONTAINER_NAME} \
        ${IMAGE_NAME} \

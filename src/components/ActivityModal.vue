@@ -20,7 +20,7 @@
               Activity for&nbsp;
             </h3>
             <button
-              class="btn tag-badge"
+              class="btn tag-button"
               :style="`backgroundColor: ${tagColor[tag]}`"
               data-toggle="dropdown"
             >
@@ -99,11 +99,6 @@
 import ActivityView from './ActivityView'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import Sketch from 'vue-color/src/components/Sketch.vue'
-import $ from 'jquery'
-
-$(document).on('click', '#tag-menu', function (e) {
-  e.stopPropagation()
-})
 
 export default {
   name: 'ActivityModal',
@@ -181,7 +176,7 @@ export default {
   margin-bottom: 0;
 }
 
-.tag-badge {
+.tag-button {
   color: white;
   text-shadow:
           0 0 3px rgba(0,0,0,0.4),
@@ -189,7 +184,7 @@ export default {
           0 0 23px rgba(0,0,0,0.1);
 }
 
-.tag-badge:hover {
+.tag-button:hover {
   color: lightgrey;
 }
 

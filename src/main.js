@@ -1,15 +1,17 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from './components/App.vue'
 
 // Vuex store
 import store from './store'
 
 // Boostrap
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import './styles/main.scss'
+
+import 'bootstrap/js/src/dropdown'
+import 'bootstrap/js/src/modal'
 
 // Font Awesome Icons
-import { FontAwesomeIcon } from './font-awesome-icons'
+import { FontAwesomeIcon } from './lib/font-awesome-icons'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

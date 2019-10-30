@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Countdown from '@/components/Countdown.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
@@ -43,7 +43,7 @@ describe('Countdown', () => {
   
   it('renders the default countdown time of 25 minutes', () => {
     
-    expect(wrapper.text()).toBe('25:00')
+    expect(wrapper.find('#timer-display').text()).toBe('25:00')
     
   })
   

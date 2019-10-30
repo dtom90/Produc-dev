@@ -14,7 +14,7 @@
       >
         <button
           id="filter-menu-button"
-          class="btn btn-light"
+          :class="'btn btn-light' + (selectedTags.length > 0 ? ' filter-active' : '')"
           :style="filterBtnStyle"
           title="Filter on tags"
           data-toggle="dropdown"
@@ -229,11 +229,6 @@ import Task from './Task.vue'
 import TagList from './TagList.vue'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
-import $ from 'jquery'
-
-$(document).on('click', '.title-section .dropdown-menu', function (e) {
-  e.stopPropagation()
-})
 
 export default {
   
@@ -382,6 +377,16 @@ export default {
   #filter-menu-button {
     width: 50px;
     margin-bottom: 0.5rem;
+  }
+  
+  .filter-active > svg {
+    color: white;
+    -webkit-filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .7));
+    filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .7));
+  }
+
+  .filter-active:hover > svg {
+    color: lightgrey;
   }
   
   #filter-menu {

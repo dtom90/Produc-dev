@@ -28,10 +28,15 @@
 </template>
 
 <script>
-import TaskList from './components/TaskList'
-import SelectedTask from './components/SelectedTask'
-import ActivityModal from './components/ActivityModal'
+import TaskList from './TaskList'
+import SelectedTask from './SelectedTask'
+import ActivityModal from './ActivityModal'
 import { mapGetters } from 'vuex'
+import $ from 'jquery'
+
+$(document).on('click', '.dropdown-menu', function (e) {
+  e.stopPropagation()
+})
 
 export default {
   

@@ -13,6 +13,39 @@
       >
         <font-awesome-icon icon="times" />
       </button>
+
+      <div
+        id="countdown-settings-dropdown"
+        class="dropright"
+      >
+        <button
+          id="countdown-menu-button"
+          class="btn btn-light"
+          data-toggle="dropdown"
+        >
+          <font-awesome-icon icon="cog" />
+        </button>
+        <div
+          id="countdown-menu"
+          class="dropdown-menu"
+        >
+          <div
+            class="form-check form-check-inline"
+          >
+            <input
+              id="continueTimer"
+              v-model="continueOnComplete"
+              type="checkbox"
+              class="form-check-input"
+            >
+            <label
+              class="form-check-label"
+              for="continueTimer"
+              @click.stop=""
+            >Continue Timer when Interval Complete</label>
+          </div>
+        </div>
+      </div>
       
       <div id="countdown-button-rotator">
         <div id="countdown-button" />
@@ -67,7 +100,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing === true"
-          :title="(countingDown ? 'Pause' : 'Start') + ' timer'"
+          :title="(countingUp ? 'Stop' : (countingDown ? 'Pause' : 'Start')) + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -79,8 +112,8 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import CountdownTimer from './CountdownTimer'
-import notifications from './notifications'
+import CountdownTimer from '../lib/CountdownTimer'
+import notifications from '../lib/notifications'
 
 export default {
   
@@ -98,6 +131,7 @@ export default {
     active: true,
     activeIntervalStarted: false,
     countingDown: false,
+    countingUp: false,
     activeMinutes: 25,
     restMinutes: 5,
     secondsRemaining: 0
@@ -114,7 +148,7 @@ export default {
     },
     
     playPauseIcon () {
-      return this.countingDown ? 'pause' : 'play'
+      return this.countingUp ? 'stop' : this.countingDown ? 'pause' : 'play'
     },
     
     cssProps () {
@@ -126,11 +160,20 @@ export default {
     },
     
     displayTime () {
-      const totalSecs = this.secondsRemaining
+      const totalSecs = this.countingUp ? -this.secondsRemaining : this.secondsRemaining
       const mins = Math.floor(totalSecs / 60)
       const secs = totalSecs % 60
       const secString = secs.toString().padStart(2, '0')
-      return `${mins}:${secString}`
+      return `${this.countingUp ? '+' : ''}${mins}:${secString}`
+    },
+
+    continueOnComplete: {
+      get () {
+        return this.$store.state.continueOnComplete
+      },
+      set (value) {
+        this.updateContinueOnComplete(value)
+      }
     }
     
   },
@@ -157,6 +200,7 @@ export default {
       'startTask',
       'stopTask',
       'unpauseTask',
+      'updateContinueOnComplete',
       'endTask'
     ]),
     
@@ -166,7 +210,11 @@ export default {
     },
     
     toggleTimer () {
-      if (this.countingDown) {
+      if (this.countingUp) {
+        this.countingUp = false
+        this.continueOnComplete = false
+        this.finishTimer()
+      } else if (this.countingDown) {
         this.timer.pause()
         this.endInterval()
       } else {
@@ -193,28 +241,35 @@ export default {
     },
     
     finishTimer (secondsRemaining = null) {
-      this.timer.clear()
-      let notify = true
+      let notify = false
       if (typeof secondsRemaining === 'number') {
         this.secondsRemaining = secondsRemaining
-      } else {
-        if (secondsRemaining instanceof MouseEvent) {
-          notify = false
+        if (!this.countingUp) {
+          notify = true
         }
       }
-      this.endInterval()
-      this.endTask()
-      if (this.active) {
-        this.activeIntervalStarted = false
-        if (notify) {
-          notifications.notify('Finished Working, Take a Break!')
+      
+      if (this.continueOnComplete) {
+        if (!this.countingUp) {
+          this.countingUp = true
         }
+      } else {
+        this.timer.clear()
+        this.endInterval()
+        this.endTask()
+        if (this.active) {
+          this.activeIntervalStarted = false
+        }
+        this.active = !this.active
+        this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
+        this.secondsRemaining = this.totalSeconds
+      }
+      
+      if (this.active && notify) {
+        notifications.notify('Finished Working, Take a Break!')
       } else if (notify) {
         notifications.notify('Finished Break, Time to Work!')
       }
-      this.active = !this.active
-      this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
-      this.secondsRemaining = this.totalSeconds
     }
   }
 }
@@ -241,6 +296,19 @@ export default {
   border: var(--countdown-color) 2px solid;
   border-radius: 19px;
   color: var(--button-color)
+}
+
+#countdown-settings-dropdown {
+  position: absolute;
+  right: -38px;
+  bottom: 0;
+}
+
+#countdown-menu {
+  width: 210px;
+  padding: 8px;
+  top: auto !important;
+  bottom: 0;
 }
 
 #countdown-button-rotator {

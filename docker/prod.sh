@@ -2,11 +2,11 @@
 
 # Runs production container
 
-IMAGE_NAME=produc-dev-prod
-CONTAINER_NAME=produc-dev-prod
+IMAGE_NAME=producdev-prod
+CONTAINER_NAME=producdev-prod
 
 THIS_DIR=$(dirname "$0")
-cd "${THIS_DIR}/.."
+cd "${THIS_DIR}/.." || exit
 
 docker build \
        -f docker/Dockerfile.prod \

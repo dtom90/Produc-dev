@@ -26,8 +26,8 @@ export function generateActivity () {
     }
   ]
   
-  const day1Duration = moment.duration(47, 'm')
-  const day2Duration = moment.duration(40, 'm')
+  const day1Duration = moment.duration(47, 'm').asMilliseconds()
+  const day2Duration = moment.duration(40, 'm').asMilliseconds()
   
   return {
     log,

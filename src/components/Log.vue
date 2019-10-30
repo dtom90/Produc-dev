@@ -5,11 +5,11 @@
       v-if="day"
       style="text-decoration: underline;"
     >
-      {{ displayDay }}
+      {{ displayDateHuman(day) }}
     </h4>
     
     <!-- Time Spent on Task -->
-    <h5>Time Spent: {{ displayTimeSpent(timeSpent) }}</h5>
+    <h5>Time Spent: {{ displayDuration(timeSpent) }}</h5>
     
     <!-- Task Activity Log -->
     <table
@@ -25,22 +25,22 @@
         </td>
         
         <td v-if="event.started">
-          <span>Started {{ day ? displayTime(event.started) : displayDateTime(event.started) }}</span>
+          <span>Started {{ day ? displayTimeHuman(event.started) : displayDateTimeHuman(event.started) }}</span>
         </td>
         <td v-if="event.stopped">
           <font-awesome-icon icon="arrow-right" />
         </td>
         <td v-if="event.stopped">
-          <span>Stopped {{ displayTime(event.stopped) }}</span>
+          <span>Stopped {{ displayTimeHuman(event.stopped) }}</span>
         </td>
         <td v-if="event.timeSpent">
-          <span>Time Spent: {{ displayTimeSpent(event.timeSpent) }}</span>
+          <span>Time Spent: {{ displayDuration(event.timeSpent) }}</span>
         </td>
         
         <td v-if="event.completed" />
         <td v-if="event.completed" />
         <td v-if="event.completed">
-          <span>Completed {{ displayTime(event.completed) }}</span>
+          <span>Completed {{ displayTimeHuman(event.completed) }}</span>
         </td>
         <td v-if="event.completed" />
       </tr>
@@ -49,11 +49,12 @@
 </template>
 
 <script>
-import moment from 'moment'
-import humanizeDuration from 'humanize-duration'
+import time from '../lib/time'
 
 export default {
   name: 'Log',
+  
+  mixins: [time],
   
   props: {
     day: {
@@ -65,30 +66,9 @@ export default {
       default: () => []
     },
     timeSpent: {
-      type: Object,
-      default: () => moment.duration()
+      type: Number,
+      default: 0
     }
-  },
-  
-  computed: {
-    
-    displayDay: function () {
-      return moment(this.day, 'YYYY-MM-DD').format('ddd MMM DD')
-    }
-    
-  },
-  
-  methods: {
-    
-    displayTime: date => moment(date).format('h:mm a'),
-    
-    displayDateTime: date => moment(date).format('ddd MMM DD, h:mm a'),
-    
-    displayTimeSpent: timeSpent => humanizeDuration(timeSpent, {
-      units: ['d', 'h', 'm'],
-      round: true
-    })
-    
   }
 }
 </script>

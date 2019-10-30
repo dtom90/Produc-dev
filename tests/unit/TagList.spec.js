@@ -1,18 +1,20 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import TagList from '@/components/TagList.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import Vuex from 'vuex'
-import colorManager from 'color-manager'
+import ColorManager from 'color-manager'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
+const myColorManager = new ColorManager()
+
 const tagValues = ['one tag', 'another tag']
 const state = {
   tags: {
-    'one tag': colorManager.getRandomColor(),
-    'another tag': colorManager.getRandomColor()
+    'one tag': myColorManager.getRandomColor(),
+    'another tag': myColorManager.getRandomColor()
   }
 }
 

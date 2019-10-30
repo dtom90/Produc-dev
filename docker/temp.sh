@@ -5,11 +5,11 @@
 # - Source code is copied to Docker image
 # - Run with additional command to replace default command
 
-IMAGE_NAME=producdev-test
-CONTAINER_NAME=producdev-test
+IMAGE_NAME=producdev-temp
+CONTAINER_NAME=producdev-temp
 
 THIS_DIR=$(dirname "$0")
-cd "${THIS_DIR}/.."
+cd "${THIS_DIR}/.." || exit
 
 docker build \
        -f docker/Dockerfile.dev \

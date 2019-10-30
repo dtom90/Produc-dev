@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Log from '@/components/Log.vue'
-import { FontAwesomeIcon } from '@/font-awesome-icons'
+import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import moment from 'moment'
 import humanizeDuration from 'humanize-duration'
-import { generateActivity } from '@/fixtures'
+import { generateActivity } from '../fixtures'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
@@ -14,7 +14,7 @@ const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
-const allDuration = moment.duration(day1Duration + day2Duration)
+const allDuration = moment.duration(day1Duration + day2Duration).asMilliseconds()
 
 describe('Log', () => {
   
@@ -57,7 +57,7 @@ describe('Log', () => {
       
       const startedTime = moment.now()
       const startedWrapper = shallowMount(Log, { propsData: {
-        log: [{ started: startedTime, stopped: null }], timeSpent: moment.duration(0)
+        log: [{ started: startedTime, stopped: null }], timeSpent: moment.duration(0).asMilliseconds()
       },
       localVue })
       
@@ -190,7 +190,7 @@ describe('Log', () => {
       
       const startedTime = moment.now()
       const startedWrapper = shallowMount(Log, { propsData: {
-        log: [{ started: startedTime, stopped: null }], timeSpent: moment.duration(0)
+        log: [{ started: startedTime, stopped: null }], timeSpent: moment.duration(0).asMilliseconds()
       },
       localVue })
       

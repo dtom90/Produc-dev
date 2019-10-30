@@ -1,7 +1,6 @@
 import getters from './getters'
-import moment from 'moment'
 import Vue from 'vue'
-import colorManager from 'color-manager'
+import ColorManager from 'color-manager'
 import $ from 'jquery'
 
 const mutations = {
@@ -34,6 +33,10 @@ const mutations = {
   
   updateAddSelectedTags (state, newValue) {
     state.addSelectedTags = newValue
+  },
+  
+  updateContinueOnComplete (state, newValue) {
+    state.continueOnComplete = newValue
   },
   
   updateIncompleteTasks (state, payload) {
@@ -78,10 +81,10 @@ const mutations = {
     if (task) {
       const interval = {
         started: null,
-        stopped: moment.now(),
+        stopped: Date.now(),
         timeSpent: payload.timeSpent
       }
-      interval.started = moment(interval.stopped) - moment.duration(interval.timeSpent, 'ms')
+      interval.started = interval.stopped - interval.timeSpent
       task.log.push(interval)
     }
   },
@@ -92,6 +95,7 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
+          const colorManager = new ColorManager(Object.values(state.tags))
           Vue.set(state.tags, newTag, colorManager.getRandomColor())
         }
         if (!(task.tags.includes(newTag))) {
