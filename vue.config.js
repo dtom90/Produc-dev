@@ -1,10 +1,6 @@
 
 const webpackConfig = {
-  publicPath: process.env.BASE_URL
-    ? process.env.BASE_URL
-    : process.env.BUILD_ENV === 'electron'
-      ? `${process.cwd()}/dist_electron/build/`
-      : '/',
+  publicPath: process.env.BASE_URL ? process.env.BASE_URL : '/',
   configureWebpack: {
     plugins: [],
     resolve: {
