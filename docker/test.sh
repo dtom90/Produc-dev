@@ -37,10 +37,14 @@ echo "Production container deployed."
 echo
 echo "Testing against production container..."
 echo
+docker build \
+       -f docker/Dockerfile.testcafe \
+       -t producdev-testcafe \
+       . && \
 docker run -it --rm \
            --net="host" \
-           producdev-temp \
-           ./node_modules/.bin/testcafe chrome:headless tests/e2e -c 4 --selector-timeout 3000
+           producdev-testcafe \
+           chromium:headless /tests -c 4 --selector-timeout 3000
 test_exit_code=$?
 echo
 echo "Stopping production container..."
