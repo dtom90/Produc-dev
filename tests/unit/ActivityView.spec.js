@@ -30,7 +30,7 @@ const shouldBehaveLikeActivityView = function (type) {
       datasets: [{
         label: 'Activity for ' + wrapper.props('element'),
         backgroundColor: '#2020FF',
-        data: [day1Duration, day2Duration].map(dur => dur.asMinutes())
+        data: [day1Duration, day2Duration].map(dur => dur / 60000)
       }]
     })
     
@@ -44,7 +44,7 @@ const shouldBehaveLikeActivityView = function (type) {
         element: 'My Task'
       }
     })
-    expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0))
+    expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0).asMilliseconds())
     
   })
   

@@ -1,5 +1,4 @@
 import getters from './getters'
-import moment from 'moment'
 import Vue from 'vue'
 import ColorManager from 'color-manager'
 import $ from 'jquery'
@@ -82,10 +81,10 @@ const mutations = {
     if (task) {
       const interval = {
         started: null,
-        stopped: moment.now(),
+        stopped: Date.now(),
         timeSpent: payload.timeSpent
       }
-      interval.started = moment(interval.stopped) - moment.duration(interval.timeSpent, 'ms')
+      interval.started = interval.stopped - interval.timeSpent
       task.log.push(interval)
     }
   },

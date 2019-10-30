@@ -1,13 +1,7 @@
 <script>
 import { Bar } from 'vue-chartjs/src/BaseCharts'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import humanizeDuration from 'humanize-duration'
-
-const displayFormat = (minutes) => humanizeDuration(minutes * 60000, {
-  units: ['d', 'h', 'm'],
-  round: true,
-  delimiter: ',\n'
-})
+import { displayDurationChart } from '../lib/time'
 
 const chartOptions = {
   legend: {
@@ -32,7 +26,7 @@ const chartOptions = {
         if (label) {
           label += ': '
         }
-        label += displayFormat(tooltipItem.yLabel)
+        label += displayDurationChart(tooltipItem.yLabel)
         return label
       }
     }
@@ -43,7 +37,7 @@ const chartOptions = {
       align: 'start',
       clip: true,
       color: 'white',
-      formatter: value => displayFormat(value)
+      formatter: displayDurationChart
     }
   },
   animation: {
