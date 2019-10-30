@@ -6,7 +6,7 @@ const baseDurationOptions = {
   round: true
 }
 
-const minutesToMs = ms => ms / 60000
+const minutesToMs = ms => ms * 60000
 
 export default {
   methods: {
