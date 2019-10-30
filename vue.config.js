@@ -1,11 +1,13 @@
+const webpack = require('webpack')
 
 const webpackConfig = {
   publicPath: process.env.BASE_URL ? process.env.BASE_URL : '/',
   configureWebpack: {
-    plugins: [],
+    plugins: [
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/) // Ignore all locale files of moment.js
+    ],
     resolve: {
       alias: {
-        moment: 'moment/src/moment',
         vuedraggable: 'vuedraggable/src/vuedraggable'
       }
     },
