@@ -16,7 +16,7 @@ addons:
   chrome: stable
 
 after_success:
-  - if [ -n "$TRAVIS_TAG" ]; then yarn run electron:pack; fi
+  - if [ -n "$TRAVIS_TAG" ]; then yarn run electron:dist; fi
 
 deploy:
   - provider: pages

@@ -49,6 +49,7 @@
     "color-manager": "https://github.com/dtom90/color-manager",
     "dayjs": "^1.8.16",
     "dompurify": "^2.0.7",
+    "electron-updater": "^4.2.0",
     "humanize-duration": "^3.21.0",
     "jquery": "^3.4.1",
     "marked": "^0.7.0",
