@@ -23,6 +23,12 @@ let wrapper
 
 const shouldBehaveLikeActivityView = function (type) {
   
+  it('renders title section for log', () => {
+    
+    expect(wrapper.text()).toMatch('Activity Log')
+    
+  })
+  
   it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
@@ -48,22 +54,7 @@ const shouldBehaveLikeActivityView = function (type) {
     
   })
   
-  it('renders "Activity Log" display button', () => {
-    
-    const viewLogSwitch = wrapper.find('#viewLogSwitch')
-    expect(viewLogSwitch.text()).toBe('Activity Log')
-    
-  })
-  
-  it('renders the daily task logs in descending chronological order when "Activity Log" clicked', async () => {
-    
-    expect(wrapper.vm.logVisible).toBe(false)
-    
-    const viewLogSwitch = wrapper.find('#viewLogSwitch')
-    viewLogSwitch.trigger('click')
-    expect(viewLogSwitch.classes()).toContain('active')
-    
-    expect(wrapper.vm.logVisible).toBe(true)
+  it('renders the daily task logs in descending chronological order', async () => {
     
     const activityLogs = wrapper.findAll(Log)
     const day2log = [log[3], log[2]]
@@ -107,10 +98,8 @@ describe('ActivityView', () => {
       })
     })
     
-    it('renders a title with the element name', () => {
-      
-      expect(wrapper.text()).toMatch('Activity for My Task')
-      
+    it('renders title section for daily activity', () => {
+      expect(wrapper.text()).toMatch('Daily Activity')
     })
     
     shouldBehaveLikeActivityView('task')
@@ -125,12 +114,6 @@ describe('ActivityView', () => {
         propsData: { log: log, element: 'myTag' },
         localVue
       })
-    })
-    
-    it('does not render a title with the element name', () => {
-      
-      expect(wrapper.text()).not.toMatch('Activity for My Task')
-      
     })
     
     shouldBehaveLikeActivityView('tag')

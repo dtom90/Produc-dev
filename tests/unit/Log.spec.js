@@ -36,7 +36,7 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toEqual(
+      expect(wrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
@@ -61,7 +61,7 @@ describe('Log', () => {
       },
       localVue })
       
-      expect(startedWrapper.find('#activityLog').text()).toEqual(
+      expect(startedWrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT)
       )
       
@@ -94,7 +94,7 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toEqual(
+      expect(wrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 22 minutes'
@@ -132,7 +132,7 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toEqual(
+      expect(wrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
         ' Time Spent: 25 minutes' +
@@ -165,7 +165,7 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('#activityLog').text()).toEqual(
+      expect(wrapper.find('.activityLog').text()).toEqual(
         taskName +
         ' Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
@@ -194,7 +194,7 @@ describe('Log', () => {
       },
       localVue })
       
-      expect(startedWrapper.find('#activityLog').text()).toEqual(
+      expect(startedWrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT)
       )
       

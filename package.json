@@ -35,9 +35,9 @@
     "test:unit": "vue-cli-service test:unit",
     
     "test:e2e:dev": "testcafe chrome tests/e2e --selector-timeout 3000 --app \"yarn run web:dev\"",
-    "test:e2e:prod": "PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e -c 4 --selector-timeout 3000 --app \"yarn run gh_pages:serve\"",
+    "test:e2e:gh_pages:prod": "PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e -c 4 --selector-timeout 3000 --app \"yarn run gh_pages:serve\"",
     
-    "test": "yarn audit && yarn run lint && yarn run test:unit && yarn run gh_pages:build && yarn run test:e2e:prod"
+    "test": "yarn audit && yarn run lint && yarn run test:unit && yarn run gh_pages:build && yarn run test:e2e:gh_pages:prod"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -83,7 +83,7 @@
     "eslint-plugin-vue": "^5.2.3",
     "express": "^4.17.1",
     "moment": "^2.24.0",
-    "testcafe": "^1.3.3",
+    "testcafe": "^1.6.0",
     "vue-cli-plugin-electron-builder": "^1.4.0",
     "vue-template-compiler": "^2.6.7",
     "webpack": "latest",

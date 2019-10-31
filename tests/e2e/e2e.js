@@ -51,7 +51,7 @@ const doneMenuButton = doneSection.find('#completedSettingsButton')
 const doneSortLabel = doneMenuButton.parent().find('label').withText('First')
 const doneSortSelect = doneMenuButton.parent().find('select')
 const doneSortOption = doneSortSelect.child('option')
-const doneList = doneSection.find('.task-list')
+const doneList = doneSection.find('.list-group')
 const doneTasks = doneList.find('.task')
 const clearAllButton = Selector('button').withText('Clear All')
 
@@ -119,7 +119,7 @@ fixture(`Testing Produc-dev at ${page}`)
       .expect(selectedTaskName.exists).notOk()
       
       // Expect an empty To Do List
-      .expect(todoSection.find('h3').withText('To Do').exists).ok()
+      .expect(todoSection.find('h3').withText('To Do').visible).ok()
       .expect(todoTasks.count).eql(0)
       .expect(doneTasks.count).eql(0)
       
@@ -330,7 +330,6 @@ test('Countdown functionality', async t => {
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).eql(rotationFactor(1, 'green'))
     
     // Expect the activity log
-    .click(activitySection.find('button').withText('Activity Log'))
     .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
@@ -363,9 +362,6 @@ test('Countdown functionality', async t => {
 
 test('Countdown modification and task switching', async t => {
   await t
-    
-    // Toggle Activity Log so we can monitor it
-    .click(activitySection.find('button').withText('Activity Log'))
     
     // Press the countdown play button and expect the countdown to decrement
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
