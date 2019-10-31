@@ -311,8 +311,6 @@ export default {
 #countdown-menu {
   width: 210px;
   padding: 8px;
-  top: auto !important;
-  bottom: 0;
 }
 
 #countdown-button-rotator {
