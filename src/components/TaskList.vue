@@ -213,7 +213,7 @@
     <!-- Completed Tasks -->
     <ul
       v-if="isCompletedList"
-      class="task-list list-group"
+      class="list-group scroll-list"
     >
       <Task
         v-for="task in completedTaskList"
@@ -413,6 +413,16 @@ export default {
   
   #incomplete-task-list .list-group-item {
     cursor: grab;
+  }
+  
+  #incomplete-task-list {
+    max-height: calc(100vh - 154px);
+    overflow-y: auto;
+  }
+  
+  .scroll-list {
+    max-height: calc(100vh - 101px);
+    overflow-y: auto;
   }
   
 </style>
