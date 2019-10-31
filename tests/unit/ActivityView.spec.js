@@ -23,12 +23,6 @@ let wrapper
 
 const shouldBehaveLikeActivityView = function (type) {
   
-  it('renders title section for log', () => {
-    
-    expect(wrapper.text()).toMatch('Activity Log')
-    
-  })
-  
   it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
@@ -54,7 +48,22 @@ const shouldBehaveLikeActivityView = function (type) {
     
   })
   
-  it('renders the daily task logs in descending chronological order', async () => {
+  it('renders "Activity Log" display button', () => {
+    
+    const viewLogSwitch = wrapper.find('#viewLogSwitch')
+    expect(viewLogSwitch.text()).toBe('Activity Log')
+    
+  })
+  
+  it('renders the daily task logs in descending chronological order when "Activity Log" clicked', async () => {
+    
+    expect(wrapper.vm.logVisible).toBe(false)
+    
+    const viewLogSwitch = wrapper.find('#viewLogSwitch')
+    viewLogSwitch.trigger('click')
+    expect(viewLogSwitch.classes()).toContain('active')
+    
+    expect(wrapper.vm.logVisible).toBe(true)
     
     const activityLogs = wrapper.findAll(Log)
     const day2log = [log[3], log[2]]
