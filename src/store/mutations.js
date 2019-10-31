@@ -72,7 +72,7 @@ const mutations = {
     state.running = false
   },
   
-  endTask (state) {
+  setTaskInactive (state) {
     state.activeTaskID = null
   },
   

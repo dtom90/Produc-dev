@@ -2,12 +2,12 @@
 const state = {
   tasks: [],
   tags: {},
+  selectedTags: [],
+  addSelectedTags: true,
   nextTaskID: 0,
   insertAtTop: false,
-  addSelectedTags: true,
   selectedTaskID: null,
   activeTaskID: null,
-  selectedTags: [],
   running: false,
   continueOnComplete: false
 }
