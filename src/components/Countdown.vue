@@ -183,7 +183,7 @@ export default {
       if (this.countingDown && oldValue === true && newValue === false) {
         this.timer.pause()
         this.endInterval()
-        this.endTask()
+        this.setTaskInactive()
       }
     }
   },
@@ -201,7 +201,7 @@ export default {
       'stopTask',
       'unpauseTask',
       'updateContinueOnComplete',
-      'endTask'
+      'setTaskInactive'
     ]),
     
     updateMinutes () {
@@ -212,8 +212,7 @@ export default {
     toggleTimer () {
       if (this.countingUp) {
         this.countingUp = false
-        this.continueOnComplete = false
-        this.finishTimer()
+        this.resetTimer()
       } else if (this.countingDown) {
         this.timer.pause()
         this.endInterval()
@@ -254,15 +253,7 @@ export default {
           this.countingUp = true
         }
       } else {
-        this.timer.clear()
-        this.endInterval()
-        this.endTask()
-        if (this.active) {
-          this.activeIntervalStarted = false
-        }
-        this.active = !this.active
-        this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
-        this.secondsRemaining = this.totalSeconds
+        this.resetTimer()
       }
       
       if (this.active && notify) {
@@ -270,6 +261,18 @@ export default {
       } else if (notify) {
         notifications.notify('Finished Break, Time to Work!')
       }
+    },
+    
+    resetTimer () {
+      this.timer.clear()
+      this.endInterval()
+      this.setTaskInactive()
+      if (this.active) {
+        this.activeIntervalStarted = false
+      }
+      this.active = !this.active
+      this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
+      this.secondsRemaining = this.totalSeconds
     }
   }
 }
