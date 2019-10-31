@@ -3,15 +3,6 @@ osx_image: xcode11
 language: node_js
 node_js: lts/*
 
-env:
-  - ELECTRON_CACHE=$HOME/.cache/electron ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
-cache:
-  yarn: true
-  directories:
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
-
 addons:
   chrome: stable
 
