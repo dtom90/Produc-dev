@@ -213,7 +213,7 @@
     <!-- Completed Tasks -->
     <ul
       v-if="isCompletedList"
-      class="task-list list-group"
+      class="list-group scroll-list"
     >
       <Task
         v-for="task in completedTaskList"
@@ -343,7 +343,8 @@ export default {
 </script>
 
 <!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
-<style scoped>
+<style scoped lang="scss">
+  @import "../styles/_variables.scss";
 
   #new-task {
     margin-bottom: 10px;
@@ -413,6 +414,16 @@ export default {
   
   #incomplete-task-list .list-group-item {
     cursor: grab;
+  }
+  
+  #incomplete-task-list {
+    max-height: calc(100vh - #{$app-top-margin} - 94px);
+    overflow-y: auto;
+  }
+  
+  .scroll-list {
+    max-height: calc(100vh - #{$app-top-margin} - 41px);
+    overflow-y: auto;
   }
   
 </style>

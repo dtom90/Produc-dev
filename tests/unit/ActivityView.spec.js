@@ -107,10 +107,8 @@ describe('ActivityView', () => {
       })
     })
     
-    it('renders a title with the element name', () => {
-      
-      expect(wrapper.text()).toMatch('Activity for My Task')
-      
+    it('renders title section for daily activity', () => {
+      expect(wrapper.text()).toMatch('Daily Activity')
     })
     
     shouldBehaveLikeActivityView('task')
@@ -125,12 +123,6 @@ describe('ActivityView', () => {
         propsData: { log: log, element: 'myTag' },
         localVue
       })
-    })
-    
-    it('does not render a title with the element name', () => {
-      
-      expect(wrapper.text()).not.toMatch('Activity for My Task')
-      
     })
     
     shouldBehaveLikeActivityView('tag')

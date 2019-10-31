@@ -3,9 +3,9 @@
     :id="id"
     class="activity-view"
   >
-    <h3 v-if="taskId !== null">
-      Activity for <strong>{{ element }}</strong>
-    </h3>
+    <h4 v-if="taskId !== null">
+      Daily Activity
+    </h4>
     
     <!-- ActivityChart -->
     <div
@@ -32,7 +32,7 @@
         :title="(logVisible ? 'Hide' : 'Show') + ' activity log'"
         @click="toggleLog"
       >
-        Activity Log
+        <span>Activity Log</span>
       </button>
     </div>
     
@@ -98,6 +98,7 @@
         :day="day"
         :log="dayActivity.log"
         :time-spent="dayActivity.timeSpent"
+        class="log-section"
       />
     </div>
   </div>
@@ -248,6 +249,15 @@ export default {
   .chart-wrapper {
     width: 100%;
     overflow-x: auto;
+  }
+  
+  #viewLogSwitch {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  .log-section {
+    padding-top: 10px;
   }
   
 </style>

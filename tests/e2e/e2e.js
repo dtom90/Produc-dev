@@ -51,7 +51,7 @@ const doneMenuButton = doneSection.find('#completedSettingsButton')
 const doneSortLabel = doneMenuButton.parent().find('label').withText('First')
 const doneSortSelect = doneMenuButton.parent().find('select')
 const doneSortOption = doneSortSelect.child('option')
-const doneList = doneSection.find('.task-list')
+const doneList = doneSection.find('.list-group')
 const doneTasks = doneList.find('.task')
 const clearAllButton = Selector('button').withText('Clear All')
 
@@ -119,7 +119,7 @@ fixture(`Testing Produc-dev at ${page}`)
       .expect(selectedTaskName.exists).notOk()
       
       // Expect an empty To Do List
-      .expect(todoSection.find('h3').withText('To Do').exists).ok()
+      .expect(todoSection.find('h3').withText('To Do').visible).ok()
       .expect(todoTasks.count).eql(0)
       .expect(doneTasks.count).eql(0)
       
