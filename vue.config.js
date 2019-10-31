@@ -24,8 +24,7 @@ const webpackConfig = {
         productName: 'Produc-dev',
         mac: {
           category: 'your.app.category.type'
-        },
-        publish: ['github']
+        }
       }
     }
   }
