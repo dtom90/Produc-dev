@@ -271,9 +271,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  @import "../styles/_variables.scss";
   
   #selected-task-container {
-    max-height: calc(100vh - 60px);
+    max-height: calc(100vh - #{$app-top-margin});
     overflow-y: auto;
   }
   

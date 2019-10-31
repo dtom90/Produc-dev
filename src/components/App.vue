@@ -63,20 +63,22 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  @import "../styles/_variables.scss";
+  
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     font-size: 20px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    margin-top: 60px;
+    margin-top: $app-top-margin;
   }
   
-  h3, h4, h5 {
+  h3, h4, h5, h6 {
     text-align: center;
   }
-
+  
   .section {
     margin-left: 20px;
     margin-right: 20px;
@@ -90,5 +92,4 @@ export default {
     flex: 2;
     min-width: 0;
   }
-  
 </style>

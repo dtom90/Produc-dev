@@ -1,20 +1,18 @@
 <template>
-  <div id="activityData">
+  <div class="activityLogComponent">
     <!-- Display Day -->
-    <h4
+    <h5
       v-if="day"
-      style="text-decoration: underline;"
     >
       {{ displayDateHuman(day) }}
-    </h4>
+    </h5>
     
     <!-- Time Spent on Task -->
-    <h5>Time Spent: {{ displayDuration(timeSpent) }}</h5>
+    <h6>Time Spent: {{ displayDuration(timeSpent) }}</h6>
     
     <!-- Task Activity Log -->
     <table
-      id="activityLog"
-      class="table"
+      class="activityLog table"
     >
       <tr
         v-for="(event, index) in log"
@@ -75,11 +73,11 @@ export default {
 
 <style scoped>
 
-  h4 {
+  .activityLogComponent {
     margin-top: 20px;
   }
   
-  #activityLog {
+  .activityLog {
     margin-top: 20px;
     font-size: 16px;
     text-align: center;

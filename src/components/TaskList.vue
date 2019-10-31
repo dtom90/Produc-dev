@@ -343,7 +343,8 @@ export default {
 </script>
 
 <!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
-<style scoped>
+<style scoped lang="scss">
+  @import "../styles/_variables.scss";
 
   #new-task {
     margin-bottom: 10px;
@@ -416,12 +417,12 @@ export default {
   }
   
   #incomplete-task-list {
-    max-height: calc(100vh - 154px);
+    max-height: calc(100vh - #{$app-top-margin} - 94px);
     overflow-y: auto;
   }
   
   .scroll-list {
-    max-height: calc(100vh - 101px);
+    max-height: calc(100vh - #{$app-top-margin} - 41px);
     overflow-y: auto;
   }
   
