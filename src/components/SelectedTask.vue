@@ -154,6 +154,7 @@
       :element="task.name"
       :log="task.log"
     />
+    <br>
   </div>
 </template>
 

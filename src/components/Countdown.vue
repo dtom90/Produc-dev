@@ -41,6 +41,7 @@
             <label
               class="form-check-label"
               for="continueTimer"
+              style="margin-left: 6px;"
               @click.stop=""
             >Continue Timer when Interval Complete</label>
           </div>

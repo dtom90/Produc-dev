@@ -21,65 +21,84 @@
     
     <br>
     
-    <!-- Input to enter interval manually -->
+    <!-- Log View Switch -->
     <div
-      v-if="id === 'taskActivity'"
-      style="position: relative"
+      id="viewType"
+      class="d-flex justify-content-center"
     >
-      <div style="position: absolute; right: 0">
-        <button
-          class="btn btn-light"
-          :title="showIntervalInput ? 'Cancel' : 'Add interval manually'"
-          @click="showIntervalInput = !showIntervalInput"
-        >
-          <font-awesome-icon
-            v-if="!showIntervalInput"
-            icon="plus"
-          />
-          <font-awesome-icon
-            v-if="showIntervalInput"
-            icon="times"
-          />
-        </button>
-      </div>
-      <div
-        v-if="showIntervalInput"
-        style="position: absolute; right: 37px;"
+      <button
+        id="viewLogSwitch"
+        :class="'btn btn-light nav-link' + (logVisible ? ' active' : '')"
+        :title="(logVisible ? 'Hide' : 'Show') + ' activity log'"
+        @click="toggleLog"
       >
-        <div
-          class="input-group"
-          style="width: 140px"
-        >
-          <input
-            ref="intervalMinutesInput"
-            type="number"
-            value="25"
-            class="form-control"
-          >
-          <div class="input-group-append">
-            <span
-              class="input-group-text"
-            >minutes</span>
-          </div>
-        </div>
-        <button
-          class="btn btn-primary"
-          @click="addIntervalButtonClicked"
-        >
-          Add Interval
-        </button>
-      </div>
+        <span>Activity Log</span>
+      </button>
     </div>
     
-    <!-- Activity Log -->
-    <div class="log-section border-top">
-      <h4>Activity Log</h4>
+    <!-- Activity Data -->
+    <div
+      v-if="logVisible"
+      class="border"
+    >
+      <!-- Input to enter interval manually -->
+      <div
+        v-if="id === 'taskActivity'"
+        style="position: relative"
+      >
+        <div style="position: absolute; right: 0">
+          <button
+            class="btn btn-light"
+            :title="showIntervalInput ? 'Cancel' : 'Add interval manually'"
+            @click="showIntervalInput = !showIntervalInput"
+          >
+            <font-awesome-icon
+              v-if="!showIntervalInput"
+              icon="plus"
+            />
+            <font-awesome-icon
+              v-if="showIntervalInput"
+              icon="times"
+            />
+          </button>
+        </div>
+        <div
+          v-if="showIntervalInput"
+          style="position: absolute; right: 37px;"
+        >
+          <div
+            class="input-group"
+            style="width: 140px"
+          >
+            <input
+              ref="intervalMinutesInput"
+              type="number"
+              value="25"
+              class="form-control"
+            >
+            <div class="input-group-append">
+              <span
+                class="input-group-text"
+              >minutes</span>
+            </div>
+          </div>
+          <button
+            class="btn btn-primary"
+            @click="addIntervalButtonClicked"
+          >
+            Add Interval
+          </button>
+        </div>
+      </div>
+      
+      <!-- Log -->
       <Log
         v-for="(dayActivity, day) in dailyActivity.dailyActivity"
         :key="day"
         :day="day"
         :log="dayActivity.log"
         :time-spent="dayActivity.timeSpent"
+        class="log-section"
       />
     </div>
   </div>
@@ -124,6 +143,7 @@ export default {
   
   data: function () {
     return {
+      logVisible: false,
       showIntervalInput: false
     }
   },
@@ -202,6 +222,10 @@ export default {
         .reduce((total, interval) => total + interval.timeSpent, 0)
     },
     
+    toggleLog () {
+      this.logVisible = !this.logVisible
+    },
+    
     addIntervalButtonClicked () {
       this.addInterval({
         id: this.taskId,
@@ -223,8 +247,13 @@ export default {
     overflow-x: auto;
   }
   
+  #viewLogSwitch {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
   .log-section {
-    padding-top: 20px;
+    padding-top: 10px;
   }
   
 </style>
