@@ -43,7 +43,7 @@
     >
       <!-- Input to enter interval manually -->
       <div
-        v-if="id === 'taskActivity'"
+        v-if="manualInput"
         style="position: relative"
       >
         <div style="position: absolute; right: 0">
@@ -131,6 +131,10 @@ export default {
     element: {
       type: String,
       default: ''
+    },
+    manualInput: {
+      type: Boolean,
+      default: false
     },
     log: {
       type: Array,
