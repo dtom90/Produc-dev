@@ -431,7 +431,7 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('p').withText('24:47').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1487 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:46').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1486 / 1500))
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1485 / 1500))
 })
 
 test('Try to delete a running task', async t => {
