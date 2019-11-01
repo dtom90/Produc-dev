@@ -15,6 +15,8 @@ const minutesToMs = ms => ms * 60000
 
 const displayDateHuman = day => dayjs(day).format('ddd MMM DD')
 
+const displayDuration = ms => humanizeDuration(ms, baseDurationOptions)
+
 export default {
   methods: {
     msToMinutes: ms => ms / 60000,
@@ -40,7 +42,7 @@ export default {
     
     displayDateTimeHuman: time => dayjs(time).format('ddd MMM DD, h:mm a'),
     
-    displayDuration: ms => humanizeDuration(ms, baseDurationOptions)
+    displayDuration
   }
 }
 
@@ -50,5 +52,7 @@ const displayDurationChart = mins => humanizeDuration(
 )
 
 export {
+  minutesToMs,
+  displayDuration,
   displayDurationChart
 }

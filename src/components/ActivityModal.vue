@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="tag"
     id="activityModal"
     class="modal fade"
     tabindex="-1"
@@ -21,7 +22,7 @@
             </h3>
             <button
               class="btn tag-button"
-              :style="`backgroundColor: ${tagColor[tag]}`"
+              :style="`backgroundColor: ${tagProperties.color}`"
               data-toggle="dropdown"
             >
               {{ tag }}
@@ -74,16 +75,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <input
-            v-model="goal"
-            type="number"
-          >
           <ActivityView
             v-if="tag"
             id="tagActivity"
             :element="tag"
             :log="tagActivity(tag)"
-            :goal="parseInt(goal)"
           />
         </div>
         <div class="modal-footer">
@@ -122,25 +118,26 @@ export default {
   
   data: () => ({
     color: '#FFFFFF',
-    newTagName: '',
-    goal: null
+    newTagName: ''
   }),
   
   computed: {
 
-    ...mapState({
-      tagColor: 'tags'
-    }),
+    ...mapState([
+      'tags'
+    ]),
     
     ...mapGetters([
       'tagActivity'
-    ])
+    ]),
+    
+    tagProperties: function () { return this.tags[this.tag] }
   },
   
   watch: {
     tag: function (newTag) {
       this.newTagName = newTag
-      this.color = this.tagColor[newTag]
+      this.color = this.tagProperties.color
     }
   },
   
@@ -164,7 +161,7 @@ export default {
         tag: this.tag,
         color: value.hex
       })
-      this.color = this.tagColor[this.tag]
+      this.color = this.tagProperties.color
     }
   }
 }

@@ -3,7 +3,7 @@
     :id="id"
     class="activity-view"
   >
-    <div class="view-select d-flex justify-content-center">
+    <div class="view-select d-flex justify-content-center position-relative">
       <div
         class="btn-group btn-group-toggle"
       >
@@ -30,6 +30,37 @@
           Weekly Activity
         </label>
       </div>
+      <div
+        v-if="!isTaskActivity"
+        class="position-absolute"
+        style="right: 0"
+      >
+        <div class="dropdown">
+          <button
+            class="btn btn-light"
+            data-toggle="dropdown"
+          >
+            Set Target
+          </button>
+          <div class="dropdown-menu">
+            <label>{{ dailyChart ? 'Daily' : 'Weekly' }} Target:</label>
+            <div
+              class="input-group"
+            >
+              <input
+                v-model="target"
+                type="number"
+                class="form-control"
+              >
+              <div class="input-group-append">
+                <span
+                  class="input-group-text"
+                >hours</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     
     <!-- ActivityChart -->
@@ -41,7 +72,7 @@
         ref="activityChart"
         :chart-data="dailyChart ? dailyActivity.chartData : weeklyActivity"
         :styles="chartStyles"
-        :goal="goal"
+        :target="target * 60"
       />
     </div>
     
@@ -168,10 +199,6 @@ export default {
       default: function () {
         return []
       }
-    },
-    goal: {
-      type: Number,
-      default: null
     }
   },
   
@@ -186,12 +213,26 @@ export default {
   computed: {
     
     ...mapState([
-      'tasks'
+      'tasks',
+      'tags'
     ]),
     
     isTaskActivity: function () { return this.taskId !== null },
     
     descendingLog: function () { return this.log.slice().reverse() },
+    
+    target: {
+      get () {
+        if (this.isTaskActivity) { return null }
+        const type = this.dailyChart ? 'dailyTarget' : 'weeklyTarget'
+        return this.tags[this.element][type]
+      },
+      set (value) {
+        const targetPayload = { tag: this.element }
+        targetPayload[this.dailyChart ? 'dailyTarget' : 'weeklyTarget'] = parseFloat(value)
+        this.setTagTarget(targetPayload)
+      }
+    },
     
     dailyActivity: function () {
       const dailyActivity = {}
@@ -285,7 +326,10 @@ export default {
   
   methods: {
     
-    ...mapMutations(['addInterval']),
+    ...mapMutations([
+      'setTagTarget',
+      'addInterval'
+    ]),
     
     calculateTimeSpent (log) {
       return log.filter(interval => interval.timeSpent)

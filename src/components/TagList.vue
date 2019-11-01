@@ -12,13 +12,13 @@
     <label v-if="taskId !==null">{{ label }}:</label>
     
     <div
-      v-for="tag in tags"
+      v-for="tag in tagList"
       :key="tag"
       class="tag btn-group"
     >
       <button
         class="tag-name btn"
-        :style="`backgroundColor: ${tagColor[tag]}`"
+        :style="`backgroundColor: ${tags[tag].color}`"
         :data-toggle="modal? 'modal' : null"
         :data-target="modal? '#activityModal' : null"
         :title="selectText"
@@ -29,7 +29,7 @@
       <button
         v-if="removeTag"
         class="tag-close btn"
-        :style="`backgroundColor: ${tagColor[tag]}`"
+        :style="`backgroundColor: ${tags[tag].color}`"
         :title="removeText"
         aria-label="Close"
         @click.stop="removeTag(tag)"
@@ -70,7 +70,7 @@
             v-for="tag in tagOptions"
             :key="tag"
             class="tag-option btn btn-light"
-            :style="`backgroundColor: ${tagColor[tag]}`"
+            :style="`backgroundColor: ${tags[tag].color}`"
             @click="addTag(tag)"
           >
             {{ tag }}
@@ -100,7 +100,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'TagList',
   props: {
-    tags: {
+    tagList: {
       type: Array,
       default: () => []
     },
@@ -143,9 +143,9 @@ export default {
   
   computed: {
     
-    ...mapState({
-      tagColor: 'tags'
-    }),
+    ...mapState([
+      'tags'
+    ]),
     
     ...mapGetters([
       'availableTags'
@@ -153,20 +153,16 @@ export default {
     
     taskTags: function () {
       return this.taskId !== null
-    },
-    
-    filtered: function () {
-      return this.removeText === 'Clear Filter'
     }
   },
-
+  
   methods: {
-
+    
     ...mapMutations([
       'addTaskTag',
       'removeTaskTag'
     ]),
-
+    
     addTagButton: function () {
       this.showTagInput = !this.showTagInput
       if (this.showTagInput) {
@@ -175,11 +171,11 @@ export default {
         })
       }
     },
-
+    
     tagInputChange: function () {
       this.tagOptions = this.availableTags(this.taskId, this.newTag)
     },
-
+    
     addTag: function (newTag) {
       this.addTaskTag({ id: this.taskId, tag: newTag })
       this.newTag = ''

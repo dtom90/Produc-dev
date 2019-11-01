@@ -2,7 +2,8 @@
 import { Bar } from 'vue-chartjs/src/BaseCharts'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { displayDurationChart } from '../lib/time'
+import { minutesToMs, displayDuration, displayDurationChart } from '../lib/time'
+import cloneDeep from 'lodash.clonedeep'
 
 const defaultChartOptions = {
   legend: {
@@ -12,11 +13,11 @@ const defaultChartOptions = {
     yAxes: [{
       scaleLabel: {
         display: true,
-        labelString: 'Minutes'
+        labelString: 'Time Spent'
       },
       ticks: {
         beginAtZero: true,
-        precision: 0
+        callback: mins => displayDurationChart(mins).split('\n')
       }
     }]
   },
@@ -57,34 +58,32 @@ const defaultChartOptions = {
   maintainAspectRatio: false
 }
 
-const baseGoalLine = {
+const baseTargetLine = Object.freeze({
   type: 'line',
   mode: 'horizontal',
   scaleID: 'y-axis-0',
-  value: 500,
+  value: 0,
   borderColor: 'red',
   borderWidth: 2,
   label: {
     backgroundColor: 'red',
     content: '',
+    yAdjust: 10,
     enabled: true
   }
-}
+})
 
-function chartOptions (goal = null) {
-  let chartOptions
-  if (goal) {
-    chartOptions = Object.assign({}, defaultChartOptions)
-    const annotation = Object.assign({}, baseGoalLine)
-    annotation.value = goal
-    annotation.label.content = 'Target: ' + goal
+function chartOptions (target = null) {
+  const chartOptions = cloneDeep(defaultChartOptions)
+  if (target !== null) {
+    const annotation = cloneDeep(baseTargetLine)
+    annotation.value = target
+    annotation.label.content = 'Target: ' + displayDuration(minutesToMs(target))
     if (chartOptions.annotation.annotations.length === 0) {
       chartOptions.annotation.annotations.push(annotation)
     } else {
       chartOptions.annotation.annotations[0] = annotation
     }
-  } else {
-    chartOptions = defaultChartOptions
   }
   return chartOptions
 }
@@ -101,7 +100,7 @@ export default {
       type: Array,
       default: () => [ChartDataLabels, annotationPlugin]
     },
-    goal: {
+    target: {
       type: Number,
       default: null
     }
@@ -109,12 +108,15 @@ export default {
 
   watch: {
     chartData: function (newChartData) {
-      this.renderChart(newChartData, chartOptions(this.goal))
+      this.renderChart(newChartData, chartOptions(this.target))
+    },
+    target: function (newTarget) {
+      this.renderChart(this.chartData, chartOptions(newTarget))
     }
   },
   
   mounted () {
-    this.renderChart(this.chartData, chartOptions(this.goal))
+    this.renderChart(this.chartData, chartOptions(this.target))
   }
 }
 
