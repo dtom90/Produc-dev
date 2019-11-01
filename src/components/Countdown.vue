@@ -241,19 +241,20 @@ export default {
     },
     
     finishTimer (secondsRemaining = null) {
+      const fromCountdownFinish = typeof secondsRemaining === 'number'
       let notify = false
-      if (typeof secondsRemaining === 'number') {
+
+      if (fromCountdownFinish) {
         this.secondsRemaining = secondsRemaining
         if (!this.countingUp) {
           notify = true
         }
-      }
-      
-      if (this.continueOnComplete) {
-        if (!this.countingUp) {
+        if (this.continueOnComplete && !this.countingUp) {
           this.countingUp = true
         }
-      } else {
+      }
+
+      if (!fromCountdownFinish || !this.continueOnComplete) {
         this.resetTimer()
       }
       
