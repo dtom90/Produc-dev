@@ -376,12 +376,11 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1499 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1498 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
     
     // Try to modify timer during countdown, should fail
-    .click(selectedTaskSection.find('p').withText('24:58'))
+    .click(selectedTaskSection.find('p').withText('24:57'))
     .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
-    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1497 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1496 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
