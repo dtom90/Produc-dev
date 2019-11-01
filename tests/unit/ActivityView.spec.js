@@ -23,6 +23,12 @@ let wrapper
 
 const shouldBehaveLikeActivityView = function (type) {
   
+  it('should have toggle buttons for weekly and daily activity', () => {
+    const toggleButtons = wrapper.find('.btn-group')
+    expect(toggleButtons.text()).toMatch('Daily Activity')
+    expect(toggleButtons.text()).toMatch('Weekly Activity')
+  })
+  
   it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
@@ -105,10 +111,6 @@ describe('ActivityView', () => {
         localVue,
         store
       })
-    })
-    
-    it('renders title section for daily activity', () => {
-      expect(wrapper.text()).toMatch('Daily Activity')
     })
     
     shouldBehaveLikeActivityView('task')
