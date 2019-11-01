@@ -1,12 +1,19 @@
 import dayjs from 'dayjs'
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
 import humanizeDuration from 'humanize-duration'
 
+dayjs.extend(advancedFormat)
+dayjs.extend(weekOfYear)
+
 const baseDurationOptions = {
-  units: ['d', 'h', 'm'],
+  units: ['h', 'm'],
   round: true
 }
 
 const minutesToMs = ms => ms * 60000
+
+const displayDateHuman = day => dayjs(day).format('ddd MMM DD')
 
 export default {
   methods: {
@@ -14,9 +21,20 @@ export default {
     
     minutesToMs,
     
+    displayWeekISO: day => {
+      const djs = dayjs(day)
+      return djs.format('YYYY-') + djs.week()
+    },
+    
+    displayWeekHuman: week => {
+      const [y, w] = week.split('-')
+      const djs = dayjs().year(y).week(w)
+      return displayDateHuman(djs.startOf('week')) + ' - ' + displayDateHuman(djs.endOf('week'))
+    },
+    
     displayDateISO: day => dayjs(day).format('YYYY-MM-DD'),
     
-    displayDateHuman: day => dayjs(day).format('ddd MMM DD'),
+    displayDateHuman,
     
     displayTimeHuman: time => dayjs(time).format('h:mm a'),
     

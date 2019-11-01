@@ -3,9 +3,34 @@
     :id="id"
     class="activity-view"
   >
-    <h4 v-if="taskId !== null">
-      Daily Activity
-    </h4>
+    <div class="view-select d-flex justify-content-center">
+      <div
+        class="btn-group btn-group-toggle"
+      >
+        <label
+          :class="'btn btn-light' + (dailyChart === true ? ' active' : '')"
+          title="Top of List"
+        >
+          <input
+            type="radio"
+            value="daily"
+            @click="dailyChart = true"
+          >
+          Daily Activity
+        </label>
+        <label
+          :class="'btn btn-light' + (dailyChart === false ? ' active' : '')"
+          title="Bottom of List"
+        >
+          <input
+            type="radio"
+            value="weekly"
+            @click="dailyChart = false"
+          >
+          Weekly Activity
+        </label>
+      </div>
+    </div>
     
     <!-- ActivityChart -->
     <div
@@ -14,7 +39,7 @@
     >
       <ActivityChart
         ref="activityChart"
-        :chart-data="dailyActivity.chartData"
+        :chart-data="dailyChart ? dailyActivity.chartData : weeklyActivity"
         :styles="chartStyles"
       />
     </div>
@@ -147,6 +172,7 @@ export default {
   
   data: function () {
     return {
+      dailyChart: true,
       logVisible: false,
       showIntervalInput: false
     }
@@ -158,13 +184,15 @@ export default {
       'tasks'
     ]),
     
+    isTaskActivity: function () { return this.taskId !== null },
+    
     descendingLog: function () { return this.log.slice().reverse() },
     
     dailyActivity: function () {
       const dailyActivity = {}
       let day
       
-      if (this.taskId !== null) {
+      if (this.isTaskActivity) {
         const task = this.tasks.filter(task => task.id === this.taskId)[0]
         if (task.completed) {
           day = this.displayDateISO(task.completed)
@@ -201,6 +229,39 @@ export default {
       })
       
       return { dailyActivity, chartData }
+    },
+    
+    weeklyActivity: function () {
+      const weeklyActivity = {}
+      let week
+      
+      // Create dailyActivity Object from this.log
+      for (const event of this.log) {
+        week = this.displayWeekISO(event.started)
+        if (week in weeklyActivity) {
+          weeklyActivity[week].log.push(event)
+        } else {
+          weeklyActivity[week] = { log: [event] }
+        }
+      }
+      
+      // Initialize chartData
+      const chartData = {
+        labels: [],
+        datasets: [{
+          label: 'Activity for ' + this.element,
+          backgroundColor: '#2020FF',
+          data: []
+        }]
+      }
+      
+      // Add time spent per week and add to chartData
+      Object.keys(weeklyActivity).forEach(week => {
+        chartData.labels.push(this.displayWeekHuman(week))
+        chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
+      })
+      
+      return chartData
     },
     
     chartStyles () {
@@ -241,6 +302,10 @@ export default {
 </script>
 
 <style scoped>
+  
+  .view-select {
+    margin-bottom: 20px;
+  }
   
   .activity-view {
     padding: 20px;
