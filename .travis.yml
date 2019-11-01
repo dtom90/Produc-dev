@@ -3,8 +3,7 @@ osx_image: xcode11
 language: node_js
 node_js: lts/*
 
-cache:
-  yarn: true
+cache: yarn
 
 addons:
   chrome: stable
