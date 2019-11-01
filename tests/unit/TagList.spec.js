@@ -39,7 +39,7 @@ describe('TagList', () => {
   
   const wrapper = shallowMount(TagList, {
     propsData: {
-      tags: tagValues,
+      tagList: tagValues,
       taskId,
       removeTag: () => null
     },

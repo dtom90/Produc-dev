@@ -100,7 +100,7 @@ describe('SelectedTask', () => {
       const tagList = wrapper.find(TagList)
       expect(tagList.props()).toEqual(
         expect.objectContaining({
-          tags: task.tags,
+          tagList: task.tags,
           selectText: 'View tag activity',
           modal: true,
           removeText: 'Remove tag from task'

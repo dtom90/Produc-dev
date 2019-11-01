@@ -42,18 +42,6 @@ const shouldBehaveLikeActivityView = function (type) {
     
   })
   
-  it('should calculate time spent even when an interval is running', () => {
-    
-    const startedTask = shallowMount(ActivityView, {
-      propsData: {
-        log: [{ started: Date.now(), stopped: null }],
-        element: 'My Task'
-      }
-    })
-    expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0).asMilliseconds())
-    
-  })
-  
   it('renders "Activity Log" display button', () => {
     
     const viewLogSwitch = wrapper.find('#viewLogSwitch')
@@ -115,15 +103,39 @@ describe('ActivityView', () => {
     
     shouldBehaveLikeActivityView('task')
     
+    it('should calculate time spent even when an interval is running', () => {
+      store = new Vuex.Store({
+        state: {
+          tasks: [{ id: 0 }]
+        }
+      })
+      
+      const startedTask = shallowMount(ActivityView, {
+        propsData: {
+          taskId: 0,
+          log: [{ started: Date.now(), stopped: null }],
+          element: 'My Task'
+        },
+        localVue,
+        store
+      })
+      expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0).asMilliseconds())
+    })
+    
   })
   
   describe('for tag', () => {
-  
+    
     // add this before each
     beforeEach(() => {
       wrapper = shallowMount(ActivityView, {
         propsData: { log: log, element: 'myTag' },
-        localVue
+        localVue,
+        store: new Vuex.Store({
+          state: {
+            tags: { myTag: {} }
+          }
+        })
       })
     })
     
