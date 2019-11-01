@@ -1,9 +1,10 @@
 <script>
 import { Bar } from 'vue-chartjs/src/BaseCharts'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import annotationPlugin from 'chartjs-plugin-annotation'
 import { displayDurationChart } from '../lib/time'
 
-const chartOptions = {
+const defaultChartOptions = {
   legend: {
     display: false
   },
@@ -48,8 +49,44 @@ const chartOptions = {
       chartWrapper.scrollLeft = canvas.clientWidth
     }
   },
+  annotation: {
+    events: ['click'],
+    annotations: []
+  },
   responsive: true,
   maintainAspectRatio: false
+}
+
+const baseGoalLine = {
+  type: 'line',
+  mode: 'horizontal',
+  scaleID: 'y-axis-0',
+  value: 500,
+  borderColor: 'red',
+  borderWidth: 2,
+  label: {
+    backgroundColor: 'red',
+    content: '',
+    enabled: true
+  }
+}
+
+function chartOptions (goal = null) {
+  let chartOptions
+  if (goal) {
+    chartOptions = Object.assign({}, defaultChartOptions)
+    const annotation = Object.assign({}, baseGoalLine)
+    annotation.value = goal
+    annotation.label.content = 'Target: ' + goal
+    if (chartOptions.annotation.annotations.length === 0) {
+      chartOptions.annotation.annotations.push(annotation)
+    } else {
+      chartOptions.annotation.annotations[0] = annotation
+    }
+  } else {
+    chartOptions = defaultChartOptions
+  }
+  return chartOptions
 }
 
 export default {
@@ -62,20 +99,24 @@ export default {
     },
     plugins: {
       type: Array,
-      default: () => [ChartDataLabels]
+      default: () => [ChartDataLabels, annotationPlugin]
+    },
+    goal: {
+      type: Number,
+      default: null
     }
   },
 
   watch: {
     chartData: function (newChartData) {
-      this.renderChart(newChartData, chartOptions)
+      this.renderChart(newChartData, chartOptions(this.goal))
     }
   },
   
   mounted () {
-    this.renderChart(this.chartData, chartOptions)
+    this.renderChart(this.chartData, chartOptions(this.goal))
   }
 }
 
-export { chartOptions }
+export { defaultChartOptions }
 </script>

@@ -41,6 +41,7 @@
         ref="activityChart"
         :chart-data="dailyChart ? dailyActivity.chartData : weeklyActivity"
         :styles="chartStyles"
+        :goal="goal"
       />
     </div>
     
@@ -167,6 +168,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    goal: {
+      type: Number,
+      default: null
     }
   },
   

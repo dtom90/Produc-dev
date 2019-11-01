@@ -74,11 +74,16 @@
           </button>
         </div>
         <div class="modal-body">
+          <input
+            v-model="goal"
+            type="number"
+          >
           <ActivityView
             v-if="tag"
             id="tagActivity"
             :element="tag"
             :log="tagActivity(tag)"
+            :goal="parseInt(goal)"
           />
         </div>
         <div class="modal-footer">
@@ -117,7 +122,8 @@ export default {
   
   data: () => ({
     color: '#FFFFFF',
-    newTagName: ''
+    newTagName: '',
+    goal: null
   }),
   
   computed: {
