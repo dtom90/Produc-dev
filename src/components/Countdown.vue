@@ -69,7 +69,7 @@
           >
             <input
               v-if="active"
-              v-model="activeMinutes"
+              v-model.number="activeMinutes"
               type="number"
               class="form-control"
               @input="secondsRemaining = totalSeconds"
@@ -77,7 +77,7 @@
             >
             <input
               v-if="!active"
-              v-model="restMinutes"
+              v-model.number="restMinutes"
               type="number"
               class="form-control"
               @input="secondsRemaining = totalSeconds"
@@ -248,13 +248,13 @@ export default {
         this.secondsRemaining = secondsRemaining
         if (!this.countingUp) {
           notify = true
-        }
-        if (this.continueOnComplete && !this.countingUp) {
-          this.countingUp = true
+          if (this.continueOnComplete && this.active) {
+            this.countingUp = true
+          }
         }
       }
-
-      if (!fromCountdownFinish || !this.continueOnComplete) {
+      
+      if (!fromCountdownFinish || !this.active || !this.countingUp) {
         this.resetTimer()
       }
       
