@@ -379,12 +379,12 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
     
     // Try to modify timer during countdown, should fail
-    .click(selectedTaskSection.find('p').withText('24:57'))
+    .click(selectedTaskSection.find('p').withText('24:56'))
     .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
-    .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1496 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1495 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1494 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1493 / 1500))
     
     // // Click a tag, should show tag activity modal, timer should not stop
     // .click(tag.withText('my tag'))
