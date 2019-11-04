@@ -261,7 +261,7 @@ export default {
       const chartData = {
         labels: [],
         datasets: [{
-          label: 'Activity for ' + this.element,
+          label: this.element,
           backgroundColor: '#2020FF',
           data: []
         }]
@@ -295,7 +295,7 @@ export default {
       const chartData = {
         labels: [],
         datasets: [{
-          label: 'Activity for ' + this.element,
+          label: this.element,
           backgroundColor: '#2020FF',
           data: []
         }]

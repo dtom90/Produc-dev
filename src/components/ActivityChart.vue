@@ -2,7 +2,7 @@
 import { Bar } from 'vue-chartjs/src/BaseCharts'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { minutesToMs, displayDuration, displayDurationChart } from '../lib/time'
+import { displayChartDuration, displayChartDurationNewline } from '../lib/time'
 import cloneDeep from 'lodash.clonedeep'
 
 const defaultChartOptions = {
@@ -17,20 +17,19 @@ const defaultChartOptions = {
       },
       ticks: {
         beginAtZero: true,
-        callback: mins => displayDurationChart(mins).split('\n')
+        maxTicksLimit: 7,
+        stepSize: 0.5,
+        callback: mins => displayChartDurationNewline(mins).split('\n')
       }
     }]
   },
   tooltips: {
+    displayColors: false,
+    position: 'nearest',
     callbacks: {
-      label: function (tooltipItem, data) {
-        let label = data.datasets[tooltipItem.datasetIndex].label || ''
-        if (label) {
-          label += ': '
-        }
-        label += displayDurationChart(tooltipItem.yLabel)
-        return label
-      }
+      title: (tooltipItem, data) => data.datasets[tooltipItem[0].datasetIndex].label,
+      label: tooltipItem => tooltipItem.xLabel + ':',
+      afterLabel: tooltipItem => displayChartDuration(tooltipItem.yLabel)
     }
   },
   plugins: {
@@ -39,15 +38,17 @@ const defaultChartOptions = {
       align: 'start',
       clip: true,
       color: 'white',
-      formatter: displayDurationChart
+      formatter: displayChartDurationNewline
     }
   },
   animation: {
     duration: 0,
     onComplete: function (event) {
-      const canvas = event.chart.canvas
-      const chartWrapper = canvas.parentElement.parentElement
-      chartWrapper.scrollLeft = canvas.clientWidth
+      if (event.numSteps === 0) {
+        const canvas = event.chart.canvas
+        const chartWrapper = canvas.parentElement.parentElement
+        chartWrapper.scrollLeft = canvas.clientWidth
+      }
     }
   },
   annotation: {
@@ -78,7 +79,7 @@ function chartOptions (target = null) {
   if (target !== null) {
     const annotation = cloneDeep(baseTargetLine)
     annotation.value = target
-    annotation.label.content = 'Target: ' + displayDuration(minutesToMs(target))
+    annotation.label.content = 'Target: ' + displayChartDuration(target)
     if (chartOptions.annotation.annotations.length === 0) {
       chartOptions.annotation.annotations.push(annotation)
     } else {

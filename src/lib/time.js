@@ -7,7 +7,8 @@ dayjs.extend(advancedFormat)
 dayjs.extend(weekOfYear)
 
 const baseDurationOptions = {
-  units: ['h', 'm'],
+  units: ['h', 'm', 's'],
+  largest: 2,
   round: true
 }
 
@@ -46,13 +47,14 @@ export default {
   }
 }
 
-const displayDurationChart = mins => humanizeDuration(
+const displayChartDuration = mins => displayDuration(minutesToMs(mins))
+
+const displayChartDurationNewline = mins => humanizeDuration(
   minutesToMs(mins),
   Object.assign({ delimiter: ',\n' }, baseDurationOptions)
 )
 
 export {
-  minutesToMs,
-  displayDuration,
-  displayDurationChart
+  displayChartDuration,
+  displayChartDurationNewline
 }
