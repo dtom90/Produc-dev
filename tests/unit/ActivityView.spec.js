@@ -34,7 +34,7 @@ const shouldBehaveLikeActivityView = function (type) {
     expect(activityChart.props('chartData')).toEqual({
       labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
       datasets: [{
-        label: 'Activity for ' + wrapper.props('element'),
+        label: wrapper.props('element'),
         backgroundColor: '#2020FF',
         data: [day1Duration, day2Duration].map(dur => dur / 60000)
       }]

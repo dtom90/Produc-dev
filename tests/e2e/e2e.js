@@ -334,7 +334,7 @@ test('Countdown functionality', async t => {
     .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
-    .expect(activitySection.find('tr').nth(0).find('td').nth(3).textContent).eql('Time Spent: 0 minutes')
+    .expect(activitySection.find('tr').nth(0).find('td').nth(3).textContent).eql('Time Spent: 6 seconds')
     
     // Set rest timer to 3 seconds
     .click(selectedTaskSection.find('p').withText('5:00'))
