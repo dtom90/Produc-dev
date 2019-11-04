@@ -110,6 +110,14 @@ const mutations = {
     Vue.set(state.tags[payload.tag], 'color', payload.color)
   },
   
+  upgradeTagColor (state) {
+    if (typeof Object.values(state.tags)[0] === 'string') {
+      Object.keys(state.tags).map(tag => {
+        state.tags[tag] = { color: state.tags[tag] }
+      })
+    }
+  },
+  
   setTagTarget (state, payload) {
     if ('weeklyTarget' in payload) {
       Vue.set(state.tags[payload.tag], 'weeklyTarget', payload.weeklyTarget)
