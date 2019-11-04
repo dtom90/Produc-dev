@@ -95,8 +95,9 @@ const mutations = {
       const task = state.tasks.find(t => t.id === payload.id)
       if (task) {
         if (!(newTag in state.tags)) {
-          const colorManager = new ColorManager(Object.values(state.tags))
-          Vue.set(state.tags, newTag, colorManager.getRandomColor())
+          const colors = Object.values(state.tags).map(tag => tag.color)
+          const colorManager = new ColorManager(colors)
+          Vue.set(state.tags, newTag, { color: colorManager.getRandomColor() })
         }
         if (!(task.tags.includes(newTag))) {
           task.tags.push(newTag)
@@ -106,7 +107,23 @@ const mutations = {
   },
   
   setTagColor (state, payload) {
-    Vue.set(state.tags, payload.tag, payload.color)
+    Vue.set(state.tags[payload.tag], 'color', payload.color)
+  },
+  
+  upgradeTagColor (state) {
+    if (typeof Object.values(state.tags)[0] === 'string') {
+      Object.keys(state.tags).map(tag => {
+        state.tags[tag] = { color: state.tags[tag] }
+      })
+    }
+  },
+  
+  setTagTarget (state, payload) {
+    if ('weeklyTarget' in payload) {
+      Vue.set(state.tags[payload.tag], 'weeklyTarget', payload.weeklyTarget)
+    } else if ('dailyTarget' in payload) {
+      Vue.set(state.tags[payload.tag], 'dailyTarget', payload.dailyTarget)
+    }
   },
   
   selectTag (state, payload) {

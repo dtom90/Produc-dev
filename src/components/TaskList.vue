@@ -18,7 +18,7 @@
           :style="filterBtnStyle"
           title="Filter on tags"
           data-toggle="dropdown"
-          :disabled="Object.keys(tagColor).length === 0"
+          :disabled="Object.keys(tags).length === 0"
         >
           <font-awesome-icon icon="filter" />
         </button>
@@ -30,7 +30,7 @@
           <TagList
             v-if="selectedTags.length > 0"
             label="Filtering on"
-            :tags="selectedTags"
+            :tag-list="selectedTags"
             :modal="true"
             :remove-tag="removeTagFilter"
             remove-text="Clear Filter"
@@ -57,7 +57,7 @@
           <TagList
             v-if="unselectedTags.length > 0"
             :label="selectedTags.length > 0 ? 'Add to filter' : 'Filter on'"
-            :tags="unselectedTags"
+            :tag-list="unselectedTags"
             :select-tag="selectTagFilter"
           />
         </div>
@@ -213,7 +213,7 @@
     <!-- Completed Tasks -->
     <ul
       v-if="isCompletedList"
-      class="task-list list-group"
+      class="list-group scroll-list"
     >
       <Task
         v-for="task in completedTaskList"
@@ -259,9 +259,9 @@ export default {
       'addSelectedTags',
       'insertAtTop'
     ]),
-    ...mapState({
-      tagColor: 'tags'
-    }),
+    ...mapState([
+      'tags'
+    ]),
     ...mapGetters([
       'incompleteTasks',
       'completedTasks',
@@ -273,7 +273,7 @@ export default {
     selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
     filterBtnStyle: function () {
       return this.selectedTags.length > 0 ? {
-        backgroundColor: this.tagColor[this.selectedTags[0]]
+        backgroundColor: this.tags[this.selectedTags[0]].color
       } : {}
     },
     toggleAddSelectedTags: {
@@ -343,7 +343,8 @@ export default {
 </script>
 
 <!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
-<style scoped>
+<style scoped lang="scss">
+  @import "../styles/_variables.scss";
 
   #new-task {
     margin-bottom: 10px;
@@ -413,6 +414,16 @@ export default {
   
   #incomplete-task-list .list-group-item {
     cursor: grab;
+  }
+  
+  #incomplete-task-list {
+    max-height: calc(100vh - #{$app-top-margin} - 94px);
+    overflow-y: auto;
+  }
+  
+  .scroll-list {
+    max-height: calc(100vh - #{$app-top-margin} - 41px);
+    overflow-y: auto;
   }
   
 </style>

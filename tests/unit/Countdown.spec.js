@@ -7,6 +7,10 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
+const state = {
+  continueOnComplete: false
+}
+
 const mutations = {
   startTask: jest.fn(),
   stopTask: jest.fn(),
@@ -14,6 +18,7 @@ const mutations = {
 }
 
 const store = new Vuex.Store({
+  state,
   mutations
 })
 
@@ -79,10 +84,10 @@ describe('Countdown', () => {
   it('should call startTask when the play button is clicked, but pausing should not call stopTask', () => {
     
     wrapper.find('#play-pause-btn').trigger('click')
-    expect(mutations.startTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
+    expect(mutations.startTask).toHaveBeenCalledWith(state, { id: expectedTaskId })
     
     wrapper.find('#play-pause-btn').trigger('click')
-    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
+    expect(mutations.stopTask).toHaveBeenCalledWith(state, { id: expectedTaskId })
     
   })
   
@@ -91,28 +96,35 @@ describe('Countdown', () => {
     wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     const timerInput = wrapper.find('input[type="number"]')
-    timerInput.setValue('0.1')
+    timerInput.setValue('0.05')
     
     wrapper.find('#timer-save-button').trigger('click')
     
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
-    expect(wrapper.find('#timer-display').text()).toBe('0:06')
-  
+    expect(wrapper.find('#timer-display').text()).toBe('0:03')
+    expect(wrapper.vm.activeMinutes).toBe(0.05)
+    expect(wrapper.vm.restMinutes).toBe(5)
+    
+    expect(wrapper.vm.secondsRemaining).toBe(3)
+    expect(wrapper.vm.active).toBe(true)
+    expect(wrapper.vm.activeIntervalStarted).toBe(false)
+    expect(wrapper.vm.countingDown).toBe(false)
+    expect(wrapper.vm.countingUp).toBe(false)
+    expect(wrapper.vm.continueOnComplete).toBe(false)
+    
     wrapper.find('#play-pause-btn').trigger('click')
     
-    await delay(1000)
-    expect(wrapper.vm.secondsRemaining).toBe(5)
-    await delay(1000)
-    expect(wrapper.vm.secondsRemaining).toBe(4)
-    await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(3)
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(2)
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(1)
     await delay(1000)
-    expect(mutations.stopTask).toHaveBeenCalledWith({}, { id: expectedTaskId })
-    expect(mutations.setTaskInactive).toHaveBeenCalledWith({}, undefined)
+    
+    expect(wrapper.vm.active).toBe(false)
+    
+    expect(mutations.stopTask).toHaveBeenCalledWith(state, { id: expectedTaskId })
+    expect(mutations.setTaskInactive).toHaveBeenCalledWith(state, undefined)
     
   }, 30000)
   

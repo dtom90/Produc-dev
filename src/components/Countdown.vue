@@ -41,6 +41,7 @@
             <label
               class="form-check-label"
               for="continueTimer"
+              style="margin-left: 6px;"
               @click.stop=""
             >Continue Timer when Interval Complete</label>
           </div>
@@ -68,7 +69,7 @@
           >
             <input
               v-if="active"
-              v-model="activeMinutes"
+              v-model.number="activeMinutes"
               type="number"
               class="form-control"
               @input="secondsRemaining = totalSeconds"
@@ -76,7 +77,7 @@
             >
             <input
               v-if="!active"
-              v-model="restMinutes"
+              v-model.number="restMinutes"
               type="number"
               class="form-control"
               @input="secondsRemaining = totalSeconds"
@@ -240,19 +241,20 @@ export default {
     },
     
     finishTimer (secondsRemaining = null) {
+      const fromCountdownFinish = typeof secondsRemaining === 'number'
       let notify = false
-      if (typeof secondsRemaining === 'number') {
+
+      if (fromCountdownFinish) {
         this.secondsRemaining = secondsRemaining
         if (!this.countingUp) {
           notify = true
+          if (this.continueOnComplete && this.active) {
+            this.countingUp = true
+          }
         }
       }
       
-      if (this.continueOnComplete) {
-        if (!this.countingUp) {
-          this.countingUp = true
-        }
-      } else {
+      if (!fromCountdownFinish || !this.active || !this.countingUp) {
         this.resetTimer()
       }
       
@@ -310,8 +312,6 @@ export default {
 #countdown-menu {
   width: 210px;
   padding: 8px;
-  top: auto !important;
-  bottom: 0;
 }
 
 #countdown-button-rotator {

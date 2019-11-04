@@ -203,12 +203,12 @@ describe('mutations', () => {
       
       addTaskTag(myState, { id: 0, tag: 'new tag a' })
       expect(myState.tags).to.have.all.keys('new tag a')
-      expect(myState.tags['new tag a']).to.match(/#\w{6}/)
+      expect(myState.tags['new tag a'].color).to.match(/#\w{6}/)
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a'])
       
       addTaskTag(myState, { id: 0, tag: 'new tag b' })
       expect(myState.tags).to.have.all.keys('new tag a', 'new tag b')
-      expect(myState.tags['new tag b']).to.match(/#\w{6}/)
+      expect(myState.tags['new tag b'].color).to.match(/#\w{6}/)
       expect(myState.tags['new tag b']).not.to.equal(myState.tags['new tag a'])
       expect(myState.tasks[0].tags).to.deep.equal(['new tag a', 'new tag b'])
       

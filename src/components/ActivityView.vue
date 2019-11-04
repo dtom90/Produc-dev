@@ -3,9 +3,65 @@
     :id="id"
     class="activity-view"
   >
-    <h3 v-if="taskId !== null">
-      Activity for <strong>{{ element }}</strong>
-    </h3>
+    <div class="view-select d-flex justify-content-center position-relative">
+      <div
+        class="btn-group btn-group-toggle"
+      >
+        <label
+          :class="'btn btn-light' + (dailyChart === true ? ' active' : '')"
+          title="Top of List"
+        >
+          <input
+            type="radio"
+            value="daily"
+            @click="dailyChart = true"
+          >
+          Daily Activity
+        </label>
+        <label
+          :class="'btn btn-light' + (dailyChart === false ? ' active' : '')"
+          title="Bottom of List"
+        >
+          <input
+            type="radio"
+            value="weekly"
+            @click="dailyChart = false"
+          >
+          Weekly Activity
+        </label>
+      </div>
+      <div
+        v-if="!isTaskActivity"
+        class="position-absolute"
+        style="right: 0"
+      >
+        <div class="dropdown">
+          <button
+            class="btn btn-light"
+            data-toggle="dropdown"
+          >
+            Set Target
+          </button>
+          <div class="dropdown-menu">
+            <label>{{ dailyChart ? 'Daily' : 'Weekly' }} Target:</label>
+            <div
+              class="input-group"
+            >
+              <input
+                v-model="target"
+                type="number"
+                class="form-control"
+              >
+              <div class="input-group-append">
+                <span
+                  class="input-group-text"
+                >hours</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <!-- ActivityChart -->
     <div
@@ -14,8 +70,9 @@
     >
       <ActivityChart
         ref="activityChart"
-        :chart-data="dailyActivity.chartData"
+        :chart-data="dailyChart ? dailyActivity.chartData : weeklyActivity"
         :styles="chartStyles"
+        :target="target * 60"
       />
     </div>
     
@@ -32,7 +89,7 @@
         :title="(logVisible ? 'Hide' : 'Show') + ' activity log'"
         @click="toggleLog"
       >
-        Activity Log
+        <span>Activity Log</span>
       </button>
     </div>
     
@@ -98,6 +155,7 @@
         :day="day"
         :log="dayActivity.log"
         :time-spent="dayActivity.timeSpent"
+        class="log-section"
       />
     </div>
   </div>
@@ -146,6 +204,7 @@ export default {
   
   data: function () {
     return {
+      dailyChart: true,
       logVisible: false,
       showIntervalInput: false
     }
@@ -154,16 +213,32 @@ export default {
   computed: {
     
     ...mapState([
-      'tasks'
+      'tasks',
+      'tags'
     ]),
     
+    isTaskActivity: function () { return this.taskId !== null },
+    
     descendingLog: function () { return this.log.slice().reverse() },
+    
+    target: {
+      get () {
+        if (this.isTaskActivity) { return null }
+        const type = this.dailyChart ? 'dailyTarget' : 'weeklyTarget'
+        return this.tags[this.element][type]
+      },
+      set (value) {
+        const targetPayload = { tag: this.element }
+        targetPayload[this.dailyChart ? 'dailyTarget' : 'weeklyTarget'] = parseFloat(value)
+        this.setTagTarget(targetPayload)
+      }
+    },
     
     dailyActivity: function () {
       const dailyActivity = {}
       let day
       
-      if (this.taskId !== null) {
+      if (this.isTaskActivity) {
         const task = this.tasks.filter(task => task.id === this.taskId)[0]
         if (task.completed) {
           day = this.displayDateISO(task.completed)
@@ -186,7 +261,7 @@ export default {
       const chartData = {
         labels: [],
         datasets: [{
-          label: 'Activity for ' + this.element,
+          label: this.element,
           backgroundColor: '#2020FF',
           data: []
         }]
@@ -200,6 +275,39 @@ export default {
       })
       
       return { dailyActivity, chartData }
+    },
+    
+    weeklyActivity: function () {
+      const weeklyActivity = {}
+      let week
+      
+      // Create dailyActivity Object from this.log
+      for (const event of this.log) {
+        week = this.displayWeekISO(event.started)
+        if (week in weeklyActivity) {
+          weeklyActivity[week].log.push(event)
+        } else {
+          weeklyActivity[week] = { log: [event] }
+        }
+      }
+      
+      // Initialize chartData
+      const chartData = {
+        labels: [],
+        datasets: [{
+          label: this.element,
+          backgroundColor: '#2020FF',
+          data: []
+        }]
+      }
+      
+      // Add time spent per week and add to chartData
+      Object.keys(weeklyActivity).forEach(week => {
+        chartData.labels.push(this.displayWeekHuman(week))
+        chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
+      })
+      
+      return chartData
     },
     
     chartStyles () {
@@ -218,7 +326,10 @@ export default {
   
   methods: {
     
-    ...mapMutations(['addInterval']),
+    ...mapMutations([
+      'setTagTarget',
+      'addInterval'
+    ]),
     
     calculateTimeSpent (log) {
       return log.filter(interval => interval.timeSpent)
@@ -241,6 +352,10 @@ export default {
 
 <style scoped>
   
+  .view-select {
+    margin-bottom: 20px;
+  }
+  
   .activity-view {
     padding: 20px;
   }
@@ -248,6 +363,15 @@ export default {
   .chart-wrapper {
     width: 100%;
     overflow-x: auto;
+  }
+  
+  #viewLogSwitch {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  .log-section {
+    padding-top: 10px;
   }
   
 </style>

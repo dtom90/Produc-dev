@@ -23,28 +23,22 @@ let wrapper
 
 const shouldBehaveLikeActivityView = function (type) {
   
+  it('should have toggle buttons for weekly and daily activity', () => {
+    const toggleButtons = wrapper.find('.btn-group')
+    expect(toggleButtons.text()).toMatch('Daily Activity')
+    expect(toggleButtons.text()).toMatch('Weekly Activity')
+  })
+  
   it('renders a chart of the activity in ascending daily order', () => {
     const activityChart = wrapper.find(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
       labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
       datasets: [{
-        label: 'Activity for ' + wrapper.props('element'),
+        label: wrapper.props('element'),
         backgroundColor: '#2020FF',
         data: [day1Duration, day2Duration].map(dur => dur / 60000)
       }]
     })
-    
-  })
-  
-  it('should calculate time spent even when an interval is running', () => {
-    
-    const startedTask = shallowMount(ActivityView, {
-      propsData: {
-        log: [{ started: Date.now(), stopped: null }],
-        element: 'My Task'
-      }
-    })
-    expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0).asMilliseconds())
     
   })
   
@@ -107,30 +101,42 @@ describe('ActivityView', () => {
       })
     })
     
-    it('renders a title with the element name', () => {
-      
-      expect(wrapper.text()).toMatch('Activity for My Task')
-      
-    })
-    
     shouldBehaveLikeActivityView('task')
+    
+    it('should calculate time spent even when an interval is running', () => {
+      store = new Vuex.Store({
+        state: {
+          tasks: [{ id: 0 }]
+        }
+      })
+      
+      const startedTask = shallowMount(ActivityView, {
+        propsData: {
+          taskId: 0,
+          log: [{ started: Date.now(), stopped: null }],
+          element: 'My Task'
+        },
+        localVue,
+        store
+      })
+      expect(startedTask.vm.calculateTimeSpent(startedTask.vm.log)).toEqual(moment.duration(0).asMilliseconds())
+    })
     
   })
   
   describe('for tag', () => {
-  
+    
     // add this before each
     beforeEach(() => {
       wrapper = shallowMount(ActivityView, {
         propsData: { log: log, element: 'myTag' },
-        localVue
+        localVue,
+        store: new Vuex.Store({
+          state: {
+            tags: { myTag: {} }
+          }
+        })
       })
-    })
-    
-    it('does not render a title with the element name', () => {
-      
-      expect(wrapper.text()).not.toMatch('Activity for My Task')
-      
     })
     
     shouldBehaveLikeActivityView('tag')

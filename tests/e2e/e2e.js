@@ -51,7 +51,7 @@ const doneMenuButton = doneSection.find('#completedSettingsButton')
 const doneSortLabel = doneMenuButton.parent().find('label').withText('First')
 const doneSortSelect = doneMenuButton.parent().find('select')
 const doneSortOption = doneSortSelect.child('option')
-const doneList = doneSection.find('.task-list')
+const doneList = doneSection.find('.list-group')
 const doneTasks = doneList.find('.task')
 const clearAllButton = Selector('button').withText('Clear All')
 
@@ -119,7 +119,7 @@ fixture(`Testing Produc-dev at ${page}`)
       .expect(selectedTaskName.exists).notOk()
       
       // Expect an empty To Do List
-      .expect(todoSection.find('h3').withText('To Do').exists).ok()
+      .expect(todoSection.find('h3').withText('To Do').visible).ok()
       .expect(todoTasks.count).eql(0)
       .expect(doneTasks.count).eql(0)
       
@@ -334,7 +334,7 @@ test('Countdown functionality', async t => {
     .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Stopped'))
     .expect(activitySection.find('tr').nth(0).textContent).match(eventNow('Started'))
-    .expect(activitySection.find('tr').nth(0).find('td').nth(3).textContent).eql('Time Spent: 0 minutes')
+    .expect(activitySection.find('tr').nth(0).find('td').nth(3).textContent).eql('Time Spent: 6 seconds')
     
     // Set rest timer to 3 seconds
     .click(selectedTaskSection.find('p').withText('5:00'))
@@ -376,47 +376,46 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1499 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:58').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1498 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
     
     // Try to modify timer during countdown, should fail
-    .click(selectedTaskSection.find('p').withText('24:58'))
+    .click(selectedTaskSection.find('p').withText('24:56'))
     .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
-    .expect(selectedTaskSection.find('p').withText('24:57').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1497 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:56').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1496 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:55').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1495 / 1500))
-    
-    // Click a tag, should show tag activity modal, timer should not stop
-    .click(tag.withText('my tag'))
-    .expect(Selector('h3').withText('Activity for').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1494 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1493 / 1500))
-    .click(Selector('button').withText('Close'))
     
-    // Pause the timer: countdown should stop, log should not be modified
+    // // Click a tag, should show tag activity modal, timer should not stop
+    // .click(tag.withText('my tag'))
+    // .expect(Selector('h3').withText('Activity for').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1492 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1491 / 1500))
+    // .click(Selector('button').withText('Close'))
+    
+    // Pause the timer: countdown should stop, log should not be modified
+    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1490 / 1500))
     .click(selectedTaskSection.find('button').child('svg[data-icon="pause"]'))
     .expect(activitySection.find('tr').count).eql(1)
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .expect(activitySection.find('tr').textContent).match(eventNow('Stopped'))
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1492 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
-    .expect(selectedTaskSection.find('p').withText('24:51').exists).notOk()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1490 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:49').exists).notOk()
     
     // Start timer again
-    .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
+    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
     .click(selectedTaskSection.find('button > svg.fa-play'))
     .expect(activitySection.find('tr').count).eql(2)
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .expect(activitySection.find('tr').textContent).notMatch(eventNow('Stopped'))
-    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1491 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1490 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:49').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1489 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:48').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1488 / 1500))
     
     // Switch to task 1, expect no timer
     .click(todoTasks.withText(task1))
@@ -429,16 +428,16 @@ test('Countdown modification and task switching', async t => {
     .expect(activitySection.find('tr').count).eql(2)
     .expect(activitySection.find('tr').textContent).match(eventNow('Started'))
     .expect(activitySection.find('tr').textContent).notMatch(eventNow('Stopped'))
-    .expect(selectedTaskSection.find('p').withText('24:48').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1488 / 1500))
     .expect(selectedTaskSection.find('p').withText('24:47').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1487 / 1500))
+    .expect(selectedTaskSection.find('p').withText('24:46').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1485 / 1500))
 })
 
 test('Try to delete a running task', async t => {
   await t
   
-  // Press the countdown play button and expect the countdown to decrement
+    // Press the countdown play button and expect the countdown to decrement
     .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1))
     .click(selectedTaskSection.find('button > svg.fa-play'))
@@ -463,4 +462,57 @@ test('Try to delete a running task', async t => {
     .expect(selectedTaskSection.find('p').withText('24:52').with({ timeout: 6000 }).visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:50').visible).ok()
+})
+
+test('Continue on Complete', async t => {
+  await t
+    
+    // Set the timer to continue on complete
+    .click(selectedTaskSection.find('#countdown-menu-button'))
+    .click(selectedTaskSection.find('label').withText('Continue Timer when Interval Complete'))
+    
+    // Adjust the timer and expect the dial to remain still
+    .expect(selectedTaskSection.find('p').withText('25:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1))
+    .click(selectedTaskSection.find('p').withText('25:00'))
+    .expect(selectedTaskSection.find('input[type="number"]').visible).ok()
+    .expect(selectedTaskSection.find('button > svg.fa-save').visible).ok()
+    .typeText(selectedTaskSection.find('#edit-wrapper input'), '0.1', { replace: true })
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1))
+    .click(selectedTaskSection.find('button > svg.fa-save'))
+    .expect(selectedTaskSection.find('p').withText('0:06').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1))
+    
+    // Press the countdown play button and expect the countdown to decrement
+    .click(selectedTaskSection.find('button > svg.fa-play'))
+    .expect(selectedTaskSection.find('p').withText('0:05').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(5 / 6))
+    .expect(selectedTaskSection.find('p').withText('0:04').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(4 / 6))
+    .expect(selectedTaskSection.find('p').withText('0:03').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(3 / 6))
+    .expect(selectedTaskSection.find('p').withText('0:02').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(2 / 6))
+    .expect(selectedTaskSection.find('p').withText('0:01').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1 / 6))
+    .expect(selectedTaskSection.find('p').withText('+0:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(0))
+    .expect(selectedTaskSection.find('p').withText('+0:01').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(-1 / 6))
+    .expect(selectedTaskSection.find('p').withText('+0:02').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(-2 / 6))
+    .expect(selectedTaskSection.find('p').withText('+0:03').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(-3 / 6))
+    
+    // Click the stop button
+    .click(selectedTaskSection.find('button > svg.fa-stop'))
+    
+    // Expect the timer to switch to a rest timer
+    .expect(selectedTaskSection.find('p').withText('5:00').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1, 'green'))
+    
+    // Click the skip button to skip the rest, expect the active timer to reappear
+    .click(selectedTaskSection.find('button > svg.fa-times'))
+    .expect(selectedTaskSection.find('p').withText('0:06').visible).ok()
+    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1, 'red'))
 })
