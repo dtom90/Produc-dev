@@ -302,7 +302,7 @@ export default {
       }
       
       // Add time spent per week and add to chartData
-      Object.keys(weeklyActivity).forEach(week => {
+      Object.keys(weeklyActivity).slice().sort().forEach(week => {
         chartData.labels.push(this.displayWeekHuman(week))
         chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
       })
