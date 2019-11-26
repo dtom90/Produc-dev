@@ -8,7 +8,7 @@
     "url": "https://davidthomason.com/"
   },
   "private": true,
-  "version": "0.5.1",
+  "version": "0.5.2",
   "scripts": {
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",
@@ -88,8 +88,9 @@
     "webpack-bundle-analyzer": "^3.6.0"
   },
   "resolutions": {
-    "handlebars": "^4.5.1",
-    "**/micromatch/braces": "^2.3.2"
+    "handlebars": ">=4.5.3",
+    "**/micromatch/braces": "^2.3.2",
+    "mem": ">=4.0.0"
   },
   "postcss": {
     "plugins": {

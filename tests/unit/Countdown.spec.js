@@ -1,4 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import notifications from '@/lib/notifications'
 import Countdown from '@/components/Countdown.vue'
 import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import Vuex from 'vuex'
@@ -21,6 +22,8 @@ const store = new Vuex.Store({
   state,
   mutations
 })
+
+jest.spyOn(notifications, 'notify').mockImplementation(() => {})
 
 const delay = t => new Promise(resolve => setTimeout(resolve, t))
 
@@ -93,18 +96,30 @@ describe('Countdown', () => {
   
   it('should adjust the timer when input is adjusted', async () => {
     
+    // Check initial state
+    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').text()).toBe('25:00')
+    expect(wrapper.vm.activeMinutes).toBe(25)
+    expect(wrapper.vm.restMinutes).toBe(5)
+    expect(wrapper.vm.secondsRemaining).toBe(1500)
+    expect(wrapper.vm.active).toBe(true)
+    expect(wrapper.vm.activeIntervalStarted).toBe(false)
+    expect(wrapper.vm.countingDown).toBe(false)
+    expect(wrapper.vm.countingUp).toBe(false)
+    expect(wrapper.vm.continueOnComplete).toBe(false)
+    
+    // Change timer 3 seconds
     wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     const timerInput = wrapper.find('input[type="number"]')
     timerInput.setValue('0.05')
-    
     wrapper.find('#timer-save-button').trigger('click')
     
+    // Check new state
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
     expect(wrapper.find('#timer-display').text()).toBe('0:03')
     expect(wrapper.vm.activeMinutes).toBe(0.05)
     expect(wrapper.vm.restMinutes).toBe(5)
-    
     expect(wrapper.vm.secondsRemaining).toBe(3)
     expect(wrapper.vm.active).toBe(true)
     expect(wrapper.vm.activeIntervalStarted).toBe(false)
@@ -112,8 +127,12 @@ describe('Countdown', () => {
     expect(wrapper.vm.countingUp).toBe(false)
     expect(wrapper.vm.continueOnComplete).toBe(false)
     
+    expect(notifications.notify).not.toHaveBeenCalled()
+    
+    // Start the countdown
     wrapper.find('#play-pause-btn').trigger('click')
     
+    // Expect the countdown to decrement
     expect(wrapper.vm.secondsRemaining).toBe(3)
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(2)
@@ -125,6 +144,38 @@ describe('Countdown', () => {
     
     expect(mutations.stopTask).toHaveBeenCalledWith(state, { id: expectedTaskId })
     expect(mutations.setTaskInactive).toHaveBeenCalledWith(state, undefined)
+    
+    expect(notifications.notify).toBeCalledWith('Finished Working, Take a Break!')
+    
+  }, 30000)
+  
+  it('should notifiy to start working after a break', async () => {
+    
+    // Skip the active interval
+    wrapper.find('#skip-btn').trigger('click')
+    expect(wrapper.vm.active).toBe(false)
+    
+    // Change timer 3 seconds
+    wrapper.find('#timer-display').trigger('click')
+    expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
+    const timerInput = wrapper.find('input[type="number"]')
+    timerInput.setValue('0.05')
+    wrapper.find('#timer-save-button').trigger('click')
+    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').text()).toBe('0:03')
+    
+    // Start the break countdown
+    wrapper.find('#play-pause-btn').trigger('click')
+    
+    // Expect the countdown to decrement
+    expect(wrapper.vm.secondsRemaining).toBe(3)
+    await delay(1000)
+    expect(wrapper.vm.secondsRemaining).toBe(2)
+    await delay(1000)
+    expect(wrapper.vm.secondsRemaining).toBe(1)
+    await delay(1000)
+    
+    expect(notifications.notify).toBeCalledWith('Finished Break, Time to Work!')
     
   }, 30000)
   

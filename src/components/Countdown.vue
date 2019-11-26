@@ -254,14 +254,14 @@ export default {
         }
       }
       
-      if (!fromCountdownFinish || !this.active || !this.countingUp) {
-        this.resetTimer()
-      }
-      
-      if (this.active && notify) {
+      if (notify && this.active) {
         notifications.notify('Finished Working, Take a Break!')
       } else if (notify) {
         notifications.notify('Finished Break, Time to Work!')
+      }
+      
+      if (!fromCountdownFinish || !this.active || !this.countingUp) {
+        this.resetTimer()
       }
     },
     
