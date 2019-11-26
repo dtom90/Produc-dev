@@ -88,8 +88,9 @@
     "webpack-bundle-analyzer": "^3.6.0"
   },
   "resolutions": {
-    "handlebars": "^4.5.1",
-    "**/micromatch/braces": "^2.3.2"
+    "handlebars": ">=4.5.3",
+    "**/micromatch/braces": "^2.3.2",
+    "mem": ">=4.0.0"
   },
   "postcss": {
     "plugins": {

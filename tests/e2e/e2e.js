@@ -383,16 +383,16 @@ test('Countdown modification and task switching', async t => {
     .expect(selectedTaskSection.find('input[type="number"]').exists).notOk()
     .expect(selectedTaskSection.find('p').withText('24:54').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1494 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1493 / 1500))
+    // .expect(selectedTaskSection.find('p').withText('24:53').visible).ok()
+    // .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1493 / 1500))
     
     // // Click a tag, should show tag activity modal, timer should not stop
     // .click(tag.withText('my tag'))
     // .expect(Selector('h3').withText('Activity for').visible).ok()
     .expect(selectedTaskSection.find('p').withText('24:52').visible).ok()
     .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1492 / 1500))
-    .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
-    .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1491 / 1500))
+    // .expect(selectedTaskSection.find('p').withText('24:51').visible).ok()
+    // .expect(selectedTaskSection.find('#countdown-container').getAttribute('style')).match(rotationFactor(1491 / 1500))
     // .click(Selector('button').withText('Close'))
     
     // Pause the timer: countdown should stop, log should not be modified
