@@ -290,8 +290,8 @@ export default {
           ? this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
           : this.incompleteTasks
       },
-      set (value) {
-        this.updateIncompleteTasks(value)
+      set (newTaskOrder) {
+        this.updateIncompleteTasks({ newTaskOrder })
       }
     },
     completedTaskList: function () {

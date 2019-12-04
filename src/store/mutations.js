@@ -39,8 +39,25 @@ const mutations = {
     state.continueOnComplete = newValue
   },
   
-  updateIncompleteTasks (state, payload) {
-    state.tasks = payload.concat(getters.completedTasks(state))
+  updateIncompleteTasks (state, { newTaskOrder }) {
+    const incompleteTasks = getters.incompleteTasks(state)
+    const origLength = incompleteTasks.length
+    if (newTaskOrder.length === origLength) {
+      state.tasks = newTaskOrder.concat(getters.completedTasks(state))
+    } else {
+      const reorderTaskIds = {}
+      newTaskOrder.forEach(task => { reorderTaskIds[task.id] = true })
+      let r = 0
+      for (let i = 0; i < incompleteTasks.length; i++) {
+        if (incompleteTasks[i].id in reorderTaskIds) {
+          incompleteTasks[i] = newTaskOrder[r]
+          r++
+        }
+      }
+      if (incompleteTasks.length === origLength) { // ensure that the length has not changed
+        state.tasks = incompleteTasks.concat(getters.completedTasks(state))
+      }
+    }
   },
   
   selectTask (state, id) {
