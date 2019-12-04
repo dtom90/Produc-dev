@@ -139,6 +139,7 @@
         <textarea
           v-model="task.notes"
           class="form-control"
+          :rows="task.notes.split('\n').length"
         />
         <div class="input-group-append">
           <button
