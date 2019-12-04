@@ -46,7 +46,7 @@ export default {
         min-width: $checkbox-size;
         width: $checkbox-size;
         height: $checkbox-size;
-        margin-right: 20px;
+        margin-right: 16px;
     }
 
     .checkbox-container > * {

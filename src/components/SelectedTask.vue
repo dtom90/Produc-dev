@@ -5,36 +5,47 @@
     class="border"
   >
     <br>
-    <!--  Main Section (Flex Grow)  -->
-    <div class="d-flex">
+    <!--  Title Section  -->
+    <div class="d-flex justify-content-between">
       <div
-        id="checkbox-name-section"
-        class="d-flex flex-grow-1 align-items-center justify-content-center"
+        id="checkbox-name-container"
+        class="d-flex align-items-center justify-content-center flex-grow-1"
       >
-        <!--  Checkbox  -->
-        <Checkbox
-          :checked="checked"
-          :task-id="task.id"
+        <div
+          id="menu-counterbalance"
+          style="width: 48px;"
         />
         
+        <!--  Checkbox  -->
+        <div
+          class="align-self-center"
+        >
+          <Checkbox
+            :checked="checked"
+            :task-id="task.id"
+          />
+        </div>
+
         <!--  Task Name & Field (when editing)  -->
-        <div id="task-name-container">
-          <div
-            v-if="!editingName"
-            id="task-name"
-            @click="editingName = true"
+        <div
+          v-if="!editingName"
+          id="task-name"
+          @click="editingName = true"
+        >
+          <span>{{ task.name }}</span>
+        </div>
+        <div
+          v-if="editingName"
+          id="edit-task-name"
+          class="input-group flex-grow-1"
+        >
+          <input
+            id="task-name-input"
+            v-model="task.name"
+            class="form-control"
+            @keyup.enter="editingName = false"
           >
-            <span>{{ task.name }}</span>
-          </div>
-          <div
-            v-if="editingName"
-            class="d-flex align-items-center"
-          >
-            <input
-              v-model="task.name"
-              class="edit-task"
-              @keyup.enter="editingName = false"
-            >
+          <div class="input-group-append">
             <button
               type="button"
               class="btn btn-primary"
@@ -44,6 +55,11 @@
             </button>
           </div>
         </div>
+
+        <div
+          id="checkbox-counterbalance"
+          style="width: 51.19px;"
+        />
       </div>
 
       <!-- Menu Options -->
@@ -283,6 +299,10 @@ export default {
   #checkbox-name-section {
     margin-left: 20px;
     flex: 1;
+  }
+  
+  #task-name-container {
+    margin: 8px;
   }
   
   #task-name {

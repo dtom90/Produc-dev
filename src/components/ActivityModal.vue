@@ -36,7 +36,6 @@
               >
                 <input
                   v-model="newTagName"
-                  class="edit-task"
                   @keyup.enter="updateTagName"
                 >
                 <button
