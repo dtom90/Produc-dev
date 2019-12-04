@@ -3,6 +3,7 @@ const state = {
   tasks: [],
   tags: {},
   selectedTags: [],
+  filterOperator: 'and',
   addSelectedTags: true,
   nextTaskID: 0,
   insertAtTop: false,

@@ -4,12 +4,14 @@
     class="form-inline"
   >
     <h6
-      v-if="taskId === null"
+      v-if="!taskTags"
       style="width: 100%"
     >
-      {{ label }}:
+      <span>{{ label }}:</span>
     </h6>
-    <label v-if="taskId !==null">{{ label }}:</label>
+    <label v-if="taskTags">
+      <span>{{ label }}:</span>
+    </label>
     
     <div
       v-for="tag in tagList"
@@ -36,6 +38,34 @@
       >
         <span aria-hidden="true">&times;</span>
       </button>
+    </div>
+    <div v-if="label === 'Filtering on tasks with' && tagList.length > 1">
+      <div
+        class="btn-group btn-group-toggle"
+      >
+        <label
+          :class="'btn btn-light' + (filterOperatorValue === 'and' ? ' active' : '')"
+          title="Show tasks with all of the selected tags"
+        >
+          <input
+            v-model="filterOperatorValue"
+            type="radio"
+            value="and"
+          >
+          <span>All</span>
+        </label>
+        <label
+          :class="'btn btn-light' + (filterOperatorValue === 'or' ? ' active' : '')"
+          title="Show tasks with any of the selected tags"
+        >
+          <input
+            v-model="filterOperatorValue"
+            type="radio"
+            value="or"
+          >
+          <span>Any</span>
+        </label>
+      </div>
     </div>
     
     <!-- Tag Input -->
@@ -106,7 +136,7 @@ export default {
     },
     taskId: {
       type: Number,
-      default: null
+      default: NaN
     },
     label: {
       type: String,
@@ -144,7 +174,8 @@ export default {
   computed: {
     
     ...mapState([
-      'tags'
+      'tags',
+      'filterOperator'
     ]),
     
     ...mapGetters([
@@ -152,7 +183,16 @@ export default {
     ]),
     
     taskTags: function () {
-      return this.taskId !== null
+      return !isNaN(this.taskId)
+    },
+
+    filterOperatorValue: {
+      get () {
+        return this.filterOperator
+      },
+      set (value) {
+        this.setFilterOperator(value)
+      }
     }
   },
   
@@ -160,7 +200,8 @@ export default {
     
     ...mapMutations([
       'addTaskTag',
-      'removeTaskTag'
+      'removeTaskTag',
+      'setFilterOperator'
     ]),
     
     addTagButton: function () {

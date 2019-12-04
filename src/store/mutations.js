@@ -147,6 +147,12 @@ const mutations = {
     state.selectedTags.push(payload.tag)
   },
   
+  setFilterOperator (state, newFilterOperatorValue) {
+    if (['and', 'or'].includes(newFilterOperatorValue)) {
+      state.filterOperator = newFilterOperatorValue
+    }
+  },
+  
   removeTag (state, payload) {
     state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
   },
