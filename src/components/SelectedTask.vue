@@ -5,36 +5,49 @@
     class="border"
   >
     <br>
-    <!--  Main Section (Flex Grow)  -->
-    <div class="d-flex">
+    <!--  Title Section  -->
+    <div class="d-flex justify-content-between">
       <div
-        id="checkbox-name-section"
-        class="d-flex flex-grow-1 align-items-center justify-content-center"
+        id="checkbox-name-container"
+        class="d-flex align-items-center justify-content-center flex-grow-1"
       >
-        <!--  Checkbox  -->
-        <Checkbox
-          :checked="checked"
-          :task-id="task.id"
+        <div
+          v-if="!editingName"
+          id="menu-counterbalance"
+          style="width: 28px;"
         />
         
+        <!--  Checkbox  -->
+        <div
+          class=""
+        >
+          <Checkbox
+            :checked="checked"
+            :task-id="task.id"
+            style="margin-left: 20px"
+          />
+        </div>
+
         <!--  Task Name & Field (when editing)  -->
-        <div id="task-name-container">
-          <div
-            v-if="!editingName"
-            id="task-name"
-            @click="editingName = true"
+        <div
+          v-if="!editingName"
+          id="task-name"
+          @click="editName"
+        >
+          <span>{{ task.name }}</span>
+        </div>
+        <div
+          v-if="editingName"
+          class="input-group flex-grow-1"
+        >
+          <input
+            id="task-name-input"
+            ref="taskNameInput"
+            v-model="task.name"
+            class="form-control"
+            @keyup.enter="editingName = false"
           >
-            <span>{{ task.name }}</span>
-          </div>
-          <div
-            v-if="editingName"
-            class="d-flex align-items-center"
-          >
-            <input
-              v-model="task.name"
-              class="edit-task"
-              @keyup.enter="editingName = false"
-            >
+          <div class="input-group-append">
             <button
               type="button"
               class="btn btn-primary"
@@ -44,10 +57,19 @@
             </button>
           </div>
         </div>
+
+        <div
+          v-if="!editingName"
+          id="checkbox-counterbalance"
+          style="width: 55.19px;"
+        />
       </div>
 
       <!-- Menu Options -->
-      <div class="dropdown">
+      <div
+        ref="taskMenu"
+        class="dropdown"
+      >
         <button
           class="btn btn-light"
           title="Task options"
@@ -64,7 +86,7 @@
               type="button"
               class="btn btn-warning"
               title="Edit task name"
-              @click="editingName = true"
+              @click="editName"
             >
               <font-awesome-icon icon="pencil-alt" />
             </button>
@@ -123,6 +145,7 @@
         <textarea
           v-model="task.notes"
           class="form-control"
+          :rows="task.notes.split('\n').length"
         />
         <div class="input-group-append">
           <button
@@ -232,6 +255,14 @@ export default {
       'deleteTask'
     ]),
     
+    editName: function () {
+      this.editingName = true
+      this.$refs.taskMenu.classList.remove('show')
+      this.$refs.taskMenu.querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
+      this.$refs.taskMenu.querySelector('.dropdown-menu').classList.remove('show')
+      this.$nextTick(() => this.$refs.taskNameInput.focus())
+    },
+    
     addTagButton: function () {
       this.showTagInput = !this.showTagInput
       if (this.showTagInput) {
@@ -285,6 +316,10 @@ export default {
     flex: 1;
   }
   
+  #task-name-container {
+    margin: 8px;
+  }
+  
   #task-name {
     font-weight: 600;
     font-size: xx-large;
@@ -311,7 +346,7 @@ export default {
   }
   
   .dropdown .btn {
-    margin: 8px;
+    margin: 0 8px;
   }
   
   .dropdown-menu {

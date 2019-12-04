@@ -29,7 +29,7 @@
         >
           <TagList
             v-if="selectedTags.length > 0"
-            label="Filtering on"
+            label="Filtering on tasks with"
             :tag-list="selectedTags"
             :modal="true"
             :remove-tag="removeTagFilter"
@@ -257,6 +257,7 @@ export default {
     ...mapState([
       'selectedTags',
       'addSelectedTags',
+      'filterOperator',
       'insertAtTop'
     ]),
     ...mapState([
@@ -287,11 +288,14 @@ export default {
     incompleteTaskList: {
       get () {
         return this.selectedTags.length > 0
-          ? this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+          ? (this.filterOperator === 'and'
+            ? this.incompleteTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
+            : this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+          )
           : this.incompleteTasks
       },
-      set (value) {
-        this.updateIncompleteTasks(value)
+      set (newTaskOrder) {
+        this.updateIncompleteTasks({ newTaskOrder })
       }
     },
     completedTaskList: function () {

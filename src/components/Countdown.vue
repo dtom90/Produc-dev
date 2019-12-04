@@ -101,7 +101,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing === true"
-          :title="(countingUp ? 'Stop' : (countingDown ? 'Pause' : 'Start')) + ' timer'"
+          :title="(overtime ? 'Stop' : (countingDown ? 'Pause' : 'Start')) + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -132,7 +132,7 @@ export default {
     active: true,
     activeIntervalStarted: false,
     countingDown: false,
-    countingUp: false,
+    overtime: false,
     activeMinutes: 25,
     restMinutes: 5,
     secondsRemaining: 0
@@ -149,7 +149,7 @@ export default {
     },
     
     playPauseIcon () {
-      return this.countingUp ? 'stop' : this.countingDown ? 'pause' : 'play'
+      return this.overtime ? 'stop' : this.countingDown ? 'pause' : 'play'
     },
     
     cssProps () {
@@ -161,11 +161,11 @@ export default {
     },
     
     displayTime () {
-      const totalSecs = this.countingUp ? -this.secondsRemaining : this.secondsRemaining
+      const totalSecs = this.overtime ? -this.secondsRemaining : this.secondsRemaining
       const mins = Math.floor(totalSecs / 60)
       const secs = totalSecs % 60
       const secString = secs.toString().padStart(2, '0')
-      return `${this.countingUp ? '+' : ''}${mins}:${secString}`
+      return `${this.overtime ? '+' : ''}${mins}:${secString}`
     },
 
     continueOnComplete: {
@@ -182,8 +182,7 @@ export default {
   watch: {
     running (newValue, oldValue) {
       if (this.countingDown && oldValue === true && newValue === false) {
-        this.timer.pause()
-        this.endInterval()
+        this.toggleTimer()
         this.setTaskInactive()
       }
     }
@@ -211,8 +210,8 @@ export default {
     },
     
     toggleTimer () {
-      if (this.countingUp) {
-        this.countingUp = false
+      if (this.overtime) {
+        this.overtime = false
         this.resetTimer()
       } else if (this.countingDown) {
         this.timer.pause()
@@ -246,10 +245,10 @@ export default {
 
       if (fromCountdownFinish) {
         this.secondsRemaining = secondsRemaining
-        if (!this.countingUp) {
+        if (!this.overtime) {
           notify = true
           if (this.continueOnComplete && this.active) {
-            this.countingUp = true
+            this.overtime = true
           }
         }
       }
@@ -260,7 +259,7 @@ export default {
         notifications.notify('Finished Break, Time to Work!')
       }
       
-      if (!fromCountdownFinish || !this.active || !this.countingUp) {
+      if (!fromCountdownFinish || !this.active || !this.overtime) {
         this.resetTimer()
       }
     },

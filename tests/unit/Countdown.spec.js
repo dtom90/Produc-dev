@@ -105,7 +105,7 @@ describe('Countdown', () => {
     expect(wrapper.vm.active).toBe(true)
     expect(wrapper.vm.activeIntervalStarted).toBe(false)
     expect(wrapper.vm.countingDown).toBe(false)
-    expect(wrapper.vm.countingUp).toBe(false)
+    expect(wrapper.vm.overtime).toBe(false)
     expect(wrapper.vm.continueOnComplete).toBe(false)
     
     // Change timer 3 seconds
@@ -124,7 +124,7 @@ describe('Countdown', () => {
     expect(wrapper.vm.active).toBe(true)
     expect(wrapper.vm.activeIntervalStarted).toBe(false)
     expect(wrapper.vm.countingDown).toBe(false)
-    expect(wrapper.vm.countingUp).toBe(false)
+    expect(wrapper.vm.overtime).toBe(false)
     expect(wrapper.vm.continueOnComplete).toBe(false)
     
     expect(notifications.notify).not.toHaveBeenCalled()
