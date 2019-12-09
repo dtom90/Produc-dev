@@ -90,7 +90,8 @@
   "resolutions": {
     "handlebars": ">=4.5.3",
     "**/micromatch/braces": "^2.3.2",
-    "mem": ">=4.0.0"
+    "mem": ">=4.0.0",
+    "serialize-javascript": ">=2.1.1"
   },
   "postcss": {
     "plugins": {
