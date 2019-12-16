@@ -421,12 +421,12 @@ export default {
   }
   
   #incomplete-task-list {
-    max-height: calc(100vh - #{$app-top-margin} - 94px);
+    max-height: calc(100vh - #{$top-offset} - 94px);
     overflow-y: auto;
   }
   
   .scroll-list {
-    max-height: calc(100vh - #{$app-top-margin} - 41px);
+    max-height: calc(100vh - #{$top-offset} - 41px);
     overflow-y: auto;
   }
   
