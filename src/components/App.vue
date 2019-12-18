@@ -30,6 +30,9 @@
     
     <!-- Activity Modal -->
     <ActivityModal :tag="modalTag" />
+    
+    <!-- Data Modal -->
+    <DataModal />
   </div>
 </template>
 
@@ -38,6 +41,7 @@ import Navbar from './Navbar'
 import TaskList from './TaskList'
 import SelectedTask from './SelectedTask'
 import ActivityModal from './ActivityModal'
+import DataModal from './DataModal'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
 
@@ -50,6 +54,7 @@ export default {
   name: 'App',
   
   components: {
+    DataModal,
     Navbar,
     TaskList,
     SelectedTask,

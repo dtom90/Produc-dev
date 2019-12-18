@@ -17,37 +17,14 @@
       id="navbarSupportedContent"
       class="collapse navbar-collapse"
     >
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a
-            id="navbarDropdown"
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <span>Data</span>
-          </a>
-          <div
-            class="dropdown-menu"
-            aria-labelledby="navbarDropdown"
-          >
-            <a
-              class="dropdown-item"
-              href="#"
-            >View</a>
-            <a
-              class="dropdown-item"
-              href="#"
-            >Save to File</a>
-            <div class="dropdown-divider" />
-            <a
-              class="dropdown-item"
-              href="#"
-            >Delete</a>
-          </div>
+            class="nav-link"
+            data-toggle="modal"
+            data-target="#exampleModal"
+            href="javascript:void(0);"
+          >Data</a>
         </li>
       </ul>
     </div>
