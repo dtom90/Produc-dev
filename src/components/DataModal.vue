@@ -30,21 +30,15 @@
         </div>
         <div
           class="modal-body"
-          style="height: 70vh; overflow-y: auto"
         >
           <pre>{{ $root.$store.state }}</pre>
         </div>
         <div class="modal-footer">
           <button
-            type="button"
-            class="btn btn-secondary"
-            data-dismiss="modal"
-          >
-            Close
-          </button>
-          <button
+            v-if="isElectron"
             type="button"
             class="btn btn-primary"
+            @click="saveState"
           >
             Save to File
           </button>
@@ -55,11 +49,42 @@
 </template>
 
 <script>
+const userAgent = navigator.userAgent.toLowerCase()
+const isElectron = userAgent.indexOf(' electron/') > -1
+
 export default {
-  name: 'DataModal'
+  name: 'DataModal',
+  data: () => ({
+    isElectron: isElectron
+  }),
+  methods: {
+    saveState () {
+      if (this.isElectron) {
+        const { dialog, app } = require('electron').remote
+        const fs = require('fs')
+        const path = require('path')
+        dialog.showSaveDialog({
+          title: 'Save Data',
+          defaultPath: path.join(app.getPath('desktop'), '/DevTrack.json')
+        })
+          .then(save => {
+            if (!save.canceled) {
+              fs.writeFile(save.filePath, JSON.stringify(this.$store.state, null, 2), err => {
+                if (err) {
+                  alert(err)
+                }
+              })
+            }
+          })
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
-
+.modal-body {
+  height: 70vh;
+  overflow-y: auto;
+}
 </style>
