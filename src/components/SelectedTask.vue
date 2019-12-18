@@ -307,7 +307,7 @@ export default {
   @import "../styles/_variables.scss";
   
   #selected-task-container {
-    max-height: calc(100vh - #{$app-top-margin});
+    max-height: calc(100vh - #{$top-offset});
     overflow-y: auto;
   }
   

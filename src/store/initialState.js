@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-const state = {
+const initialState = {
   tasks: [],
   tags: {},
   selectedTags: [],
@@ -21,4 +21,4 @@ const state = {
 // import { taskWithActivity } from '../../tests/fixtures'
 // state.tasks.push(taskWithActivity())
 
-export default state
+export default initialState
