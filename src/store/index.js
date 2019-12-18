@@ -12,7 +12,7 @@ const vuexLocalStorage = new VuexPersist({
 })
 
 export default new Vuex.Store({
-  initialState,
+  state: initialState,
   getters,
   mutations,
   plugins: [vuexLocalStorage.plugin]

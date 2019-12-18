@@ -8,8 +8,8 @@ const page = `http://${hostname}:${port}${path}`
 
 const handleErrorsAndWarnings = async function () {
   const { error, warn } = await t.getBrowserConsoleMessages()
-  await t.expect(error[0]).notOk()
-  await t.expect(warn[0]).notOk()
+  await t.expect(error.length).eql(0, 'JavaScipt Console Errors:\n' + error.join('\n') + '\n')
+  await t.expect(warn.length).eql(0, 'JavaScipt Console Warnings:\n' + warn.join('\n') + '\n')
 }
 
 const rotationFactor = (turn, color = 'red') => {

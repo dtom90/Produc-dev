@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { state, mutations } from '@/store'
+import { initialState, mutations } from '@/store'
 
 const { addTask, addTaskTag, selectTag, removeTaskTag, startTask, stopTask, completeTask, deleteTask } = mutations
 
@@ -13,7 +13,7 @@ describe('mutations', () => {
   
   beforeEach(() => {
     
-    myState = JSON.parse(JSON.stringify(state))
+    myState = JSON.parse(JSON.stringify(initialState))
     addTask(myState, { name: 'my first task' })
     createdTime = myState.tasks[0].created
     origState = JSON.parse(JSON.stringify(myState))
