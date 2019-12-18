@@ -16,6 +16,14 @@
         icon="clock"
       />
     </div>
+    <div class="d-flex">
+      <span
+        v-for="tag in task.tags"
+        :key="tag"
+        class="badge mini-tag"
+        :style="{backgroundColor: tags[tag].color}"
+      >&nbsp;&nbsp;</span>
+    </div>
   </li>
 </template>
 
@@ -44,6 +52,7 @@ export default {
   computed: {
     
     ...mapState([
+      'tags',
       'selectedTaskID',
       'activeTaskID'
     ]),
@@ -80,5 +89,12 @@ export default {
   color: red;
   width: 2rem;
   height: 2rem;
+}
+
+.mini-tag {
+  width: 50px;
+  height: 10px;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 </style>

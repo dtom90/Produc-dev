@@ -56,7 +56,7 @@ const doneTasks = doneList.find('.task')
 const clearAllButton = Selector('button').withText('Clear All')
 
 const tasksPresent = ClientFunction(list => {
-  const tasks = list().querySelectorAll('.task')
+  const tasks = list().querySelectorAll('.task .task-name')
   return Array.apply(null, tasks).map(task => task.innerText)
 })
 
