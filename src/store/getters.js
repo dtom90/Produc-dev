@@ -3,6 +3,10 @@ const getters = {
     return state.tasks.find(t => t.id === state.selectedTaskID)
   },
   
+  activeTask (state) {
+    return state.tasks.find(t => t.id === state.activeTaskID)
+  },
+  
   incompleteTasks: state => state.tasks.filter(t => !t.completed),
   
   completedTasks (state) {
