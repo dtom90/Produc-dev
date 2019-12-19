@@ -29,7 +29,7 @@
           <font-awesome-icon icon="arrow-right" />
         </td>
         <td v-if="event.stopped">
-          <span>Stopped {{ displayTimeHuman(event.stopped) }}</span>
+          <span>{{ event.running ? 'Running' : 'Stopped' }} {{ displayTimeHuman(event.stopped) }}</span>
         </td>
         <td v-if="event.timeSpent">
           <span>Time Spent: {{ displayDuration(event.timeSpent) }}</span>

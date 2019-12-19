@@ -191,6 +191,7 @@ export default {
   mounted: function () {
     this.secondsRemaining = this.totalSeconds
     this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
+    this.resetRunning()
     notifications.requestPermission()
   },
   
@@ -201,6 +202,7 @@ export default {
       'stopTask',
       'unpauseTask',
       'updateContinueOnComplete',
+      'resetRunning',
       'setTaskInactive'
     ]),
     
@@ -230,6 +232,7 @@ export default {
 
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
+      this.stopTask({ id: this.taskId, running: true })
     },
     
     endInterval () {
