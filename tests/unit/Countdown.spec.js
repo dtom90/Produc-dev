@@ -15,7 +15,8 @@ const state = {
 const mutations = {
   startTask: jest.fn(),
   stopTask: jest.fn(),
-  setTaskInactive: jest.fn()
+  setTaskInactive: jest.fn(),
+  resetRunning: jest.fn()
 }
 
 const store = new Vuex.Store({
@@ -39,6 +40,7 @@ describe('Countdown', () => {
       propsData: { taskId: expectedTaskId },
       store
     })
+    expect(mutations.resetRunning).toHaveBeenCalled()
   })
   
   it('renders a play button for the timer', () => {

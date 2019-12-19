@@ -232,7 +232,9 @@ export default {
 
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
-      this.stopTask({ id: this.taskId, running: true })
+      if (this.active) {
+        this.stopTask({ id: this.taskId, running: true })
+      }
     },
     
     endInterval () {
