@@ -18,7 +18,14 @@
         id="selected-task-section"
         class="section"
       >
-        <SelectedTask :task="selectedTask" />
+        <ActiveTask
+          v-if="showActive"
+          :task="activeTask"
+        />
+        <SelectedTask
+          :task="selectedTask"
+          :height-class="heightClass"
+        />
       </div>
       
       <div class="section task-list">
@@ -44,6 +51,7 @@ import ActivityModal from './ActivityModal'
 import DataModal from './DataModal'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
+import ActiveTask from './ActiveTask'
 
 $(document).on('click', '.dropdown-menu', function (e) {
   e.stopPropagation()
@@ -54,13 +62,14 @@ export default {
   name: 'App',
   
   components: {
+    ActiveTask,
     DataModal,
     Navbar,
     TaskList,
     SelectedTask,
     ActivityModal
   },
-
+  
   data: () => ({
     modalTag: null
   }),
@@ -69,9 +78,18 @@ export default {
     
     ...mapGetters([
       'selectedTask',
+      'activeTask',
       'incompleteTasks',
       'completedTasks'
-    ])
+    ]),
+    
+    showActive () {
+      return this.selectedTask && this.activeTask && this.selectedTask.id !== this.activeTask.id
+    },
+    
+    heightClass () {
+      return (this.showActive ? 'partial' : 'full') + '-height'
+    }
   }
 }
 </script>
@@ -80,6 +98,10 @@ export default {
   @import "../styles/_variables.scss";
 
   $horiz-spacing: 8px;
+  
+  body {
+    overscroll-behavior-y: none;
+  }
   
   #app {
     -webkit-font-smoothing: antialiased;

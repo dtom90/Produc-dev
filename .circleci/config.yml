@@ -1,0 +1,53 @@
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+    - image: docker:stable
+    steps:
+    - checkout
+    - setup_remote_docker
+    - run:
+        name: Build test Docker image
+        command: |
+          docker build \
+                 -f docker/Dockerfile.dev \
+                 -t devtrack-test \
+                 .
+    - run:
+        name: Run lint and unit tests
+        command: |
+          docker run -i --rm \
+                 devtrack-test \
+                 sh -c 'yarn run lint && yarn run test:unit'
+    - run:
+        name: Build production Docker image
+        command: |
+          docker build \
+                 -f docker/Dockerfile.prod \
+                 -t devtrack-prod \
+                 .
+    - run:
+        name: Run production Docker container
+        command: |
+          docker run -i --rm \
+                 -p 8080:80 \
+                 --name devtrack-prod \
+                 devtrack-prod
+        background: true
+    - run:
+        name: Build TestCafé image
+        command: |
+          docker build \
+                 -f docker/Dockerfile.testcafe \
+                 -t devtrack-testcafe \
+                 .
+    - run:
+        name: Run TestCafé against production container
+        command: |
+          docker run -i --rm \
+                 --net="host" \
+                 devtrack-testcafe chromium:headless /tests -c 4 --selector-timeout 3000
+    - run:
+        name: Stop production Docker contianer
+        command: docker stop devtrack-prod

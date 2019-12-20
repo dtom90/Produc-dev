@@ -81,12 +81,17 @@ const mutations = {
     const task = state.tasks.find(t => t.id === payload.id)
     if (task && task.log.length > 0) {
       const lastInterval = task.log[task.log.length - 1]
-      if (lastInterval.stopped === null) {
-        lastInterval.stopped = Date.now()
-        lastInterval.timeSpent = lastInterval.stopped - lastInterval.started
+      lastInterval.stopped = Date.now()
+      lastInterval.timeSpent = lastInterval.stopped - lastInterval.started
+      if ('running' in payload) {
+        lastInterval.running = payload.running
+      } else {
+        if ('running' in lastInterval) {
+          Vue.delete(lastInterval, 'running')
+        }
+        state.running = false
       }
     }
-    state.running = false
   },
   
   setTaskInactive (state) {
@@ -104,6 +109,19 @@ const mutations = {
       interval.started = interval.stopped - interval.timeSpent
       task.log.push(interval)
     }
+  },
+  
+  resetRunning (state) {
+    if (state.activeTaskID) {
+      const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
+      if (activeTask && activeTask.log.length > 0) {
+        const lastInterval = activeTask.log[activeTask.log.length - 1]
+        if ('running' in lastInterval) {
+          Vue.delete(lastInterval, 'running')
+        }
+      }
+    }
+    state.running = false
   },
   
   addTaskTag (state, payload) {
