@@ -47,7 +47,7 @@ jobs:
         command: |
           docker run -i --rm \
                  --net="host" \
-                 devtrack-testcafe 'chromium --no-sandbox,firefox' /tests
+                 devtrack-testcafe chromium:headless /tests -c 4 --selector-timeout 3000
     - run:
         name: Stop production Docker contianer
         command: docker stop devtrack-prod
