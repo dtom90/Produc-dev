@@ -7,9 +7,9 @@ IMAGE_NAME=producdev-prod
 CONTAINER_NAME=producdev-prod
 
 echo
-echo "Running Lint and Unit Tests..."
+echo "Running Packages Audit, Lint, and Unit Tests..."
 echo
-./docker/temp.sh yarn run lint && yarn run test:unit
+./docker/temp.sh yarn audit:packages && yarn run lint && yarn run test:unit
 test_exit_code=$?
 if [ ${test_exit_code} != 0 ]; then exit ${test_exit_code}; fi
 echo
