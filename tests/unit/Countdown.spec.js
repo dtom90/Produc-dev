@@ -8,22 +8,6 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const state = {
-  continueOnComplete: false
-}
-
-const mutations = {
-  startTask: jest.fn(),
-  stopTask: jest.fn(),
-  setTaskInactive: jest.fn(),
-  resetRunning: jest.fn()
-}
-
-const store = new Vuex.Store({
-  state,
-  mutations
-})
-
 jest.spyOn(notifications, 'notify').mockImplementation(() => {})
 
 const delay = t => new Promise(resolve => setTimeout(resolve, t))
@@ -32,9 +16,22 @@ const expectedTaskId = 5
 
 describe('Countdown', () => {
   
-  let wrapper
+  let state, mutations, store, wrapper
   
   beforeEach(() => {
+    state = {
+      continueOnComplete: false
+    }
+    mutations = {
+      startTask: jest.fn(),
+      stopTask: jest.fn(),
+      setTaskInactive: jest.fn(),
+      resetRunning: jest.fn()
+    }
+    store = new Vuex.Store({
+      state,
+      mutations
+    })
     wrapper = shallowMount(Countdown, {
       localVue,
       propsData: { taskId: expectedTaskId },
@@ -138,8 +135,10 @@ describe('Countdown', () => {
     expect(wrapper.vm.secondsRemaining).toBe(3)
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(2)
+    expect(mutations.stopTask).toHaveBeenCalledWith(state, { id: expectedTaskId, running: true })
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(1)
+    expect(mutations.stopTask).toHaveBeenCalledWith(state, { id: expectedTaskId, running: true })
     await delay(1000)
     
     expect(wrapper.vm.active).toBe(false)
@@ -165,16 +164,19 @@ describe('Countdown', () => {
     wrapper.find('#timer-save-button').trigger('click')
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
     expect(wrapper.find('#timer-display').text()).toBe('0:03')
+    expect(wrapper.vm.secondsRemaining).toBe(3)
+    expect(mutations.stopTask).not.toHaveBeenCalledWith(state, { id: expectedTaskId, running: true })
     
     // Start the break countdown
     wrapper.find('#play-pause-btn').trigger('click')
     
     // Expect the countdown to decrement
-    expect(wrapper.vm.secondsRemaining).toBe(3)
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(2)
+    expect(mutations.stopTask).not.toHaveBeenCalledWith(state, { id: expectedTaskId, running: true })
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(1)
+    expect(mutations.stopTask).not.toHaveBeenCalledWith(state, { id: expectedTaskId, running: true })
     await delay(1000)
     
     expect(notifications.notify).toBeCalledWith('Finished Break, Time to Work!')
