@@ -21,7 +21,7 @@ const webpackConfig = {
     electronBuilder: {
       builderOptions: {
         appId: 'produc.dev',
-        productName: 'Produc-dev',
+        productName: 'DevTrack',
         mac: {
           category: 'your.app.category.type'
         }

@@ -1,8 +1,8 @@
 {
-  "name": "produc-dev",
+  "name": "devtrack",
   "description": "An app for productive developers",
-  "homepage": "https://github.com/dtom90/Produc-dev",
-  "repository": "https://github.com/dtom90/Produc-dev",
+  "homepage": "https://github.com/dtom90/DevTrack",
+  "repository": "https://github.com/dtom90/DevTrack",
   "author": {
     "name": "David Thomason",
     "url": "https://davidthomason.com/"
@@ -15,8 +15,8 @@
     "web:build:analyze": "ANALYZE_WEBPACK=true vue-cli-service build --dest dist_web",
     "web:serve": "node web.js",
     "web:prod": "yarn run web:build && yarn run web:serve",
-    "gh_pages:build": "BASE_URL=/Produc-dev/ vue-cli-service build --dest dist_gh_pages",
-    "gh_pages:serve": "BASE_URL=/Produc-dev/ node web.js",
+    "gh_pages:build": "BASE_URL=/DevTrack/ vue-cli-service build --dest dist_gh_pages",
+    "gh_pages:serve": "BASE_URL=/DevTrack/ node web.js",
     "gh_pages:prod": "yarn run gh_pages:build && yarn run gh_pages:serve",
     
     "electron:dev": "vue-cli-service electron:serve",
@@ -31,7 +31,7 @@
     "lint:fix": "vue-cli-service lint --fix",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e:dev": "testcafe chrome tests/e2e --selector-timeout 3000 --app \"yarn run web:dev\"",
-    "test:e2e:gh_pages": "PORT=5000 BASE_URL=/Produc-dev/ testcafe chrome:headless tests/e2e -c 2 --selector-timeout 3000 --app \"yarn run gh_pages:serve\"",
+    "test:e2e:gh_pages": "PORT=5000 BASE_URL=/DevTrack/ testcafe chrome:headless tests/e2e -c 2 --selector-timeout 3000 --app \"yarn run gh_pages:serve\"",
     "test:gh_pages:build:e2e": "yarn run gh_pages:build && yarn run test:e2e:gh_pages",
     "test": "yarn audit:packages && yarn run lint && yarn run test:unit && yarn run test:gh_pages:build:e2e"
   },

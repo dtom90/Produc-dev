@@ -108,7 +108,7 @@ const eventNow = (type) => {
   ].join('|'))
 }
 
-fixture(`Testing Produc-dev at ${page}`)
+fixture(`Testing DevTrack at ${page}`)
   .page(page)
   .afterEach(() => handleErrorsAndWarnings())
   .beforeEach(async t => {

@@ -18,5 +18,5 @@ deploy:
     github_token: $GH_TOKEN
     local_dir: dist_gh_pages
     on:
-      repo: dtom90/Produc-dev
+      repo: dtom90/DevTrack
       branch: master
