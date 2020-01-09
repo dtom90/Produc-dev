@@ -1,5 +1,6 @@
 {
   "name": "devtrack",
+  "displayName": "DevTrack",
   "description": "An app for productive developers",
   "homepage": "https://github.com/dtom90/DevTrack",
   "repository": "https://github.com/dtom90/DevTrack",
@@ -8,7 +9,7 @@
     "url": "https://davidthomason.com/"
   },
   "private": true,
-  "version": "0.7.1",
+  "version": "0.8.0",
   "scripts": {
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",

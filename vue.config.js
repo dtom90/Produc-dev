@@ -20,10 +20,10 @@ const webpackConfig = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        appId: 'produc.dev',
+        appId: 'app.devtrack',
         productName: 'DevTrack',
         mac: {
-          category: 'your.app.category.type'
+          category: 'public.app-category.productivity'
         }
       }
     }
