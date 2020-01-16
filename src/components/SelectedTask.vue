@@ -18,9 +18,7 @@
         />
         
         <!--  Checkbox  -->
-        <div
-          class=""
-        >
+        <div>
           <Checkbox
             :checked="checked"
             :task-id="task.id"
