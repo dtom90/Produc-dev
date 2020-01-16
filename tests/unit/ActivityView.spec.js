@@ -19,7 +19,7 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-let wrapper
+let wrapper, methods
 
 const shouldBehaveLikeActivityView = function (type) {
   
@@ -64,16 +64,18 @@ const shouldBehaveLikeActivityView = function (type) {
     if (type === 'task') {
       day2log.unshift({ completed: task.completed })
     }
-    expect(activityLogs.at(0).props()).toEqual({
-      log: day2log,
+    expect(JSON.stringify(activityLogs.at(0).props())).toEqual(JSON.stringify({
       day: day2.format(EXPECTED_DAY_KEY_FORMAT),
-      timeSpent: day2Duration
-    })
-    expect(activityLogs.at(1).props()).toEqual({
-      log: [log[1], log[0]],
+      log: day2log,
+      timeSpent: day2Duration,
+      deleteInterval: methods.deleteIntervalButtonClicked.bind()
+    }))
+    expect(JSON.stringify(activityLogs.at(1).props())).toEqual(JSON.stringify({
       day: day1.format(EXPECTED_DAY_KEY_FORMAT),
-      timeSpent: day1Duration
-    })
+      log: [log[1], log[0]],
+      timeSpent: day1Duration,
+      deleteInterval: methods.deleteIntervalButtonClicked.bind()
+    }))
     
   })
   
@@ -88,6 +90,10 @@ describe('ActivityView', () => {
     
     // add this before each
     beforeEach(() => {
+      methods = {
+        deleteIntervalButtonClicked: jest.fn()
+      }
+      
       store = new Vuex.Store({
         state: {
           tasks: [task]
@@ -96,6 +102,7 @@ describe('ActivityView', () => {
       
       wrapper = shallowMount(ActivityView, {
         propsData: { log: log, element: 'My Task', taskId: 1 },
+        methods,
         localVue,
         store
       })
@@ -125,11 +132,15 @@ describe('ActivityView', () => {
   })
   
   describe('for tag', () => {
+    methods = {
+      deleteIntervalButtonClicked: jest.fn()
+    }
     
     // add this before each
     beforeEach(() => {
       wrapper = shallowMount(ActivityView, {
         propsData: { log: log, element: 'myTag' },
+        methods,
         localVue,
         store: new Vuex.Store({
           state: {

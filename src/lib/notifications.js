@@ -7,11 +7,9 @@ export default {
     } else {
       const formerPermission = Notification.permission
       Notification.requestPermission().then(function (permission) {
-        if (permission === 'granted') {
-          if (formerPermission === 'default') {
-            new Notification('Permissions to notify you have been granted!')
-          }
-        } else {
+        if (permission === 'granted' && formerPermission === 'default') {
+          new Notification('Permissions to notify you have been granted!')
+        } else if (formerPermission === 'default') {
           alert('Warning! Permissions to notify you have been denied! You may not tell when your Pomodoro timer ends.')
         }
       })

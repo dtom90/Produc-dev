@@ -1,5 +1,5 @@
 <template>
-  <div class="activityLogComponent">
+  <div class="log">
     <!-- Display Day -->
     <h5
       v-if="day"
@@ -34,6 +34,32 @@
         <td v-if="event.timeSpent">
           <span>Time Spent: {{ displayDuration(event.timeSpent) }}</span>
         </td>
+        <td
+          v-if="!event.task"
+          class="btn-container"
+        >
+          <div class="dropright">
+            <button
+              class="btn btn-light interval-menu-btn"
+              data-toggle="dropdown"
+              data-boundary="viewport"
+            >
+              <font-awesome-icon icon="ellipsis-v" />
+            </button>
+            <div
+              class="dropdown-menu"
+              style="padding: 0;"
+            >
+              <button
+                class="btn btn-danger"
+                style="width: 100%"
+                @click="deleteInterval(event.started)"
+              >
+                Delete Interval
+              </button>
+            </div>
+          </div>
+        </td>
         
         <td v-if="event.completed" />
         <td v-if="event.completed" />
@@ -66,6 +92,10 @@ export default {
     timeSpent: {
       type: Number,
       default: 0
+    },
+    deleteInterval: {
+      type: Function,
+      default: () => {}
     }
   }
 }
@@ -73,13 +103,20 @@ export default {
 
 <style scoped>
 
-  .activityLogComponent {
-    margin-top: 20px;
+  .log {
+    margin-top: 32px;
   }
   
   .activityLog {
     margin-top: 20px;
+    margin-bottom: 0;
     font-size: 16px;
     text-align: center;
+    border-bottom: rgb(222, 226, 230) 1px solid;
+  }
+  
+  .btn-container {
+    padding: 0;
+    vertical-align: middle;
   }
 </style>

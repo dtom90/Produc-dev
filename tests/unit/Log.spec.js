@@ -13,6 +13,8 @@ const EXPECTED_DATETIME_FORMAT = 'ddd MMM DD, h:mm a'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
+const DELETE_INTERVAL = '  \n              Delete Interval'
+
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
 const allDuration = moment.duration(day1Duration + day2Duration).asMilliseconds()
 
@@ -39,16 +41,16 @@ describe('Log', () => {
       expect(wrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
-        '     Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 25 minutes' + DELETE_INTERVAL + '\n' +
+        '                 Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes' +
-        '     Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 15 minutes' + DELETE_INTERVAL + '\n' +
+        '                 Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
-        '     Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
+        ' Time Spent: 25 minutes' + DELETE_INTERVAL + '\n' +
+        '                 Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 22 minutes'
+        ' Time Spent: 22 minutes' + DELETE_INTERVAL
       )
       
     })
@@ -62,7 +64,7 @@ describe('Log', () => {
       localVue })
       
       expect(startedWrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT)
+        'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT) + '   ' + DELETE_INTERVAL
       )
       
     })
@@ -97,7 +99,7 @@ describe('Log', () => {
       expect(wrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 22 minutes'
+        ' Time Spent: 22 minutes' + DELETE_INTERVAL
       )
       
     })
@@ -135,10 +137,10 @@ describe('Log', () => {
       expect(wrapper.find('.activityLog').text()).toEqual(
         'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' +
-        '     Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
+        ' Time Spent: 25 minutes' + DELETE_INTERVAL + '\n' +
+        '                 Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes'
+        ' Time Spent: 15 minutes' + DELETE_INTERVAL
       )
       
     })
@@ -169,15 +171,15 @@ describe('Log', () => {
         taskName +
         ' Started ' + moment(log[3].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes    ' +
+        ' Time Spent: 25 minutes     ' +
         taskName +
         ' Started ' + moment(log[2].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes    ' +
+        ' Time Spent: 15 minutes     ' +
         taskName +
         ' Started ' + moment(log[1].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes    ' +
+        ' Time Spent: 25 minutes     ' +
         taskName +
         ' Started ' + moment(log[0].started).format(EXPECTED_DATETIME_FORMAT) +
         '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
@@ -195,7 +197,7 @@ describe('Log', () => {
       localVue })
       
       expect(startedWrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT)
+        'Started ' + moment(startedTime).format(EXPECTED_DATETIME_FORMAT) + '   ' + DELETE_INTERVAL
       )
       
     })

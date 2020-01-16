@@ -111,6 +111,14 @@ const mutations = {
     }
   },
   
+  deleteInterval (state, { taskId, startedTime }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (task) {
+      const intervalIndex = task.log.findIndex(interval => interval.started === startedTime)
+      task.log.splice(intervalIndex, 1)
+    }
+  },
+  
   resetRunning (state) {
     if (state.activeTaskID) {
       const activeTask = state.tasks.find(t => t.id === state.activeTaskID)

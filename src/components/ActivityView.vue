@@ -101,62 +101,63 @@
       <!-- Input to enter interval manually -->
       <div
         v-if="manualInput"
-        style="position: relative"
       >
-        <div style="position: absolute; right: 0">
+        <div
+          class="dropdown"
+          style="display: flex; justify-content: flex-end;"
+        >
           <button
             class="btn btn-light"
+            data-toggle="dropdown"
             :title="showIntervalInput ? 'Cancel' : 'Add interval manually'"
-            @click="showIntervalInput = !showIntervalInput"
           >
             <font-awesome-icon
-              v-if="!showIntervalInput"
-              icon="plus"
-            />
-            <font-awesome-icon
-              v-if="showIntervalInput"
-              icon="times"
+              :icon="showIntervalInput ? 'times' : 'plus'"
             />
           </button>
-        </div>
-        <div
-          v-if="showIntervalInput"
-          style="position: absolute; right: 37px;"
-        >
           <div
-            class="input-group"
-            style="width: 140px"
+            ref="addIntervalMenu"
+            class="dropdown-menu"
+            style="padding: 0;"
           >
-            <input
-              ref="intervalMinutesInput"
-              type="number"
-              value="25"
-              class="form-control"
+            <div
+              class="input-group"
+              style="width: 158px"
             >
-            <div class="input-group-append">
-              <span
-                class="input-group-text"
-              >minutes</span>
+              <input
+                ref="intervalMinutesInput"
+                type="number"
+                value="25"
+                class="form-control"
+              >
+              <div class="input-group-append">
+                <span
+                  class="input-group-text"
+                >minutes</span>
+              </div>
             </div>
+            <button
+              class="btn btn-primary"
+              style="width: 158px"
+              @click="addIntervalButtonClicked"
+            >
+              Add Interval
+            </button>
           </div>
-          <button
-            class="btn btn-primary"
-            @click="addIntervalButtonClicked"
-          >
-            Add Interval
-          </button>
         </div>
       </div>
       
       <!-- Log -->
-      <Log
-        v-for="(dayActivity, day) in dailyActivity.dailyActivity"
-        :key="day"
-        :day="day"
-        :log="dayActivity.log"
-        :time-spent="dayActivity.timeSpent"
-        class="log-section"
-      />
+      <div :id="manualInput ? 'task-log' : ''">
+        <Log
+          v-for="(dayActivity, day) in dailyActivity.dailyActivity"
+          :key="day"
+          :day="day"
+          :log="dayActivity.log"
+          :time-spent="dayActivity.timeSpent"
+          :delete-interval="deleteIntervalButtonClicked"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -328,7 +329,8 @@ export default {
     
     ...mapMutations([
       'setTagTarget',
-      'addInterval'
+      'addInterval',
+      'deleteInterval'
     ]),
     
     calculateTimeSpent (log) {
@@ -344,6 +346,13 @@ export default {
       this.addInterval({
         id: this.taskId,
         timeSpent: this.minutesToMs(this.$refs.intervalMinutesInput.value)
+      })
+    },
+    
+    deleteIntervalButtonClicked (startedTime) {
+      this.deleteInterval({
+        taskId: this.taskId,
+        startedTime
       })
     }
   }
@@ -370,8 +379,9 @@ export default {
     font-weight: 500;
   }
   
-  .log-section {
-    padding-top: 10px;
+  /*noinspection CssUnusedSymbol*/
+  #task-log {
+    margin-top: -38px;
   }
   
 </style>
