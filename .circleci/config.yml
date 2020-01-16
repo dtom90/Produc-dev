@@ -15,11 +15,11 @@ jobs:
                  -t devtrack-test \
                  .
     - run:
-        name: Run lint and unit tests
+        name: Run packages audit, lint, and unit tests
         command: |
           docker run -i --rm \
                  devtrack-test \
-                 sh -c 'yarn run lint && yarn run test:unit'
+                 sh -c 'yarn audit:packages && yarn run lint && yarn run test:unit'
     - run:
         name: Build production Docker image
         command: |

@@ -67,12 +67,14 @@ const shouldBehaveLikeActivityView = function (type) {
     expect(activityLogs.at(0).props()).toEqual({
       log: day2log,
       day: day2.format(EXPECTED_DAY_KEY_FORMAT),
-      timeSpent: day2Duration
+      timeSpent: day2Duration,
+      deleteInterval: jest.fn()
     })
     expect(activityLogs.at(1).props()).toEqual({
       log: [log[1], log[0]],
       day: day1.format(EXPECTED_DAY_KEY_FORMAT),
-      timeSpent: day1Duration
+      timeSpent: day1Duration,
+      deleteInterval: jest.fn()
     })
     
   })
