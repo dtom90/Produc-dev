@@ -35,7 +35,7 @@
           <span>Time Spent: {{ displayDuration(event.timeSpent) }}</span>
         </td>
         <td
-          v-if="!event.task"
+          v-if="!event.task && !event.completed"
           class="btn-container"
         >
           <div class="dropright">
