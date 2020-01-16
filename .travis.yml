@@ -9,6 +9,9 @@ cache: yarn
 addons:
   chrome: stable
 
+after_success:
+  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then yarn run electron:dist; fi
+
 deploy:
   - provider: pages
     skip_cleanup: true
