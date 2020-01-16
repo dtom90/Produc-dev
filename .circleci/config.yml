@@ -51,3 +51,9 @@ jobs:
     - run:
         name: Stop production Docker contianer
         command: docker stop devtrack-prod
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
