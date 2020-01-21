@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 const initialState = {
   tasks: [],
   tags: {},
@@ -9,6 +8,8 @@ const initialState = {
   insertAtTop: false,
   selectedTaskID: null,
   activeTaskID: null,
+  activeMinutes: 25,
+  restMinutes: 5,
   running: false,
   continueOnComplete: false
 }

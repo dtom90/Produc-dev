@@ -35,10 +35,6 @@ const mutations = {
     state.addSelectedTags = newValue
   },
   
-  updateContinueOnComplete (state, newValue) {
-    state.continueOnComplete = newValue
-  },
-  
   updateIncompleteTasks (state, { newTaskOrder }) {
     const incompleteTasks = getters.incompleteTasks(state)
     const origLength = incompleteTasks.length
@@ -62,6 +58,18 @@ const mutations = {
   
   selectTask (state, id) {
     state.selectedTaskID = id
+  },
+  
+  updateActiveMinutes (state, { activeMinutes }) {
+    state.activeMinutes = activeMinutes
+  },
+  
+  updateRestMinutes (state, { restMinutes }) {
+    state.restMinutes = restMinutes
+  },
+  
+  updateContinueOnComplete (state, newValue) {
+    state.continueOnComplete = newValue
   },
   
   startTask (state, payload) {

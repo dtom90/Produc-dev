@@ -9,6 +9,10 @@ cache: yarn
 addons:
   chrome: stable
 
+branches:
+  only:
+    - master
+
 after_success:
   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then yarn run electron:dist; fi
 
