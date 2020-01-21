@@ -9,6 +9,7 @@
         id="skip-btn"
         class="btn btn-light"
         title="Skip current interval"
+        :disabled="editing"
         @click="finishTimer"
       >
         <font-awesome-icon icon="times" />
@@ -69,18 +70,18 @@
           >
             <input
               v-if="active"
-              v-model.number="activeMinutes"
+              :value="activeMinutes"
               type="number"
               class="form-control"
-              @input="secondsRemaining = totalSeconds"
+              @input="changeActiveMinutes"
               @keyup.enter="updateMinutes"
             >
             <input
               v-if="!active"
-              v-model.number="restMinutes"
+              :value="restMinutes"
               type="number"
               class="form-control"
-              @input="secondsRemaining = totalSeconds"
+              @input="changeRestMinutes"
               @keyup.enter="updateMinutes"
             >
             <div class="input-group-append">
@@ -100,7 +101,7 @@
           id="play-pause-btn"
           type="button"
           class="btn btn-light btn-lg"
-          :disabled="editing === true"
+          :disabled="editing"
           :title="(overtime ? 'Stop' : (countingDown ? 'Pause' : 'Start')) + ' timer'"
           @click="toggleTimer"
         >
@@ -133,14 +134,14 @@ export default {
     activeIntervalStarted: false,
     countingDown: false,
     overtime: false,
-    activeMinutes: 25,
-    restMinutes: 5,
     secondsRemaining: 0
   }),
   
   computed: {
     
     ...mapState([
+      'activeMinutes',
+      'restMinutes',
       'running'
     ]),
     
@@ -201,10 +202,22 @@ export default {
       'startTask',
       'stopTask',
       'unpauseTask',
+      'updateActiveMinutes',
+      'updateRestMinutes',
       'updateContinueOnComplete',
       'resetRunning',
       'setTaskInactive'
     ]),
+    
+    changeActiveMinutes (e) {
+      this.updateActiveMinutes({ activeMinutes: parseFloat(e.target.value) })
+      this.secondsRemaining = this.totalSeconds
+    },
+    
+    changeRestMinutes (e) {
+      this.updateRestMinutes({ restMinutes: parseFloat(e.target.value) })
+      this.secondsRemaining = this.totalSeconds
+    },
     
     updateMinutes () {
       this.timer.setSeconds(this.totalSeconds)
