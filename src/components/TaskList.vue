@@ -300,7 +300,10 @@ export default {
     },
     completedTaskList: function () {
       const filteredTasks = this.selectedTags.length > 0
-        ? this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        ? (this.filterOperator === 'and'
+          ? this.completedTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
+          : this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        )
         : this.completedTasks
       return filteredTasks && this.sortOrder !== 'Oldest'
         ? filteredTasks.slice().reverse()
