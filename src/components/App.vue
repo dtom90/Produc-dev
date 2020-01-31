@@ -37,6 +37,9 @@
     
     <!-- Activity Modal -->
     <ActivityModal :tag="modalTag" />
+
+    <!-- Tag Modal -->
+    <TagModal />
     
     <!-- Data Modal -->
     <DataModal />
@@ -48,6 +51,7 @@ import Navbar from './Navbar'
 import TaskList from './TaskList'
 import SelectedTask from './SelectedTask'
 import ActivityModal from './ActivityModal'
+import TagModal from './TagModal'
 import DataModal from './DataModal'
 import { mapGetters } from 'vuex'
 import $ from 'jquery'
@@ -63,11 +67,12 @@ export default {
   
   components: {
     ActiveTask,
-    DataModal,
     Navbar,
     TaskList,
     SelectedTask,
-    ActivityModal
+    ActivityModal,
+    TagModal,
+    DataModal
   },
   
   data: () => ({

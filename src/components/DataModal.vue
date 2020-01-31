@@ -1,10 +1,10 @@
 <template>
   <div
-    id="exampleModal"
+    id="dataModal"
     class="modal fade"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="exampleModalLabel"
+    aria-labelledby="dataModalLabel"
     aria-hidden="true"
   >
     <div
