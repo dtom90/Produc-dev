@@ -200,14 +200,16 @@
       v-if="!isCompletedList"
       id="incomplete-task-list"
       v-model="incompleteTaskList"
+      class="list-group"
+      animation="200"
+      @start="startDrag"
+      @end="endDrag"
     >
-      <transition-group>
-        <Task
-          v-for="task in incompleteTaskList"
-          :key="task.id"
-          :task="task"
-        />
-      </transition-group>
+      <Task
+        v-for="task in incompleteTaskList"
+        :key="task.id"
+        :task="task"
+      />
     </draggable>
     
     <!-- Completed Tasks -->
@@ -343,6 +345,12 @@ export default {
     },
     removeTagFilter (tag) {
       this.removeTag({ tag })
+    },
+    startDrag () {
+      this.$el.closest('html').classList.add('draggable-cursor')
+    },
+    endDrag () {
+      this.$el.closest('html').classList.remove('draggable-cursor')
     }
   }
   
@@ -410,17 +418,23 @@ export default {
     width: 1.5em;
     height: 1.5em;
   }
-
-  #incomplete-task-list .list-group-item:active
-  {
+  
+  #incomplete-task-list .list-group-item {
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor:    -moz-grab;
+    cursor:         grab;
+  }
+  
+  .sortable-chosen {
+    background-color: #e9ecef;
+  }
+  
+  .draggable-cursor * {
     cursor: move !important;
     cursor: -webkit-grabbing !important;
     cursor:    -moz-grabbing !important;
     cursor:         grabbing !important;
-  }
-  
-  #incomplete-task-list .list-group-item {
-    cursor: grab;
   }
   
   #incomplete-task-list {
