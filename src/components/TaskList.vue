@@ -271,10 +271,10 @@ export default {
       'selectedTask',
       'unselectedTags'
     ]),
-    isCompletedList: function () { return this.title === 'Done' },
-    btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
-    selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    filterBtnStyle: function () {
+    isCompletedList () { return this.title === 'Done' },
+    btnId () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
+    selectId () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
+    filterBtnStyle () {
       return this.selectedTags.length > 0 ? {
         backgroundColor: this.tags[this.selectedTags[0]].color
       } : {}
@@ -300,7 +300,7 @@ export default {
         this.updateIncompleteTasks({ newTaskOrder })
       }
     },
-    completedTaskList: function () {
+    completedTaskList () {
       const filteredTasks = this.selectedTags.length > 0
         ? (this.filterOperator === 'and'
           ? this.completedTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
@@ -314,6 +314,7 @@ export default {
   },
   
   methods: {
+    
     ...mapMutations([
       'addTask',
       'setTopInsert',
@@ -353,7 +354,6 @@ export default {
       this.$el.closest('html').classList.remove('draggable-cursor')
     }
   }
-  
 }
 </script>
 

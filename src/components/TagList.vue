@@ -14,7 +14,7 @@
     </label>
     
     <div
-      v-for="tag in tagList"
+      v-for="tag in sortedTaskList"
       :key="tag"
       class="tag btn-group"
     >
@@ -175,6 +175,7 @@ export default {
     
     ...mapState([
       'tags',
+      'tagOrder',
       'filterOperator'
     ]),
     
@@ -182,10 +183,14 @@ export default {
       'availableTags'
     ]),
     
-    taskTags: function () {
+    taskTags () {
       return !isNaN(this.taskId)
     },
-
+    
+    sortedTaskList () {
+      return this.tagList.slice().sort((a, b) => this.tagOrder.indexOf(a) - this.tagOrder.indexOf(b))
+    },
+    
     filterOperatorValue: {
       get () {
         return this.filterOperator
