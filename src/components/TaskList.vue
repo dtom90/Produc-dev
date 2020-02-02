@@ -357,7 +357,6 @@ export default {
 }
 </script>
 
-<!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
 <style scoped lang="scss">
   @import "../styles/_variables.scss";
 
@@ -418,7 +417,8 @@ export default {
     width: 1.5em;
     height: 1.5em;
   }
-  
+
+  //noinspection CssInvalidPropertyValue
   #incomplete-task-list .list-group-item {
     cursor: move;
     cursor: -webkit-grab;
@@ -428,13 +428,6 @@ export default {
   
   .sortable-chosen {
     background-color: #e9ecef;
-  }
-  
-  .draggable-cursor * {
-    cursor: move !important;
-    cursor: -webkit-grabbing !important;
-    cursor:    -moz-grabbing !important;
-    cursor:         grabbing !important;
   }
   
   #incomplete-task-list {

@@ -112,6 +112,14 @@ export default {
   @import "../styles/_variables.scss";
 
   $horiz-spacing: 8px;
+
+  //noinspection CssInvalidPropertyValue
+  .draggable-cursor * {
+    cursor: move !important;
+    cursor: -webkit-grabbing !important;
+    cursor:    -moz-grabbing !important;
+    cursor:         grabbing !important;
+  }
   
   body {
     overscroll-behavior-y: none;

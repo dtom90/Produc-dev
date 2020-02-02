@@ -34,6 +34,8 @@
           <draggable
             v-model="changeTagOrder"
             animation="200"
+            @start="startDrag"
+            @end="endDrag"
           >
             <div
               v-for="tagName in tagOrder"
@@ -45,26 +47,13 @@
                 role="group"
               >
                 <button
-                  class="btn"
+                  type="button"
+                  class="btn move-btn"
                   :style="`backgroundColor: ${tags[tagName].color}`"
                 >
                   <font-awesome-icon icon="bars" />
                 </button>
-                <button
-                  class="tag-name btn"
-                  :style="`backgroundColor: ${tags[tagName].color}`"
-                >
-                  {{ tagName }}
-                </button>
-              <!--              <button-->
-              <!--                class="tag-close btn"-->
-              <!--                :style="`backgroundColor: ${tags[tagName].color}`"-->
-              <!--                title="Delete tag"-->
-              <!--                aria-label="Close"-->
-              <!--                @click.stop="deleteTag(tagName)"-->
-              <!--              >-->
-              <!--                <span aria-hidden="true">&times;</span>-->
-              <!--              </button>-->
+                <TagSettingsButton :tag="tagName" />
               </div>
             </div>
           </draggable>
@@ -76,16 +65,18 @@
 </template>
 
 <script>
+import TagSettingsButton from './TagSettingsButton'
 import { mapState, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
   name: 'DataModal',
+  
   components: {
+    TagSettingsButton,
     draggable
   },
-  data: () => ({
-  }),
+  
   computed: {
     ...mapState([
       'tags',
@@ -100,27 +91,43 @@ export default {
       }
     }
   },
+  
   methods: {
     ...mapMutations([
       'updateTagOrder'
-    ])
+    ]),
+    startDrag () {
+      this.$el.closest('html').classList.add('draggable-cursor')
+    },
+    endDrag () {
+      this.$el.closest('html').classList.remove('draggable-cursor')
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.modal-body {
-  overflow-y: auto;
-}
+
 .tag {
   margin-bottom: 20px;
-  
-  button {
+
+  //noinspection CssInvalidPropertyValue
+  .move-btn {
     color: white;
     text-shadow:
             0 0 3px rgba(0,0,0,0.4),
             0 0 13px rgba(0,0,0,0.1),
             0 0 23px rgba(0,0,0,0.1);
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor:    -moz-grab;
+    cursor:         grab;
   }
+  
+  .move-btn:hover {
+    color: lightgrey;
+  }
+  
 }
+
 </style>
