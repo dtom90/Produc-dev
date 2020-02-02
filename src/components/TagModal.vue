@@ -31,36 +31,43 @@
         <div
           class="modal-body"
         >
-          <div
-            v-for="(tagData, tagName) in tags"
-            :key="tagName"
-            class="tag btn-toolbar"
+          <draggable
+            v-model="changeTagOrder"
+            animation="200"
           >
             <div
-              class="btn-group"
-              role="group"
+              v-for="tagName in tagOrder"
+              :key="tagName"
+              class="tag btn-toolbar"
             >
-              <button
-                class="tag-name btn"
-                :style="`backgroundColor: ${tagData.color}`"
-                data-toggle="modal"
-                data-target="#activityModal"
-                title="View tag activity"
-                @click="viewActivityModal(tagName)"
+              <div
+                class="btn-group"
+                role="group"
               >
-                {{ tagName }}
-              </button>
-              <button
-                class="tag-close btn"
-                :style="`backgroundColor: ${tagData.color}`"
-                title="Delete tag"
-                aria-label="Close"
-                @click.stop="deleteTag(tagName)"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <button
+                  class="btn"
+                  :style="`backgroundColor: ${tags[tagName].color}`"
+                >
+                  <font-awesome-icon icon="bars" />
+                </button>
+                <button
+                  class="tag-name btn"
+                  :style="`backgroundColor: ${tags[tagName].color}`"
+                >
+                  {{ tagName }}
+                </button>
+              <!--              <button-->
+              <!--                class="tag-close btn"-->
+              <!--                :style="`backgroundColor: ${tags[tagName].color}`"-->
+              <!--                title="Delete tag"-->
+              <!--                aria-label="Close"-->
+              <!--                @click.stop="deleteTag(tagName)"-->
+              <!--              >-->
+              <!--                <span aria-hidden="true">&times;</span>-->
+              <!--              </button>-->
+              </div>
             </div>
-          </div>
+          </draggable>
         </div>
         <div class="modal-footer" />
       </div>
@@ -69,25 +76,40 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'DataModal',
+  components: {
+    draggable
+  },
   data: () => ({
   }),
   computed: {
     ...mapState([
-      'tags'
-    ])
+      'tags',
+      'tagOrder'
+    ]),
+    changeTagOrder: {
+      get () {
+        return this.tagOrder
+      },
+      set (newOrder) {
+        this.updateTagOrder({ newOrder })
+      }
+    }
   },
   methods: {
+    ...mapMutations([
+      'updateTagOrder'
+    ])
   }
 }
 </script>
 
 <style scoped lang="scss">
 .modal-body {
-  height: 70vh;
   overflow-y: auto;
 }
 .tag {

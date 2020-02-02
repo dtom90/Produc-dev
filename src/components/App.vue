@@ -53,7 +53,7 @@ import SelectedTask from './SelectedTask'
 import ActivityModal from './ActivityModal'
 import TagModal from './TagModal'
 import DataModal from './DataModal'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import $ from 'jquery'
 import ActiveTask from './ActiveTask'
 
@@ -95,6 +95,15 @@ export default {
     heightClass () {
       return (this.showActive ? 'partial' : 'full') + '-height'
     }
+  },
+  mounted () {
+    this.ensureTagOrder()
+  },
+  
+  methods: {
+    ...mapMutations([
+      'ensureTagOrder'
+    ])
   }
 }
 </script>
