@@ -24,7 +24,8 @@ const webpackConfig = {
         productName: 'DevTrack',
         mac: {
           category: 'public.app-category.productivity'
-        }
+        },
+        publish: ['github']
       }
     }
   }

@@ -18,7 +18,7 @@
     </div>
     <div class="d-flex">
       <span
-        v-for="tag in task.tags"
+        v-for="tag in taskTags"
         :key="tag"
         class="badge mini-tag"
         :style="{backgroundColor: tags[tag].color}"
@@ -53,19 +53,24 @@ export default {
     
     ...mapState([
       'tags',
+      'tagOrder',
       'selectedTaskID',
       'activeTaskID'
     ]),
     
-    active: function () {
+    active () {
       return this.selectedTaskID === this.task.id ? ' active' : ''
     },
 
-    checked: function () {
+    checked () {
       return this.task.completed !== null
     },
     
-    displayCountdownIndicator: function () {
+    taskTags () {
+      return this.task.tags.slice().sort((a, b) => this.tagOrder.indexOf(a) - this.tagOrder.indexOf(b))
+    },
+    
+    displayCountdownIndicator () {
       return this.activeTaskID === this.task.id
     }
   },

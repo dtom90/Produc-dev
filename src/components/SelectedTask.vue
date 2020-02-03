@@ -231,19 +231,18 @@ export default {
     ...mapState([
       'activeTaskID',
       'running',
-      'tags'
+      'tagOrder'
     ]),
     
-    checked: function () {
+    checked () {
       return this.task.completed !== null
     },
     
-    taskTags: function () {
-      const tags = Object.keys(this.tags)
-      return this.task.tags.slice().sort((a, b) => tags.indexOf(a) - tags.indexOf(b))
+    taskTags () {
+      return this.task.tags
     },
     
-    displayNotes: function () {
+    displayNotes () {
       return marked(DOMPurify.sanitize(this.task.notes), { renderer })
     }
     
@@ -257,7 +256,7 @@ export default {
       'deleteTask'
     ]),
     
-    editName: function () {
+    editName () {
       this.editingName = true
       this.$refs.taskMenu.classList.remove('show')
       this.$refs.taskMenu.querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
@@ -265,7 +264,7 @@ export default {
       this.$nextTick(() => this.$refs.taskNameInput.focus())
     },
     
-    addTagButton: function () {
+    addTagButton () {
       this.showTagInput = !this.showTagInput
       if (this.showTagInput) {
         this.$nextTick(() => {
@@ -274,11 +273,11 @@ export default {
       }
     },
     
-    tagInputChange: function () {
+    tagInputChange () {
       this.tagOptions = this.availableTags(this.task.id, this.newTag)
     },
     
-    addTag: function (newTag) {
+    addTag (newTag) {
       this.addTaskTag({ id: this.task.id, tag: newTag })
       this.newTag = ''
       this.tagInputChange()
@@ -286,12 +285,12 @@ export default {
       this.$refs.addTagInput.focus()
     },
     
-    removeTag: function (tag) {
+    removeTag (tag) {
       this.removeTaskTag({ id: this.task.id, tag })
       this.$forceUpdate()
     },
     
-    clickOutside: function (event) {
+    clickOutside (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
             event.relatedTarget.classList.contains('tag-option'))) {
         this.tagOptions = []

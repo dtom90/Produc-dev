@@ -149,12 +149,23 @@ const mutations = {
           const colors = Object.values(state.tags).map(tag => tag.color)
           const colorManager = new ColorManager(colors)
           Vue.set(state.tags, newTag, { color: colorManager.getRandomColor() })
+          state.tagOrder.push(newTag)
         }
         if (!(task.tags.includes(newTag))) {
           task.tags.push(newTag)
         }
       }
     }
+  },
+  
+  ensureTagOrder (state) {
+    if (state.tagOrder.length === 0) {
+      state.tagOrder = Object.keys(state.tags)
+    }
+  },
+  
+  updateTagOrder (state, { newOrder }) {
+    state.tagOrder = newOrder
   },
   
   setTagColor (state, payload) {

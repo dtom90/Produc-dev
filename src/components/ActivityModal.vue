@@ -20,48 +20,7 @@
             >
               Activity for&nbsp;
             </h3>
-            <button
-              class="btn tag-button"
-              :style="`backgroundColor: ${tagProperties.color}`"
-              data-toggle="dropdown"
-            >
-              {{ tag }}
-            </button>
-            <div
-              id="tag-menu"
-              class="dropdown-menu"
-            >
-              <div
-                class="d-flex align-items-center"
-              >
-                <input
-                  v-model="newTagName"
-                  @keyup.enter="updateTagName"
-                >
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  @click="updateTagName"
-                >
-                  <font-awesome-icon icon="save" />
-                </button>
-              </div>
-              <div class="dropdown-divider" />
-              <sketch-picker
-                :value="color"
-                @input="updateTagColor"
-              />
-              <div class="dropdown-divider" />
-              <button
-                id="delete-tag-btn"
-                type="button"
-                class="btn btn-danger"
-                title="Delete tag"
-                @click="deleteTag({tag})"
-              >
-                <font-awesome-icon icon="trash-alt" />
-              </button>
-            </div>
+            <TagSettingsButton :tag="tag" />
           </div>
           
           <button
@@ -97,15 +56,15 @@
 
 <script>
 import ActivityView from './ActivityView'
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import Sketch from 'vue-color/src/components/Sketch.vue'
+import { mapGetters } from 'vuex'
+import TagSettingsButton from './TagSettingsButton'
 
 export default {
   name: 'ActivityModal',
   
   components: {
-    ActivityView,
-    'sketch-picker': Sketch
+    TagSettingsButton,
+    ActivityView
   },
   
   props: {
@@ -115,53 +74,10 @@ export default {
     }
   },
   
-  data: () => ({
-    color: '#FFFFFF',
-    newTagName: ''
-  }),
-  
   computed: {
-
-    ...mapState([
-      'tags'
-    ]),
-    
     ...mapGetters([
       'tagActivity'
-    ]),
-    
-    tagProperties: function () { return this.tags[this.tag] }
-  },
-  
-  watch: {
-    tag: function (newTag) {
-      this.newTagName = newTag
-      this.color = this.tagProperties.color
-    }
-  },
-  
-  methods: {
-    
-    ...mapMutations([
-      'setTagColor',
-      'renameTag',
-      'deleteTag'
-    ]),
-    
-    updateTagName () {
-      this.renameTag({
-        oldName: this.tag,
-        newName: this.newTagName
-      })
-    },
-    
-    updateTagColor (value) {
-      this.setTagColor({
-        tag: this.tag,
-        color: value.hex
-      })
-      this.color = this.tagProperties.color
-    }
+    ])
   }
 }
 </script>
@@ -176,26 +92,6 @@ export default {
 .modal-title > h3 {
   margin-top: .2rem;
   margin-bottom: 0;
-}
-
-.tag-button {
-  color: white;
-  text-shadow:
-          0 0 3px rgba(0,0,0,0.4),
-          0 0 13px rgba(0,0,0,0.1),
-          0 0 23px rgba(0,0,0,0.1);
-}
-
-.tag-button:hover {
-  color: lightgrey;
-}
-
-.dropdown-menu {
-  min-width: 40px;
-}
-
-#delete-tag-btn {
-  margin-left: 8px;
 }
 
 </style>

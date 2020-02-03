@@ -15,7 +15,8 @@ const state = {
   tags: {
     'one tag': myColorManager.getRandomColor(),
     'another tag': myColorManager.getRandomColor()
-  }
+  },
+  tagOrder: tagValues
 }
 
 const getters = {

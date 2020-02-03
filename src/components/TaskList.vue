@@ -200,14 +200,16 @@
       v-if="!isCompletedList"
       id="incomplete-task-list"
       v-model="incompleteTaskList"
+      class="list-group"
+      animation="200"
+      @start="startDrag"
+      @end="endDrag"
     >
-      <transition-group>
-        <Task
-          v-for="task in incompleteTaskList"
-          :key="task.id"
-          :task="task"
-        />
-      </transition-group>
+      <Task
+        v-for="task in incompleteTaskList"
+        :key="task.id"
+        :task="task"
+      />
     </draggable>
     
     <!-- Completed Tasks -->
@@ -269,10 +271,10 @@ export default {
       'selectedTask',
       'unselectedTags'
     ]),
-    isCompletedList: function () { return this.title === 'Done' },
-    btnId: function () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
-    selectId: function () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
-    filterBtnStyle: function () {
+    isCompletedList () { return this.title === 'Done' },
+    btnId () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
+    selectId () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
+    filterBtnStyle () {
       return this.selectedTags.length > 0 ? {
         backgroundColor: this.tags[this.selectedTags[0]].color
       } : {}
@@ -298,9 +300,12 @@ export default {
         this.updateIncompleteTasks({ newTaskOrder })
       }
     },
-    completedTaskList: function () {
+    completedTaskList () {
       const filteredTasks = this.selectedTags.length > 0
-        ? this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        ? (this.filterOperator === 'and'
+          ? this.completedTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
+          : this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        )
         : this.completedTasks
       return filteredTasks && this.sortOrder !== 'Oldest'
         ? filteredTasks.slice().reverse()
@@ -309,6 +314,7 @@ export default {
   },
   
   methods: {
+    
     ...mapMutations([
       'addTask',
       'setTopInsert',
@@ -340,13 +346,17 @@ export default {
     },
     removeTagFilter (tag) {
       this.removeTag({ tag })
+    },
+    startDrag () {
+      this.$el.closest('html').classList.add('draggable-cursor')
+    },
+    endDrag () {
+      this.$el.closest('html').classList.remove('draggable-cursor')
     }
   }
-  
 }
 </script>
 
-<!--suppress CssInvalidPropertyValue, CssUnusedSymbol -->
 <style scoped lang="scss">
   @import "../styles/_variables.scss";
 
@@ -408,16 +418,16 @@ export default {
     height: 1.5em;
   }
 
-  #incomplete-task-list .list-group-item:active
-  {
-    cursor: move !important;
-    cursor: -webkit-grabbing !important;
-    cursor:    -moz-grabbing !important;
-    cursor:         grabbing !important;
+  //noinspection CssInvalidPropertyValue
+  #incomplete-task-list .list-group-item {
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor:    -moz-grab;
+    cursor:         grab;
   }
   
-  #incomplete-task-list .list-group-item {
-    cursor: grab;
+  .sortable-chosen {
+    background-color: #e9ecef;
   }
   
   #incomplete-task-list {

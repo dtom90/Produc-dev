@@ -37,6 +37,9 @@
     
     <!-- Activity Modal -->
     <ActivityModal :tag="modalTag" />
+
+    <!-- Tag Modal -->
+    <TagModal />
     
     <!-- Data Modal -->
     <DataModal />
@@ -48,8 +51,9 @@ import Navbar from './Navbar'
 import TaskList from './TaskList'
 import SelectedTask from './SelectedTask'
 import ActivityModal from './ActivityModal'
+import TagModal from './TagModal'
 import DataModal from './DataModal'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import $ from 'jquery'
 import ActiveTask from './ActiveTask'
 
@@ -63,11 +67,12 @@ export default {
   
   components: {
     ActiveTask,
-    DataModal,
     Navbar,
     TaskList,
     SelectedTask,
-    ActivityModal
+    ActivityModal,
+    TagModal,
+    DataModal
   },
   
   data: () => ({
@@ -90,6 +95,15 @@ export default {
     heightClass () {
       return (this.showActive ? 'partial' : 'full') + '-height'
     }
+  },
+  mounted () {
+    this.ensureTagOrder()
+  },
+  
+  methods: {
+    ...mapMutations([
+      'ensureTagOrder'
+    ])
   }
 }
 </script>
@@ -98,6 +112,14 @@ export default {
   @import "../styles/_variables.scss";
 
   $horiz-spacing: 8px;
+
+  //noinspection CssInvalidPropertyValue
+  .draggable-cursor * {
+    cursor: move !important;
+    cursor: -webkit-grabbing !important;
+    cursor:    -moz-grabbing !important;
+    cursor:         grabbing !important;
+  }
   
   body {
     overscroll-behavior-y: none;
