@@ -251,32 +251,34 @@ export default {
     },
     
     endInterval () {
-      this.countingDown = false
-      if (this.active) {
+      if (this.active && this.countingDown) {
         this.stopTask({ id: this.taskId })
       }
+      this.countingDown = false
     },
     
     finishTimer (secondsRemaining = null) {
       const fromCountdownFinish = typeof secondsRemaining === 'number'
       let notify = false
-
-      if (fromCountdownFinish) {
-        this.secondsRemaining = secondsRemaining
-        if (!this.overtime) {
-          notify = true
-          if (this.continueOnComplete && this.active) {
+      
+      if (fromCountdownFinish) { // If this came from the countdown finishing
+        this.secondsRemaining = secondsRemaining // reset secondsRemaining
+        if (!this.overtime) { // If we're not in overtime
+          notify = true // Set notify to true
+          if (this.continueOnComplete && this.active) { // If continueOnComplete is set, go into overtime
             this.overtime = true
           }
         }
       }
       
+      // Notify interval finish
       if (notify && this.active) {
         notifications.notify('Finished Working, Take a Break!')
       } else if (notify) {
         notifications.notify('Finished Break, Time to Work!')
       }
       
+      // If this was a manual finishTimer, or we're not continuing into overtime
       if (!fromCountdownFinish || !this.active || !this.overtime) {
         this.resetTimer()
       }
