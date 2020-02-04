@@ -1,6 +1,4 @@
-if: branch = master AND \
-  type = push AND \
-  tag IS blank
+if: branch = master
 
 os: osx
 osx_image: xcode11
