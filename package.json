@@ -9,7 +9,7 @@
     "url": "https://davidthomason.com/"
   },
   "private": true,
-  "version": "0.8.4",
+  "version": "0.8.5",
   "scripts": {
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",

@@ -245,6 +245,7 @@ const mutations = {
       })
       state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
       Vue.delete(state.tags, payload.tag)
+      state.tagOrder = state.tagOrder.filter(tag => tag !== payload.tag)
       $('#activityModal').modal('hide')
     }
   },

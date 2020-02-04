@@ -1,4 +1,4 @@
-if: branch = master
+if: branch = master AND type = push
 
 os: osx
 osx_image: xcode11
