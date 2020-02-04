@@ -2,6 +2,7 @@ const initialState = {
   tasks: [],
   tags: {},
   tagOrder: [],
+  modalTag: null,
   selectedTags: [],
   filterOperator: 'and',
   addSelectedTags: true,

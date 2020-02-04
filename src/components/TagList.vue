@@ -206,7 +206,8 @@ export default {
     ...mapMutations([
       'addTaskTag',
       'removeTaskTag',
-      'setFilterOperator'
+      'setFilterOperator',
+      'setModalTag'
     ]),
     
     addTagButton: function () {
@@ -230,8 +231,8 @@ export default {
       this.$refs.addTagInput.focus()
     },
     
-    viewActivityModal: function (tag) {
-      this.$root.$children[0].modalTag = tag
+    viewActivityModal: function (newTag) {
+      this.setModalTag({ newTag })
     },
     
     clickOutside: function (event) {
