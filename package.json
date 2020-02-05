@@ -9,7 +9,7 @@
     "url": "https://davidthomason.com/"
   },
   "private": true,
-  "version": "0.8.5",
+  "version": "0.8.6",
   "scripts": {
     "web:dev": "vue-cli-service serve",
     "web:build": "vue-cli-service build --dest dist_web",
@@ -24,6 +24,7 @@
     "electron:build": "vue-cli-service electron:build --dir",
     "electron:serve": "electron dist_electron/bundled",
     "electron:dist": "vue-cli-service electron:build",
+    "electron:publish": "vue-cli-service electron:build --publish always",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     
