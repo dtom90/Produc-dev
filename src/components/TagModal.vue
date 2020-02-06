@@ -70,7 +70,7 @@ import { mapState, mapMutations } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
-  name: 'DataModal',
+  name: 'TagModal',
   
   components: {
     TagSettingsButton,

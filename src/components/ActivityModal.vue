@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="tag"
+    v-if="modalTag"
     id="activityModal"
     class="modal fade"
     tabindex="-1"
@@ -20,7 +20,7 @@
             >
               Activity for&nbsp;
             </h3>
-            <TagSettingsButton :tag="tag" />
+            <TagSettingsButton :tag="modalTag" />
           </div>
           
           <button
@@ -34,10 +34,10 @@
         </div>
         <div class="modal-body">
           <ActivityView
-            v-if="tag"
+            v-if="modalTag"
             id="tagActivity"
-            :element="tag"
-            :log="tagActivity(tag)"
+            :element="modalTag"
+            :log="tagActivity(modalTag)"
           />
         </div>
         <div class="modal-footer">
@@ -56,7 +56,7 @@
 
 <script>
 import ActivityView from './ActivityView'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import TagSettingsButton from './TagSettingsButton'
 
 export default {
@@ -67,14 +67,11 @@ export default {
     ActivityView
   },
   
-  props: {
-    tag: {
-      type: String,
-      default: null
-    }
-  },
-  
   computed: {
+    ...mapState([
+      'modalTag'
+    ]),
+    
     ...mapGetters([
       'tagActivity'
     ])

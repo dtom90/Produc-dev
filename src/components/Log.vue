@@ -38,7 +38,10 @@
           v-if="!event.task && !event.completed"
           class="btn-container"
         >
-          <div class="dropright">
+          <div
+            :ref="`intervalMenu${index}`"
+            class="dropright"
+          >
             <button
               class="btn btn-light interval-menu-btn"
               data-toggle="dropdown"
@@ -53,7 +56,7 @@
               <button
                 class="btn btn-danger"
                 style="width: 100%"
-                @click="deleteInterval(event.started)"
+                @click="deleteInterval(event.started, index)"
               >
                 Delete Interval
               </button>
@@ -93,9 +96,19 @@ export default {
       type: Number,
       default: 0
     },
-    deleteInterval: {
+    deleteIntervalButtonClicked: {
       type: Function,
       default: () => {}
+    }
+  },
+  
+  methods: {
+
+    deleteInterval (startedTime, index) {
+      this.$refs[`intervalMenu${index}`][0].classList.remove('show')
+      this.$refs[`intervalMenu${index}`][0].querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
+      this.$refs[`intervalMenu${index}`][0].querySelector('.dropdown-menu').classList.remove('show')
+      this.deleteIntervalButtonClicked(startedTime)
     }
   }
 }

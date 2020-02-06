@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="tagSettingsButton"
     class="btn-group dropright"
     role="group"
   >
@@ -104,6 +105,9 @@ export default {
         oldName: this.tag,
         newName: this.newTagName
       })
+      this.$refs.tagSettingsButton.classList.remove('show')
+      this.$refs.tagSettingsButton.querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
+      this.$refs.tagSettingsButton.querySelector('.dropdown-menu').classList.remove('show')
     },
   
     updateTagColor (value) {

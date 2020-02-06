@@ -188,6 +188,10 @@ const mutations = {
     }
   },
   
+  setModalTag (state, { newTag }) {
+    state.modalTag = newTag
+  },
+  
   selectTag (state, payload) {
     state.selectedTags.push(payload.tag)
   },
@@ -233,7 +237,10 @@ const mutations = {
           state.selectedTags[idx] = payload.newName
         }
         Vue.delete(state.tags, payload.oldName)
-        $('#activityModal').modal('hide')
+        Vue.set(state.tagOrder, state.tagOrder.indexOf(payload.oldName), payload.newName)
+        if (state.modalTag === payload.oldName) {
+          state.modalTag = payload.newName
+        }
       }
     }
   },

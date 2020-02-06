@@ -155,7 +155,7 @@
           :day="day"
           :log="dayActivity.log"
           :time-spent="dayActivity.timeSpent"
-          :delete-interval="deleteIntervalButtonClicked"
+          :delete-interval-button-clicked="deleteIntervalButtonClicked"
         />
       </div>
     </div>

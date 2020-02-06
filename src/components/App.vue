@@ -36,7 +36,7 @@
     </div>
     
     <!-- Activity Modal -->
-    <ActivityModal :tag="modalTag" />
+    <ActivityModal />
 
     <!-- Tag Modal -->
     <TagModal />
@@ -74,10 +74,6 @@ export default {
     TagModal,
     DataModal
   },
-  
-  data: () => ({
-    modalTag: null
-  }),
   
   computed: {
     
