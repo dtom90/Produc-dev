@@ -8,7 +8,7 @@ node_js: lts/*
 
 cache: yarn
 
-script: yarn run gh_pages:build && cp -R .circleci dist_gh_pages && yarn run electron:dist
+script: yarn run gh_pages:build && cp -R .circleci dist_gh_pages && yarn run electron:release
 
 deploy:
   - provider: pages
