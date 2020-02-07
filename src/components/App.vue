@@ -38,6 +38,9 @@
     <!-- Activity Modal -->
     <ActivityModal />
 
+    <!-- All Activity Modal -->
+    <AllActivityModal />
+    
     <!-- Tag Modal -->
     <TagModal />
     
@@ -51,6 +54,7 @@ import Navbar from './Navbar'
 import TaskList from './TaskList'
 import SelectedTask from './SelectedTask'
 import ActivityModal from './ActivityModal'
+import AllActivityModal from './AllActivityModal'
 import TagModal from './TagModal'
 import DataModal from './DataModal'
 import { mapGetters, mapMutations } from 'vuex'
@@ -71,6 +75,7 @@ export default {
     TaskList,
     SelectedTask,
     ActivityModal,
+    AllActivityModal,
     TagModal,
     DataModal
   },

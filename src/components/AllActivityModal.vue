@@ -1,11 +1,10 @@
 <template>
   <div
-    v-if="modalTag"
-    id="activityModal"
+    id="allActivityModal"
     class="modal fade"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="activityModal"
+    aria-labelledby="allActivityModal"
     aria-hidden="true"
   >
     <div
@@ -15,8 +14,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-title">
-            <h3>Activity for&nbsp;</h3>
-            <TagSettingsButton :tag="modalTag" />
+            <h3>All Activity</h3>
           </div>
           
           <button
@@ -30,10 +28,9 @@
         </div>
         <div class="modal-body">
           <ActivityView
-            v-if="modalTag"
             id="tagActivity"
-            :element="modalTag"
-            :log="tagActivity(modalTag)"
+            element="All Activity"
+            :log="allActivity"
           />
         </div>
         <div class="modal-footer">
@@ -52,24 +49,18 @@
 
 <script>
 import ActivityView from './ActivityView'
-import { mapState, mapGetters } from 'vuex'
-import TagSettingsButton from './TagSettingsButton'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ActivityModal',
   
   components: {
-    TagSettingsButton,
     ActivityView
   },
   
   computed: {
-    ...mapState([
-      'modalTag'
-    ]),
-    
     ...mapGetters([
-      'tagActivity'
+      'allActivity'
     ])
   }
 }
