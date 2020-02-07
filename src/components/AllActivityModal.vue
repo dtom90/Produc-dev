@@ -28,7 +28,7 @@
         </div>
         <div class="modal-body">
           <ActivityView
-            id="tagActivity"
+            id="allActivity"
             element="All Activity"
             :log="allActivity"
           />
