@@ -22,6 +22,14 @@
           <a
             class="nav-link"
             data-toggle="modal"
+            data-target="#allActivityModal"
+            href="javascript:void(0);"
+          >All Activity</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="modal"
             data-target="#tagModal"
             href="javascript:void(0);"
           >Tags</a>

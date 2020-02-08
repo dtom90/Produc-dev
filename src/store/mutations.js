@@ -180,12 +180,10 @@ const mutations = {
     }
   },
   
-  setTagTarget (state, payload) {
-    if ('weeklyTarget' in payload) {
-      Vue.set(state.tags[payload.tag], 'weeklyTarget', payload.weeklyTarget)
-    } else if ('dailyTarget' in payload) {
-      Vue.set(state.tags[payload.tag], 'dailyTarget', payload.dailyTarget)
-    }
+  setTarget (state, payload) {
+    const targetElement = 'tag' in payload ? state.tags[payload.tag] : state.totalTarget
+    const targetType = Object.keys(payload).filter(key => key.includes('Target'))
+    Vue.set(targetElement, targetType, payload[targetType])
   },
   
   setModalTag (state, { newTag }) {

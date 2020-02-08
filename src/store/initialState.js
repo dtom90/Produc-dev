@@ -3,6 +3,7 @@ const initialState = {
   tags: {},
   tagOrder: [],
   modalTag: null,
+  totalTarget: {},
   selectedTags: [],
   filterOperator: 'and',
   addSelectedTags: true,

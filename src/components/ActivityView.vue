@@ -215,7 +215,8 @@ export default {
     
     ...mapState([
       'tasks',
-      'tags'
+      'tags',
+      'totalTarget'
     ]),
     
     isTaskActivity: function () { return this.taskId !== null },
@@ -226,12 +227,13 @@ export default {
       get () {
         if (this.isTaskActivity) { return null }
         const type = this.dailyChart ? 'dailyTarget' : 'weeklyTarget'
-        return this.tags[this.element][type]
+        const targetElement = this.element === 'All Activity' ? this.totalTarget : this.tags[this.element]
+        return targetElement[type]
       },
       set (value) {
-        const targetPayload = { tag: this.element }
+        const targetPayload = this.element === 'All Activity' ? {} : { tag: this.element }
         targetPayload[this.dailyChart ? 'dailyTarget' : 'weeklyTarget'] = parseFloat(value)
-        this.setTagTarget(targetPayload)
+        this.setTarget(targetPayload)
       }
     },
     
@@ -328,7 +330,7 @@ export default {
   methods: {
     
     ...mapMutations([
-      'setTagTarget',
+      'setTarget',
       'addInterval',
       'deleteInterval'
     ]),
