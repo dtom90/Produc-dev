@@ -117,6 +117,7 @@
     <div
       v-if="!isCompletedList"
       id="todo-input-section"
+      class="input-group"
     >
       <!-- New Task Input Field -->
       <input
@@ -128,15 +129,13 @@
         @keyup.enter="addNewTask"
       >
 
-      <!-- To Do List Add Position Menu -->
-      <div
-        class="dropright custom-icons"
-      >
+      <!-- To Do List Add Position Button -->
+      <div class="input-group-append">
         <button
-          id="add-position-menu-button"
-          class="btn btn-light"
-          title="List options"
-          data-toggle="dropdown"
+          id="add-position-button"
+          class="btn btn-light custom-icons"
+          :title="`Adding tasks to ${insertAtTop === true ? 'top' : 'bottom'} of list`"
+          @click="setTopInsert(!insertAtTop)"
         >
           <img
             v-if="insertAtTop"
@@ -149,49 +148,6 @@
             alt="Add to Bottom"
           >
         </button>
-        
-        <div
-          id="add-position-menu"
-          class="dropdown-menu"
-        >
-          <h6 style="margin-bottom: 10px;">
-            Add New Tasks To:
-          </h6>
-          <div
-            class="btn-group btn-group-toggle"
-          >
-            <label
-              :class="'btn btn-light' + (insertAtTop === true ? ' active' : '')"
-              title="Top of List"
-            >
-              <input
-                id="insert-top"
-                type="radio"
-                value="Top"
-                @click="setTopInsert(true)"
-              >
-              <img
-                src="add_to_top.svg"
-                alt="Add to Top"
-              >
-            </label>
-            <label
-              :class="'btn btn-light' + (insertAtTop === false ? ' active' : '')"
-              title="Bottom of List"
-            >
-              <input
-                id="insert-bottom"
-                type="radio"
-                value="Bottom"
-                @click="setTopInsert(false)"
-              >
-              <img
-                src="add_to_bottom.svg"
-                alt="Add to Bottom"
-              >
-            </label>
-          </div>
-        </div>
       </div>
     </div>
     
@@ -360,10 +316,6 @@ export default {
 <style scoped lang="scss">
   @import "../styles/_variables.scss";
 
-  #new-task {
-    margin-bottom: 10px;
-  }
-
   .title-section {
     display: flex;
   }
@@ -378,11 +330,11 @@ export default {
   }
   
   #todo-input-section {
-    display: flex;
+    margin-bottom: 10px;
   }
-
-  #todo-input-section > input {
-    flex: 1;
+  
+  #add-position-button {
+    border: 1px solid #ced4da;
   }
   
   #add-position-menu {
@@ -414,8 +366,8 @@ export default {
   }
   
   .custom-icons img {
-    width: 1.5em;
-    height: 1.5em;
+    width: 1.4em;
+    height: 1.4em;
   }
 
   //noinspection CssInvalidPropertyValue
