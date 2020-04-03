@@ -101,50 +101,36 @@
       <!-- Input to enter interval manually -->
       <div
         v-if="manualInput"
+        style="display: flex; justify-content: flex-end;"
       >
-        <div
-          class="dropdown"
-          style="display: flex; justify-content: flex-end;"
+        <b-dropdown
+          ref="addIntervalDropdown"
+          variant="light"
+          toggle-class="text-decoration-none"
+          no-caret
         >
-          <button
-            class="btn btn-light"
-            data-toggle="dropdown"
-            :title="showIntervalInput ? 'Cancel' : 'Add interval manually'"
-          >
-            <font-awesome-icon
-              :icon="showIntervalInput ? 'times' : 'plus'"
-            />
-          </button>
-          <div
-            ref="addIntervalMenu"
-            class="dropdown-menu"
-            style="padding: 0;"
-          >
-            <div
-              class="input-group"
-              style="width: 158px"
+          <template v-slot:button-content>
+            <font-awesome-icon :icon="showIntervalInput ? 'times' : 'plus'" />
+          </template>
+          <b-dropdown-form>
+            <b-input-group
+              append="minutes"
             >
-              <input
-                ref="intervalMinutesInput"
+              <b-form-input
+                v-model="appendMinutes"
                 type="number"
-                value="25"
-                class="form-control"
-              >
-              <div class="input-group-append">
-                <span
-                  class="input-group-text"
-                >minutes</span>
-              </div>
-            </div>
-            <button
-              class="btn btn-primary"
+              />
+            </b-input-group>
+            
+            <b-btn
+              variant="primary"
               style="width: 158px"
               @click="addIntervalButtonClicked"
             >
               Add Interval
-            </button>
-          </div>
-        </div>
+            </b-btn>
+          </b-dropdown-form>
+        </b-dropdown>
       </div>
       
       <!-- Log -->
@@ -207,7 +193,8 @@ export default {
     return {
       dailyChart: true,
       logVisible: false,
-      showIntervalInput: false
+      showIntervalInput: false,
+      appendMinutes: 25
     }
   },
   
@@ -347,8 +334,9 @@ export default {
     addIntervalButtonClicked () {
       this.addInterval({
         id: this.taskId,
-        timeSpent: this.minutesToMs(this.$refs.intervalMinutesInput.value)
+        timeSpent: this.minutesToMs(this.appendMinutes)
       })
+      this.$refs.addIntervalDropdown.hide(true)
     },
     
     deleteIntervalButtonClicked (startedTime) {
