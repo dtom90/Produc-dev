@@ -70,6 +70,7 @@
           <span>Completed {{ displayTimeHuman(event.completed) }}</span>
         </td>
         <td v-if="event.completed" />
+        <td v-if="event.completed" />
       </tr>
     </table>
   </div>

@@ -20,6 +20,9 @@
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/badge";
 
+// https://github.com/bootstrap-vue/bootstrap-vue/issues/2951#issuecomment-488582211
+@import 'node_modules/bootstrap-vue/src/components/dropdown/_dropdown.scss';
+
 .tag-close {
   @include font-size($close-font-size);
   font-weight: $close-font-weight;

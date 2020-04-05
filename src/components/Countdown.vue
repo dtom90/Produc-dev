@@ -269,6 +269,8 @@ export default {
             this.overtime = true
           }
         }
+      } else if (this.overtime) {
+        this.overtime = false
       }
       
       // Notify interval finish
@@ -278,9 +280,11 @@ export default {
         notifications.notify('Finished Break, Time to Work!')
       }
       
-      // If this was a manual finishTimer, or we're not continuing into overtime
+      // If this was a manual finishTimer, or we're not continuing into overtime, then reset the timer
       if (!fromCountdownFinish || !this.active || !this.overtime) {
         this.resetTimer()
+      } else {
+        this.decrementTimer(this.secondsRemaining)
       }
     },
     
