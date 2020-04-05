@@ -97,6 +97,7 @@
     "handlebars": ">=4.5.3",
     "**/micromatch/braces": "^2.3.2",
     "mem": ">=4.0.0",
+    "minimist": ">=1.2.3",
     "serialize-javascript": ">=2.1.1",
     "tree-kill": ">=1.2.2",
     "kind-of": ">=6.0.3",
