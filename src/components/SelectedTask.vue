@@ -142,7 +142,7 @@
       >
         <textarea
           v-model="task.notes"
-          class="form-control"
+          class="form-control no-wrap"
           :rows="task.notes.split('\n').length"
         />
         <div class="input-group-append">
@@ -347,11 +347,17 @@ export default {
     padding-right: 15px;
   }
   
+  .no-wrap {
+    white-space: nowrap;
+  }
+  
   #display-notes {
     padding: 10px;
     border: #e2e6ea 1px solid;
     border-radius: 5px;
     font-size: 18px;
+    overflow-x: scroll;
+    @extend .no-wrap;
   }
   
   .dropdown .btn {
