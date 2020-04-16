@@ -70,7 +70,7 @@
     >
       <ActivityChart
         ref="activityChart"
-        :chart-data="dailyChart ? dailyActivity.chartData : weeklyActivity"
+        :chart-data="chartData"
         :styles="chartStyles"
         :target="target * 60"
       />
@@ -297,6 +297,13 @@ export default {
         chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
       })
       
+      return chartData
+    },
+    
+    chartData () {
+      const chartData = this.dailyChart ? this.dailyActivity.chartData : this.weeklyActivity
+      chartData.labels = chartData.labels.slice(0, 30)
+      chartData.datasets[0].data = chartData.datasets[0].data.slice(0, 30)
       return chartData
     },
     
