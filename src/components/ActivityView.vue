@@ -301,14 +301,14 @@ export default {
     },
     
     chartData () {
-      const chartData = this.dailyChart ? this.dailyActivity.chartData : this.weeklyActivity
-      chartData.labels = chartData.labels.slice(0, 30)
-      chartData.datasets[0].data = chartData.datasets[0].data.slice(0, 30)
+      const chartData = Object.assign({}, this.dailyChart ? this.dailyActivity.chartData : this.weeklyActivity)
+      chartData.labels = chartData.labels.slice(-30)
+      chartData.datasets[0].data = chartData.datasets[0].data.slice(-30)
       return chartData
     },
     
     chartStyles () {
-      const width = 50 + this.dailyActivity.chartData.labels.length * 100
+      const width = 50 + this.chartData.labels.length * 100
       
       return width > 600 ? {
         width: `${width}px`,
