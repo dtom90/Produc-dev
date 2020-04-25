@@ -267,13 +267,18 @@ export default {
           data: []
         }]
       }
-      
+  
       // Add time spent per week and add to chartData
-      Object.keys(weeklyActivity).slice().sort().forEach(week => {
+      Object.keys(weeklyActivity).slice().sort((a, b) => {
+        const [ay, aw] = a.split('-').map(n => parseInt(n))
+        const [by, bw] = b.split('-')
+        return (ay - by) * 100 + (aw - bw)
+      }).forEach(week => {
+        console.log(week)
         chartData.labels.push(this.displayWeekHuman(week))
         chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
       })
-      
+  
       return chartData
     },
     
