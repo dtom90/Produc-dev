@@ -98,40 +98,11 @@
       v-if="logVisible"
       class="border"
     >
-      <!-- Input to enter interval manually -->
-      <div
+      <!-- Dropdown to add interval manually -->
+      <DropdownAddInterval
         v-if="manualInput"
-        style="display: flex; justify-content: flex-end;"
-      >
-        <b-dropdown
-          ref="addIntervalDropdown"
-          variant="light"
-          toggle-class="text-decoration-none"
-          no-caret
-        >
-          <template v-slot:button-content>
-            <font-awesome-icon :icon="showIntervalInput ? 'times' : 'plus'" />
-          </template>
-          <b-dropdown-form>
-            <b-input-group
-              append="minutes"
-            >
-              <b-form-input
-                v-model="appendMinutes"
-                type="number"
-              />
-            </b-input-group>
-            
-            <b-btn
-              variant="primary"
-              style="width: 158px"
-              @click="addIntervalButtonClicked"
-            >
-              Add Interval
-            </b-btn>
-          </b-dropdown-form>
-        </b-dropdown>
-      </div>
+        :task-id="taskId"
+      />
       
       <!-- Log -->
       <div :id="manualInput ? 'task-log' : ''">
@@ -151,6 +122,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
+import DropdownAddInterval from './DropdownAddInterval'
 import { mapState, mapMutations } from 'vuex'
 import time from '../lib/time'
 
@@ -158,8 +130,9 @@ export default {
   name: 'ActivityView',
   
   components: {
-    Log,
-    ActivityChart
+    ActivityChart,
+    DropdownAddInterval,
+    Log
   },
 
   mixins: [time],
@@ -192,9 +165,7 @@ export default {
   data: function () {
     return {
       dailyChart: true,
-      logVisible: false,
-      showIntervalInput: false,
-      appendMinutes: 25
+      logVisible: false
     }
   },
   
@@ -325,7 +296,6 @@ export default {
     
     ...mapMutations([
       'setTarget',
-      'addInterval',
       'deleteInterval'
     ]),
     
@@ -336,14 +306,6 @@ export default {
     
     toggleLog () {
       this.logVisible = !this.logVisible
-    },
-    
-    addIntervalButtonClicked () {
-      this.addInterval({
-        id: this.taskId,
-        timeSpent: this.minutesToMs(this.appendMinutes)
-      })
-      this.$refs.addIntervalDropdown.hide(true)
     },
     
     deleteIntervalButtonClicked (startedTime) {
