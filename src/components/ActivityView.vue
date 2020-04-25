@@ -235,10 +235,23 @@ export default {
       }
       
       // Add time spent per day and add to chartData
+      let nextDay = null
       Object.keys(dailyActivity).forEach(day => {
+        const daysDiff = this.dateDiffInDays(day, nextDay)
+        if (nextDay && daysDiff > 1) {
+          const a = this.displayDateHuman(this.daysLater(day, 1))
+          if (daysDiff === 2) {
+            chartData.labels.unshift(a)
+          } else {
+            const b = this.displayDateHuman(this.daysLater(nextDay, -1))
+            chartData.labels.unshift([a + ' -', b])
+          }
+          chartData.datasets[0].data.unshift(0)
+        }
         dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
         chartData.labels.unshift(this.displayDateHuman(day))
         chartData.datasets[0].data.unshift(this.msToMinutes(dailyActivity[day].timeSpent))
+        nextDay = day
       })
       
       return { dailyActivity, chartData }
@@ -274,7 +287,6 @@ export default {
         const [by, bw] = b.split('-')
         return (ay - by) * 100 + (aw - bw)
       }).forEach(week => {
-        console.log(week)
         chartData.labels.push(this.displayWeekHuman(week))
         chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
       })
