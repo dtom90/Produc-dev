@@ -106,7 +106,7 @@ export default {
       default: null
     }
   },
-
+  
   watch: {
     chartData: function (newChartData) {
       this.renderChart(newChartData, chartOptions(this.target))

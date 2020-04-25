@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'TagList',
@@ -163,7 +163,7 @@ export default {
       default: null
     }
   },
-
+  
   data: () => ({
     editing: false,
     newTag: '',
@@ -237,7 +237,7 @@ export default {
     
     clickOutside: function (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
-              event.relatedTarget.classList.contains('tag-option'))) {
+        event.relatedTarget.classList.contains('tag-option'))) {
         this.tagOptions = []
         if (!(event.relatedTarget && event.relatedTarget.id === 'addTagButton')) {
           this.showTagInput = false
@@ -251,69 +251,67 @@ export default {
 
 <style scoped>
 
-    /*noinspection CssUnusedSymbol*/
-    #taskTags {
-      padding-left: 20px;
-    }
-    
-    #taskTags > * {
-      margin-top: 20px;
-      margin-right: 20px;
-    }
+/*noinspection CssUnusedSymbol*/
+#taskTags {
+  padding-left: 20px;
+}
 
-    #filterTags > *:not(label) {
-      margin-top: 5px;
-      margin-bottom: 5px;
-      margin-right: 10px;
-    }
+#taskTags > * {
+  margin-top: 20px;
+  margin-right: 20px;
+}
 
-    #filterTags > label {
-      width: 100%;
-      justify-content: start;
-    }
+#filterTags > *:not(label) {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+}
 
-    #addTagInput {
-      max-width: 160px;
-    }
-    
-    #tagDropdown {
-      position: relative;
-    }
-    
-    #tagDropdownMenu {
-      position: absolute;
-      top: 42px;
-      z-index: 4;
-      width: 160px;
-    }
-    
-    .tag > button {
-      color: white;
-      text-shadow:
-              0 0 3px rgba(0,0,0,0.4),
-              0 0 13px rgba(0,0,0,0.1),
-              0 0 23px rgba(0,0,0,0.1);
-    }
-    
-    .tag > button:hover {
-      color: lightgrey;
-    }
-    
-    .tag-name {
-      word-break: break-word;
-    }
-    
-    .tag-option {
-      color: white;
-      text-shadow:
-              0 0 3px rgba(0,0,0,0.4),
-              0 0 13px rgba(0,0,0,0.1),
-              0 0 23px rgba(0,0,0,0.1);
-      word-break: break-word;
-    }
-    
-    .tag-option:hover {
-      color: lightgrey;
-    }
-    
+#filterTags > label {
+  width: 100%;
+  justify-content: start;
+}
+
+#addTagInput {
+  max-width: 160px;
+}
+
+#tagDropdown {
+  position: relative;
+}
+
+#tagDropdownMenu {
+  position: absolute;
+  top: 42px;
+  z-index: 4;
+  width: 160px;
+}
+
+.tag > button {
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4),
+  0 0 13px rgba(0, 0, 0, 0.1),
+  0 0 23px rgba(0, 0, 0, 0.1);
+}
+
+.tag > button:hover {
+  color: lightgrey;
+}
+
+.tag-name {
+  word-break: break-word;
+}
+
+.tag-option {
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4),
+  0 0 13px rgba(0, 0, 0, 0.1),
+  0 0 23px rgba(0, 0, 0, 0.1);
+  word-break: break-word;
+}
+
+.tag-option:hover {
+  color: lightgrey;
+}
+
 </style>

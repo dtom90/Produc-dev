@@ -61,7 +61,7 @@ export default {
     active () {
       return this.selectedTaskID === this.task.id ? ' active' : ''
     },
-
+  
     checked () {
       return this.task.completed !== null
     },

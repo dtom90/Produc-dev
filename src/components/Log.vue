@@ -99,12 +99,13 @@ export default {
     },
     deleteIntervalButtonClicked: {
       type: Function,
-      default: () => {}
+      default: () => {
+      }
     }
   },
   
   methods: {
-
+  
     deleteInterval (startedTime, index) {
       this.$refs[`intervalMenu${index}`][0].classList.remove('show')
       this.$refs[`intervalMenu${index}`][0].querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
@@ -117,20 +118,20 @@ export default {
 
 <style scoped>
 
-  .log {
-    margin-top: 32px;
-  }
-  
-  .activityLog {
-    margin-top: 20px;
-    margin-bottom: 0;
-    font-size: 16px;
-    text-align: center;
-    border-bottom: rgb(222, 226, 230) 1px solid;
-  }
-  
-  .btn-container {
-    padding: 0;
-    vertical-align: middle;
-  }
+.log {
+  margin-top: 32px;
+}
+
+.activityLog {
+  margin-top: 20px;
+  margin-bottom: 0;
+  font-size: 16px;
+  text-align: center;
+  border-bottom: rgb(222, 226, 230) 1px solid;
+}
+
+.btn-container {
+  padding: 0;
+  vertical-align: middle;
+}
 </style>

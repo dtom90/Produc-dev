@@ -25,7 +25,7 @@
             style="margin-left: 20px"
           />
         </div>
-
+  
         <!--  Task Name & Field (when editing)  -->
         <div
           v-if="!editingName"
@@ -55,14 +55,14 @@
             </button>
           </div>
         </div>
-
+  
         <div
           v-if="!editingName"
           id="checkbox-counterbalance"
           style="width: 55.19px;"
         />
       </div>
-
+  
       <!-- Menu Options -->
       <div
         ref="taskMenu"
@@ -100,7 +100,7 @@
         </div>
       </div>
     </div>
-      
+  
     <!-- Tags Section -->
     <TagList
       :tag-list="taskTags"
@@ -108,14 +108,14 @@
       :modal="true"
       :remove-tag="removeTag"
     />
-
+  
     <!-- Notes Section -->
     <div
       id="notes-section"
       class="d-flex align-items-center"
     >
       <span id="notes-label">Notes: </span>
-
+  
       <!-- Display Mode -->
       <!-- eslint-disable vue/no-v-html -->
       <span
@@ -134,7 +134,7 @@
       >
         <font-awesome-icon icon="pencil-alt" />
       </button>
-        
+  
       <!-- Editing Mode -->
       <div
         v-if="editingNotes"
@@ -157,7 +157,7 @@
         </div>
       </div>
     </div>
-      
+  
     <!-- Countdown Timer -->
     <keep-alive>
       <Countdown
@@ -166,7 +166,7 @@
         class="top-margin"
       />
     </keep-alive>
-      
+  
     <!-- Activity View -->
     <ActivityView
       id="taskActivity"
@@ -185,7 +185,7 @@ import Checkbox from './Checkbox'
 import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import marked from 'marked'
 import DOMPurify from 'dompurify'
 
@@ -292,7 +292,7 @@ export default {
     
     clickOutside (event) {
       if (!(event.relatedTarget && event.relatedTarget.classList &&
-            event.relatedTarget.classList.contains('tag-option'))) {
+        event.relatedTarget.classList.contains('tag-option'))) {
         this.tagOptions = []
         if (!(event.relatedTarget && event.relatedTarget.id === 'addTagButton')) {
           this.showTagInput = false
@@ -305,79 +305,79 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  @import "../styles/_variables.scss";
-  
-  #selected-task-container {
-    overflow-y: auto;
-    border-radius: 0.25rem;
-  }
-  
-  .full-height {
-    max-height: calc(100vh - #{$top-offset})
-  }
-  
-  .partial-height {
-    max-height: calc(100vh - #{$top-offset} - 94px)
-  }
-  
-  #checkbox-name-section {
-    margin-left: 20px;
-    flex: 1;
-  }
-  
-  #task-name-container {
-    margin: 8px;
-  }
-  
-  #task-name {
-    font-weight: 600;
-    font-size: xx-large;
-    text-align: center;
-  }
-  
-  #selected-task-menu {
-    justify-content: space-evenly;
-  }
-  
-  #notes-section {
-    padding: 15px 10px 10px;
-  }
-  
-  #notes-label {
-    padding-right: 15px;
-  }
-  
-  .no-wrap {
-    white-space: nowrap;
-  }
-  
-  #display-notes {
-    padding: 10px;
-    border: #e2e6ea 1px solid;
-    border-radius: 5px;
-    font-size: 18px;
-    overflow-x: scroll;
-    @extend .no-wrap;
-  }
-  
-  .dropdown .btn {
-    margin: 0 8px;
-  }
-  
-  .dropdown-menu {
-    min-width: 40px;
-  }
-  
-  $play-btn-size: 75px;
-  
-  #play-btn {
-    width: $play-btn-size;
-    height: $play-btn-size;
-    font-size: 28px;
-    border-radius: $play-btn-size;
-  }
-  
-  .top-margin {
-    margin-top: 20px;
-  }
+@import "../styles/_variables.scss";
+
+#selected-task-container {
+  overflow-y: auto;
+  border-radius: 0.25rem;
+}
+
+.full-height {
+  max-height: calc(100vh - #{$top-offset})
+}
+
+.partial-height {
+  max-height: calc(100vh - #{$top-offset} - 94px)
+}
+
+#checkbox-name-section {
+  margin-left: 20px;
+  flex: 1;
+}
+
+#task-name-container {
+  margin: 8px;
+}
+
+#task-name {
+  font-weight: 600;
+  font-size: xx-large;
+  text-align: center;
+}
+
+#selected-task-menu {
+  justify-content: space-evenly;
+}
+
+#notes-section {
+  padding: 15px 10px 10px;
+}
+
+#notes-label {
+  padding-right: 15px;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+#display-notes {
+  padding: 10px;
+  border: #e2e6ea 1px solid;
+  border-radius: 5px;
+  font-size: 18px;
+  overflow-x: scroll;
+  @extend .no-wrap;
+}
+
+.dropdown .btn {
+  margin: 0 8px;
+}
+
+.dropdown-menu {
+  min-width: 40px;
+}
+
+$play-btn-size: 75px;
+
+#play-btn {
+  width: $play-btn-size;
+  height: $play-btn-size;
+  font-size: 28px;
+  border-radius: $play-btn-size;
+}
+
+.top-margin {
+  margin-top: 20px;
+}
 </style>

@@ -37,7 +37,7 @@
     
     <!-- Activity Modal -->
     <ActivityModal />
-
+  
     <!-- All Activity Modal -->
     <AllActivityModal />
     
@@ -110,51 +110,51 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../styles/_variables.scss";
+@import "../styles/_variables.scss";
 
-  $horiz-spacing: 8px;
+$horiz-spacing: 8px;
 
-  //noinspection CssInvalidPropertyValue
-  .draggable-cursor * {
-    cursor: move !important;
-    cursor: -webkit-grabbing !important;
-    cursor:    -moz-grabbing !important;
-    cursor:         grabbing !important;
-  }
-  
-  body {
-    overscroll-behavior-y: none;
-  }
-  
-  #app {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-  }
-  
-  #main-section {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    font-size: 20px;
-    margin-top: $main-section-margin-top;
-    padding-left: $horiz-spacing;
-    padding-right: $horiz-spacing;
-  }
-  
-  h3, h4, h5, h6 {
-    text-align: center;
-  }
-  
-  .section {
-    margin-left: $horiz-spacing;
-    margin-right: $horiz-spacing;
-  }
-  
-  .task-list {
-    flex: 1;
-  }
-  
-  #selected-task-section {
-    flex: 2;
-    min-width: 0;
-  }
+//noinspection CssInvalidPropertyValue
+.draggable-cursor * {
+  cursor: move !important;
+  cursor: -webkit-grabbing !important;
+  cursor: -moz-grabbing !important;
+  cursor: grabbing !important;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
+
+#main-section {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  margin-top: $main-section-margin-top;
+  padding-left: $horiz-spacing;
+  padding-right: $horiz-spacing;
+}
+
+h3, h4, h5, h6 {
+  text-align: center;
+}
+
+.section {
+  margin-left: $horiz-spacing;
+  margin-right: $horiz-spacing;
+}
+
+.task-list {
+  flex: 1;
+}
+
+#selected-task-section {
+  flex: 2;
+  min-width: 0;
+}
 </style>

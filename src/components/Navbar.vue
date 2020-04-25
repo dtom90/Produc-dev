@@ -12,7 +12,7 @@
     >
       <span class="navbar-toggler-icon" />
     </button>
-
+  
     <div id="time-container">
       <span>{{ displayTime }}</span>
     </div>
@@ -81,7 +81,7 @@ export default {
 #time-container {
   position: fixed;
   width: 100%;
-  margin:0 -16px;
+  margin: 0 -16px;
   display: flex;
   justify-content: center;
   font-size: larger;

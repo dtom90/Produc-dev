@@ -66,7 +66,7 @@
 
 <script>
 import TagSettingsButton from './TagSettingsButton'
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -110,18 +110,17 @@ export default {
 
 .tag {
   margin-bottom: 20px;
-
+  
   //noinspection CssInvalidPropertyValue
   .move-btn {
     color: white;
-    text-shadow:
-            0 0 3px rgba(0,0,0,0.4),
-            0 0 13px rgba(0,0,0,0.1),
-            0 0 23px rgba(0,0,0,0.1);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4),
+    0 0 13px rgba(0, 0, 0, 0.1),
+    0 0 23px rgba(0, 0, 0, 0.1);
     cursor: move;
     cursor: -webkit-grab;
-    cursor:    -moz-grab;
-    cursor:         grab;
+    cursor: -moz-grab;
+    cursor: grab;
   }
   
   .move-btn:hover {

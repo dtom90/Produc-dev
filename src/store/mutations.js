@@ -42,7 +42,9 @@ const mutations = {
       state.tasks = newTaskOrder.concat(getters.completedTasks(state))
     } else {
       const reorderTaskIds = {}
-      newTaskOrder.forEach(task => { reorderTaskIds[task.id] = true })
+      newTaskOrder.forEach(task => {
+        reorderTaskIds[task.id] = true
+      })
       let r = 0
       for (let i = 0; i < incompleteTasks.length; i++) {
         if (incompleteTasks[i].id in reorderTaskIds) {
@@ -279,7 +281,9 @@ const mutations = {
   overwriteState (state, newState) {
     const r = confirm('WARNING: Loading state from this file will COMPLETELY OVERWRITE your current data with the data provided in this file. Are you ABSOLUTELY sure that you want to do this?')
     if (r === true) {
-      Object.keys(state).forEach(key => { state[key] = newState[key] })
+      Object.keys(state).forEach(key => {
+        state[key] = newState[key]
+      })
     }
   }
 }

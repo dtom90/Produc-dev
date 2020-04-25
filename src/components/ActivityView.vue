@@ -134,7 +134,7 @@ export default {
     DropdownAddInterval,
     Log
   },
-
+  
   mixins: [time],
   
   props: {
@@ -170,20 +170,26 @@ export default {
   },
   
   computed: {
-    
+  
     ...mapState([
       'tasks',
       'tags',
       'totalTarget'
     ]),
-    
-    isTaskActivity: function () { return this.taskId !== null },
-    
-    descendingLog: function () { return this.log.slice().reverse() },
-    
+  
+    isTaskActivity: function () {
+      return this.taskId !== null
+    },
+  
+    descendingLog: function () {
+      return this.log.slice().reverse()
+    },
+  
     target: {
       get () {
-        if (this.isTaskActivity) { return null }
+        if (this.isTaskActivity) {
+          return null
+        }
         const type = this.dailyChart ? 'dailyTarget' : 'weeklyTarget'
         const targetElement = this.element === 'All Activity' ? this.totalTarget : this.tags[this.element]
         return targetElement[type]
@@ -319,28 +325,28 @@ export default {
 </script>
 
 <style scoped>
-  
-  .view-select {
-    margin-bottom: 20px;
-  }
-  
-  .activity-view {
-    padding: 20px;
-  }
-  
-  .chart-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
-  
-  #viewLogSwitch {
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-  
-  /*noinspection CssUnusedSymbol*/
-  #task-log {
-    margin-top: -38px;
-  }
-  
+
+.view-select {
+  margin-bottom: 20px;
+}
+
+.activity-view {
+  padding: 20px;
+}
+
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#viewLogSwitch {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/*noinspection CssUnusedSymbol*/
+#task-log {
+  margin-top: -38px;
+}
+
 </style>

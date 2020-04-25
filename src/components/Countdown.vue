@@ -14,7 +14,7 @@
       >
         <font-awesome-icon icon="times" />
       </button>
-
+  
       <div
         id="countdown-settings-dropdown"
         class="dropright"
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import CountdownTimer from '../lib/CountdownTimer'
 import notifications from '../lib/notifications'
 
@@ -168,7 +168,7 @@ export default {
       const secString = secs.toString().padStart(2, '0')
       return `${this.overtime ? '+' : ''}${mins}:${secString}`
     },
-
+  
     continueOnComplete: {
       get () {
         return this.$store.state.continueOnComplete
@@ -242,7 +242,7 @@ export default {
         this.countingDown = true
       }
     },
-
+  
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
       if (this.active) {

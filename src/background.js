@@ -6,6 +6,7 @@ import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -17,12 +18,14 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800,
+  win = new BrowserWindow({
+    width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true
-    } })
-
+    }
+  })
+  
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
