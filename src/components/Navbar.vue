@@ -12,7 +12,11 @@
     >
       <span class="navbar-toggler-icon" />
     </button>
-
+  
+    <div id="time-container">
+      <span>{{ displayTime }}</span>
+    </div>
+    
     <div
       id="navbarMenuOptions"
       class="collapse navbar-collapse"
@@ -49,10 +53,37 @@
 
 <script>
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  data: function () {
+    return {
+      displayTime: '',
+      currentMinute: null
+    }
+  },
+  mounted () {
+    this.updateTime()
+    setInterval(this.updateTime, 1000)
+  },
+  methods: {
+    updateTime () {
+      const currentDate = new Date()
+      const currentMinute = currentDate.getMinutes()
+      if (currentMinute !== this.currentMinute) {
+        this.currentMinute = currentMinute
+        this.displayTime = `${currentDate.getHours()}:${this.currentMinute}`
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
-
+#time-container {
+  position: fixed;
+  width: 100%;
+  margin: 0 -16px;
+  display: flex;
+  justify-content: center;
+  font-size: larger;
+}
 </style>

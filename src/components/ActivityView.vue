@@ -98,40 +98,11 @@
       v-if="logVisible"
       class="border"
     >
-      <!-- Input to enter interval manually -->
-      <div
+      <!-- Dropdown to add interval manually -->
+      <DropdownAddInterval
         v-if="manualInput"
-        style="display: flex; justify-content: flex-end;"
-      >
-        <b-dropdown
-          ref="addIntervalDropdown"
-          variant="light"
-          toggle-class="text-decoration-none"
-          no-caret
-        >
-          <template v-slot:button-content>
-            <font-awesome-icon :icon="showIntervalInput ? 'times' : 'plus'" />
-          </template>
-          <b-dropdown-form>
-            <b-input-group
-              append="minutes"
-            >
-              <b-form-input
-                v-model="appendMinutes"
-                type="number"
-              />
-            </b-input-group>
-            
-            <b-btn
-              variant="primary"
-              style="width: 158px"
-              @click="addIntervalButtonClicked"
-            >
-              Add Interval
-            </b-btn>
-          </b-dropdown-form>
-        </b-dropdown>
-      </div>
+        :task-id="taskId"
+      />
       
       <!-- Log -->
       <div :id="manualInput ? 'task-log' : ''">
@@ -151,6 +122,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
+import DropdownAddInterval from './DropdownAddInterval'
 import { mapState, mapMutations } from 'vuex'
 import time from '../lib/time'
 
@@ -158,10 +130,11 @@ export default {
   name: 'ActivityView',
   
   components: {
-    Log,
-    ActivityChart
+    ActivityChart,
+    DropdownAddInterval,
+    Log
   },
-
+  
   mixins: [time],
   
   props: {
@@ -192,27 +165,31 @@ export default {
   data: function () {
     return {
       dailyChart: true,
-      logVisible: false,
-      showIntervalInput: false,
-      appendMinutes: 25
+      logVisible: false
     }
   },
   
   computed: {
-    
+  
     ...mapState([
       'tasks',
       'tags',
       'totalTarget'
     ]),
-    
-    isTaskActivity: function () { return this.taskId !== null },
-    
-    descendingLog: function () { return this.log.slice().reverse() },
-    
+  
+    isTaskActivity: function () {
+      return this.taskId !== null
+    },
+  
+    descendingLog: function () {
+      return this.log.slice().reverse()
+    },
+  
     target: {
       get () {
-        if (this.isTaskActivity) { return null }
+        if (this.isTaskActivity) {
+          return null
+        }
         const type = this.dailyChart ? 'dailyTarget' : 'weeklyTarget'
         const targetElement = this.element === 'All Activity' ? this.totalTarget : this.tags[this.element]
         return targetElement[type]
@@ -258,10 +235,23 @@ export default {
       }
       
       // Add time spent per day and add to chartData
+      let nextDay = null
       Object.keys(dailyActivity).forEach(day => {
+        const daysDiff = this.dateDiffInDays(day, nextDay)
+        if (nextDay && daysDiff > 1) {
+          const a = this.displayDateHuman(this.daysLater(day, 1))
+          if (daysDiff === 2) {
+            chartData.labels.unshift(a)
+          } else {
+            const b = this.displayDateHuman(this.daysLater(nextDay, -1))
+            chartData.labels.unshift([a + ' -', b])
+          }
+          chartData.datasets[0].data.unshift(0)
+        }
         dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
         chartData.labels.unshift(this.displayDateHuman(day))
         chartData.datasets[0].data.unshift(this.msToMinutes(dailyActivity[day].timeSpent))
+        nextDay = day
       })
       
       return { dailyActivity, chartData }
@@ -290,13 +280,17 @@ export default {
           data: []
         }]
       }
-      
+  
       // Add time spent per week and add to chartData
-      Object.keys(weeklyActivity).slice().sort().forEach(week => {
+      Object.keys(weeklyActivity).slice().sort((a, b) => {
+        const [ay, aw] = a.split('-').map(n => parseInt(n))
+        const [by, bw] = b.split('-')
+        return (ay - by) * 100 + (aw - bw)
+      }).forEach(week => {
         chartData.labels.push(this.displayWeekHuman(week))
         chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
       })
-      
+  
       return chartData
     },
     
@@ -325,7 +319,6 @@ export default {
     
     ...mapMutations([
       'setTarget',
-      'addInterval',
       'deleteInterval'
     ]),
     
@@ -336,14 +329,6 @@ export default {
     
     toggleLog () {
       this.logVisible = !this.logVisible
-    },
-    
-    addIntervalButtonClicked () {
-      this.addInterval({
-        id: this.taskId,
-        timeSpent: this.minutesToMs(this.appendMinutes)
-      })
-      this.$refs.addIntervalDropdown.hide(true)
     },
     
     deleteIntervalButtonClicked (startedTime) {
@@ -357,28 +342,28 @@ export default {
 </script>
 
 <style scoped>
-  
-  .view-select {
-    margin-bottom: 20px;
-  }
-  
-  .activity-view {
-    padding: 20px;
-  }
-  
-  .chart-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
-  
-  #viewLogSwitch {
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-  
-  /*noinspection CssUnusedSymbol*/
-  #task-log {
-    margin-top: -38px;
-  }
-  
+
+.view-select {
+  margin-bottom: 20px;
+}
+
+.activity-view {
+  padding: 20px;
+}
+
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#viewLogSwitch {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/*noinspection CssUnusedSymbol*/
+#task-log {
+  margin-top: -38px;
+}
+
 </style>

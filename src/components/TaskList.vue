@@ -22,7 +22,7 @@
         >
           <font-awesome-icon icon="filter" />
         </button>
-
+  
         <div
           id="filter-menu"
           class="dropdown-menu"
@@ -128,7 +128,7 @@
         placeholder="enter new task"
         @keyup.enter="addNewTask"
       >
-
+  
       <!-- To Do List Add Position Button -->
       <div class="input-group-append">
         <button
@@ -227,9 +227,15 @@ export default {
       'selectedTask',
       'unselectedTags'
     ]),
-    isCompletedList () { return this.title === 'Done' },
-    btnId () { return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton' },
-    selectId () { return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect' },
+    isCompletedList () {
+      return this.title === 'Done'
+    },
+    btnId () {
+      return this.isCompletedList ? 'completedSettingsButton' : 'todoSettingsButton'
+    },
+    selectId () {
+      return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect'
+    },
     filterBtnStyle () {
       return this.selectedTags.length > 0 ? {
         backgroundColor: this.tags[this.selectedTags[0]].color
@@ -246,9 +252,10 @@ export default {
     incompleteTaskList: {
       get () {
         return this.selectedTags.length > 0
-          ? (this.filterOperator === 'and'
-            ? this.incompleteTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
-            : this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+          ? (
+            this.filterOperator === 'and'
+              ? this.incompleteTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
+              : this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
           )
           : this.incompleteTasks
       },
@@ -258,9 +265,10 @@ export default {
     },
     completedTaskList () {
       const filteredTasks = this.selectedTags.length > 0
-        ? (this.filterOperator === 'and'
-          ? this.completedTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
-          : this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
+        ? (
+          this.filterOperator === 'and'
+            ? this.completedTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
+            : this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         )
         : this.completedTasks
       return filteredTasks && this.sortOrder !== 'Oldest'
@@ -314,82 +322,82 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  @import "../styles/_variables.scss";
+@import "../styles/_variables.scss";
 
-  .title-section {
-    display: flex;
-  }
+.title-section {
+  display: flex;
+}
 
-  .title {
-    flex: 1;
-    margin-left: 40px;
-  }
+.title {
+  flex: 1;
+  margin-left: 40px;
+}
 
-  .title-section > button {
-    margin-bottom: 0.5rem;
-  }
-  
-  #todo-input-section {
-    margin-bottom: 10px;
-  }
-  
-  #add-position-button {
-    border: 1px solid #ced4da;
-  }
-  
-  #add-position-menu {
-    text-align: center;
-  }
-  
-  #filter-menu-button {
-    width: 50px;
-    margin-bottom: 0.5rem;
-  }
-  
-  .filter-active > svg {
-    color: white;
-    -webkit-filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .7));
-    filter: drop-shadow( 1px 1px 1px rgba(0, 0, 0, .7));
-  }
+.title-section > button {
+  margin-bottom: 0.5rem;
+}
 
-  .filter-active:hover > svg {
-    color: lightgrey;
-  }
-  
-  #filter-menu {
-    padding: 8px;
-    width: 200px;
-  }
-  
-  #filter-menu .form-check {
-    margin: 0;
-  }
-  
-  .custom-icons img {
-    width: 1.4em;
-    height: 1.4em;
-  }
+#todo-input-section {
+  margin-bottom: 10px;
+}
 
-  //noinspection CssInvalidPropertyValue
-  #incomplete-task-list .list-group-item {
-    cursor: move;
-    cursor: -webkit-grab;
-    cursor:    -moz-grab;
-    cursor:         grab;
-  }
-  
-  .sortable-chosen {
-    background-color: #e9ecef;
-  }
-  
-  #incomplete-task-list {
-    max-height: calc(100vh - #{$top-offset} - 94px);
-    overflow-y: auto;
-  }
-  
-  .scroll-list {
-    max-height: calc(100vh - #{$top-offset} - 41px);
-    overflow-y: auto;
-  }
-  
+#add-position-button {
+  border: 1px solid #ced4da;
+}
+
+#add-position-menu {
+  text-align: center;
+}
+
+#filter-menu-button {
+  width: 50px;
+  margin-bottom: 0.5rem;
+}
+
+.filter-active > svg {
+  color: white;
+  -webkit-filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, .7));
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, .7));
+}
+
+.filter-active:hover > svg {
+  color: lightgrey;
+}
+
+#filter-menu {
+  padding: 8px;
+  width: 200px;
+}
+
+#filter-menu .form-check {
+  margin: 0;
+}
+
+.custom-icons img {
+  width: 1.4em;
+  height: 1.4em;
+}
+
+//noinspection CssInvalidPropertyValue
+#incomplete-task-list .list-group-item {
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+}
+
+.sortable-chosen {
+  background-color: #e9ecef;
+}
+
+#incomplete-task-list {
+  max-height: calc(100vh - #{$top-offset} - 94px);
+  overflow-y: auto;
+}
+
+.scroll-list {
+  max-height: calc(100vh - #{$top-offset} - 41px);
+  overflow-y: auto;
+}
+
 </style>

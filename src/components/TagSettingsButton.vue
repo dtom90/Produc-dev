@@ -78,7 +78,9 @@ export default {
     ...mapState([
       'tags'
     ]),
-    tagProperties: function () { return this.tags[this.tag] }
+    tagProperties: function () {
+      return this.tags[this.tag]
+    }
   },
   
   watch: {
@@ -124,23 +126,22 @@ export default {
 <style scoped>
 
 .tag-button {
-    color: white;
-    text-shadow:
-            0 0 3px rgba(0,0,0,0.4),
-            0 0 13px rgba(0,0,0,0.1),
-            0 0 23px rgba(0,0,0,0.1);
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4),
+  0 0 13px rgba(0, 0, 0, 0.1),
+  0 0 23px rgba(0, 0, 0, 0.1);
 }
 
 .tag-button:hover {
-    color: lightgrey;
+  color: lightgrey;
 }
 
 .dropdown-menu {
-    min-width: 40px;
+  min-width: 40px;
 }
 
 #delete-tag-btn {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 
 </style>
