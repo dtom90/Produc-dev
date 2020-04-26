@@ -285,6 +285,10 @@ const mutations = {
         state[key] = newState[key]
       })
     }
+  },
+  
+  setTimeFormat (state, timeFormat24) {
+    state.timeFormat24 = timeFormat24
   }
 }
 

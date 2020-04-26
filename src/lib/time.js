@@ -44,15 +44,15 @@ export default {
       const djs = dayjs().year(y).week(w)
       return [displayDateHuman(djs.startOf('week')) + ' -', displayDateHuman(djs.endOf('week'))]
     },
-    
+  
     displayDateISO: day => dayjs(day).format('YYYY-MM-DD'),
-    
+  
     displayDateHuman,
-    
-    displayTimeHuman: time => dayjs(time).format('h:mm a'),
-    
-    displayDateTimeHuman: time => dayjs(time).format('ddd MMM DD, h:mm a'),
-    
+  
+    displayTimeHuman: (time, tf24 = false) => dayjs(time).format(`${tf24 ? 'H' : 'h'}:mm A`),
+  
+    displayDateTimeHuman: time => dayjs(time).format('ddd MMM DD, h:mm A'),
+  
     displayDuration
   }
 }
