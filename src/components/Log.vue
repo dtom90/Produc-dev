@@ -23,7 +23,7 @@
         </td>
         
         <td v-if="event.started">
-          <span>Started {{ day ? displayTimeHuman(event.started) : displayDateTimeHuman(event.started) }}</span>
+          <span>Started {{ displayTimeHuman(event.started) }}</span>
         </td>
         <td v-if="event.stopped">
           <font-awesome-icon icon="arrow-right" />

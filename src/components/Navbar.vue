@@ -73,7 +73,6 @@
 
 <script>
 import time from '../lib/time'
-import { mapState } from 'vuex'
 
 export default {
   name: 'Navbar',
@@ -88,10 +87,8 @@ export default {
   },
   
   computed: {
-    ...mapState(['timeFormat24']),
-    
     displayTime () {
-      return this.displayTimeHuman(this.currentDate, this.timeFormat24)// `${currentDate.getHours()}:${this.currentMinute}`
+      return this.displayTimeHuman(this.currentDate)
     }
   },
   
