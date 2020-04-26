@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import TagSettingsButton from './TagSettingsButton'
+import TagSettingsButton from '../TagSettingsButton'
 import { mapMutations, mapState } from 'vuex'
 import draggable from 'vuedraggable'
 

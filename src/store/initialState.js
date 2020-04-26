@@ -14,7 +14,8 @@ const initialState = {
   activeMinutes: 25,
   restMinutes: 5,
   running: false,
-  continueOnComplete: false
+  continueOnComplete: false,
+  timeFormat24: false
 }
 
 // // Load state from sample file

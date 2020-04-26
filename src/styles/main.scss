@@ -21,7 +21,8 @@
 @import "~bootstrap/scss/badge";
 
 // https://github.com/bootstrap-vue/bootstrap-vue/issues/2951#issuecomment-488582211
-@import 'node_modules/bootstrap-vue/src/components/dropdown/_dropdown.scss';
+@import 'node_modules/bootstrap-vue/src/components/dropdown/dropdown';
+@import 'node_modules/bootstrap-vue/src/components/modal/modal';
 
 .tag-close {
   @include font-size($close-font-size);

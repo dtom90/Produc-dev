@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import AllActivityModal from '@/components/AllActivityModal'
+import AllActivityModal from '@/components/modals/AllActivityModal'
 import ActivityView from '@/components/ActivityView'
 import { generateActivity } from '../fixtures'
 import Vuex from 'vuex'

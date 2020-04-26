@@ -20,7 +20,7 @@ export default {
     if (!('Notification' in window)) { // Check if the browser supports notifications
       alert(message)
     } else if (Notification.permission === 'granted') { // Check if notification permissions have already been granted
-      new Notification(message) // If it's okay, create a notification
+      return new Notification(message) // If it's okay, create a notification
     } else if (Notification.permission !== 'denied') { // Otherwise, display an alert
       alert(message)
     }

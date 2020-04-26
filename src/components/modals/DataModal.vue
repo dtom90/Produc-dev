@@ -8,7 +8,7 @@
     aria-hidden="true"
   >
     <div
-      class="modal-dialog"
+      class="modal-dialog modal-lg"
       role="document"
     >
       <div class="modal-content">
@@ -110,7 +110,7 @@ export default {
                 } else {
                   try {
                     const json = JSON.parse(data)
-                    const { initialState } = require('../store')
+                    const { initialState } = require('../../store')
                     if (Object.keys(initialState).every(key => key in json)) {
                       this.overwriteState(json)
                     } else {

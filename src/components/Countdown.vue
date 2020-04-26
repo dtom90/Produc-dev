@@ -134,7 +134,8 @@ export default {
     activeIntervalStarted: false,
     countingDown: false,
     overtime: false,
-    secondsRemaining: 0
+    secondsRemaining: 0,
+    notificationList: []
   }),
   
   computed: {
@@ -225,6 +226,11 @@ export default {
     },
     
     toggleTimer () {
+      // close any open notification
+      while (this.notificationList.length > 0) {
+        this.notificationList.pop().close()
+      }
+  
       if (this.overtime) {
         this.overtime = false
         this.resetTimer()
@@ -272,14 +278,22 @@ export default {
       } else if (this.overtime) {
         this.overtime = false
       }
-      
+  
       // Notify interval finish
-      if (notify && this.active) {
-        notifications.notify('Finished Working, Take a Break!')
-      } else if (notify) {
-        notifications.notify('Finished Break, Time to Work!')
+      if (notify) {
+        let notification
+        if (this.active) {
+          notification = notifications.notify('Finished Working, Take a Break!')
+        } else {
+          notification = notifications.notify('Finished Break, Time to Work!')
+        }
+    
+        // add to notificationList for later closure
+        if (notification && notification instanceof Notification) {
+          this.notificationList.push(notification)
+        }
       }
-      
+  
       // If this was a manual finishTimer, or we're not continuing into overtime, then reset the timer
       if (!fromCountdownFinish || !this.active || !this.overtime) {
         this.resetTimer()

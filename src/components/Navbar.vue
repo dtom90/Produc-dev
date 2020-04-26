@@ -38,13 +38,33 @@
             href="javascript:void(0);"
           >Tags</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item dropdown">
           <a
-            class="nav-link"
-            data-toggle="modal"
-            data-target="#dataModal"
+            id="optionsDropdown"
+            class="nav-link dropdown-toggle"
             href="javascript:void(0);"
-          >Data</a>
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Options
+          </a>
+          <div
+            class="dropdown-menu dropdown-menu-right"
+            aria-labelledby="optionsDropdown"
+          >
+            <b-dropdown-item v-b-modal.time-settings-modal>
+              Time Settings
+            </b-dropdown-item>
+            <div class="dropdown-divider" />
+            <a
+              class="dropdown-item"
+              data-toggle="modal"
+              data-target="#dataModal"
+              href="javascript:void(0);"
+            >Data</a>
+          </div>
         </li>
       </ul>
     </div>
@@ -52,38 +72,59 @@
 </template>
 
 <script>
+import time from '../lib/time'
+
 export default {
   name: 'Navbar',
+  
+  mixins: [time],
+  
   data: function () {
     return {
-      displayTime: '',
+      currentDate: null,
       currentMinute: null
     }
   },
+  
+  computed: {
+    displayTime () {
+      return this.displayTimeHuman(this.currentDate)
+    }
+  },
+  
   mounted () {
     this.updateTime()
     setInterval(this.updateTime, 1000)
   },
+  
   methods: {
     updateTime () {
-      const currentDate = new Date()
-      const currentMinute = currentDate.getMinutes()
-      if (currentMinute !== this.currentMinute) {
-        this.currentMinute = currentMinute
-        this.displayTime = `${currentDate.getHours()}:${this.currentMinute}`
-      }
+      this.currentDate = new Date()
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.navbar-brand {
+  z-index: 2;
+}
+
+.navbar-toggler {
+  z-index: 2;
+}
+
 #time-container {
   position: fixed;
+  z-index: 1;
   width: 100%;
   margin: 0 -16px;
   display: flex;
   justify-content: center;
   font-size: larger;
+}
+
+#navbarMenuOptions {
+  z-index: 4;
 }
 </style>

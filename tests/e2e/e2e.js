@@ -101,7 +101,7 @@ const eventNow = (type) => {
   const now = moment().local()
   const oneMinAgo = moment(now).subtract(1, 'minute')
   const oneMinAhead = moment(now).add(1, 'minute')
-  const format = 'h:mm a'
+  const format = 'h:mm A'
   return new RegExp([
     `${type} ${oneMinAgo.format(format)}`,
     `${type} ${now.format(format)}`,
