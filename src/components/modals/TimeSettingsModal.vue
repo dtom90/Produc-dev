@@ -2,7 +2,6 @@
   <b-modal
     id="time-settings-modal"
     title="Time Settings"
-    centered
   >
     <b-form-checkbox v-model="timeFormat">
       Use 24-hour Clock

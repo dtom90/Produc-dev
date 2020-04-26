@@ -55,15 +55,12 @@
 <script>
 import Navbar from './Navbar'
 import TaskList from './TaskList'
+import ActiveTask from './ActiveTask'
 import SelectedTask from './SelectedTask'
-import ActivityModal from './ActivityModal'
-import AllActivityModal from './AllActivityModal'
-import TagModal from './TagModal'
-import DataModal from './DataModal'
-import TimeSettingsModal from './TimeSettingsModal'
+import { ActivityModal, AllActivityModal, TagModal, TimeSettingsModal, DataModal } from './modals'
+
 import { mapGetters, mapMutations } from 'vuex'
 import $ from 'jquery'
-import ActiveTask from './ActiveTask'
 
 $(document).on('click', '.dropdown-menu', function (e) {
   e.stopPropagation()
@@ -161,5 +158,9 @@ h3, h4, h5, h6 {
 #selected-task-section {
   flex: 2;
   min-width: 0;
+}
+
+.modal-dialog {
+  margin-top: 56px !important;
 }
 </style>
