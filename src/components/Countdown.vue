@@ -14,7 +14,7 @@
       >
         <font-awesome-icon icon="times" />
       </button>
-  
+      
       <div
         id="countdown-settings-dropdown"
         class="dropright"
@@ -169,7 +169,7 @@ export default {
       const secString = secs.toString().padStart(2, '0')
       return `${this.overtime ? '+' : ''}${mins}:${secString}`
     },
-  
+    
     continueOnComplete: {
       get () {
         return this.$store.state.continueOnComplete
@@ -230,7 +230,7 @@ export default {
       while (this.notificationList.length > 0) {
         this.notificationList.pop().close()
       }
-  
+      
       if (this.overtime) {
         this.overtime = false
         this.resetTimer()
@@ -248,7 +248,7 @@ export default {
         this.countingDown = true
       }
     },
-  
+    
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
       if (this.active) {
@@ -278,7 +278,7 @@ export default {
       } else if (this.overtime) {
         this.overtime = false
       }
-  
+      
       // Notify interval finish
       if (notify) {
         let notification
@@ -287,13 +287,13 @@ export default {
         } else {
           notification = notifications.notify('Finished Break, Time to Work!')
         }
-    
+        
         // add to notificationList for later closure
         if (notification && notification instanceof Notification) {
           this.notificationList.push(notification)
         }
       }
-  
+      
       // If this was a manual finishTimer, or we're not continuing into overtime, then reset the timer
       if (!fromCountdownFinish || !this.active || !this.overtime) {
         this.resetTimer()
