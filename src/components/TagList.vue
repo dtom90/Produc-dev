@@ -14,7 +14,7 @@
     </label>
     
     <div
-      v-for="tag in sortedTaskList"
+      v-for="tag in sortedTagList"
       :key="tag"
       class="tag btn-group"
     >
@@ -187,7 +187,7 @@ export default {
       return !isNaN(this.taskId)
     },
     
-    sortedTaskList () {
+    sortedTagList () {
       return this.tagList.slice().sort((a, b) => this.tagOrder.indexOf(a) - this.tagOrder.indexOf(b))
     },
     
