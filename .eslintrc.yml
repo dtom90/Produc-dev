@@ -1,9 +1,8 @@
----
 root: true
 env:
   node: true
 extends:
-  - eslint:recommended
+  - 'eslint:recommended'
   - standard
 rules:
   no-console: 2
@@ -12,3 +11,9 @@ rules:
     - skipBlankLines: true
 parserOptions:
   ecmaVersion: 2019
+overrides:
+  - files:
+      - '**/__tests__/*.{j,t}s?(x)'
+      - '**/tests/unit/**/*.spec.{j,t}s?(x)'
+    env:
+      jest: true

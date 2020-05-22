@@ -54,7 +54,7 @@ const shouldBehaveLikeActivityView = function (type) {
     expect(wrapper.vm.logVisible).toBe(false)
     
     const viewLogSwitch = wrapper.find('#viewLogSwitch')
-    viewLogSwitch.trigger('click')
+    await viewLogSwitch.trigger('click')
     expect(viewLogSwitch.classes()).toContain('active')
     
     expect(wrapper.vm.logVisible).toBe(true)
