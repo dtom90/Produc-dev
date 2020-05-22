@@ -1,125 +1,133 @@
 <template>
   <div
     :id="taskTags ? 'taskTags' : 'filterTags'"
-    class="form-inline"
+    :class="taskTags ? 'd-flex' : 'form-inline'"
   >
     <h6
       v-if="!taskTags"
       style="width: 100%"
+      class="tag-label"
     >
       <span>{{ label }}:</span>
     </h6>
-    <label v-if="taskTags">
+    <label
+      v-if="taskTags"
+      class="tag-label"
+    >
       <span>{{ label }}:</span>
     </label>
     
-    <div
-      v-for="tag in sortedTagList"
-      :key="tag"
-      class="tag btn-group"
-    >
-      <button
-        class="tag-name btn"
-        :style="`backgroundColor: ${tags[tag].color}`"
-        :data-toggle="modal? 'modal' : null"
-        :data-target="modal? '#activityModal' : null"
-        :title="selectText"
-        @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
-      >
-        {{ tag }}
-      </button>
-      <button
-        v-if="removeTag"
-        class="tag-close btn"
-        :style="`backgroundColor: ${tags[tag].color}`"
-        :title="removeText"
-        aria-label="Close"
-        @click.stop="removeTag(tag)"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div v-if="label === 'Filtering on tasks with' && tagList.length > 1">
+    <div id="elements">
       <div
-        class="btn-group btn-group-toggle"
+        v-for="tag in sortedTagList"
+        :key="tag"
+        class="tag btn-group"
       >
-        <label
-          :class="'btn btn-light' + (filterOperatorValue === 'and' ? ' active' : '')"
-          title="Show tasks with all of the selected tags"
+        <button
+          class="tag-name btn"
+          :style="`backgroundColor: ${tags[tag].color}`"
+          :data-toggle="modal? 'modal' : null"
+          :data-target="modal? '#activityModal' : null"
+          :title="selectText"
+          @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
         >
-          <input
-            v-model="filterOperatorValue"
-            type="radio"
-            value="and"
-          >
-          <span>All</span>
-        </label>
-        <label
-          :class="'btn btn-light' + (filterOperatorValue === 'or' ? ' active' : '')"
-          title="Show tasks with any of the selected tags"
+          {{ tag }}
+        </button>
+        <button
+          v-if="removeTag"
+          class="tag-close btn"
+          :style="`backgroundColor: ${tags[tag].color}`"
+          :title="removeText"
+          aria-label="Close"
+          @click.stop="removeTag(tag)"
         >
-          <input
-            v-model="filterOperatorValue"
-            type="radio"
-            value="or"
-          >
-          <span>Any</span>
-        </label>
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
-    
-    <!-- Tag Input -->
-    <div
-      v-if="taskTags"
-      id="newTag"
-      class="d-flex"
-    >
-      <button
-        id="addTagButton"
-        class="btn btn-light"
-        :title="showTagInput ? 'Cancel' : 'Add new tag'"
-        @click="addTagButton"
-      >
-        <font-awesome-icon
-          v-if="!showTagInput"
-          icon="plus"
-        />
-        <font-awesome-icon
-          v-if="showTagInput"
-          icon="times"
-        />
-      </button>
-      <div
-        id="tagDropdown"
-      >
+      <div v-if="label === 'Filtering on tasks with' && tagList.length > 1">
         <div
-          id="tagDropdownMenu"
-          class="btn-group-vertical"
+          class="btn-group btn-group-toggle"
         >
-          <button
-            v-for="tag in tagOptions"
-            :key="tag"
-            class="tag-option btn btn-light"
-            :style="`backgroundColor: ${tags[tag].color}`"
-            @click="addTag(tag)"
+          <label
+            :class="'btn btn-light' + (filterOperatorValue === 'and' ? ' active' : '')"
+            title="Show tasks with all of the selected tags"
           >
-            {{ tag }}
-          </button>
+            <input
+              v-model="filterOperatorValue"
+              type="radio"
+              value="and"
+            >
+            <span>All</span>
+          </label>
+          <label
+            :class="'btn btn-light' + (filterOperatorValue === 'or' ? ' active' : '')"
+            title="Show tasks with any of the selected tags"
+          >
+            <input
+              v-model="filterOperatorValue"
+              type="radio"
+              value="or"
+            >
+            <span>Any</span>
+          </label>
         </div>
       </div>
-      <input
-        v-if="showTagInput"
-        id="addTagInput"
-        ref="addTagInput"
-        v-model="newTag"
-        type="text"
-        class="form-control"
-        placeholder="add new tag"
-        @input="tagInputChange"
-        @focus="tagInputChange"
-        @blur="clickOutside"
-        @keyup.enter="addTag(newTag)"
+      
+      <!-- Tag Input -->
+      <div
+        v-if="taskTags"
+        id="newTag"
+        class="btn-group"
       >
+        <div class="d-flex">
+          <button
+            id="addTagButton"
+            class="btn btn-light"
+            :title="showTagInput ? 'Cancel' : 'Add new tag'"
+            @click="addTagButton"
+          >
+            <font-awesome-icon
+              v-if="!showTagInput"
+              icon="plus"
+            />
+            <font-awesome-icon
+              v-if="showTagInput"
+              icon="times"
+            />
+          </button>
+          <div
+            id="tagDropdown"
+          >
+            <div
+              id="tagDropdownMenu"
+              class="btn-group-vertical"
+            >
+              <button
+                v-for="tag in tagOptions"
+                :key="tag"
+                class="tag-option btn btn-light"
+                :style="`backgroundColor: ${tags[tag].color}`"
+                @click="addTag(tag)"
+              >
+                {{ tag }}
+              </button>
+            </div>
+          </div>
+          <input
+            v-if="showTagInput"
+            id="addTagInput"
+            ref="addTagInput"
+            v-model="newTag"
+            type="text"
+            class="form-control"
+            placeholder="add new tag"
+            @input="tagInputChange"
+            @focus="tagInputChange"
+            @blur="clickOutside"
+            @keyup.enter="addTag(newTag)"
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -256,12 +264,14 @@ export default {
   padding-left: 20px;
 }
 
-#taskTags > * {
+/*noinspection CssUnusedSymbol*/
+#taskTags > .tag-label, #taskTags > #elements > * {
   margin-top: 20px;
   margin-right: 20px;
 }
 
-#filterTags > *:not(label) {
+/*noinspection CssUnusedSymbol*/
+#filterTags > .tag-label, #filterTags > #elements > * {
   margin-top: 5px;
   margin-bottom: 5px;
   margin-right: 10px;

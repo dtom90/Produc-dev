@@ -16,7 +16,7 @@
         icon="clock"
       />
     </div>
-    <div class="d-flex">
+    <div class="d-flex flex-wrap">
       <span
         v-for="tag in taskTags"
         :key="tag"
@@ -61,7 +61,7 @@ export default {
     active () {
       return this.selectedTaskID === this.task.id ? ' active' : ''
     },
-  
+    
     checked () {
       return this.task.completed !== null
     },
