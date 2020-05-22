@@ -96,9 +96,13 @@ export default {
   height: 2rem;
 }
 
+.badge:empty {
+  display: inline-block !important;
+}
+
 .mini-tag {
-  width: 50px;
-  height: 10px;
+  width: 50px !important;
+  height: 10px !important;
   margin-top: 10px;
   margin-right: 10px;
 }
