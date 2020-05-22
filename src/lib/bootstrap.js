@@ -7,6 +7,7 @@ import 'bootstrap/js/src/modal'
 import {
   ButtonPlugin,
   InputGroupPlugin,
+  FormGroupPlugin,
   FormInputPlugin,
   FormCheckboxPlugin,
   DropdownPlugin,
@@ -16,6 +17,7 @@ import Vue from 'vue'
 
 Vue.use(ButtonPlugin)
 Vue.use(InputGroupPlugin)
+Vue.use(FormGroupPlugin)
 Vue.use(FormInputPlugin)
 Vue.use(FormCheckboxPlugin)
 Vue.use(DropdownPlugin)

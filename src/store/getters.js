@@ -16,8 +16,9 @@ const getters = {
   
   unselectedTags: state => Object.keys(state.tags).filter(tag => !state.selectedTags.includes(tag)),
   
-  availableTags: state => (id, snip) => Object.keys(state.tags).filter(tag =>
-    tag.startsWith(snip) && !state.tasks.find(t => t.id === id).tags.includes(tag)),
+  availableTags: state => (id, snip) => Object.keys(state.tags)
+    .filter(tag => tag.startsWith(snip) && !state.tasks.find(t => t.id === id).tags.includes(tag))
+    .sort((a, b) => state.tagOrder.indexOf(a) - state.tagOrder.indexOf(b)),
   
   tagActivity: state => tag => state.tasks.filter(task => task.tags.includes(tag))
     .map(task => {

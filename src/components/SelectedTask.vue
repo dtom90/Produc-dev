@@ -25,12 +25,14 @@
             style="margin-left: 20px"
           />
         </div>
-  
+        
         <!--  Task Name & Field (when editing)  -->
         <div
           v-if="!editingName"
           id="task-name"
-          @click="editName"
+          @mousedown="possibleEdit = true"
+          @mousemove="possibleEdit = false"
+          @mouseup="editName"
         >
           <span>{{ task.name }}</span>
         </div>
@@ -55,14 +57,14 @@
             </button>
           </div>
         </div>
-  
+        
         <div
           v-if="!editingName"
           id="checkbox-counterbalance"
           style="width: 55.19px;"
         />
       </div>
-  
+      
       <!-- Menu Options -->
       <div
         ref="taskMenu"
@@ -100,7 +102,7 @@
         </div>
       </div>
     </div>
-  
+    
     <!-- Tags Section -->
     <TagList
       :tag-list="taskTags"
@@ -108,14 +110,14 @@
       :modal="true"
       :remove-tag="removeTag"
     />
-  
+    
     <!-- Notes Section -->
     <div
       id="notes-section"
       class="d-flex align-items-center"
     >
       <span id="notes-label">Notes: </span>
-  
+      
       <!-- Display Mode -->
       <!-- eslint-disable vue/no-v-html -->
       <span
@@ -134,7 +136,7 @@
       >
         <font-awesome-icon icon="pencil-alt" />
       </button>
-  
+      
       <!-- Editing Mode -->
       <div
         v-if="editingNotes"
@@ -157,7 +159,7 @@
         </div>
       </div>
     </div>
-  
+    
     <!-- Countdown Timer -->
     <keep-alive>
       <Countdown
@@ -166,7 +168,7 @@
         class="top-margin"
       />
     </keep-alive>
-  
+    
     <!-- Activity View -->
     <ActivityView
       id="taskActivity"
@@ -219,6 +221,7 @@ export default {
   },
   
   data: () => ({
+    possibleEdit: true,
     editingName: false,
     editingNotes: false,
     newTag: '',
@@ -257,11 +260,14 @@ export default {
     ]),
     
     editName () {
-      this.editingName = true
-      this.$refs.taskMenu.classList.remove('show')
-      this.$refs.taskMenu.querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
-      this.$refs.taskMenu.querySelector('.dropdown-menu').classList.remove('show')
-      this.$nextTick(() => this.$refs.taskNameInput.focus())
+      if (this.possibleEdit) {
+        this.editingName = true
+        this.$refs.taskMenu.classList.remove('show')
+        this.$refs.taskMenu.querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
+        this.$refs.taskMenu.querySelector('.dropdown-menu').classList.remove('show')
+        this.$nextTick(() => this.$refs.taskNameInput.focus())
+      }
+      this.possibleEdit = true
     },
     
     addTagButton () {

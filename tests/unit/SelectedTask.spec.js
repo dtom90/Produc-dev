@@ -25,7 +25,7 @@ const store = new Vuex.Store({
 describe('SelectedTask', () => {
   
   describe('Incomplete Task', () => {
-  
+    
     const task = newTask()
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
@@ -45,40 +45,39 @@ describe('SelectedTask', () => {
     })
     
     it('renders the task name when passed', () => {
-    
+      
       expect(wrapper.text()).toMatch(task.name)
-    
+      
     })
     
     it('renders the task log', () => {
       
       const renderedActivity = wrapper.find(ActivityView)
-      expect(renderedActivity.props()).toEqual({ log: task.log, id: 'taskActivity', element: task.name, manualInput: true, taskId: task.id })
+      expect(renderedActivity.props()).toEqual({
+        log: task.log,
+        id: 'taskActivity',
+        element: task.name,
+        manualInput: true,
+        taskId: task.id
+      })
       
     })
     
     it('does not render the task completed date', () => {
-  
+      
       expect(wrapper.text()).not.toMatch('Completed:')
       
     })
     
     it('renders the task name when passed', () => {
-    
+      
       expect(wrapper.text()).toMatch(task.name)
-    
-    })
-    
-    it('renders an edit button for changing the task name', () => {
-    
-      expect(wrapper.find('button.btn-warning').find(FontAwesomeIcon).attributes('icon')).toBe('pencil-alt')
-    
+      
     })
     
     it('renders a delete button for removing the task', () => {
       
       const deleteButton = wrapper.find('button.btn-danger')
-      expect(deleteButton.find(FontAwesomeIcon).attributes('icon')).toBe('trash-alt')
       deleteButton.trigger('click')
       expect(mutations.deleteTask).toHaveBeenCalledWith(state, { id: task.id })
       
@@ -87,7 +86,7 @@ describe('SelectedTask', () => {
   })
   
   describe('Tagged Task', () => {
-  
+    
     const task = newTask(true)
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
@@ -131,10 +130,16 @@ describe('SelectedTask', () => {
     })
     
     it('renders the task activity views', () => {
-    
+      
       const renderedActivity = wrapper.find(ActivityView)
-      expect(renderedActivity.props()).toEqual({ log: task.log, id: 'taskActivity', element: task.name, manualInput: false, taskId: task.id })
-    
+      expect(renderedActivity.props()).toEqual({
+        log: task.log,
+        id: 'taskActivity',
+        element: task.name,
+        manualInput: false,
+        taskId: task.id
+      })
+      
     })
     
   })

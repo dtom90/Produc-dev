@@ -16,7 +16,8 @@ jest.spyOn(storeConfig.mutations, 'stopTask')
 jest.spyOn(storeConfig.mutations, 'updateActiveMinutes')
 jest.spyOn(storeConfig.mutations, 'updateRestMinutes')
 jest.spyOn(storeConfig.mutations, 'setTaskInactive')
-jest.spyOn(notifications, 'notify').mockImplementation(() => {})
+jest.spyOn(notifications, 'notify').mockImplementation(() => {
+})
 
 const delay = t => new Promise(resolve => setTimeout(resolve, t))
 
@@ -29,7 +30,6 @@ describe('Countdown', () => {
   beforeEach(() => {
     
     store = new Vuex.Store(cloneDeep(storeConfig))
-    // console.log(storeConfig.mutations)
     
     wrapper = shallowMount(Countdown, {
       localVue,
@@ -42,8 +42,7 @@ describe('Countdown', () => {
   it('renders a play button for the timer', () => {
     
     const playPauseButton = wrapper.find('#play-pause-btn')
-    expect(playPauseButton.find(FontAwesomeIcon).isVisible()).toBe(true)
-    expect(playPauseButton.find(FontAwesomeIcon).attributes('icon')).toBe('play')
+    expect(playPauseButton.isVisible()).toBe(true)
     
   })
   
@@ -53,14 +52,14 @@ describe('Countdown', () => {
     
   })
   
-  it('renders a field for adjusting the pomodoro timer when the time is clicked', () => {
+  it('renders a field for adjusting the pomodoro timer when the time is clicked', async () => {
     
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
     expect(wrapper.find('#timer-display').text()).toBe('25:00')
     expect(wrapper.find('input[type="number"]').exists()).toBe(false)
     expect(wrapper.find('#timer-save-button').exists()).toBe(false)
-    
-    wrapper.find('#timer-display').trigger('click')
+  
+    await wrapper.find('#timer-display').trigger('click')
     
     expect(wrapper.find('#timer-display').exists()).toBe(false)
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
@@ -69,25 +68,25 @@ describe('Countdown', () => {
     
   })
   
-  it('should not allow clicking play-pause-btn when editing the timer', () => {
-    
-    wrapper.find('#timer-display').trigger('click')
+  it('should not allow clicking play-pause-btn when editing the timer', async () => {
+  
+    await wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('#timer-display').exists()).toBe(false)
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     expect(wrapper.find('input[type="number"]').element.value).toBe('25')
     
     expect(wrapper.find('#play-pause-btn').attributes('disabled')).toBe('disabled')
-    wrapper.find('#play-pause-btn').trigger('click')
+    await wrapper.find('#play-pause-btn').trigger('click')
     expect(storeConfig.mutations.startTask).not.toHaveBeenCalled()
     
   })
   
-  it('should call startTask when the play button is clicked, but pausing should not call stopTask', () => {
-    
-    wrapper.find('#play-pause-btn').trigger('click')
+  it('should call startTask when the play button is clicked, but pausing should not call stopTask', async () => {
+  
+    await wrapper.find('#play-pause-btn').trigger('click')
     expect(storeConfig.mutations.startTask).toHaveBeenCalledWith(storeConfig.state, { id: expectedTaskId })
-    
-    wrapper.find('#play-pause-btn').trigger('click')
+  
+    await wrapper.find('#play-pause-btn').trigger('click')
     expect(storeConfig.mutations.stopTask).toHaveBeenCalledWith(storeConfig.state, { id: expectedTaskId })
     
   })
@@ -107,11 +106,11 @@ describe('Countdown', () => {
     expect(wrapper.vm.continueOnComplete).toBe(false)
     
     // Change timer 3 seconds
-    wrapper.find('#timer-display').trigger('click')
+    await wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     const timerInput = wrapper.find('input[type="number"]')
     timerInput.setValue('0.05')
-    wrapper.find('#timer-save-button').trigger('click')
+    await wrapper.find('#timer-save-button').trigger('click')
     const expectedState = cloneDeep(storeConfig.state)
     expectedState.activeMinutes = 0.05
     expect(storeConfig.mutations.updateActiveMinutes).toHaveBeenCalledWith(expectedState, { activeMinutes: 0.05 })
@@ -131,7 +130,7 @@ describe('Countdown', () => {
     expect(notifications.notify).not.toHaveBeenCalled()
     
     // Start the countdown
-    wrapper.find('#play-pause-btn').trigger('click')
+    await wrapper.find('#play-pause-btn').trigger('click')
     
     // Expect the countdown to decrement
     expect(wrapper.vm.secondsRemaining).toBe(3)
@@ -155,33 +154,42 @@ describe('Countdown', () => {
   it('should notifiy to start working after a break', async () => {
     
     // Skip the active interval
-    wrapper.find('#skip-btn').trigger('click')
+    await wrapper.find('#skip-btn').trigger('click')
     expect(wrapper.vm.active).toBe(false)
     
     // Change timer 3 seconds
-    wrapper.find('#timer-display').trigger('click')
+    await wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
     const timerInput = wrapper.find('input[type="number"]')
     timerInput.setValue('0.05')
-    wrapper.find('#timer-save-button').trigger('click')
+    await wrapper.find('#timer-save-button').trigger('click')
     const expectedState = cloneDeep(storeConfig.state)
     expectedState.restMinutes = 0.05
     expect(storeConfig.mutations.updateRestMinutes).toHaveBeenCalledWith(expectedState, { restMinutes: 0.05 })
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
     expect(wrapper.find('#timer-display').text()).toBe('0:03')
     expect(wrapper.vm.secondsRemaining).toBe(3)
-    expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, { id: expectedTaskId, running: true })
+    expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, {
+      id: expectedTaskId,
+      running: true
+    })
     
     // Start the break countdown
-    wrapper.find('#play-pause-btn').trigger('click')
+    await wrapper.find('#play-pause-btn').trigger('click')
     
     // Expect the countdown to decrement
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(2)
-    expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, { id: expectedTaskId, running: true })
+    expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, {
+      id: expectedTaskId,
+      running: true
+    })
     await delay(1000)
     expect(wrapper.vm.secondsRemaining).toBe(1)
-    expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, { id: expectedTaskId, running: true })
+    expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, {
+      id: expectedTaskId,
+      running: true
+    })
     await delay(1000)
     
     expect(notifications.notify).toBeCalledWith('Finished Break, Time to Work!')

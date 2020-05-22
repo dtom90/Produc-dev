@@ -72,9 +72,9 @@ describe('TaskList', () => {
       
       if (expectedSortingOptions.length > 0) {
         const sortOrder = expectedSortingOptions[0]
-  
+        
         expect(wrapper.vm.sortOrder).toBe(sortOrder)
-  
+        
         const renderedTasks = wrapper.findAll(Task)
         expect(renderedTasks.length).toBe(tasks.length)
         renderedTasks.wrappers.forEach((renderedTask, i) => {
@@ -85,16 +85,16 @@ describe('TaskList', () => {
       
     })
     
-    it(`should sort in ${expectedSortingOptions[1]}-first order`, () => {
-  
+    it(`should sort in ${expectedSortingOptions[1]}-first order`, async () => {
+      
       if (expectedSortingOptions.length > 1) {
         const sortOrder = expectedSortingOptions[1]
-  
-        wrapper.setData({
+        
+        await wrapper.setData({
           sortOrder: sortOrder
         })
         expect(wrapper.vm.sortOrder).toBe(sortOrder)
-  
+        
         const renderedTasks = wrapper.findAll(Task)
         expect(renderedTasks.length).toBe(tasks.length)
         renderedTasks.wrappers.forEach((renderedTask, i) => {
@@ -105,14 +105,14 @@ describe('TaskList', () => {
       
     })
     
-    it('should add a new task when entered', () => {
+    it('should add a new task when entered', async () => {
       
       if (title === 'To Do') {
         const taskInput = wrapper.find('input[placeholder="enter new task"]')
-        taskInput.trigger('click')
+        await taskInput.trigger('click')
         taskInput.setValue('new task 4')
-        taskInput.trigger('keyup.enter')
-  
+        await taskInput.trigger('keyup.enter')
+        
         expect(mutations.addTask).toHaveBeenCalledWith(state, { name: 'new task 4' })
         expect(taskInput.element.value).toBe('')
       }
@@ -120,7 +120,7 @@ describe('TaskList', () => {
     })
     
     it('should clear all tasks when the button is clicked', () => {
-  
+      
       if (title === 'Done') {
         const clearAllBtn = wrapper.find('button.btn-danger')
         expect(clearAllBtn.text()).toEqual('Clear All')
