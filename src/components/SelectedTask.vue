@@ -168,6 +168,23 @@
         class="top-margin"
       />
     </keep-alive>
+    <div
+      v-if="!task.completed && (running && activeTaskID !== task.id)"
+      class="d-flex flex-column align-items-center"
+      style="color: darkred"
+    >
+      <div>Continue Here</div>
+      <button
+        id="continue-here-btn"
+        type="button"
+        class="btn btn-light btn-lg"
+        style="color: darkred"
+        title="Continue Timer Here"
+        @click="continueTimerHere"
+      >
+        <font-awesome-icon icon="play" />
+      </button>
+    </div>
     
     <!-- Activity View -->
     <ActivityView
@@ -254,6 +271,8 @@ export default {
   methods: {
     
     ...mapMutations([
+      'startTask',
+      'stopTask',
       'addTaskTag',
       'removeTaskTag',
       'deleteTask'
@@ -304,8 +323,12 @@ export default {
           this.showTagInput = false
         }
       }
-    }
+    },
     
+    continueTimerHere () {
+      this.stopTask({ id: this.activeTaskID })
+      this.startTask({ id: this.task.id })
+    }
   }
 }
 </script>
