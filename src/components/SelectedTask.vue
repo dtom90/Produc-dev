@@ -132,7 +132,7 @@
         type="button"
         class="btn btn-light"
         title="Edit task name"
-        @click="editingNotes = true"
+        @click="editNotes"
       >
         <font-awesome-icon icon="pencil-alt" />
       </button>
@@ -143,6 +143,7 @@
         class="input-group"
       >
         <textarea
+          ref="notesInput"
           v-model="task.notes"
           class="form-control"
           :rows="task.notes.split('\n').length"
@@ -329,6 +330,13 @@ export default {
       }
     },
     
+    editNotes () {
+      this.editingNotes = true
+      this.$nextTick(() => {
+        this.$refs.notesInput.focus()
+      })
+    },
+    
     continueTimerHere () {
       this.stopTask({ id: this.activeTaskID })
       this.startTask({ id: this.task.id })
@@ -386,7 +394,7 @@ export default {
   border-radius: 5px;
   font-size: 18px;
   flex: 1;
-  min-width:0;
+  min-width: 0;
   overflow: visible;
   overflow-wrap: break-word;
 }
