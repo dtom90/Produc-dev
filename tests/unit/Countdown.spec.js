@@ -56,14 +56,14 @@ describe('Countdown', () => {
     
     expect(wrapper.find('#timer-display').isVisible()).toBe(true)
     expect(wrapper.find('#timer-display').text()).toBe('25:00')
-    expect(wrapper.find('input[type="number"]').exists()).toBe(false)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').exists()).toBe(false)
     expect(wrapper.find('#timer-save-button').exists()).toBe(false)
   
     await wrapper.find('#timer-display').trigger('click')
     
     expect(wrapper.find('#timer-display').exists()).toBe(false)
-    expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
-    expect(wrapper.find('input[type="number"]').element.value).toBe('25')
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').element.value).toBe('25')
     expect(wrapper.find('#timer-save-button').isVisible()).toBe(true)
     
   })
@@ -72,8 +72,8 @@ describe('Countdown', () => {
   
     await wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('#timer-display').exists()).toBe(false)
-    expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
-    expect(wrapper.find('input[type="number"]').element.value).toBe('25')
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').element.value).toBe('25')
     
     expect(wrapper.find('#play-pause-btn').attributes('disabled')).toBe('disabled')
     await wrapper.find('#play-pause-btn').trigger('click')
@@ -107,8 +107,8 @@ describe('Countdown', () => {
     
     // Change timer 3 seconds
     await wrapper.find('#timer-display').trigger('click')
-    expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
-    const timerInput = wrapper.find('input[type="number"]')
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    const timerInput = wrapper.find('#edit-wrapper > input[type="number"]')
     timerInput.setValue('0.05')
     await wrapper.find('#timer-save-button').trigger('click')
     const expectedState = cloneDeep(storeConfig.state)
@@ -159,8 +159,8 @@ describe('Countdown', () => {
     
     // Change timer 3 seconds
     await wrapper.find('#timer-display').trigger('click')
-    expect(wrapper.find('input[type="number"]').isVisible()).toBe(true)
-    const timerInput = wrapper.find('input[type="number"]')
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    const timerInput = wrapper.find('#edit-wrapper > input[type="number"]')
     timerInput.setValue('0.05')
     await wrapper.find('#timer-save-button').trigger('click')
     const expectedState = cloneDeep(storeConfig.state)
