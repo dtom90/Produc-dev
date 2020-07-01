@@ -66,6 +66,14 @@ const mutations = {
     state.activeMinutes = activeMinutes
   },
   
+  updateSecondReminderEnabled (state, { value }) {
+    state.secondReminderEnabled = value
+  },
+  
+  updateSecondReminderMinutes (state, { value }) {
+    state.secondReminderMinutes = value
+  },
+  
   updateRestMinutes (state, { restMinutes }) {
     state.restMinutes = restMinutes
   },

@@ -115,6 +115,7 @@
     <div
       id="notes-section"
       class="d-flex align-items-center"
+      style="max-width: 100%"
     >
       <span id="notes-label">Notes: </span>
       
@@ -123,7 +124,6 @@
       <span
         v-if="task.notes && !editingNotes"
         id="display-notes"
-        class="flex-grow-1"
         v-html="displayNotes"
       />
       <!-- eslint-enable vue/no-v-html -->
@@ -132,7 +132,7 @@
         type="button"
         class="btn btn-light"
         title="Edit task name"
-        @click="editingNotes = true"
+        @click="editNotes"
       >
         <font-awesome-icon icon="pencil-alt" />
       </button>
@@ -143,8 +143,9 @@
         class="input-group"
       >
         <textarea
+          ref="notesInput"
           v-model="task.notes"
-          class="form-control no-wrap"
+          class="form-control"
           :rows="task.notes.split('\n').length"
         />
         <div class="input-group-append">
@@ -207,6 +208,10 @@ import ActivityView from './ActivityView'
 import { mapMutations, mapState } from 'vuex'
 import marked from 'marked'
 import DOMPurify from 'dompurify'
+
+marked.setOptions({
+  breaks: true
+})
 
 const renderer = new marked.Renderer()
 const linkRenderer = renderer.link
@@ -325,6 +330,13 @@ export default {
       }
     },
     
+    editNotes () {
+      this.editingNotes = true
+      this.$nextTick(() => {
+        this.$refs.notesInput.focus()
+      })
+    },
+    
     continueTimerHere () {
       this.stopTask({ id: this.activeTaskID })
       this.startTask({ id: this.task.id })
@@ -376,17 +388,15 @@ export default {
   padding-right: 15px;
 }
 
-.no-wrap {
-  white-space: nowrap;
-}
-
 #display-notes {
   padding: 10px;
   border: #e2e6ea 1px solid;
   border-radius: 5px;
   font-size: 18px;
-  overflow-x: scroll;
-  @extend .no-wrap;
+  flex: 1;
+  min-width: 0;
+  overflow: visible;
+  overflow-wrap: break-word;
 }
 
 .dropdown .btn {

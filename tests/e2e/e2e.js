@@ -45,6 +45,7 @@ const tag = selectedTaskSection.find('.tag')
 const tagOption = selectedTaskSection.find('button.tag-option')
 const countdownSection = selectedTaskSection.find('#countdown-container')
 const activitySection = selectedTaskSection.find('#taskActivity')
+const timerInput = countdownSection.find('#edit-wrapper > input[type="number"]')
 
 // Completed List selectors
 const doneSection = Selector('.section').withText('Done')
@@ -305,7 +306,7 @@ test('Countdown functionality', async t => {
     .expect(countdownSection.find('p').withText('25:00').visible).ok()
     .expect(countdownSection.getAttribute('style')).match(rotationFactor(1))
     .click(countdownSection.find('p').withText('25:00'))
-    .expect(countdownSection.find('input[type="number"]').visible).ok()
+    .expect(timerInput.visible).ok()
     .expect(countdownSection.find('button > svg.fa-save').visible).ok()
     .typeText(countdownSection.find('#edit-wrapper input'), '0.1', { replace: true })
     .expect(countdownSection.getAttribute('style')).match(rotationFactor(1))
@@ -339,7 +340,7 @@ test('Countdown functionality', async t => {
     
     // Set rest timer to 3 seconds
     .click(countdownSection.find('p').withText('5:00'))
-    .expect(countdownSection.find('input[type="number"]').visible).ok()
+    .expect(timerInput.visible).ok()
     .expect(countdownSection.find('button > svg.fa-save').visible).ok()
     .typeText(countdownSection.find('#edit-wrapper input'), '0.05', { replace: true })
     .expect(countdownSection.getAttribute('style')).match(rotationFactor(1, 'green'))
@@ -378,7 +379,7 @@ test('Countdown modification and task switching', async t => {
     
     // Try to modify timer during countdown, should fail
     .click(countdownSection.find('p').withText('24:54'))
-    .expect(countdownSection.find('input[type="number"]').exists).notOk()
+    .expect(timerInput.exists).notOk()
     .expect(countdownSection.find('p').withText('24:52').visible).ok()
     .expect(countdownSection.find('p').withText('24:50').visible).ok()
     
@@ -463,7 +464,7 @@ test('Continue on Complete', async t => {
     .expect(countdownSection.find('p').withText('25:00').visible).ok()
     .expect(countdownSection.getAttribute('style')).match(rotationFactor(1))
     .click(countdownSection.find('p').withText('25:00'))
-    .expect(countdownSection.find('input[type="number"]').visible).ok()
+    .expect(timerInput.visible).ok()
     .expect(countdownSection.find('button > svg.fa-save').visible).ok()
     .typeText(countdownSection.find('#edit-wrapper input'), '0.1', { replace: true })
     .expect(countdownSection.getAttribute('style')).match(rotationFactor(1))

@@ -12,6 +12,8 @@ const initialState = {
   selectedTaskID: null,
   activeTaskID: null,
   activeMinutes: 25,
+  secondReminderEnabled: true,
+  secondReminderMinutes: 5,
   restMinutes: 5,
   running: false,
   continueOnComplete: false,

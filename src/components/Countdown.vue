@@ -46,6 +46,38 @@
               @click.stop=""
             >Continue Timer when Interval Complete</label>
           </div>
+          <div class="dropdown-divider" />
+          <form class="form-inline">
+            <fieldset :disabled="!continueOnComplete">
+              <div class="form-group">
+                <input
+                  id="secondReminderEnabled"
+                  v-model="secondReminderEnabled"
+                  type="checkbox"
+                  class="form-check-input"
+                >
+                <label
+                  class="form-check-label"
+                  for="secondReminderEnabled"
+                  style="margin-left: 6px;"
+                  @click.stop=""
+                >Second Reminder</label>
+              </div>
+              
+              <div class="form-group">
+                <label for="secondReminderMinutes">after&nbsp;</label>
+                <input
+                  id="secondReminderMinutes"
+                  v-model="secondReminderMinutes"
+                  type="number"
+                  class="form-control mx-sm-1"
+                  style="max-width: 60px;"
+                  :disabled="!secondReminderEnabled"
+                >
+                <span>&nbsp;minutes</span>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
       
@@ -134,6 +166,7 @@ export default {
     activeIntervalStarted: false,
     countingDown: false,
     overtime: false,
+    secondReminderDisplayed: false,
     secondsRemaining: 0,
     notificationList: []
   }),
@@ -177,6 +210,28 @@ export default {
       set (value) {
         this.updateContinueOnComplete(value)
       }
+    },
+    
+    secondReminderEnabled: {
+      get () {
+        return this.$store.state.secondReminderEnabled
+      },
+      set (value) {
+        this.updateSecondReminderEnabled({ value })
+      }
+    },
+    
+    secondReminderMinutes: {
+      get () {
+        return this.$store.state.secondReminderMinutes
+      },
+      set (value) {
+        this.updateSecondReminderMinutes({ value })
+      }
+    },
+    
+    secondReminderSeconds () {
+      return -(this.secondReminderMinutes * 60)
     }
     
   },
@@ -204,6 +259,8 @@ export default {
       'stopTask',
       'unpauseTask',
       'updateActiveMinutes',
+      'updateSecondReminderEnabled',
+      'updateSecondReminderMinutes',
       'updateRestMinutes',
       'updateContinueOnComplete',
       'resetRunning',
@@ -253,6 +310,14 @@ export default {
       this.secondsRemaining = secondsRemaining
       if (this.active) {
         this.stopTask({ id: this.taskId, running: true })
+        if (this.overtime && !this.secondReminderDisplayed && this.secondsRemaining <= this.secondReminderSeconds) {
+          const notification = notifications.notify('Finished Working, Take a Break!')
+          this.secondReminderDisplayed = true
+          // add to notificationList for later closure
+          if (notification && notification instanceof Notification) {
+            this.notificationList.push(notification)
+          }
+        }
       }
     },
     
@@ -312,6 +377,7 @@ export default {
       this.active = !this.active
       this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
       this.secondsRemaining = this.totalSeconds
+      this.secondReminderDisplayed = false
     }
   }
 }
@@ -330,6 +396,7 @@ export default {
   height: 200px;
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 #skip-btn {
   position: absolute;
   right: -38px;
@@ -351,6 +418,7 @@ export default {
   padding: 8px;
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 #countdown-button-rotator {
   position: absolute;
   width: 100%;
@@ -360,6 +428,7 @@ export default {
   pointer-events: none;
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 #countdown-button {
   position: absolute;
   width: 20px;
@@ -370,6 +439,7 @@ export default {
   transform: translate(90px, -8px);
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 #countdown-trail {
   position: absolute;
   width: 100%;
@@ -394,6 +464,7 @@ export default {
   font-size: 1.2rem;
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 #play-pause-btn {
   color: var(--button-color);
 }
