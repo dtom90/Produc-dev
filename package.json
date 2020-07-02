@@ -10,7 +10,7 @@
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --no-fix",
-    "audit:packages": "yarn audit --moderate || test $? -ge 2",
+    "audit:packages": "yarn audit --level moderate || test $? -ge 2",
     "electron:build": "vue-cli-service electron:build --dir",
     "electron:dev": "vue-cli-service electron:serve",
     "electron:release": "vue-cli-service electron:build",

@@ -1,9 +1,10 @@
 version: 2
+
 jobs:
   test:
-    working_directory: /app
     docker:
       - image: docker:stable
+    working_directory: /app
     steps:
       - checkout
       - setup_remote_docker:
@@ -53,27 +54,37 @@ jobs:
           name: Stop production Docker contianer
           command: docker stop devtrack-prod
   build-gh-pages:
-    working_directory: /app
-    docker:
-      - image: docker:stable
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - add_ssh_keys:
           fingerprints:
             - "27:7d:a1:a0:dc:5a:30:f1:47:74:a6:50:af:6e:59:2d"
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
-          name: Build GitHub Pages Docker Image
+          name: Build Docker Image
           command: |
             docker build \
                    -f docker/gh-pages.dockerfile \
                    -t devtrack-ghpages .
       - run:
-          name: Build & Publish GitHub Pages
+          name: Build GitHub Pages
           command: |
-            docker run -it \
+            docker run -it --rm \
+                   -v `pwd`:/app -w /app \
                    devtrack-ghpages
+      - run:
+          name: Publish to GitHub Pages
+          command: |
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use stable
+            npm install -g gh-pages@2.1.1
+            git config user.email "dtom90@users.noreply.github.com"
+            git config user.name "David Thomason"
+            gh-pages --dist dist_gh_pages
+
 workflows:
   version: 2
   test:

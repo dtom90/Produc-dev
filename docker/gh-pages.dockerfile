@@ -1,11 +1,7 @@
-FROM devtrack-test
+FROM node:lts-alpine as build-stage
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash git openssh
 
-RUN npm install -g gh-pages@3.1.0
+WORKDIR /app
 
-RUN git config user.email "dtom90@users.noreply.github.com"
-RUN git config user.name "David Thomason"
-
-RUN mkdir ~/.ssh && touch ~/.ssh/known_hosts
-RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-CMD yarn run gh_pages:build && gh-pages --dist dist_gh_pages
+CMD yarn install && yarn run gh_pages:build
