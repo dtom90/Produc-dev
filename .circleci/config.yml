@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Run packages audit, lint, and unit tests
           command: |
-            docker run -i --rm \
+            docker run -it \
                    devtrack-test \
                    sh -c 'yarn audit:packages && yarn run lint && yarn run test:unit'
       - run:
@@ -31,7 +31,7 @@ jobs:
       - run:
           name: Run production Docker container
           command: |
-            docker run -i --rm \
+            docker run -it --rm \
                    -p 8080:80 \
                    --name devtrack-prod \
                    devtrack-prod
@@ -46,13 +46,31 @@ jobs:
       - run:
           name: Run TestCafé against production container
           command: |
-            docker run -i --rm \
+            docker run -it --rm \
                    --net="host" \
                    devtrack-testcafe chromium:headless /tests -c 4 --selector-timeout 3000
       - run:
           name: Stop production Docker contianer
           command: docker stop devtrack-prod
-
+  build-gh-pages:
+    working_directory: /app
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build GitHub Pages Docker Image
+          command: |
+            docker build \
+                   -f docker/gh-pages.dockerfile \
+                   -t devtrack-ghpages .
+      - run:
+          name: Build & Publish GitHub Pages
+          command: |
+            docker run -it \
+                   devtrack-ghpages
 workflows:
   version: 2
   test:
@@ -62,3 +80,6 @@ workflows:
             branches:
               ignore:
                 - gh-pages
+      - build-gh-pages:
+          requires:
+            - test
