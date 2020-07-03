@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Stop production Docker contianer
           command: docker stop devtrack-prod
-  build-gh-pages:
+  build-web:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true
@@ -84,6 +84,17 @@ jobs:
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
             gh-pages --dist dist_gh_pages
+  build-electron:
+    macos:
+      xcode: 11.5.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: yarn
+      - run:
+          name: Build and release publish Electron app
+          command: yarn run electron:release
 
 workflows:
   version: 2
@@ -94,10 +105,11 @@ workflows:
             branches:
               ignore:
                 - gh-pages
-      - build-gh-pages:
-          requires:
-            - test
+  deploy:
+    jobs:
+      - build-web:
           filters:
             branches:
               only:
                 - master
+      - build-electron
