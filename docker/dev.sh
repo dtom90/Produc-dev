@@ -1,12 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Runs development container with source mapping
 # - PREREQUISITE: run install.sh to install dependencies
 # - Source code is mapped from host
 # - Run with additional command to replace default command
 
-IMAGE_NAME=producdev-base
-CONTAINER_NAME=producdev-dev
+IMAGE_NAME=devtrack-base
+CONTAINER_NAME=devtrack-dev
 
 # shellcheck disable=SC2124
 CMD="$@"
