@@ -97,3 +97,7 @@ workflows:
       - build-gh-pages:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
