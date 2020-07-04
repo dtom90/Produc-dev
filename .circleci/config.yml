@@ -30,7 +30,7 @@ jobs:
 
   build-web:
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu-1604:202004-01
       docker_layer_caching: true
     steps:
       - add_ssh_keys:
@@ -46,9 +46,10 @@ jobs:
             export NVM_DIR="/opt/circleci/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm use stable
-            npm install -g gh-pages@2.1.1
+            npm install -g gh-pages@3.0.0
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
+            cp -r .circleci dist_gh_pages
             gh-pages --dist dist_gh_pages --no-history
 
   build-electron:
@@ -82,11 +83,7 @@ workflows:
                 - gh-pages
   build-deploy:
     jobs:
-      - build-web:
-          filters:
-            branches:
-              only:
-                - master
+      - build-web
       - build-electron:
           filters:
             branches:
