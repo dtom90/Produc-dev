@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Runs development container with source mapping
 # - PREREQUISITE: run install.sh to install dependencies
