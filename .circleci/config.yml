@@ -39,7 +39,7 @@ jobs:
       - checkout
       - run:
           name: Build GitHub Pages
-          command: ./docker/install.sh && yarn run gh_pages:build
+          command: ./docker/install.sh 'yarn install && yarn run gh_pages:build'
       - run:
           name: Publish to GitHub Pages
           command: |
@@ -49,7 +49,7 @@ jobs:
             npm install -g gh-pages@2.1.1
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
-            gh-pages --dist dist_gh_pages
+            gh-pages --dist dist_gh_pages --no-history
 
   build-electron:
     macos:

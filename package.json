@@ -52,7 +52,7 @@
     "marked": "^0.7.0",
     "popper.js": "^1.16.0",
     "sass": "^1.21.0",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^9.0.1",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.4.2",
     "vue-color": "^2.7.0",
