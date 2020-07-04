@@ -1,6 +1,6 @@
 {
   "name": "devtrack",
-  "version": "0.8.19",
+  "version": "0.8.20",
   "private": true,
   "description": "An app for productive developers",
   "author": {
@@ -10,7 +10,7 @@
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --no-fix",
-    "audit:packages": "yarn audit || test $? -eq 0",
+    "audit:packages": "yarn audit --level moderate || test $? -ge 2",
     "electron:build": "vue-cli-service electron:build --dir",
     "electron:dev": "vue-cli-service electron:serve",
     "electron:release": "vue-cli-service electron:build",
@@ -104,6 +104,7 @@
   "repository": "https://github.com/dtom90/DevTrack",
   "resolutions": {
     "minimist": ">=0.2.1 <1.0.0 || >=1.2.3",
-    "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2"
+    "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
+    "kind-of": ">=6.0.3"
   }
 }

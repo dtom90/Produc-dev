@@ -1,5 +1,4 @@
 # DevTrack
-[![Build Status](https://travis-ci.org/dtom90/DevTrack.svg?branch=master)](https://travis-ci.org/dtom90/DevTrack)
 [![CircleCI](https://circleci.com/gh/dtom90/DevTrack.svg?style=svg)](https://circleci.com/gh/dtom90/DevTrack)
 
 An app for productive developers
@@ -45,7 +44,7 @@ yarn run test
 ```
 #### Run all tests in Docker containers
 ```
-./docker/test.sh
+./docker/test_all.sh
 ```
 
 ## Production
