@@ -47,7 +47,6 @@ jobs:
             npm install gh-pages@3.0.0
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
-            cp -r .circleci dist_gh_pages
             ./node_modules/.bin/gh-pages --dist dist_gh_pages --no-history
 
   build-electron:

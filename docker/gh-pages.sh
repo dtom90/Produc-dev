@@ -19,6 +19,6 @@ docker run -it \
        -p 8080:8080 \
        --name ${CONTAINER_NAME} \
        ${IMAGE_NAME} \
-       yarn run gh_pages:build && \
+       sh -c 'yarn run gh_pages:build && cp -r .circleci dist_gh_pages' && \
 docker cp ${CONTAINER_NAME}:/app/dist_gh_pages ./dist_gh_pages && \
 docker rm -f ${CONTAINER_NAME}
