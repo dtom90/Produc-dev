@@ -15,6 +15,7 @@ if [[ -z "$CMD" ]]; then CMD="yarn run web:dev"; fi
 THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.." || exit
 
+./docker/install.sh && \
 docker run -it --rm \
        -p 8080:8080 \
        -v "$(pwd)":/app \

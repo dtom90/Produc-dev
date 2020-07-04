@@ -39,7 +39,7 @@ jobs:
       - checkout
       - run:
           name: Build GitHub Pages
-          command: ./docker/install.sh && yarn run gh_pages:build
+          command: ./docker/install.sh 'yarn install && yarn run gh_pages:build'
       - run:
           name: Publish to GitHub Pages
           command: |
@@ -82,11 +82,7 @@ workflows:
                 - gh-pages
   build-deploy:
     jobs:
-      - build-web:
-          filters:
-            branches:
-              only:
-                - master
+      - build-web
       - build-electron:
           filters:
             branches:
