@@ -80,7 +80,11 @@ workflows:
                 - gh-pages
   build-deploy:
     jobs:
-      - build-web
+      - build-web:
+          filters:
+            branches:
+              only:
+                - master
       - build-electron:
           filters:
             branches:
