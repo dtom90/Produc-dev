@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Installs node modules to host directory
 

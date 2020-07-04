@@ -3,21 +3,21 @@ version: 2
 jobs:
   test-basic:
     docker:
-      - image: docker:stable
+      - image: cimg/base:stable
     steps:
-      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - checkout
       - run:
           name: Run packages audit, lint, and unit tests
           command: ./docker/test_basic.sh
   test-e2e:
     docker:
-      - image: docker:stable
+      - image: cimg/base:stable
     steps:
-      - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+      - checkout
       - run:
           name: Build & run production Docker image
           command: ./docker/prod.sh -d
@@ -29,27 +29,25 @@ jobs:
           command: docker stop devtrack-prod
 
   build-web:
-    machine:
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true
+    docker:
+      - image: cimg/node:lts
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
       - add_ssh_keys:
           fingerprints:
             - "27:7d:a1:a0:dc:5a:30:f1:47:74:a6:50:af:6e:59:2d"
       - checkout
       - run:
           name: Build GitHub Pages
-          command: ./docker/install.sh 'yarn install && yarn run gh_pages:build'
+          command: ./docker/gh-pages.sh
       - run:
           name: Publish to GitHub Pages
           command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use stable
-            npm install -g gh-pages@2.1.1
+            npm install gh-pages@3.0.0
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
-            gh-pages --dist dist_gh_pages --no-history
+            ./node_modules/.bin/gh-pages --dist dist_gh_pages --no-history
 
   build-electron:
     macos:
