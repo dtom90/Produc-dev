@@ -1,12 +1,14 @@
 import dayjs from 'dayjs'
+import dayOfYear from 'dayjs/plugin/dayOfYear'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import utc from 'dayjs/plugin/utc'
 import humanizeDuration from 'humanize-duration'
 import { mapState } from 'vuex'
 
-dayjs.extend(advancedFormat)
+dayjs.extend(dayOfYear)
 dayjs.extend(weekOfYear)
+dayjs.extend(advancedFormat)
 dayjs.extend(utc)
 
 const baseDurationOptions = {
@@ -70,6 +72,8 @@ const displayChartDurationNewline = mins => humanizeDuration(
 )
 
 export {
+  dayjs,
+  displayDuration,
   displayChartDuration,
   displayChartDurationNewline
 }
