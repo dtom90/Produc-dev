@@ -107,7 +107,7 @@
       <!-- Log -->
       <div :id="manualInput ? 'task-log' : ''">
         <Log
-          v-for="(dayActivity, day) in dailyActivity.dailyActivity"
+          v-for="(dayActivity, day) in dailyActivity"
           :key="day"
           :day="day"
           :log="dayActivity.log"
@@ -170,21 +170,21 @@ export default {
   },
   
   computed: {
-  
+    
     ...mapState([
       'tasks',
       'tags',
       'totalTarget'
     ]),
-  
+    
     isTaskActivity: function () {
       return this.taskId !== null
     },
-  
+    
     descendingLog: function () {
       return this.log.slice().reverse()
     },
-  
+    
     target: {
       get () {
         if (this.isTaskActivity) {
@@ -224,78 +224,11 @@ export default {
         }
       }
       
-      // Initialize chartData
-      const chartData = {
-        labels: [],
-        datasets: [{
-          label: this.element,
-          backgroundColor: '#2020FF',
-          data: []
-        }]
-      }
-      
-      // Add time spent per day and add to chartData
-      let nextDay = null
-      Object.keys(dailyActivity).forEach(day => {
-        const daysDiff = this.dateDiffInDays(day, nextDay)
-        if (nextDay && daysDiff > 1) {
-          const a = this.displayDateHuman(this.daysLater(day, 1))
-          if (daysDiff === 2) {
-            chartData.labels.unshift(a)
-          } else {
-            const b = this.displayDateHuman(this.daysLater(nextDay, -1))
-            chartData.labels.unshift([a + ' -', b])
-          }
-          chartData.datasets[0].data.unshift(0)
-        }
-        dailyActivity[day].timeSpent = this.calculateTimeSpent(dailyActivity[day].log)
-        chartData.labels.unshift(this.displayDateHuman(day))
-        chartData.datasets[0].data.unshift(this.msToMinutes(dailyActivity[day].timeSpent))
-        nextDay = day
-      })
-      
-      return { dailyActivity, chartData }
-    },
-    
-    weeklyActivity: function () {
-      const weeklyActivity = {}
-      let week
-      
-      // Create dailyActivity Object from this.log
-      for (const event of this.log) {
-        week = this.displayWeekISO(event.started)
-        if (week in weeklyActivity) {
-          weeklyActivity[week].log.push(event)
-        } else {
-          weeklyActivity[week] = { log: [event] }
-        }
-      }
-      
-      // Initialize chartData
-      const chartData = {
-        labels: [],
-        datasets: [{
-          label: this.element,
-          backgroundColor: '#2020FF',
-          data: []
-        }]
-      }
-  
-      // Add time spent per week and add to chartData
-      Object.keys(weeklyActivity).slice().sort((a, b) => {
-        const [ay, aw] = a.split('-').map(n => parseInt(n))
-        const [by, bw] = b.split('-')
-        return (ay - by) * 100 + (aw - bw)
-      }).forEach(week => {
-        chartData.labels.push(this.displayWeekHuman(week))
-        chartData.datasets[0].data.push(this.msToMinutes(this.calculateTimeSpent(weeklyActivity[week].log)))
-      })
-  
-      return chartData
+      return dailyActivity
     },
     
     chartData () {
-      const chartData = Object.assign({}, this.dailyChart ? this.dailyActivity.chartData : this.weeklyActivity)
+      const chartData = Object.assign({}, this.dailyChart ? dailyChartData(this) : weeklyChartData(this))
       chartData.labels = chartData.labels.slice(-30)
       chartData.datasets[0].data = chartData.datasets[0].data.slice(-30)
       return chartData
@@ -339,6 +272,78 @@ export default {
     }
   }
 }
+
+function dailyChartData (that) {
+  // Initialize chartData
+  const chartData = {
+    labels: [],
+    datasets: [{
+      label: that.element,
+      backgroundColor: '#2020FF',
+      data: []
+    }]
+  }
+  
+  // Add time spent per day and add to chartData
+  let nextDay = null
+  Object.keys(that.dailyActivity).forEach(day => {
+    const daysDiff = that.dateDiffInDays(day, nextDay)
+    if (nextDay && daysDiff > 1) {
+      const a = that.displayDateHuman(that.daysLater(day, 1))
+      if (daysDiff === 2) {
+        chartData.labels.unshift(a)
+      } else {
+        const b = that.displayDateHuman(that.daysLater(nextDay, -1))
+        chartData.labels.unshift([a + ' -', b])
+      }
+      chartData.datasets[0].data.unshift(0)
+    }
+    that.dailyActivity[day].timeSpent = that.calculateTimeSpent(that.dailyActivity[day].log)
+    chartData.labels.unshift(that.displayDateHuman(day))
+    chartData.datasets[0].data.unshift(that.msToMinutes(that.dailyActivity[day].timeSpent))
+    nextDay = day
+  })
+  
+  return chartData
+}
+
+function weeklyChartData (that) {
+  const weeklyActivity = {}
+  let week
+  
+  // Create weeklyActivity Object from log
+  for (const event of that.log) {
+    week = that.displayWeekISO(event.started)
+    if (week in weeklyActivity) {
+      weeklyActivity[week].log.push(event)
+    } else {
+      weeklyActivity[week] = { log: [event] }
+    }
+  }
+  
+  // Initialize chartData
+  const chartData = {
+    labels: [],
+    datasets: [{
+      label: that.element,
+      backgroundColor: '#2020FF',
+      data: []
+    }]
+  }
+  
+  // Add time spent per week and add to chartData
+  Object.keys(weeklyActivity).slice().sort((a, b) => {
+    const [ay, aw] = a.split('-').map(n => parseInt(n))
+    const [by, bw] = b.split('-')
+    return (ay - by) * 100 + (aw - bw)
+  }).forEach(week => {
+    chartData.labels.push(that.displayWeekHuman(week))
+    chartData.datasets[0].data.push(that.msToMinutes(that.calculateTimeSpent(weeklyActivity[week].log)))
+  })
+  
+  return chartData
+}
+
 </script>
 
 <style scoped>
