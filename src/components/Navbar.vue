@@ -12,7 +12,7 @@
     >
       <span class="navbar-toggler-icon" />
     </button>
-  
+    
     <div id="time-container">
       <span>{{ displayTime }}</span>
     </div>
@@ -29,6 +29,14 @@
             data-target="#allActivityModal"
             href="javascript:void(0);"
           >All Activity</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="modal"
+            data-target="#standupModal"
+            href="javascript:void(0);"
+          >Standup</a>
         </li>
         <li class="nav-item">
           <a
