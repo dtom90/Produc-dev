@@ -22,14 +22,9 @@
       class="collapse navbar-collapse"
     >
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-toggle="modal"
-            data-target="#allActivityModal"
-            href="javascript:void(0);"
-          >All Activity</a>
-        </li>
+        <b-nav-item v-b-modal.allActivityModal>
+          All Activity
+        </b-nav-item>
         <li class="nav-item">
           <a
             class="nav-link"
