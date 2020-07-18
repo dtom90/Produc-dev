@@ -16,6 +16,7 @@ const initialState = {
   secondReminderMinutes: 5,
   restMinutes: 5,
   running: false,
+  notificationsEnabled: true,
   continueOnComplete: false,
   timeFormat24: false
 }

@@ -295,6 +295,10 @@ const mutations = {
     }
   },
   
+  setNotificationsEnabled (state, newValue) {
+    state.notificationsEnabled = newValue
+  },
+  
   setTimeFormat (state, timeFormat24) {
     state.timeFormat24 = timeFormat24
   }

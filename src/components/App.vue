@@ -49,9 +49,6 @@
     
     <!-- Data Modal -->
     <DataModal />
-    
-    <!-- Time Settings Modal -->
-    <TimeSettingsModal />
   </div>
 </template>
 
@@ -60,7 +57,7 @@ import Navbar from './Navbar'
 import TaskList from './TaskList'
 import ActiveTask from './ActiveTask'
 import SelectedTask from './SelectedTask'
-import { ActivityModal, AllActivityModal, StandupModal, TagModal, TimeSettingsModal, DataModal } from './modals'
+import { ActivityModal, AllActivityModal, StandupModal, TagModal, DataModal } from './modals'
 
 import { mapGetters, mapMutations } from 'vuex'
 import $ from 'jquery'
@@ -82,8 +79,7 @@ export default {
     AllActivityModal,
     StandupModal,
     TagModal,
-    DataModal,
-    TimeSettingsModal
+    DataModal
   },
   
   computed: {

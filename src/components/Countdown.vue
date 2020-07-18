@@ -176,7 +176,8 @@ export default {
     ...mapState([
       'activeMinutes',
       'restMinutes',
-      'running'
+      'running',
+      'notificationsEnabled'
     ]),
     
     totalSeconds () {
@@ -249,7 +250,9 @@ export default {
     this.secondsRemaining = this.totalSeconds
     this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
     this.resetRunning()
-    notifications.requestPermission()
+    if (this.notificationsEnabled) {
+      notifications.requestPermission()
+    }
   },
   
   methods: {
@@ -310,7 +313,7 @@ export default {
       this.secondsRemaining = secondsRemaining
       if (this.active) {
         this.stopTask({ id: this.taskId, running: true })
-        if (this.overtime && !this.secondReminderDisplayed && this.secondsRemaining <= this.secondReminderSeconds) {
+        if (this.notificationsEnabled && this.overtime && !this.secondReminderDisplayed && this.secondsRemaining <= this.secondReminderSeconds) {
           const notification = notifications.notify('Finished Working, Take a Break!')
           this.secondReminderDisplayed = true
           // add to notificationList for later closure
@@ -345,7 +348,7 @@ export default {
       }
       
       // Notify interval finish
-      if (notify) {
+      if (this.notificationsEnabled && notify) {
         let notification
         if (this.active) {
           notification = notifications.notify('Finished Working, Take a Break!')

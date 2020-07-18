@@ -62,9 +62,16 @@
             class="dropdown-menu dropdown-menu-right"
             aria-labelledby="optionsDropdown"
           >
-            <b-dropdown-item v-b-modal.time-settings-modal>
-              Time Settings
-            </b-dropdown-item>
+            <b-dropdown-item-button>
+              <b-form-checkbox v-model="checkboxEnableNotifications">
+                Enable Notifications
+              </b-form-checkbox>
+            </b-dropdown-item-button>
+            <b-dropdown-item-button>
+              <b-form-checkbox v-model="timeFormat">
+                Use 24-hour Clock
+              </b-form-checkbox>
+            </b-dropdown-item-button>
             <div class="dropdown-divider" />
             <a
               class="dropdown-item"
@@ -81,6 +88,7 @@
 
 <script>
 import time from '../lib/time'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'Navbar',
@@ -95,8 +103,31 @@ export default {
   },
   
   computed: {
+    ...mapState([
+      'notificationsEnabled',
+      'timeFormat24'
+    ]),
+    
     displayTime () {
       return this.displayTimeHuman(this.currentDate)
+    },
+    
+    checkboxEnableNotifications: {
+      get () {
+        return this.notificationsEnabled
+      },
+      set (newValue) {
+        this.setNotificationsEnabled(newValue)
+      }
+    },
+    
+    timeFormat: {
+      get () {
+        return this.timeFormat24
+      },
+      set (newValue) {
+        this.setTimeFormat(newValue)
+      }
     }
   },
   
@@ -106,6 +137,11 @@ export default {
   },
   
   methods: {
+    ...mapMutations([
+      'setNotificationsEnabled',
+      'setTimeFormat'
+    ]),
+    
     updateTime () {
       this.currentDate = new Date()
     }
