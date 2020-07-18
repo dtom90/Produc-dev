@@ -1,4 +1,10 @@
 const webpackConfig = {
+  devServer: {
+    overlay: {
+      warnings: false,
+      errors: false
+    }
+  },
   publicPath: process.env.BASE_URL ? process.env.BASE_URL : '/',
   configureWebpack: {
     plugins: [],
