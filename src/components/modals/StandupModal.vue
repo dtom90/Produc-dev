@@ -6,11 +6,11 @@
     scrollable
     ok-only
   >
-    <h4>Yesterday's Activity</h4>
+    <h4>{{ displayFullDateHuman(lastDay) }} Activity</h4>
     <br>
     <table class="table">
       <tr
-        v-for="task of yesterdaysActivity"
+        v-for="task of lastDaysActivity"
         :key="task[0]"
       >
         <td>{{ task[0] }}</td>
@@ -34,9 +34,15 @@ export default {
       'allActivity'
     ]),
     
-    yesterdaysActivity () {
-      const yesterday = dayjs().subtract(1, 'day').dayOfYear()
-      const yesterTasks = this.allActivity.filter(log => dayjs(log.started).dayOfYear() === yesterday)
+    lastDay () {
+      return dayjs(this.allActivity[this.allActivity.length - 1].started)
+    },
+    
+    lastDaysActivity () {
+      const yesterTasks = this.allActivity.filter(log =>
+        dayjs(log.started).dayOfYear() === this.lastDay.dayOfYear() &&
+        dayjs(log.started).year() === this.lastDay.year()
+      )
       return Object.entries(yesterTasks.reduce((sum, task) => {
         sum[task.task] = task.task in sum ? sum[task.task] + task.timeSpent : task.timeSpent
         return sum
