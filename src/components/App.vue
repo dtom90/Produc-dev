@@ -163,4 +163,10 @@ h3, h4, h5, h6 {
 .modal-dialog {
   margin-top: 56px !important;
 }
+
+.modal-title {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
 </style>

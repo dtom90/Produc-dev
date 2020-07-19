@@ -26,8 +26,6 @@
         <button
           class="tag-name btn"
           :style="`backgroundColor: ${tags[tag].color}`"
-          :data-toggle="modal? 'modal' : null"
-          :data-target="modal? '#activityModal' : null"
           :title="selectText"
           @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
         >
@@ -241,6 +239,7 @@ export default {
     
     viewActivityModal: function (newTag) {
       this.setModalTag({ newTag })
+      this.$root.$emit('bv::toggle::modal', 'activityModal')
     },
     
     clickOutside: function (event) {

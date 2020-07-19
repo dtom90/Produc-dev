@@ -31,12 +31,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/*noinspection CssUnusedSymbol*/
-.modal-title {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-}
-</style>
