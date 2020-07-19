@@ -1,5 +1,6 @@
 appId: app.devtrack
 productName: DevTrack
+publish: github
 mac:
   category: public.app-category.productivity
   hardenedRuntime: true
