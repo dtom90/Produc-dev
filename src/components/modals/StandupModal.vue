@@ -6,7 +6,7 @@
     scrollable
     ok-only
   >
-    <h4>{{ displayFullDateHuman(lastDay) }} Activity</h4>
+    <h4>{{ lastDayDisplay }}</h4>
     <br>
     <table class="table">
       <tr
@@ -35,10 +35,20 @@ export default {
     ]),
     
     lastDay () {
-      return dayjs(this.allActivity[this.allActivity.length - 1].started)
+      if (this.allActivity.length > 0) {
+        return dayjs(this.allActivity[this.allActivity.length - 1].started)
+      }
+      return null
+    },
+    
+    lastDayDisplay () {
+      return this.lastDay === null ? 'No Activity Yet' : this.displayFullDateHuman(this.lastDay) + ' Activity'
     },
     
     lastDaysActivity () {
+      if (this.lastDay === null) {
+        return []
+      }
       const yesterTasks = this.allActivity.filter(log =>
         dayjs(log.started).dayOfYear() === this.lastDay.dayOfYear() &&
         dayjs(log.started).year() === this.lastDay.year()
