@@ -22,58 +22,34 @@
       class="collapse navbar-collapse"
     >
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-toggle="modal"
-            data-target="#allActivityModal"
-            href="javascript:void(0);"
-          >All Activity</a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-toggle="modal"
-            data-target="#standupModal"
-            href="javascript:void(0);"
-          >Standup</a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-toggle="modal"
-            data-target="#tagModal"
-            href="javascript:void(0);"
-          >Tags</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            id="optionsDropdown"
-            class="nav-link dropdown-toggle"
-            href="javascript:void(0);"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            Options
-          </a>
-          <div
-            class="dropdown-menu dropdown-menu-right"
-            aria-labelledby="optionsDropdown"
-          >
-            <b-dropdown-item v-b-modal.time-settings-modal>
-              Time Settings
-            </b-dropdown-item>
-            <div class="dropdown-divider" />
-            <a
-              class="dropdown-item"
-              data-toggle="modal"
-              data-target="#dataModal"
-              href="javascript:void(0);"
-            >Data</a>
-          </div>
-        </li>
+        <b-nav-item v-b-modal.allActivityModal>
+          All Activity
+        </b-nav-item>
+        <b-nav-item v-b-modal.standupModal>
+          Standup
+        </b-nav-item>
+        <b-nav-item v-b-modal.tagModal>
+          Tags
+        </b-nav-item>
+        <b-nav-item-dropdown
+          text="Options"
+          boundary="viewport"
+        >
+          <b-dropdown-item-button>
+            <b-form-checkbox v-model="checkboxEnableNotifications">
+              Enable Notifications
+            </b-form-checkbox>
+          </b-dropdown-item-button>
+          <b-dropdown-item-button>
+            <b-form-checkbox v-model="timeFormat">
+              Use 24-hour Clock
+            </b-form-checkbox>
+          </b-dropdown-item-button>
+          <div class="dropdown-divider" />
+          <b-dropdown-item-button v-b-modal.dataModal>
+            Data
+          </b-dropdown-item-button>
+        </b-nav-item-dropdown>
       </ul>
     </div>
   </nav>
@@ -81,6 +57,7 @@
 
 <script>
 import time from '../lib/time'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'Navbar',
@@ -95,8 +72,31 @@ export default {
   },
   
   computed: {
+    ...mapState([
+      'notificationsEnabled',
+      'timeFormat24'
+    ]),
+    
     displayTime () {
       return this.displayTimeHuman(this.currentDate)
+    },
+    
+    checkboxEnableNotifications: {
+      get () {
+        return this.notificationsEnabled
+      },
+      set (newValue) {
+        this.setNotificationsEnabled(newValue)
+      }
+    },
+    
+    timeFormat: {
+      get () {
+        return this.timeFormat24
+      },
+      set (newValue) {
+        this.setTimeFormat(newValue)
+      }
     }
   },
   
@@ -106,6 +106,11 @@ export default {
   },
   
   methods: {
+    ...mapMutations([
+      'setNotificationsEnabled',
+      'setTimeFormat'
+    ]),
+    
     updateTime () {
       this.currentDate = new Date()
     }

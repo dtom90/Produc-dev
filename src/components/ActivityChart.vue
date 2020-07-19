@@ -1,9 +1,11 @@
 <script>
-import { Bar } from 'vue-chartjs/src/BaseCharts'
+import { Bar, mixins } from 'vue-chartjs'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { displayChartDuration, displayChartDurationNewline } from '../lib/time'
 import cloneDeep from 'lodash.clonedeep'
+
+const { reactiveProp } = mixins
 
 const defaultChartOptions = {
   legend: {
@@ -74,7 +76,7 @@ const baseTargetLine = Object.freeze({
   }
 })
 
-function chartOptions (target = null) {
+function chartOptions (target = null, scrollRight = false) {
   const chartOptions = cloneDeep(defaultChartOptions)
   if (target !== null) {
     const annotation = cloneDeep(baseTargetLine)
@@ -86,17 +88,18 @@ function chartOptions (target = null) {
       chartOptions.annotation.annotations[0] = annotation
     }
   }
+  if (scrollRight === false) {
+    chartOptions.animation.onComplete = () => {}
+  }
   return chartOptions
 }
 
 export default {
   extends: Bar,
   
+  mixins: [reactiveProp],
+  
   props: {
-    chartData: {
-      type: Object,
-      default: () => ({})
-    },
     plugins: {
       type: Array,
       default: () => [ChartDataLabels, annotationPlugin]
@@ -117,7 +120,7 @@ export default {
   },
   
   mounted () {
-    this.renderChart(this.chartData, chartOptions(this.target))
+    this.renderChart(this.chartData, chartOptions(this.target, true))
   }
 }
 

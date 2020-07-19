@@ -391,12 +391,12 @@ export default {
 }
 
 #incomplete-task-list {
-  max-height: calc(100vh - #{$top-offset} - 94px);
+  max-height: calc(100vh - #{$top-offset} - 96px);
   overflow-y: auto;
 }
 
 .scroll-list {
-  max-height: calc(100vh - #{$top-offset} - 41px);
+  max-height: calc(100vh - #{$top-offset} - 42px);
   overflow-y: auto;
 }
 

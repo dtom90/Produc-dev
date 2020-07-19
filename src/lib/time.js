@@ -21,6 +21,8 @@ const minutesToMs = ms => ms * 60000
 
 const displayDateHuman = day => dayjs(day).format('ddd MMM DD')
 
+const displayFullDateHuman = day => dayjs(day).format('dddd MMM DD')
+
 const displayDuration = ms => humanizeDuration(ms, baseDurationOptions)
 
 export default {
@@ -55,6 +57,8 @@ export default {
     displayDateISO: day => dayjs(day).format('YYYY-MM-DD'),
     
     displayDateHuman,
+    
+    displayFullDateHuman,
     
     displayTimeHuman (time) {
       return dayjs(time).format(`${this.timeFormat24 ? 'H' : 'h'}:mm ${this.timeFormat24 ? '' : 'A'}`)

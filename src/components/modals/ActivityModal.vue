@@ -1,53 +1,21 @@
 <template>
-  <div
+  <b-modal
     v-if="modalTag"
     id="activityModal"
-    class="modal fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="activityModal"
-    aria-hidden="true"
+    size="lg"
+    ok-only
   >
-    <div
-      class="modal-dialog modal-lg"
-      role="document"
-    >
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="modal-title">
-            <h3>Activity for&nbsp;</h3>
-            <TagSettingsButton :tag="modalTag" />
-          </div>
-          
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <ActivityView
-            v-if="modalTag"
-            id="tagActivity"
-            :element="modalTag"
-            :log="tagActivity(modalTag)"
-          />
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-dismiss="modal"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+    <template v-slot:modal-title>
+      <span id="activity-for">Activity for</span>
+      <TagSettingsButton :tag="modalTag" />
+    </template>
+    <ActivityView
+      v-if="modalTag"
+      id="tagActivity"
+      :element="modalTag"
+      :log="tagActivity(modalTag)"
+    />
+  </b-modal>
 </template>
 
 <script>
@@ -76,15 +44,8 @@ export default {
 </script>
 
 <style scoped>
-.modal-title {
-  display: flex;
-  flex: 1;
-  justify-content: center;
+#activity-for {
+  margin-top: 5px;
+  margin-right: 5px;
 }
-
-.modal-title > h3 {
-  margin-top: .2rem;
-  margin-bottom: 0;
-}
-
 </style>

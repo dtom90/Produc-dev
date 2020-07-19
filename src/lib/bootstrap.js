@@ -5,6 +5,8 @@ import 'bootstrap/js/src/dropdown'
 import 'bootstrap/js/src/modal'
 
 import {
+  NavbarPlugin,
+  LinkPlugin,
   ButtonPlugin,
   InputGroupPlugin,
   FormGroupPlugin,
@@ -15,6 +17,8 @@ import {
 } from 'bootstrap-vue'
 import Vue from 'vue'
 
+Vue.use(NavbarPlugin)
+Vue.use(LinkPlugin)
 Vue.use(ButtonPlugin)
 Vue.use(InputGroupPlugin)
 Vue.use(FormGroupPlugin)

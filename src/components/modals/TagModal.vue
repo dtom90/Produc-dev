@@ -1,67 +1,38 @@
 <template>
-  <div
+  <b-modal
     id="tagModal"
-    class="modal fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="tagModalLabel"
-    aria-hidden="true"
+    title="Tags"
+    size="lg"
+    scrollable
+    ok-only
   >
-    <div
-      class="modal-dialog"
-      role="document"
+    <draggable
+      v-model="changeTagOrder"
+      animation="200"
+      @start="startDrag"
+      @end="endDrag"
     >
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5
-            id="exampleModalLabel"
-            class="modal-title"
-          >
-            Tags
-          </h5>
+      <div
+        v-for="tagName in tagOrder"
+        :key="tagName"
+        class="tag btn-toolbar"
+      >
+        <div
+          class="btn-group"
+          role="group"
+        >
           <button
             type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
+            class="btn move-btn"
+            :style="`backgroundColor: ${tags[tagName].color}`"
           >
-            <span aria-hidden="true">&times;</span>
+            <font-awesome-icon icon="bars" />
           </button>
+          <TagSettingsButton :tag="tagName" />
         </div>
-        <div
-          class="modal-body"
-        >
-          <draggable
-            v-model="changeTagOrder"
-            animation="200"
-            @start="startDrag"
-            @end="endDrag"
-          >
-            <div
-              v-for="tagName in tagOrder"
-              :key="tagName"
-              class="tag btn-toolbar"
-            >
-              <div
-                class="btn-group"
-                role="group"
-              >
-                <button
-                  type="button"
-                  class="btn move-btn"
-                  :style="`backgroundColor: ${tags[tagName].color}`"
-                >
-                  <font-awesome-icon icon="bars" />
-                </button>
-                <TagSettingsButton :tag="tagName" />
-              </div>
-            </div>
-          </draggable>
-        </div>
-        <div class="modal-footer" />
       </div>
-    </div>
-  </div>
+    </draggable>
+  </b-modal>
 </template>
 
 <script>
