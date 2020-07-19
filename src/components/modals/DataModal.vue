@@ -1,59 +1,30 @@
 <template>
-  <div
+  <b-modal
     id="dataModal"
-    class="modal fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="dataModalLabel"
-    aria-hidden="true"
+    title="Data"
+    size="lg"
+    scrollable
   >
-    <div
-      class="modal-dialog modal-lg"
-      role="document"
-    >
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5
-            id="exampleModalLabel"
-            class="modal-title"
-          >
-            Data
-          </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div
-          class="modal-body"
-        >
-          <pre>{{ $root.$store.state }}</pre>
-        </div>
-        <div class="modal-footer">
-          <button
-            v-if="isElectron"
-            type="button"
-            class="btn btn-primary"
-            @click="saveState"
-          >
-            Save to File
-          </button>
-          <button
-            v-if="isElectron"
-            type="button"
-            class="btn btn-danger"
-            @click="loadState"
-          >
-            Load from File
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+    <pre>{{ $root.$store.state }}</pre>
+    <template v-slot:modal-footer>
+      <button
+        v-if="isElectron"
+        type="button"
+        class="btn btn-primary"
+        @click="saveState"
+      >
+        Save to File
+      </button>
+      <button
+        v-if="isElectron"
+        type="button"
+        class="btn btn-danger"
+        @click="loadState"
+      >
+        Load from File
+      </button>
+    </template>
+  </b-modal>
 </template>
 
 <script>
@@ -133,9 +104,9 @@ export default {
 }
 </script>
 
-<style scoped>
-.modal-body {
-  height: 70vh;
-  overflow-y: auto;
+<style>
+/*noinspection CssUnusedSymbol*/
+#dataModal .modal-body {
+  max-height: 70vh;
 }
 </style>
