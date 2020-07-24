@@ -35,8 +35,12 @@ export default {
     ]),
     
     lastDay () {
-      if (this.allActivity.length > 0) {
-        return dayjs(this.allActivity[this.allActivity.length - 1].started)
+      const today = dayjs()
+      for (let i = this.allActivity.length - 1; i > 0; i--) {
+        const day = dayjs(this.allActivity[i].started)
+        if (day.dayOfYear() < today.dayOfYear() && day.year() === today.year()) {
+          return day
+        }
       }
       return null
     },
@@ -49,10 +53,10 @@ export default {
       if (this.lastDay === null) {
         return []
       }
-      const yesterTasks = this.allActivity.filter(log =>
-        dayjs(log.started).dayOfYear() === this.lastDay.dayOfYear() &&
-        dayjs(log.started).year() === this.lastDay.year()
-      )
+      const yesterTasks = this.allActivity.filter(log => {
+        return log.started && dayjs(log.started).dayOfYear() === this.lastDay.dayOfYear() &&
+          dayjs(log.started).year() === this.lastDay.year()
+      })
       return Object.entries(yesterTasks.reduce((sum, task) => {
         sum[task.task] = task.task in sum ? sum[task.task] + task.timeSpent : task.timeSpent
         return sum
