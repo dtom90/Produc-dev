@@ -30,13 +30,12 @@ describe('SelectedTask', () => {
     const wrapper = shallowMount(SelectedTask, {
       propsData: { task: task },
       localVue,
-      store,
-      attachToDocument: true
+      store
     })
     
     it('renders an unchecked checkbox', () => {
       
-      const checkbox = wrapper.find(Checkbox)
+      const checkbox = wrapper.findComponent(Checkbox)
       expect(checkbox.props()).toEqual({
         checked: false,
         taskId: task.id
@@ -52,7 +51,7 @@ describe('SelectedTask', () => {
     
     it('renders the task log', () => {
       
-      const renderedActivity = wrapper.find(ActivityView)
+      const renderedActivity = wrapper.findComponent(ActivityView)
       expect(renderedActivity.props()).toEqual({
         log: task.log,
         id: 'taskActivity',
@@ -96,7 +95,7 @@ describe('SelectedTask', () => {
     
     it('renders a TagList', () => {
       
-      const tagList = wrapper.find(TagList)
+      const tagList = wrapper.findComponent(TagList)
       expect(tagList.props()).toEqual(
         expect.objectContaining({
           tagList: task.tags,
@@ -121,7 +120,7 @@ describe('SelectedTask', () => {
     
     it('renders a checked checkbox', () => {
       
-      const checkbox = wrapper.find(Checkbox)
+      const checkbox = wrapper.findComponent(Checkbox)
       expect(checkbox.props()).toEqual({
         checked: true,
         taskId: task.id
@@ -131,7 +130,7 @@ describe('SelectedTask', () => {
     
     it('renders the task activity views', () => {
       
-      const renderedActivity = wrapper.find(ActivityView)
+      const renderedActivity = wrapper.findComponent(ActivityView)
       expect(renderedActivity.props()).toEqual({
         log: task.log,
         id: 'taskActivity',

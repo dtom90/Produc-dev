@@ -75,7 +75,7 @@ describe('TaskList', () => {
         
         expect(wrapper.vm.sortOrder).toBe(sortOrder)
         
-        const renderedTasks = wrapper.findAll(Task)
+        const renderedTasks = wrapper.findAllComponents(Task)
         expect(renderedTasks.length).toBe(tasks.length)
         renderedTasks.wrappers.forEach((renderedTask, i) => {
           const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i
@@ -95,7 +95,7 @@ describe('TaskList', () => {
         })
         expect(wrapper.vm.sortOrder).toBe(sortOrder)
         
-        const renderedTasks = wrapper.findAll(Task)
+        const renderedTasks = wrapper.findAllComponents(Task)
         expect(renderedTasks.length).toBe(tasks.length)
         renderedTasks.wrappers.forEach((renderedTask, i) => {
           const index = sortOrder === 'Oldest' ? i : tasks.length - 1 - i

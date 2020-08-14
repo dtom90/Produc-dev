@@ -42,7 +42,7 @@ describe('Countdown', () => {
   it('renders a play button for the timer', () => {
     
     const playPauseButton = wrapper.find('#play-pause-btn')
-    expect(playPauseButton.isVisible()).toBe(true)
+    expect(playPauseButton.element).toBeVisible()
     
   })
   
@@ -54,7 +54,7 @@ describe('Countdown', () => {
   
   it('renders a field for adjusting the pomodoro timer when the time is clicked', async () => {
     
-    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').element).toBeVisible()
     expect(wrapper.find('#timer-display').text()).toBe('25:00')
     expect(wrapper.find('#edit-wrapper > input[type="number"]').exists()).toBe(false)
     expect(wrapper.find('#timer-save-button').exists()).toBe(false)
@@ -62,9 +62,9 @@ describe('Countdown', () => {
     await wrapper.find('#timer-display').trigger('click')
     
     expect(wrapper.find('#timer-display').exists()).toBe(false)
-    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').element).toBeVisible()
     expect(wrapper.find('#edit-wrapper > input[type="number"]').element.value).toBe('25')
-    expect(wrapper.find('#timer-save-button').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-save-button').element).toBeVisible()
     
   })
   
@@ -72,7 +72,7 @@ describe('Countdown', () => {
   
     await wrapper.find('#timer-display').trigger('click')
     expect(wrapper.find('#timer-display').exists()).toBe(false)
-    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').element).toBeVisible()
     expect(wrapper.find('#edit-wrapper > input[type="number"]').element.value).toBe('25')
     
     expect(wrapper.find('#play-pause-btn').attributes('disabled')).toBe('disabled')
@@ -94,7 +94,7 @@ describe('Countdown', () => {
   it('should adjust the timer when input is adjusted', async () => {
     
     // Check initial state
-    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').element).toBeVisible()
     expect(wrapper.find('#timer-display').text()).toBe('25:00')
     expect(wrapper.vm.activeMinutes).toBe(25)
     expect(wrapper.vm.restMinutes).toBe(5)
@@ -107,7 +107,7 @@ describe('Countdown', () => {
     
     // Change timer 3 seconds
     await wrapper.find('#timer-display').trigger('click')
-    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').element).toBeVisible()
     const timerInput = wrapper.find('#edit-wrapper > input[type="number"]')
     timerInput.setValue('0.05')
     await wrapper.find('#timer-save-button').trigger('click')
@@ -116,7 +116,7 @@ describe('Countdown', () => {
     expect(storeConfig.mutations.updateActiveMinutes).toHaveBeenCalledWith(expectedState, { activeMinutes: 0.05 })
     
     // Check new state
-    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').element).toBeVisible()
     expect(wrapper.find('#timer-display').text()).toBe('0:03')
     expect(wrapper.vm.activeMinutes).toBe(0.05)
     expect(wrapper.vm.restMinutes).toBe(5)
@@ -159,14 +159,14 @@ describe('Countdown', () => {
     
     // Change timer 3 seconds
     await wrapper.find('#timer-display').trigger('click')
-    expect(wrapper.find('#edit-wrapper > input[type="number"]').isVisible()).toBe(true)
+    expect(wrapper.find('#edit-wrapper > input[type="number"]').element).toBeVisible()
     const timerInput = wrapper.find('#edit-wrapper > input[type="number"]')
     timerInput.setValue('0.05')
     await wrapper.find('#timer-save-button').trigger('click')
     const expectedState = cloneDeep(storeConfig.state)
     expectedState.restMinutes = 0.05
     expect(storeConfig.mutations.updateRestMinutes).toHaveBeenCalledWith(expectedState, { restMinutes: 0.05 })
-    expect(wrapper.find('#timer-display').isVisible()).toBe(true)
+    expect(wrapper.find('#timer-display').element).toBeVisible()
     expect(wrapper.find('#timer-display').text()).toBe('0:03')
     expect(wrapper.vm.secondsRemaining).toBe(3)
     expect(storeConfig.mutations.stopTask).not.toHaveBeenCalledWith(expectedState, {

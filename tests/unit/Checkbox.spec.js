@@ -33,16 +33,16 @@ function checkboxWrapper (checked = false) {
 describe('Checkbox', () => {
   
   it('renders an empty checkbox', () => {
-  
+    
     const wrapper = checkboxWrapper()
     const checkboxContainer = wrapper.find('.checkbox-container')
-    expect(checkboxContainer.find('span.check-custom').isVisible()).toBe(true)
+    expect(checkboxContainer.find('span.check-custom').element).toBeVisible()
     expect(checkboxContainer.find('input[type="checkbox"]').element.checked).toBe(false)
     
   })
   
   it('calls completeTask when the checkbox is clicked', () => {
-  
+    
     const wrapper = checkboxWrapper()
     wrapper.find('input[type="checkbox"]').trigger('click')
     expect(mutations.completeTask).toHaveBeenCalledWith({}, { id: taskId })
@@ -50,10 +50,10 @@ describe('Checkbox', () => {
   })
   
   it('renders a checked checkbox', () => {
-  
+    
     const wrapper = checkboxWrapper(true)
     const checkboxContainer = wrapper.find('.checkbox-container')
-    expect(checkboxContainer.find('span.check-custom').isVisible()).toBe(true)
+    expect(checkboxContainer.find('span.check-custom').element).toBeVisible()
     expect(checkboxContainer.find('input[type="checkbox"]').element.checked).toBe(true)
     
   })

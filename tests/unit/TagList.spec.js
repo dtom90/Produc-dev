@@ -74,7 +74,7 @@ describe('TagList', () => {
     
     await addTagButton.trigger('click')
     addTagInput = wrapper.find('#addTagInput')
-    expect(addTagInput.isVisible()).toBe(true)
+    expect(addTagInput.element).toBeVisible()
     expect(addTagInput.attributes('placeholder')).toBe('add new tag')
     
   })

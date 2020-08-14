@@ -19,18 +19,21 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-let wrapper, methods
+let wrapper
+const methods = {
+  deleteIntervalButtonClicked: jest.fn()
+}
 
 const shouldBehaveLikeActivityView = function (type) {
   
   it('should have toggle buttons for weekly and daily activity', () => {
-    const toggleButtons = wrapper.find('.btn-group')
-    expect(toggleButtons.text()).toMatch('Daily Activity')
-    expect(toggleButtons.text()).toMatch('Weekly Activity')
+    const toggleButtons = wrapper.element.getElementsByClassName('btn-group').item(0).getElementsByClassName('btn')
+    expect(toggleButtons.item(0)).toHaveTextContent('Daily Activity')
+    expect(toggleButtons.item(1)).toHaveTextContent('Weekly Activity')
   })
   
   it('renders a chart of the activity in ascending daily order', () => {
-    const activityChart = wrapper.find(ActivityChart)
+    const activityChart = wrapper.findComponent(ActivityChart)
     expect(activityChart.props('chartData')).toEqual({
       labels: [day1, day2].map(day => day.format(EXPECTED_DAY_DISPLAY_FORMAT)),
       datasets: [{
@@ -59,7 +62,7 @@ const shouldBehaveLikeActivityView = function (type) {
     
     expect(wrapper.vm.logVisible).toBe(true)
     
-    const activityLogs = wrapper.findAll(Log)
+    const activityLogs = wrapper.findAllComponents(Log)
     const day2log = [log[3], log[2]]
     if (type === 'task') {
       day2log.unshift({ completed: task.completed })
@@ -90,9 +93,6 @@ describe('ActivityView', () => {
     
     // add this before each
     beforeEach(() => {
-      methods = {
-        deleteIntervalButtonClicked: jest.fn()
-      }
       
       store = new Vuex.Store({
         state: {
@@ -102,7 +102,6 @@ describe('ActivityView', () => {
       
       wrapper = shallowMount(ActivityView, {
         propsData: { log: log, element: 'My Task', taskId: 1 },
-        methods,
         localVue,
         store
       })
@@ -132,15 +131,14 @@ describe('ActivityView', () => {
   })
   
   describe('for tag', () => {
-    methods = {
-      deleteIntervalButtonClicked: jest.fn()
-    }
+    // methods = {
+    //   deleteIntervalButtonClicked: jest.fn()
+    // }
     
     // add this before each
     beforeEach(() => {
       wrapper = shallowMount(ActivityView, {
         propsData: { log: log, element: 'myTag' },
-        methods,
         localVue,
         store: new Vuex.Store({
           state: {
