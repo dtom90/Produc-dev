@@ -27,5 +27,6 @@ module.exports = {
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!(vue-color|vue-chartjs)).+\\.js$'],
   testURL: 'http://localhost/',
   setupFiles: ['<rootDir>/tests/unit/setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/setupAfterEnv.js'],
   preset: '@vue/cli-plugin-unit-jest'
 }

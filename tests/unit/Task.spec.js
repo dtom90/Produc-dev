@@ -40,8 +40,8 @@ describe('Task', () => {
   })
   
   it('renders an unchecked checkbox for the task', () => {
-  
-    const checkbox = wrapper.find(Checkbox)
+    
+    const checkbox = wrapper.findComponent(Checkbox)
     expect(checkbox.props()).toEqual({
       checked: false,
       taskId: task.id
@@ -57,7 +57,7 @@ describe('Task', () => {
       store
     })
     
-    const checkbox = completedWrapper.find(Checkbox)
+    const checkbox = completedWrapper.findComponent(Checkbox)
     expect(checkbox.props()).toEqual({
       checked: true,
       taskId: task.id
@@ -66,7 +66,7 @@ describe('Task', () => {
   })
   
   it('selects the task when clicked', () => {
-  
+    
     wrapper.trigger('click')
     expect(mutations.selectTask).toHaveBeenCalledWith({}, task.id)
     
