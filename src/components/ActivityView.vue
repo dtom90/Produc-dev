@@ -107,7 +107,7 @@
       <!-- Log -->
       <div :id="manualInput ? 'task-log' : ''">
         <Log
-          v-for="(dayActivity, day) in dailyActivity"
+          v-for="([day, dayActivity]) in dailyActivity"
           :key="day"
           :day="day"
           :log="dayActivity.log"
@@ -224,7 +224,9 @@ export default {
         }
       }
       
-      return dailyActivity
+      const dailyActivityArray = Object.entries(dailyActivity)
+      dailyActivityArray.sort(([day1, activity1], [day2, activity2]) => this.stringToMs(day2) - this.stringToMs(day1))
+      return dailyActivityArray
     },
     
     chartData () {
@@ -286,7 +288,7 @@ function dailyChartData (that) {
   
   // Add time spent per day and add to chartData
   let nextDay = null
-  Object.keys(that.dailyActivity).forEach(day => {
+  that.dailyActivity.forEach(([day, dayActivity]) => {
     const daysDiff = that.dateDiffInDays(day, nextDay)
     if (nextDay && daysDiff > 1) {
       const a = that.displayDateHuman(that.daysLater(day, 1))
@@ -298,9 +300,9 @@ function dailyChartData (that) {
       }
       chartData.datasets[0].data.unshift(0)
     }
-    that.dailyActivity[day].timeSpent = that.calculateTimeSpent(that.dailyActivity[day].log)
+    dayActivity.timeSpent = that.calculateTimeSpent(dayActivity.log)
     chartData.labels.unshift(that.displayDateHuman(day))
-    chartData.datasets[0].data.unshift(that.msToMinutes(that.dailyActivity[day].timeSpent))
+    chartData.datasets[0].data.unshift(that.msToMinutes(dayActivity.timeSpent))
     nextDay = day
   })
   
