@@ -121,7 +121,7 @@ const mutations = {
     if (task) {
       const interval = {
         started: null,
-        stopped: Date.now(),
+        stopped: payload.stopped,
         timeSpent: payload.timeSpent
       }
       interval.started = interval.stopped - interval.timeSpent

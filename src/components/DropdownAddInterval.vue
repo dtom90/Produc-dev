@@ -7,6 +7,7 @@
       variant="light"
       toggle-class="text-decoration-none"
       no-caret
+      @show="dropdownWillShow"
       @shown="dropdownShown = true"
       @hide="dropdownWillHide"
       @hidden="dropdownShown = false"
@@ -16,6 +17,7 @@
       </template>
       <b-dropdown-form @submit="addIntervalButtonClicked">
         <b-form-group>
+          Duration:
           <b-input-group append="minutes">
             <b-form-input
               ref="appendMinutesInput"
@@ -26,9 +28,18 @@
           </b-input-group>
         </b-form-group>
         
+        <b-form-group>
+          Ending At:
+          <VueCtkDateTimePicker
+            v-model="endTime"
+            :format="displayDateTimeFormat()"
+            :right="true"
+          />
+        </b-form-group>
+        
         <b-btn
           variant="primary"
-          style="width: 158px"
+          style="width: 258px"
           @click="addIntervalButtonClicked"
         >
           Add Interval
@@ -41,9 +52,15 @@
 <script>
 import { mapMutations } from 'vuex'
 import time from '../lib/time'
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 
 export default {
   name: 'DropdownAddInterval',
+  
+  components: {
+    VueCtkDateTimePicker
+  },
   
   mixins: [time],
   
@@ -59,12 +76,17 @@ export default {
       dropdownShown: false,
       dropdownHide: null,
       intentionalEnter: false,
-      appendMinutes: 25
+      appendMinutes: 25,
+      endTime: this.displayDateTimeHuman()
     }
   },
   
   methods: {
     ...mapMutations(['addInterval']),
+    
+    dropdownWillShow () {
+      this.endTime = this.displayDateTimeHuman()
+    },
     
     dropdownWillHide (event) {
       if (!this.intentionalEnter) {
@@ -93,6 +115,7 @@ export default {
       event.preventDefault()
       this.addInterval({
         id: this.taskId,
+        stopped: this.stringToMs(this.endTime),
         timeSpent: this.minutesToMs(this.appendMinutes)
       })
       this.$refs.dropdown.hide()
