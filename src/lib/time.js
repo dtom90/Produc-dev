@@ -35,6 +35,8 @@ export default {
     
     minutesToMs,
     
+    stringToMs: (str) => dayjs(str).valueOf(),
+    
     // a and b are javascript Date objects
     dateDiffInDays (a, b) {
       const [ua, ub] = [a, b].map(day => dayjs.utc(day))
@@ -42,6 +44,18 @@ export default {
     },
     
     daysLater: (a, diffDays) => dayjs.utc(a).add(diffDays, 'day'),
+    
+    displayTimeFormat () {
+      return `${this.timeFormat24 ? 'H' : 'h'}:mm${this.timeFormat24 ? '' : ' A'}`
+    },
+    
+    displayDateFormat () {
+      return 'YYYY-MM-DD'
+    },
+    
+    displayDateTimeFormat () {
+      return this.displayDateFormat() + ' ' + this.displayTimeFormat()
+    },
     
     displayWeekISO: day => {
       const djs = dayjs(day)
@@ -54,14 +68,20 @@ export default {
       return [displayDateHuman(djs.startOf('week')) + ' -', displayDateHuman(djs.endOf('week'))]
     },
     
-    displayDateISO: day => dayjs(day).format('YYYY-MM-DD'),
+    displayDateISO (day) {
+      return dayjs(day).format(this.displayDateFormat())
+    },
     
     displayDateHuman,
     
     displayFullDateHuman,
     
     displayTimeHuman (time) {
-      return dayjs(time).format(`${this.timeFormat24 ? 'H' : 'h'}:mm ${this.timeFormat24 ? '' : 'A'}`)
+      return dayjs(time).format(this.displayTimeFormat())
+    },
+    
+    displayDateTimeHuman (time) {
+      return dayjs(time).format(this.displayDateTimeFormat())
     },
     
     displayDuration
