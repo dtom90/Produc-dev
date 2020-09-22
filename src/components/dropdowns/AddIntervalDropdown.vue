@@ -51,12 +51,12 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import time from '../lib/time'
+import time from '../../lib/time'
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 
 export default {
-  name: 'DropdownAddInterval',
+  name: 'AddIntervalDropdown',
   
   components: {
     VueCtkDateTimePicker

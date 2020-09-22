@@ -99,7 +99,7 @@
       class="border"
     >
       <!-- Dropdown to add interval manually -->
-      <DropdownAddInterval
+      <AddIntervalDropdown
         v-if="manualInput"
         :task-id="taskId"
       />
@@ -122,7 +122,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
-import DropdownAddInterval from './DropdownAddInterval'
+import AddIntervalDropdown from './dropdowns/AddIntervalDropdown'
 import { mapState, mapMutations } from 'vuex'
 import time from '../lib/time'
 
@@ -131,7 +131,7 @@ export default {
   
   components: {
     ActivityChart,
-    DropdownAddInterval,
+    AddIntervalDropdown,
     Log
   },
   
@@ -225,7 +225,7 @@ export default {
       }
       
       const dailyActivityArray = Object.entries(dailyActivity)
-      dailyActivityArray.sort(([day1, activity1], [day2, activity2]) => this.stringToMs(day2) - this.stringToMs(day1))
+      dailyActivityArray.sort(([day1], [day2]) => this.stringToMs(day2) - this.stringToMs(day1))
       return dailyActivityArray
     },
     
