@@ -194,7 +194,6 @@
       :task-id="task.id"
       :element="task.name"
       :log="task.log"
-      :manual-input="!task.completed"
     />
     <br>
   </div>

@@ -100,12 +100,11 @@
     >
       <!-- Dropdown to add interval manually -->
       <AddIntervalDropdown
-        v-if="manualInput"
         :task-id="taskId"
       />
       
       <!-- Log -->
-      <div :id="manualInput ? 'task-log' : ''">
+      <div id="task-log">
         <Log
           v-for="([day, dayActivity]) in dailyActivity"
           :key="day"
@@ -149,10 +148,6 @@ export default {
     element: {
       type: String,
       default: ''
-    },
-    manualInput: {
-      type: Boolean,
-      default: false
     },
     log: {
       type: Array,
@@ -368,7 +363,6 @@ function weeklyChartData (that) {
   font-weight: 500;
 }
 
-/*noinspection CssUnusedSymbol*/
 #task-log {
   margin-top: -38px;
 }

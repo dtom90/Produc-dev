@@ -4,6 +4,7 @@
   >
     <b-dropdown
       ref="dropdown"
+      right
       variant="light"
       toggle-class="text-decoration-none"
       no-caret
