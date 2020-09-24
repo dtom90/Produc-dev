@@ -56,7 +56,6 @@ describe('SelectedTask', () => {
         log: task.log,
         id: 'taskActivity',
         element: task.name,
-        manualInput: true,
         taskId: task.id
       })
       
@@ -135,7 +134,6 @@ describe('SelectedTask', () => {
         log: task.log,
         id: 'taskActivity',
         element: task.name,
-        manualInput: false,
         taskId: task.id
       })
       

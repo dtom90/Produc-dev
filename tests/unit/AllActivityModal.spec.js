@@ -41,8 +41,7 @@ describe('AllActivityModal', () => {
       element: 'All Activity',
       log,
       id: 'allActivity',
-      taskId: null,
-      manualInput: false
+      taskId: null
     })
     
   })
