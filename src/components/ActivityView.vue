@@ -99,13 +99,12 @@
       class="border"
     >
       <!-- Dropdown to add interval manually -->
-      <DropdownAddInterval
-        v-if="manualInput"
+      <AddIntervalDropdown
         :task-id="taskId"
       />
       
       <!-- Log -->
-      <div :id="manualInput ? 'task-log' : ''">
+      <div id="task-log">
         <Log
           v-for="([day, dayActivity]) in dailyActivity"
           :key="day"
@@ -122,7 +121,7 @@
 <script>
 import Log from './Log'
 import ActivityChart from './ActivityChart'
-import DropdownAddInterval from './DropdownAddInterval'
+import AddIntervalDropdown from './dropdowns/AddIntervalDropdown'
 import { mapState, mapMutations } from 'vuex'
 import time from '../lib/time'
 
@@ -131,7 +130,7 @@ export default {
   
   components: {
     ActivityChart,
-    DropdownAddInterval,
+    AddIntervalDropdown,
     Log
   },
   
@@ -149,10 +148,6 @@ export default {
     element: {
       type: String,
       default: ''
-    },
-    manualInput: {
-      type: Boolean,
-      default: false
     },
     log: {
       type: Array,
@@ -225,7 +220,7 @@ export default {
       }
       
       const dailyActivityArray = Object.entries(dailyActivity)
-      dailyActivityArray.sort(([day1, activity1], [day2, activity2]) => this.stringToMs(day2) - this.stringToMs(day1))
+      dailyActivityArray.sort(([day1], [day2]) => this.stringToMs(day2) - this.stringToMs(day1))
       return dailyActivityArray
     },
     
@@ -368,7 +363,6 @@ function weeklyChartData (that) {
   font-weight: 500;
 }
 
-/*noinspection CssUnusedSymbol*/
 #task-log {
   margin-top: -38px;
 }
