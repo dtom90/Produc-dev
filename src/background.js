@@ -2,6 +2,7 @@
 
 import { app, protocol, BrowserWindow, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import log from 'electron-log'
 import {
   createProtocol,
   installVueDevtools
@@ -9,9 +10,18 @@ import {
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+log.info('App starting...')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+function sendStatusToWindow (text) {
+  log.info(text)
+  win.webContents.send('message', text)
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
@@ -34,7 +44,6 @@ function createWindow () {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
-    autoUpdater.checkForUpdatesAndNotify()
   }
   
   // Open links in the default browser window
@@ -47,6 +56,31 @@ function createWindow () {
     win = null
   })
 }
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...')
+})
+autoUpdater.on('update-available', (info) => {
+  sendStatusToWindow('Update available.')
+  log.info(info)
+})
+autoUpdater.on('update-not-available', (info) => {
+  sendStatusToWindow('Update not available.')
+  log.info(info)
+})
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow('Error in auto-updater. ' + err)
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
+  logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
+  logMessage = logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+  sendStatusToWindow(logMessage)
+})
+autoUpdater.on('update-downloaded', (info) => {
+  sendStatusToWindow('Update downloaded')
+  log.info(info)
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -79,6 +113,12 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+})
+
+// This will immediately download an update, then install when the
+// app quits.
+app.on('ready', function () {
+  autoUpdater.checkForUpdatesAndNotify()
 })
 
 // Exit cleanly on request from parent process in development mode.
