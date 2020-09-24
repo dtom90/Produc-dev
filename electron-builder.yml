@@ -7,5 +7,4 @@ mac:
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
-  target: dmg
 afterSign: scripts/notarize.js

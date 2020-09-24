@@ -44,6 +44,7 @@ function createWindow () {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
+    autoUpdater.checkForUpdatesAndNotify()
   }
   
   // Open links in the default browser window
@@ -113,12 +114,6 @@ app.on('ready', async () => {
     }
   }
   createWindow()
-})
-
-// This will immediately download an update, then install when the
-// app quits.
-app.on('ready', function () {
-  autoUpdater.checkForUpdatesAndNotify()
 })
 
 // Exit cleanly on request from parent process in development mode.
