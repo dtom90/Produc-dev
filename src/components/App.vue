@@ -18,14 +18,16 @@
         id="selected-task-section"
         class="section"
       >
-        <ActiveTask
-          v-if="showActive"
-          :task="activeTask"
-        />
-        <SelectedTask
-          :task="selectedTask"
-          :height-class="heightClass"
-        />
+        <div id="selected-task-container">
+          <ActiveTask
+            v-if="showActive"
+            :task="activeTask"
+          />
+          <SelectedTask
+            :task="selectedTask"
+            :height-class="heightClass"
+          />
+        </div>
       </div>
       
       <div class="section task-list">
@@ -140,6 +142,7 @@ body {
   margin-top: $main-section-margin-top;
   padding-left: $horiz-spacing;
   padding-right: $horiz-spacing;
+  height: calc(100vh - #{$top-offset})
 }
 
 h3, h4, h5, h6 {
@@ -158,6 +161,12 @@ h3, h4, h5, h6 {
 #selected-task-section {
   flex: 2;
   min-width: 0;
+}
+
+#selected-task-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .modal-dialog {

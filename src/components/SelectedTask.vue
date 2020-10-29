@@ -2,7 +2,7 @@
   <div
     v-if="task"
     id="selected-task-container"
-    :class="'border ' + heightClass"
+    class="border"
   >
     <br>
     <!--  Title Section  -->
@@ -350,14 +350,7 @@ export default {
 #selected-task-container {
   overflow-y: auto;
   border-radius: 0.25rem;
-}
-
-.full-height {
-  max-height: calc(100vh - #{$top-offset})
-}
-
-.partial-height {
-  max-height: calc(100vh - #{$top-offset} - 94px)
+  flex: 1;
 }
 
 #checkbox-name-section {
