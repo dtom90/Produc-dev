@@ -4,9 +4,11 @@
     id="selected-task-container"
     class="border"
   >
-    <br>
     <!--  Title Section  -->
-    <div class="d-flex justify-content-between">
+    <div
+      id="title-section"
+      class="d-flex justify-content-between"
+    >
       <div
         id="checkbox-name-container"
         class="d-flex align-items-center justify-content-center flex-grow-1"
@@ -351,6 +353,10 @@ export default {
   overflow-y: auto;
   border-radius: 0.25rem;
   flex: 1;
+}
+
+#title-section {
+  margin-top: 20px;
 }
 
 #checkbox-name-section {

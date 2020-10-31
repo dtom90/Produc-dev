@@ -1,7 +1,7 @@
 <template>
   <button
     id="active-task-container"
-    class="btn btn-light border d-flex justify-content-center align-items-center flex-wrap"
+    class="btn btn-light border d-flex justify-content-center align-items-center"
     @click="selectTask(task.id)"
   >
     <font-awesome-icon
