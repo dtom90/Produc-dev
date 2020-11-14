@@ -4,7 +4,7 @@ const app = express()
 
 const port = 5000
 const baseUrl = process.env.BASE_URL || '/'
-const staticDir = baseUrl === '/DevTrack/' ? 'dist_gh_pages' : 'dist_web'
+const staticDir = 'dist_web'
 
 app.use(baseUrl, express.static(path.join(__dirname, staticDir)))
 

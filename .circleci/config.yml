@@ -47,7 +47,7 @@ jobs:
             npm install gh-pages@3.0.0
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
-            ./node_modules/.bin/gh-pages --dist dist_gh_pages --dotfiles --no-history --message "GitHub Pages"
+            ./node_modules/.bin/gh-pages --dist dist_web --dotfiles --no-history --message "GitHub Pages"
 
   build-electron:
     macos:
