@@ -13,7 +13,13 @@
         v-for="task of lastDaysActivity"
         :key="task[0]"
       >
-        <td>{{ task[0] }}</td>
+        <td class="d-flex align-items-center">
+          <Checkbox
+            :checked="completedTasks.filter(completedTask => completedTask.name === task[0]).length > 0"
+            :disabled="true"
+          />
+          <span>{{ task[0] }}</span>
+        </td>
         <td>{{ displayDuration(task[1]) }}</td>
       </tr>
     </table>
@@ -23,15 +29,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import time, { dayjs } from '../../lib/time'
+import Checkbox from '@/components/Checkbox'
 
 export default {
   name: 'StandupModal',
-  
+  components: { Checkbox },
   mixins: [time],
   
   computed: {
     ...mapGetters([
-      'allActivity'
+      'allActivity',
+      'completedTasks'
     ]),
     
     lastDay () {

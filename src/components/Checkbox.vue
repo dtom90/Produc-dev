@@ -2,9 +2,10 @@
   <div class="checkbox-container">
     <input
       :checked="checked"
-      class="task-checkbox"
+      :class="'task-checkbox' + (disabled ? '' : ' enabled-checkbox')"
       type="checkbox"
       :title="'Mark task ' + (checked ? 'in' : '') + 'complete'"
+      :disabled="disabled"
       @change="completeTask({id: taskId})"
     >
     <span class="check-custom" />
@@ -19,6 +20,10 @@ export default {
   
   props: {
     checked: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     },
@@ -70,7 +75,7 @@ $checkbox-size: 2.2rem;
 }
 
 /* Styles for the hover state of the custom checkbox */
-.task-checkbox:hover ~ .check-custom {
+.enabled-checkbox:hover ~ .check-custom {
   border-color: #b0d5ff;
   box-shadow: 0 0 0 2px rgba(23, 133, 255, 0.25);
 }
