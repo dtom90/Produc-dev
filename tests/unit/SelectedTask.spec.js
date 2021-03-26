@@ -38,6 +38,7 @@ describe('SelectedTask', () => {
       const checkbox = wrapper.findComponent(Checkbox)
       expect(checkbox.props()).toEqual({
         checked: false,
+        disabled: false,
         taskId: task.id
       })
       
@@ -122,6 +123,7 @@ describe('SelectedTask', () => {
       const checkbox = wrapper.findComponent(Checkbox)
       expect(checkbox.props()).toEqual({
         checked: true,
+        disabled: false,
         taskId: task.id
       })
       
