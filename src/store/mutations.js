@@ -82,6 +82,17 @@ const mutations = {
     state.continueOnComplete = newValue
   },
   
+  disableTaskNotifications (state, { taskId, disableNotifications }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (task) {
+      if (disableNotifications) {
+        task.disableNotifications = true
+      } else {
+        delete task.disableNotifications
+      }
+    }
+  },
+  
   startTask (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     if (task) {
