@@ -10,7 +10,7 @@
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --no-fix",
-    "audit:packages": "yarn audit --level moderate || test $? -le 2",
+    "audit:packages": "yarn audit --groups dependencies",
     "electron:build": "vue-cli-service electron:build --dir",
     "electron:dev": "vue-cli-service electron:serve",
     "electron:release": "vue-cli-service electron:build",
@@ -34,8 +34,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.10.1",
-    "chart.js": "^2.9.1",
+    "bootstrap-vue": "^2.21.2",
+    "chart.js": "^2.9.4",
     "chartjs-plugin-annotation": "^0.5.7",
     "chartjs-plugin-datalabels": "^0.6.0",
     "color-manager": "https://github.com/dtom90/color-manager",
@@ -102,15 +102,5 @@
   ],
   "displayName": "DevTrack",
   "homepage": "https://github.com/dtom90/DevTrack",
-  "repository": "https://github.com/dtom90/DevTrack",
-  "resolutions": {
-    "dot-prop": ">=4.2.1",
-    "lodash": ">=4.17.19",
-    "minimist": ">=0.2.1 <1.0.0 || >=1.2.3",
-    "node-forge": ">=0.10.0",
-    "node-notifier": ">=8.0.1",
-    "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
-    "kind-of": ">=6.0.3",
-    "serialize-javascript": ">=3.1.0"
-  }
+  "repository": "https://github.com/dtom90/DevTrack"
 }
