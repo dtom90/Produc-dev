@@ -101,6 +101,23 @@
               <font-awesome-icon icon="trash-alt" />
             </button>
           </div>
+          <div class="dropdown-divider" />
+          <div
+            class="form-check form-check-inline"
+            style="margin-left: 0.75rem"
+          >
+            <input
+              id="disableNotifications"
+              v-model="disableNotifications"
+              type="checkbox"
+              class="form-check-input"
+            >
+            <label
+              class="form-check-label"
+              for="disableNotifications"
+              @click.stop=""
+            >Disable Notifications For This Task</label>
+          </div>
         </div>
       </div>
     </div>
@@ -264,6 +281,15 @@ export default {
       return this.task.completed !== null
     },
     
+    disableNotifications: {
+      get () {
+        return this.task.disableNotifications || false
+      },
+      set (value) {
+        this.disableTaskNotifications({ taskId: this.task.id, disableNotifications: value })
+      }
+    },
+    
     taskTags () {
       return this.task.tags
     },
@@ -279,6 +305,7 @@ export default {
     ...mapMutations([
       'startTask',
       'stopTask',
+      'disableTaskNotifications',
       'addTaskTag',
       'removeTaskTag',
       'deleteTask'
@@ -399,10 +426,6 @@ export default {
 
 .dropdown .btn {
   margin: 0 8px;
-}
-
-.dropdown-menu {
-  min-width: 40px;
 }
 
 $play-btn-size: 75px;

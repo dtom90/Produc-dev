@@ -73,7 +73,7 @@ export default {
   
   computed: {
     ...mapState([
-      'notificationsEnabled',
+      'globalNotificationsEnabled',
       'timeFormat24'
     ]),
     
@@ -83,7 +83,7 @@ export default {
     
     checkboxEnableNotifications: {
       get () {
-        return this.notificationsEnabled
+        return this.globalNotificationsEnabled
       },
       set (newValue) {
         this.setNotificationsEnabled(newValue)

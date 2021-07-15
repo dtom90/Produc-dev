@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import CountdownTimer from '../lib/CountdownTimer'
 import notifications from '../lib/notifications'
 
@@ -176,7 +176,10 @@ export default {
     ...mapState([
       'activeMinutes',
       'restMinutes',
-      'running',
+      'running'
+    ]),
+    
+    ...mapGetters([
       'notificationsEnabled'
     ]),
     
