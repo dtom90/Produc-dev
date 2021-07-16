@@ -8,9 +8,9 @@ const getters = {
   },
   
   notificationsEnabled (state) {
-    const selectedTask = state.tasks.find(t => t.id === state.selectedTaskID)
+    const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
     return state.globalNotificationsEnabled && (
-      selectedTask ? !(selectedTask.disableNotifications === true) : true
+      activeTask ? !(activeTask.disableNotifications === true) : true
     )
   },
   
