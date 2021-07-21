@@ -68,6 +68,17 @@ export default {
       return [displayDateHuman(djs.startOf('week')) + ' -', displayDateHuman(djs.endOf('week'))]
     },
     
+    displayMonthISO: day => {
+      const djs = dayjs(day)
+      return djs.format('YYYY-') + djs.month()
+    },
+    
+    displayMonthHuman: month => {
+      const [y, m] = month.split('-')
+      const djs = dayjs().year(y).month(m)
+      return djs.format('MMM YYYY')
+    },
+    
     displayDateISO (day) {
       return dayjs(day).format(this.displayDateFormat())
     },
