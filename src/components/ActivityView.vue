@@ -8,26 +8,37 @@
         class="btn-group btn-group-toggle"
       >
         <label
-          :class="'btn btn-light' + (dailyChart === true ? ' active' : '')"
+          :class="'btn btn-light' + (chartType === 'Daily' ? ' active' : '')"
           title="Top of List"
         >
           <input
             type="radio"
             value="daily"
-            @click="dailyChart = true"
+            @click="chartType = 'Daily'"
           >
           Daily Activity
         </label>
         <label
-          :class="'btn btn-light' + (dailyChart === false ? ' active' : '')"
+          :class="'btn btn-light' + (chartType === 'Weekly' ? ' active' : '')"
           title="Bottom of List"
         >
           <input
             type="radio"
             value="weekly"
-            @click="dailyChart = false"
+            @click="chartType = 'Weekly'"
           >
           Weekly Activity
+        </label>
+        <label
+          :class="'btn btn-light' + (chartType === 'Monthly' ? ' active' : '')"
+          title="Bottom of List"
+        >
+          <input
+            type="radio"
+            value="weekly"
+            @click="chartType = 'Monthly'"
+          >
+          Monthly Activity
         </label>
       </div>
       <div
@@ -43,7 +54,7 @@
             Set Target
           </button>
           <div class="dropdown-menu">
-            <label>{{ dailyChart ? 'Daily' : 'Weekly' }} Target:</label>
+            <label>{{ chartType }} Target:</label>
             <div
               class="input-group"
             >
@@ -159,7 +170,7 @@ export default {
   
   data: function () {
     return {
-      dailyChart: true,
+      chartType: 'Daily',
       logVisible: false
     }
   },
@@ -185,13 +196,13 @@ export default {
         if (this.isTaskActivity) {
           return null
         }
-        const type = this.dailyChart ? 'dailyTarget' : 'weeklyTarget'
+        const type = this.chartType + 'Target'
         const targetElement = this.element === 'All Activity' ? this.totalTarget : this.tags[this.element]
         return targetElement[type]
       },
       set (value) {
         const targetPayload = this.element === 'All Activity' ? {} : { tag: this.element }
-        targetPayload[this.dailyChart ? 'dailyTarget' : 'weeklyTarget'] = parseFloat(value)
+        targetPayload[this.chartType + 'Target'] = parseFloat(value)
         this.setTarget(targetPayload)
       }
     },
@@ -225,7 +236,7 @@ export default {
     },
     
     chartData () {
-      const chartData = Object.assign({}, this.dailyChart ? dailyChartData(this) : weeklyChartData(this))
+      const chartData = Object.assign({}, this.chartType === 'Daily' ? dailyChartData(this) : (this.chartType === 'Weekly' ? weeklyChartData(this) : monthlyChartData(this)))
       chartData.labels = chartData.labels.slice(-30)
       chartData.datasets[0].data = chartData.datasets[0].data.slice(-30)
       return chartData
@@ -331,13 +342,50 @@ function weeklyChartData (that) {
   // Add time spent per week and add to chartData
   Object.keys(weeklyActivity).slice().sort((a, b) => {
     const [ay, aw] = a.split('-').map(n => parseInt(n))
-    const [by, bw] = b.split('-')
+    const [by, bw] = b.split('-').map(n => parseInt(n))
     return (ay - by) * 100 + (aw - bw)
   }).forEach(week => {
     chartData.labels.push(that.displayWeekHuman(week))
     chartData.datasets[0].data.push(that.msToMinutes(that.calculateTimeSpent(weeklyActivity[week].log)))
   })
   
+  return chartData
+}
+
+function monthlyChartData (that) {
+  const monthlyActivity = {}
+  let month
+
+  // Create monthlyActivity Object from log
+  for (const event of that.log) {
+    month = that.displayMonthISO(event.started)
+    if (month in monthlyActivity) {
+      monthlyActivity[month].log.push(event)
+    } else {
+      monthlyActivity[month] = { log: [event] }
+    }
+  }
+
+  // Initialize chartData
+  const chartData = {
+    labels: [],
+    datasets: [{
+      label: that.element,
+      backgroundColor: '#2020FF',
+      data: []
+    }]
+  }
+
+  // Add time spent per week and add to chartData
+  Object.keys(monthlyActivity).slice().sort((a, b) => {
+    const [ay, am] = a.split('-').map(n => parseInt(n))
+    const [by, bm] = b.split('-').map(n => parseInt(n))
+    return (ay - by) * 100 + (am - bm)
+  }).forEach(month => {
+    chartData.labels.push(that.displayMonthHuman(month))
+    chartData.datasets[0].data.push(that.msToMinutes(that.calculateTimeSpent(monthlyActivity[month].log)))
+  })
+
   return chartData
 }
 
