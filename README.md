@@ -7,7 +7,7 @@ Written in [Vue.js](https://vuejs.org/)
 
 ## Setup
 ```
-yarn install
+yarn
 ```
 #### Install in Docker for development:
 ```
@@ -17,7 +17,7 @@ yarn install
 ## Development
 #### Compile and hot-reload for development:
 ```
-yarn run dev
+yarn run web:dev
 ```
 #### Deploy container for development:
 ```
