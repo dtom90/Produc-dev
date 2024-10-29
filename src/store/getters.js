@@ -17,7 +17,9 @@ const getters = {
   incompleteTasks: state => state.tasks.filter(t => !t.completed),
   
   completedTasks (state) {
-    const completedTasks = state.tasks.filter(t => t.completed).sort((a, b) => a.completed - b.completed)
+    let completedTasks = state.tasks.filter(t => t.completed)
+    completedTasks = state.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
+    completedTasks = completedTasks.sort((a, b) => a.completed - b.completed)
     return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
   },
   

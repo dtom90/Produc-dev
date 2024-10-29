@@ -55,7 +55,7 @@ const doneSortSelect = doneMenuButton.parent().find('select')
 const doneSortOption = doneSortSelect.child('option')
 const doneList = doneSection.find('.list-group')
 const doneTasks = doneList.find('.task')
-const clearAllButton = Selector('button').withText('Clear All')
+const deleteAllButton = Selector('button').withText('Delete All')
 
 const tasksPresent = ClientFunction(list => {
   const tasks = list().querySelectorAll('.task .task-name')
@@ -280,10 +280,10 @@ test('Create, Complete and Delete Tasks', async t => {
     .expect(tasksPresent(todoSection)).eql([task5])
     .expect(tasksPresent(doneList)).ok([task2mod, task4])
     
-    // Click the Clear button to clear all completed tasks
+    // Click the Delete All button to delete all completed tasks
     .setNativeDialogHandler(dialogHandler, { dependencies: { numCompletedTasks: 2, deleteTask: true } })
     .click(doneMenuButton)
-    .click(clearAllButton)
+    .click(deleteAllButton)
     .expect(tasksPresent(todoSection)).eql([task5])
     .expect(tasksPresent(doneList)).eql([])
     
@@ -294,7 +294,7 @@ test('Create, Complete and Delete Tasks', async t => {
     .expect(tasksPresent(doneList)).eql([task5])
     .setNativeDialogHandler(dialogHandler, { dependencies: { numCompletedTasks: 9, deleteTask: false } })
     .click(doneMenuButton)
-    .click(clearAllButton)
+    .click(deleteAllButton)
     .expect(tasksPresent(todoSection)).eql([])
     .expect(tasksPresent(doneList)).eql([])
 })

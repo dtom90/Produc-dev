@@ -102,13 +102,35 @@
             </div>
           </div>
           <div class="dropdown-divider" />
+          <div
+            class="form-check form-check-inline"
+          >
+            <input
+              id="showArchived"
+              v-model="toggleShowArchived"
+              class="form-check-input"
+              type="checkbox"
+            >
+            <label
+              class="form-check-label"
+              for="showArchived"
+            >Show archived</label>
+          </div>
           <button
-            id="clear-btn"
+            id="archive-btn"
+            class="btn btn-danger"
+            title="Archive all list tasks"
+            @click="archiveTasks"
+          >
+            Archive All
+          </button>
+          <button
+            id="delete-btn"
             class="btn btn-danger"
             title="Delete all list tasks"
-            @click="clearTasks"
+            @click="deleteTasks"
           >
-            Clear All
+            Delete All
           </button>
         </div>
       </div>
@@ -216,6 +238,7 @@ export default {
       'selectedTags',
       'addSelectedTags',
       'filterOperator',
+      'showArchived',
       'insertAtTop'
     ]),
     ...mapState([
@@ -247,6 +270,14 @@ export default {
       },
       set (value) {
         this.updateAddSelectedTags(value)
+      }
+    },
+    toggleShowArchived: {
+      get () {
+        return this.showArchived
+      },
+      set (value) {
+        this.updateShowArchived(value)
       }
     },
     incompleteTaskList: {
@@ -283,7 +314,9 @@ export default {
       'addTask',
       'setTopInsert',
       'updateAddSelectedTags',
-      'clearTasks',
+      'updateShowArchived',
+      'archiveTasks',
+      'deleteTasks',
       'updateIncompleteTasks',
       'selectTag',
       'removeTag',
@@ -333,7 +366,10 @@ export default {
   margin-left: 40px;
 }
 
-.title-section > button {
+.title-section > button,
+.dropdown-menu > button,
+.dropdown-menu > .form-check,
+{
   margin-bottom: 0.5rem;
 }
 

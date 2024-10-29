@@ -27,7 +27,8 @@ const getters = {
 
 const mutations = {
   addTask: jest.fn(),
-  clearTasks: jest.fn()
+  archiveTasks: jest.fn(),
+  deleteTasks: jest.fn()
 }
 
 const store = new Vuex.Store({
@@ -119,13 +120,23 @@ describe('TaskList', () => {
       
     })
     
-    it('should clear all tasks when the button is clicked', () => {
+    it('should archive all tasks when the archive button is clicked', () => {
       
       if (title === 'Done') {
-        const clearAllBtn = wrapper.find('button.btn-danger')
-        expect(clearAllBtn.text()).toEqual('Clear All')
-        clearAllBtn.trigger('click')
-        expect(mutations.clearTasks).toHaveBeenCalled()
+        const archiveAllBtn = wrapper.find('button[title="Archive all list tasks"]')
+        archiveAllBtn.trigger('click')
+        expect(mutations.archiveTasks).toHaveBeenCalled()
+      }
+      
+    })
+    
+    it('should delete all tasks when the button is clicked', () => {
+      
+      if (title === 'Done') {
+        const deleteAllBtn = wrapper.find('button[title="Delete all list tasks"]')
+        expect(deleteAllBtn.text()).toEqual('Delete All')
+        deleteAllBtn.trigger('click')
+        expect(mutations.deleteTasks).toHaveBeenCalled()
       }
       
     })
