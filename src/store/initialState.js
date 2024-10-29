@@ -7,6 +7,7 @@ const initialState = {
   selectedTags: [],
   filterOperator: 'and',
   addSelectedTags: true,
+  showArchived: false,
   nextTaskID: 0,
   insertAtTop: false,
   selectedTaskID: null,

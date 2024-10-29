@@ -1,5 +1,5 @@
 # build stage
-FROM node:14.17.3-alpine as build-stage
+FROM node:14.18.3-alpine as build-stage
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh
 WORKDIR /app

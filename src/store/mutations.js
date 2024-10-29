@@ -35,6 +35,10 @@ const mutations = {
     state.addSelectedTags = newValue
   },
   
+  updateShowArchived (state, newValue) {
+    state.showArchived = newValue
+  },
+  
   updateIncompleteTasks (state, { newTaskOrder }) {
     const incompleteTasks = getters.incompleteTasks(state)
     const origLength = incompleteTasks.length
@@ -290,7 +294,20 @@ const mutations = {
     }
   },
   
-  clearTasks (state) {
+  archiveTasks (state) {
+    const completedTasks = state.tasks.filter(t => t.completed && !t.archived)
+    if (completedTasks.length === 0) {
+      alert('No completed tasks to archive')
+      return
+    }
+    if (completedTasks.length === 1 || confirm(`Are you sure that you want to archive all ${completedTasks.length} completed tasks?`)) {
+      completedTasks.forEach(task => {
+        task.archived = true
+      })
+    }
+  },
+  
+  deleteTasks (state) {
     const completedTasks = state.tasks.filter(t => t.completed)
     if (completedTasks.length === 1 || confirm(`Are you sure that you want to delete all ${completedTasks.length} completed tasks?`)) {
       state.tasks = state.tasks.filter(t => !t.completed)
