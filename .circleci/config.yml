@@ -67,7 +67,7 @@ jobs:
           command: |
             set +e
             nvm install v16.20.2
-            nvm use v16.20.2
+            nvm alias default v16.20.2
       - run:
           name: Install dependencies
           command: yarn
