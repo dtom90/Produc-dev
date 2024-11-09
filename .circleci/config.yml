@@ -79,6 +79,9 @@ jobs:
             pip install setuptools
             yarn
       - run:
+          name: Reset xcode selection
+          command: xcode-select -r
+      - run:
           name: Build and release publish Electron app
           command: yarn run electron:release
 
