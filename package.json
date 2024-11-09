@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
+    "@electron/notarize": "^2.5.0",
     "@testing-library/jest-dom": "5.11.9",
     "@vue/cli-plugin-babel": "^4.5.19",
     "@vue/cli-plugin-eslint": "^4.5.19",
@@ -72,7 +73,6 @@
     "dotenv": "^8.2.0",
     "electron": "^33.2.0",
     "electron-builder": "^22.7.0",
-    "electron-notarize": "^1.2.2",
     "eslint": "^7.4.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.31.0",
