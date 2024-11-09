@@ -51,7 +51,7 @@ jobs:
 
   build-electron:
     macos:
-      xcode: 15.4.0
+      xcode: 16.1.0
     steps:
       - run:
           name: Install NVM
