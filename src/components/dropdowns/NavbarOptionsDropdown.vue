@@ -17,9 +17,6 @@
     <b-dropdown-item-button v-b-modal.dataModal>
       Data
     </b-dropdown-item-button>
-    <b-dropdown-item-button v-b-modal.dataModal>
-      Delete Completed
-    </b-dropdown-item-button>
   </b-nav-item-dropdown>
 </template>
 
