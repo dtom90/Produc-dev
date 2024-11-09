@@ -13,6 +13,7 @@ exports.default = async function notarizing (context) {
     appBundleId: 'app.devtrack',
     appPath: `${appOutDir}/${appName}.app`,
     appleId: process.env.APPLEID,
-    appleIdPassword: process.env.APPLEIDPASS
+    appleIdPassword: process.env.APPLEIDPASS,
+    teamId: process.env.TEAM_ID
   })
 }
