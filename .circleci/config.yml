@@ -1,5 +1,8 @@
 version: 2
 
+orbs:
+  macos: circleci/macos@2.5.2
+
 jobs:
   test-basic:
     docker:
