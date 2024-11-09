@@ -53,6 +53,7 @@ jobs:
     macos:
       xcode: 16.1.0
     steps:
+      - macos/install-rosetta
       - run:
           name: Install NVM
           command: |
