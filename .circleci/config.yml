@@ -66,8 +66,8 @@ jobs:
           name: Set Node Version
           command: |
             set +e
-            nvm install
-            nvm use
+            nvm install v16.20.2
+            nvm use v16.20.2
       - run:
           name: Install dependencies
           command: yarn
