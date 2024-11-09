@@ -36,7 +36,7 @@ jobs:
           docker_layer_caching: true
       - add_ssh_keys:
           fingerprints:
-            - "27:7d:a1:a0:dc:5a:30:f1:47:74:a6:50:af:6e:59:2d"
+            - "SHA256:/LoPSzj7Kvn+OYACQ5FIBUzs50HNMACBBIfoiE36EPU"
       - checkout
       - run:
           name: Build GitHub Pages
@@ -70,7 +70,10 @@ jobs:
             nvm alias default v16.20.2
       - run:
           name: Install dependencies
-          command: yarn
+          command: |
+            set +e
+            pip install setuptools
+            yarn
       - run:
           name: Build and release publish Electron app
           command: yarn run electron:release
