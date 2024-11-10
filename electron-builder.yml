@@ -7,4 +7,9 @@ mac:
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
+  target:
+    target: 'default',
+    arch:
+      - x64
+      - arm64
 afterSign: scripts/notarize.js
