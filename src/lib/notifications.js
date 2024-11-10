@@ -1,4 +1,9 @@
 /* eslint-disable no-new */
+
+window.electronAPI.onMessage((data) => {
+  alert(data)
+})
+
 export default {
   
   requestPermission: function () {
