@@ -22,6 +22,11 @@ const webpackConfig = {
         maxSize: 700000
       }
     }
+  },
+  pluginOptions: {
+    electronBuilder: {
+      preload: 'src/preload.js'
+    }
   }
 }
 

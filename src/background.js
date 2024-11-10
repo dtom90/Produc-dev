@@ -1,12 +1,14 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, shell } from 'electron'
+import { app, protocol, BrowserWindow, shell, ipcMain, dialog } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
+import path from 'path'
+import { promises as fs } from 'fs'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -32,7 +34,10 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: false,
+      contextIsolation: true, // Enable context isolation for security
+      enableRemoteModule: false, // Disable remote module for security
+      preload: path.join(__dirname, 'preload.js')
     }
   })
   
@@ -113,8 +118,53 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
+  ipcMain.handle('saveStateDialog', handleSaveStateDialog)
+  ipcMain.handle('loadStateDialog', handleLoadStateDialog)
   createWindow()
 })
+
+async function handleSaveStateDialog (_event, state) {
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    title: 'Save Data',
+    defaultPath: path.join(app.getPath('desktop'), '/DevTrack.json')
+  })
+  if (!canceled) {
+    fs.writeFile(filePath, JSON.stringify(state, null, 2), err => {
+      if (err) {
+        alert(err)
+      }
+    })
+    return filePath
+  }
+}
+
+async function handleLoadStateDialog () {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    title: 'Load Data',
+    defaultPath: path.join(app.getPath('desktop'), '/DevTrack.json'),
+    properties: ['openFile'],
+    filters: [
+      { name: 'JSON', extensions: ['json'] }
+    ]
+  })
+
+  if (!canceled) {
+    try {
+      const data = await fs.readFile(filePaths[0], { encoding: 'utf8' })
+      const jsonObject = JSON.parse(data)
+      return {
+        filePath: filePaths[0],
+        jsonObject
+      }
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        sendStatusToWindow(`The file you selected, ${filePaths[0]}, does not appear to be a JSON file!`)
+      } else {
+        sendStatusToWindow(`Error while reading file: ${err}`)
+      }
+    }
+  }
+}
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

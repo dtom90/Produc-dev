@@ -29,6 +29,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import { initialState } from '../../store'
 
 const userAgent = navigator.userAgent.toLowerCase()
 const isElectron = userAgent.indexOf(' electron/') > -1
@@ -40,64 +41,32 @@ export default {
   }),
   methods: {
     ...mapMutations(['overwriteState']),
-    saveState () {
-      if (this.isElectron) {
-        const { dialog, app } = require('electron').remote
-        const fs = require('fs')
-        const path = require('path')
-        dialog.showSaveDialog({
-          title: 'Save Data',
-          defaultPath: path.join(app.getPath('desktop'), '/DevTrack.json')
-        })
-          .then(save => {
-            if (!save.canceled) {
-              fs.writeFile(save.filePath, JSON.stringify(this.$store.state, null, 2), err => {
-                if (err) {
-                  alert(err)
-                }
-              })
-            }
-          })
+    async saveState () {
+      if (isElectron) {
+        const filePath = await window.electronAPI.saveStateDialog(this.$store.state)
+        if (filePath) {
+          alert(`DevTrack state saved to ${filePath}`)
+        }
+      } else {
+        alert('Cannot save state on web app!')
       }
     },
-    loadState () {
-      if (this.isElectron) {
-        const { dialog, app } = require('electron').remote
-        const fs = require('fs')
-        const path = require('path')
-        dialog.showOpenDialog({
-          title: 'Load Data',
-          defaultPath: path.join(app.getPath('desktop'), '/DevTrack.json'),
-          properties: ['openFile'],
-          filters: [
-            { name: 'JSON', extensions: ['json'] }
-          ]
-        })
-          .then(open => {
-            if (!open.canceled) {
-              fs.readFile(open.filePaths[0], { encoding: 'utf8' }, (err, data) => {
-                if (err) {
-                  alert(err)
-                } else {
-                  try {
-                    const json = JSON.parse(data)
-                    const { initialState } = require('../../store')
-                    if (Object.keys(initialState).every(key => key in json)) {
-                      this.overwriteState(json)
-                    } else {
-                      alert('Error: the JSON format of this file does not match the format expected by the application!')
-                    }
-                  } catch (e) {
-                    if (e instanceof SyntaxError) {
-                      alert(`The file you selected, ${open.filePaths[0]}, does not appear to be a JSON file!`)
-                    } else {
-                      alert(e)
-                    }
-                  }
-                }
-              })
-            }
-          })
+    async loadState () {
+      if (isElectron) {
+        const data = await window.electronAPI.loadStateDialog()
+        if (data) {
+          const { filePath, jsonObject } = data
+          if (Object.keys(initialState).every(key => key in jsonObject)) {
+            this.overwriteState(jsonObject)
+          } else {
+            alert('Error: the   JSON format of this file does not match the format expected by the application!')
+          }
+          if (filePath) {
+            alert(`DevTrack state loaded from ${filePath}`)
+          }
+        }
+      } else {
+        alert('Cannot load state on web app!')
       }
     }
   }

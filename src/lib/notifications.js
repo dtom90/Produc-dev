@@ -1,4 +1,14 @@
 /* eslint-disable no-new */
+
+// Handle Electron notifications
+const userAgent = navigator.userAgent.toLowerCase()
+const isElectron = userAgent.indexOf(' electron/') > -1
+if (isElectron) {
+  window.electronAPI.onMessage((data) => {
+    alert(data)
+  })
+}
+
 export default {
   
   requestPermission: function () {
