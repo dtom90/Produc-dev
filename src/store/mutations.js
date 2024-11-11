@@ -323,8 +323,8 @@ const mutations = {
     }
   },
   
-  setNotificationsEnabled (state, newValue) {
-    state.notificationsEnabled = newValue
+  setGlobalNotificationsEnabled (state, newValue) {
+    state.globalNotificationsEnabled = newValue
   },
   
   setTimeFormat (state, timeFormat24) {
