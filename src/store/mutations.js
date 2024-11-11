@@ -301,9 +301,14 @@ const mutations = {
       return
     }
     if (completedTasks.length === 1 || confirm(`Are you sure that you want to archive all ${completedTasks.length} completed tasks?`)) {
-      completedTasks.forEach(task => {
-        task.archived = true
-      })
+      const updatedTasks = []
+      for (let i = 0; i < state.tasks.length; i++) {
+        if (state.tasks[i].completed && !state.tasks[i].archived) {
+          state.tasks[i].archived = true
+        }
+        updatedTasks.push(state.tasks[i])
+      }
+      state.tasks = updatedTasks
     }
   },
   

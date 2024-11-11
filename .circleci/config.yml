@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   macos: circleci/macos@2.5.2
+  cypress: cypress-io/cypress@3.4.0
 
 jobs:
   test-basic:
@@ -97,6 +98,14 @@ workflows:
                 - master
                 - gh-pages
       - test-e2e:
+          filters:
+            branches:
+              ignore:
+                - master
+                - gh-pages
+      - cypress/run:
+          package-manager: yarn
+          start-command: ./docker/prod.sh -d
           filters:
             branches:
               ignore:
