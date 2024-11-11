@@ -33,7 +33,7 @@ jobs:
 
   build-web:
     docker:
-      - image: cimg/node:14.18.3
+      - image: cimg/node:16.20.2
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
