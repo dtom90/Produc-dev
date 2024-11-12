@@ -16,5 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+beforeEach(() => {
+  cy.visit('http://localhost:8080')
+  cy.contains('DevTrack')
+})

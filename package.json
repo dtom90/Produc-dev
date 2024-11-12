@@ -20,6 +20,7 @@
     "postuninstall": "electron-builder install-app-deps",
     "test": "yarn audit:packages && yarn run lint && yarn run test:unit && yarn run test:gh_pages:build:e2e",
     "cy:open": "cypress open",
+    "cy:run": "cypress run -b chrome",
     "test:e2e:dev": "testcafe chrome tests/e2e --selector-timeout 3000 --app \"yarn run web:dev\"",
     "test:e2e:prod": "PORT=5000 testcafe chrome:headless tests/e2e -c 2 --selector-timeout 3000 --app \"yarn run web:serve\"",
     "test:prod:build:e2e": "yarn run web:build && yarn run test:e2e:prod",

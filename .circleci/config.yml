@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   macos: circleci/macos@2.5.2
-  cypress: cypress-io/cypress@3.4.0
 
 jobs:
   test-basic:
@@ -28,6 +27,22 @@ jobs:
       - run:
           name: Run browser tests against production container
           command: ./docker/test_e2e.sh
+      - run:
+          name: Stop production Docker contianer
+          command: docker stop devtrack-prod
+  test-cypress:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run:
+          name: Build & run production Docker image
+          command: ./docker/prod.sh -d
+      - run:
+          name: Run cypress browser tests against production container
+          command: ./docker/test_cypress.sh
       - run:
           name: Stop production Docker contianer
           command: docker stop devtrack-prod
@@ -103,9 +118,7 @@ workflows:
               ignore:
                 - master
                 - gh-pages
-      - cypress/run:
-          package-manager: yarn
-          start-command: ./docker/prod.sh -d
+      - test-cypress:
           filters:
             branches:
               ignore:

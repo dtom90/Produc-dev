@@ -1,7 +1,5 @@
 describe('create tasks', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8080')
-    cy.contains('DevTrack')
     cy.get('input[placeholder="enter new task"]')
       .click()
       .type('My First Task{enter}')

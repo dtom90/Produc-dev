@@ -4,10 +4,10 @@ THIS_DIR=$(dirname "$0")
 cd "${THIS_DIR}/.." || exit
 
 docker build \
-       -f docker/testcafe.dockerfile \
-       -t devtrack-testcafe \
+       -f docker/cypress.dockerfile \
+       -t devtrack-cypress \
        . && \
 docker run -it --rm \
            --net="host" \
-           devtrack-testcafe \
-           chromium:headless /tests -c 4 --selector-timeout 3000
+           devtrack-cypress \
+           npx cypress run -b chrome
