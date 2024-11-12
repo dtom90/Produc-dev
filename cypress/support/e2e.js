@@ -17,6 +17,7 @@
 import './commands'
 
 beforeEach(() => {
-  cy.visit('http://localhost:8080')
+  const hostname = Cypress.env('DEVTRACK_HOSTNAME') || 'localhost'
+  cy.visit(`http://${hostname}:8080`)
   cy.contains('DevTrack')
 })
