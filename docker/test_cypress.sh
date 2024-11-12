@@ -15,6 +15,7 @@ docker build \
 docker run -it --rm \
            --net=bridge \
            --name ${CONTAINER_NAME} \
+           --add-host=host.docker.internal:host-gateway \
            --env CYPRESS_DEVTRACK_HOSTNAME='host.docker.internal' \
            ${IMAGE_NAME} \
            --browser chrome
