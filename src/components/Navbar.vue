@@ -39,7 +39,6 @@
 
 <script>
 import time from '../lib/time'
-import { mapMutations } from 'vuex'
 import NavbarOptionsDropdown from './dropdowns/NavbarOptionsDropdown'
 
 export default {
@@ -70,11 +69,6 @@ export default {
   },
   
   methods: {
-    ...mapMutations([
-      'setNotificationsEnabled',
-      'setTimeFormat'
-    ]),
-    
     updateTime () {
       this.currentDate = new Date()
     }

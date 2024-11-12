@@ -30,10 +30,26 @@ jobs:
       - run:
           name: Stop production Docker contianer
           command: docker stop devtrack-prod
+  test-cypress:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run:
+          name: Build & run production Docker image
+          command: ./docker/prod.sh -d
+      - run:
+          name: Run cypress browser tests against production container
+          command: ./docker/test_cypress.sh
+      - run:
+          name: Stop production Docker contianer
+          command: docker stop devtrack-prod
 
   build-web:
     docker:
-      - image: cimg/node:14.18.3
+      - image: cimg/node:16.20.2
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -97,6 +113,12 @@ workflows:
                 - master
                 - gh-pages
       - test-e2e:
+          filters:
+            branches:
+              ignore:
+                - master
+                - gh-pages
+      - test-cypress:
           filters:
             branches:
               ignore:

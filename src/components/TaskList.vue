@@ -193,6 +193,7 @@
     <!-- Completed Tasks -->
     <ul
       v-if="isCompletedList"
+      id="completed-task-list"
       class="list-group scroll-list"
     >
       <Task

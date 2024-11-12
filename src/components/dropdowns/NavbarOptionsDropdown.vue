@@ -4,12 +4,12 @@
     boundary="viewport"
   >
     <b-dropdown-item-button>
-      <b-form-checkbox v-model="checkboxEnableNotifications">
+      <b-form-checkbox v-model="globalNotificationsEnabledValue">
         Enable Notifications
       </b-form-checkbox>
     </b-dropdown-item-button>
     <b-dropdown-item-button>
-      <b-form-checkbox v-model="timeFormat">
+      <b-form-checkbox v-model="timeFormatValue">
         Use 24-hour Clock
       </b-form-checkbox>
     </b-dropdown-item-button>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'NavbarOptionsDropdown',
@@ -32,16 +32,16 @@ export default {
       'timeFormat24'
     ]),
     
-    checkboxEnableNotifications: {
+    globalNotificationsEnabledValue: {
       get () {
         return this.globalNotificationsEnabled
       },
       set (newValue) {
-        this.setNotificationsEnabled(newValue)
+        this.setGlobalNotificationsEnabled(newValue)
       }
     },
     
-    timeFormat: {
+    timeFormatValue: {
       get () {
         return this.timeFormat24
       },
@@ -49,6 +49,13 @@ export default {
         this.setTimeFormat(newValue)
       }
     }
+  },
+  
+  methods: {
+    ...mapMutations([
+      'setGlobalNotificationsEnabled',
+      'setTimeFormat'
+    ])
   }
 }
 </script>
