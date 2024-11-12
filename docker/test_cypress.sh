@@ -10,4 +10,4 @@ docker build \
 docker run -it --rm \
            --net="host" \
            devtrack-cypress \
-           npx cypress run -b chrome
+           npx cypress run --browser chrome
