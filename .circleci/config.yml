@@ -31,11 +31,9 @@ jobs:
           name: Stop production Docker contianer
           command: docker stop devtrack-prod
   test-cypress:
-    docker:
-      - image: cimg/base:stable
+    machine:
+      image: ubuntu-2404:2024.08.1
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - run:
           name: Build & run production Docker image
@@ -112,12 +110,12 @@ workflows:
               ignore:
                 - master
                 - gh-pages
-#      - test-e2e:
-#          filters:
-#            branches:
-#              ignore:
-#                - master
-#                - gh-pages
+      - test-e2e:
+          filters:
+            branches:
+              ignore:
+                - master
+                - gh-pages
       - test-cypress:
           filters:
             branches:
