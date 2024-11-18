@@ -150,7 +150,7 @@
         v-if="!editingNotes"
         type="button"
         class="btn btn-light"
-        title="Edit task name"
+        title="Edit notes"
         @click="editNotes"
       >
         <font-awesome-icon icon="pencil-alt" />
@@ -172,6 +172,7 @@
             v-if="editingNotes"
             type="button"
             class="btn btn-primary"
+            title="Save notes"
             @click="editingNotes = false"
           >
             <font-awesome-icon icon="save" />
@@ -224,7 +225,7 @@ import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
 import { mapMutations, mapState } from 'vuex'
-import marked from 'marked'
+import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 
 marked.setOptions({

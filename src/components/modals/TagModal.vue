@@ -68,10 +68,10 @@ export default {
       'updateTagOrder'
     ]),
     startDrag () {
-      this.$el.closest('html').classList.add('draggable-cursor')
+      document.body.classList.add('draggable-cursor')
     },
     endDrag () {
-      this.$el.closest('html').classList.remove('draggable-cursor')
+      document.body.classList.remove('draggable-cursor')
     }
   }
 }

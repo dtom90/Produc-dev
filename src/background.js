@@ -64,14 +64,14 @@ function createWindow () {
 }
 
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...')
+  log.info('Checking for update...')
 })
 autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('Update available.')
   log.info(info)
 })
 autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.')
+  log.info('Update not available.')
   log.info(info)
 })
 autoUpdater.on('error', (err) => {
@@ -81,7 +81,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   let logMessage = 'Download speed: ' + progressObj.bytesPerSecond
   logMessage = logMessage + ' - Downloaded ' + progressObj.percent + '%'
   logMessage = logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
-  sendStatusToWindow(logMessage)
+  log.info(logMessage)
 })
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded')

@@ -138,6 +138,7 @@ export default {
 
 .dropdown-menu {
   min-width: 40px;
+  position: absolute;
 }
 
 #delete-tag-btn {
