@@ -1,6 +1,6 @@
 {
   "name": "devtrack",
-  "version": "0.12.3",
+  "version": "0.12.4",
   "private": true,
   "description": "An app for productive developers",
   "author": {
@@ -57,11 +57,12 @@
     "vue-chartjs": "^3.5.0",
     "vue-color": "^2.7.0",
     "vue-ctk-date-time-picker": "^2.5.0",
-    "vuedraggable": "^2.23.0",
+    "vuedraggable": "^2.24.3",
     "vuex": "^3.1.1",
     "vuex-persist": "^2.0.1"
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.2.5",
     "@babel/core": "^7.26.0",
     "@electron/notarize": "^2.5.0",
     "@testing-library/jest-dom": "5.11.9",

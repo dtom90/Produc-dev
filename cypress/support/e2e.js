@@ -16,6 +16,16 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
+Cypress.on('window:before:load', (win) => {
+  cy.stub(win.console, 'error').callsFake((...args) => {
+    // Log the error to the Cypress console
+    console.error(...args)
+    
+    // Fail the test if a console error occurs
+    throw new Error(`Console error: ${args.join(' ')}`);
+  })
+})
+
 beforeEach(() => {
   const hostname = Cypress.env('DEVTRACK_HOSTNAME') || 'localhost'
   cy.visit(`http://${hostname}:8080`)
