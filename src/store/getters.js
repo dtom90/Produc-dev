@@ -14,7 +14,11 @@ const getters = {
     )
   },
   
-  incompleteTasks: state => state.tasks.filter(t => !t.completed),
+  incompleteTasks: (state) => {
+    let incompleteTasks = state.tasks.filter(t => !t.completed)
+    incompleteTasks = state.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
+    return incompleteTasks
+  },
   
   completedTasks (state) {
     let completedTasks = state.tasks.filter(t => t.completed)

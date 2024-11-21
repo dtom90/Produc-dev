@@ -1,3 +1,20 @@
 $navbar-height: 56px;
 $main-section-margin-top: 15px;
 $top-offset: calc(#{$navbar-height} + #{$main-section-margin-top});
+
+$archive-color: #654321;
+
+.archive-badge {
+  background-color: $archive-color;
+}
+
+.btn-archive-color {
+  background-color: $archive-color; /* Your custom color */
+  color: white; /* Adjust text color */
+  border-color: $archive-color; /* Optional: Match border */
+}
+.btn-archive-color:hover {
+  background-color: #7B5544; /* Darker shade for hover */
+  color: white; /* Adjust text color */
+  border-color: #7B5544;
+}

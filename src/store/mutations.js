@@ -86,17 +86,6 @@ const mutations = {
     state.continueOnComplete = newValue
   },
   
-  disableTaskNotifications (state, { taskId, disableNotifications }) {
-    const task = state.tasks.find(t => t.id === taskId)
-    if (task) {
-      if (disableNotifications) {
-        task.disableNotifications = true
-      } else {
-        delete task.disableNotifications
-      }
-    }
-  },
-  
   startTask (state, payload) {
     const task = state.tasks.find(t => t.id === payload.id)
     if (task) {
@@ -277,6 +266,14 @@ const mutations = {
       Vue.delete(state.tags, payload.tag)
       state.tagOrder = state.tagOrder.filter(tag => tag !== payload.tag)
       $('#activityModal').modal('hide')
+    }
+  },
+  
+  archiveTask (state, { id }) {
+    const index = state.tasks.findIndex(t => t.id === id)
+    if (index !== -1) {
+      const archived = state.tasks[index].archived
+      state.tasks.splice(index, 1, { ...state.tasks[index], archived: !archived })
     }
   },
   
