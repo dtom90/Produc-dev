@@ -9,6 +9,12 @@
         :checked="checked"
         :task-id="task.id"
       />
+      <b-badge
+        v-if="task.archived"
+        class="archive-badge"
+      >
+        Archvied
+      </b-badge>&nbsp;
       <span class="task-name">{{ task.name }}</span>
       <font-awesome-icon
         v-if="displayCountdownIndicator"
@@ -84,7 +90,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../styles/_variables.scss";
+
 .task-name {
   flex: 1;
   text-align: left;

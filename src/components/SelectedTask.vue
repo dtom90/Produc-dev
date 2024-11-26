@@ -36,6 +36,12 @@
           @mousemove="possibleEdit = false"
           @mouseup="editName"
         >
+          <b-badge
+            v-if="task.archived"
+            class="archive-badge"
+          >
+            Archived
+          </b-badge>&nbsp;
           <span>{{ task.name }}</span>
         </div>
         <div
@@ -82,41 +88,42 @@
         <div class="dropdown-menu dropdown-menu-right">
           <div
             id="selected-task-menu"
-            class="d-flex"
           >
-            <button
-              type="button"
-              class="btn btn-warning"
+            <b-button
+              block
+              variant="warning"
               title="Edit task name"
               @click="editName"
             >
               <font-awesome-icon icon="pencil-alt" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
+              <span>&nbsp;&nbsp;Edit</span>
+            </b-button>
+            
+            <b-button
+              block
+              variant="archive-color"
+              title="Archive task"
+              @click="archiveTask({id: task.id})"
+            >
+              <span v-if="!task.archived">
+                <font-awesome-icon icon="download" />
+                <span>&nbsp;&nbsp;Archive</span>
+              </span>
+              <span v-if="task.archived">
+                <font-awesome-icon icon="upload" />
+                <span>&nbsp;&nbsp;Unarchive</span>
+              </span>
+            </b-button>
+            
+            <b-button
+              block
+              variant="danger"
               title="Delete task"
               @click="deleteTask({id: task.id})"
             >
               <font-awesome-icon icon="trash-alt" />
-            </button>
-          </div>
-          <div class="dropdown-divider" />
-          <div
-            class="form-check form-check-inline"
-            style="margin-left: 0.75rem"
-          >
-            <input
-              id="disableNotifications"
-              v-model="disableNotifications"
-              type="checkbox"
-              class="form-check-input"
-            >
-            <label
-              class="form-check-label"
-              for="disableNotifications"
-              @click.stop=""
-            >Disable Notifications For This Task</label>
+              <span>&nbsp;&nbsp;Delete</span>
+            </b-button>
           </div>
         </div>
       </div>
@@ -282,15 +289,6 @@ export default {
       return this.task.completed !== null
     },
     
-    disableNotifications: {
-      get () {
-        return this.task.disableNotifications || false
-      },
-      set (value) {
-        this.disableTaskNotifications({ taskId: this.task.id, disableNotifications: value })
-      }
-    },
-    
     taskTags () {
       return this.task.tags
     },
@@ -309,6 +307,7 @@ export default {
       'disableTaskNotifications',
       'addTaskTag',
       'removeTaskTag',
+      'archiveTask',
       'deleteTask'
     ]),
     
@@ -425,8 +424,16 @@ export default {
   overflow-wrap: break-word;
 }
 
-.dropdown .btn {
-  margin: 0 8px;
+.dropdown > button {
+  margin: 8px;
+}
+
+.dropdown-menu {
+  padding: 8px;
+
+  .selected-task-menu {
+    margin: 8px;
+  }
 }
 
 $play-btn-size: 75px;

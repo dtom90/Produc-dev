@@ -7,6 +7,7 @@ import 'bootstrap/js/src/modal'
 import {
   NavbarPlugin,
   LinkPlugin,
+  BadgePlugin,
   ButtonPlugin,
   InputGroupPlugin,
   FormGroupPlugin,
@@ -19,6 +20,7 @@ import Vue from 'vue'
 
 Vue.use(NavbarPlugin)
 Vue.use(LinkPlugin)
+Vue.use(BadgePlugin)
 Vue.use(ButtonPlugin)
 Vue.use(InputGroupPlugin)
 Vue.use(FormGroupPlugin)

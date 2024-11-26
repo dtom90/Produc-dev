@@ -6,10 +6,12 @@ import ActivityView from '@/components/ActivityView.vue'
 import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import { newTask, taskWithActivity } from '../fixtures'
 import Vuex from 'vuex'
+import { ButtonPlugin } from 'bootstrap-vue'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
+localVue.use(ButtonPlugin)
 
 const state = { tags: {} }
 
@@ -76,7 +78,7 @@ describe('SelectedTask', () => {
     
     it('renders a delete button for removing the task', () => {
       
-      const deleteButton = wrapper.find('button.btn-danger')
+      const deleteButton = wrapper.find('[title="Delete task"]')
       deleteButton.trigger('click')
       expect(mutations.deleteTask).toHaveBeenCalledWith(state, { id: task.id })
       
