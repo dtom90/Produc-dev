@@ -5,6 +5,7 @@ import 'bootstrap/js/src/dropdown'
 import 'bootstrap/js/src/modal'
 
 import {
+  NavPlugin,
   NavbarPlugin,
   LinkPlugin,
   BadgePlugin,
@@ -14,10 +15,12 @@ import {
   FormInputPlugin,
   FormCheckboxPlugin,
   DropdownPlugin,
-  ModalPlugin
+  ModalPlugin,
+  SidebarPlugin
 } from 'bootstrap-vue'
 import Vue from 'vue'
 
+Vue.use(NavPlugin)
 Vue.use(NavbarPlugin)
 Vue.use(LinkPlugin)
 Vue.use(BadgePlugin)
@@ -28,3 +31,4 @@ Vue.use(FormInputPlugin)
 Vue.use(FormCheckboxPlugin)
 Vue.use(DropdownPlugin)
 Vue.use(ModalPlugin)
+Vue.use(SidebarPlugin)

@@ -1,27 +1,19 @@
 <template>
-  <nav class="navbar navbar-expand-sm navbar-light bg-light">
-    <span class="navbar-brand mb-0 h1">DevTrack</span>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarMenuOptions"
-      aria-controls="navbarMenuOptions"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon" />
-    </button>
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <b-navbar-brand href="#">
+      DevTrack
+    </b-navbar-brand>
+    <b-navbar-toggle target="nav-collapse" />
     
     <div id="time-container">
       <span>{{ displayTime }}</span>
     </div>
     
-    <div
-      id="navbarMenuOptions"
-      class="collapse navbar-collapse"
+    <b-collapse
+      id="nav-collapse"
+      is-nav
     >
-      <ul class="navbar-nav ml-auto">
+      <b-navbar-nav class="ml-auto d-flex justify-content-end">
         <b-nav-item v-b-modal.allActivityModal>
           All Activity
         </b-nav-item>
@@ -32,8 +24,8 @@
           Tags
         </b-nav-item>
         <NavbarOptionsDropdown />
-      </ul>
-    </div>
+      </b-navbar-nav>
+    </b-collapse>
   </nav>
 </template>
 

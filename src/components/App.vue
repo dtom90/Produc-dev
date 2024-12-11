@@ -8,16 +8,41 @@
       id="main-section"
       class="d-flex"
     >
-      <div class="section task-list">
-        <TaskList
-          title="To Do"
-        />
+      <div
+        v-if="!isNarrowScreen"
+        class="section task-list"
+      >
+        <TaskList title="To Do" />
       </div>
-      
+      <b-sidebar
+        v-if="isNarrowScreen"
+        id="sidebar-todo"
+        shadow
+      >
+        <TaskList title="To Do" />
+      </b-sidebar>
+
       <div
         id="selected-task-section"
         class="section"
       >
+        <div
+          id="sidebar-buttons"
+          class="d-flex justify-content-between"
+        >
+          <b-button
+            v-b-toggle.sidebar-todo
+            variant="primary"
+          >
+            To Do
+          </b-button>
+          <b-button
+            v-b-toggle.sidebar-done
+            variant="primary"
+          >
+            Done
+          </b-button>
+        </div>
         <div id="selected-task-container">
           <ActiveTask
             v-if="showActive"
@@ -30,11 +55,19 @@
         </div>
       </div>
       
-      <div class="section task-list">
-        <TaskList
-          title="Done"
-        />
+      <div
+        v-if="!isNarrowScreen"
+        class="section task-list"
+      >
+        <TaskList title="Done" />
       </div>
+      <b-sidebar
+        v-if="isNarrowScreen"
+        id="sidebar-done"
+        shadow
+      >
+        <TaskList title="Done" />
+      </b-sidebar>
     </div>
     
     <!-- Activity Modal -->
@@ -84,6 +117,12 @@ export default {
     DataModal
   },
   
+  data () {
+    return {
+      windowWidth: window.innerWidth
+    }
+  },
+  
   computed: {
     
     ...mapGetters([
@@ -99,16 +138,28 @@ export default {
     
     heightClass () {
       return (this.showActive ? 'partial' : 'full') + '-height'
+    },
+    
+    isNarrowScreen () {
+      return this.windowWidth < 768
     }
   },
   mounted () {
     this.ensureTagOrder()
+    window.addEventListener('resize', this.handleResize)
+  },
+  
+  beforeDestroy () {
+    window.removeEventListener('resize', this.handleResize)
   },
   
   methods: {
     ...mapMutations([
       'ensureTagOrder'
-    ])
+    ]),
+    handleResize () {
+      this.windowWidth = window.innerWidth
+    }
   }
 }
 </script>
@@ -154,10 +205,6 @@ h3, h4, h5, h6 {
   margin-right: $horiz-spacing;
 }
 
-.task-list {
-  flex: 1;
-}
-
 #selected-task-section {
   flex: 2;
   min-width: 0;
@@ -177,5 +224,27 @@ h3, h4, h5, h6 {
   display: flex;
   flex: 1;
   justify-content: center;
+}
+
+@media (min-width: 768px) {
+  #sidebar-buttons {
+    display: none !important;
+  }
+  
+  .task-list {
+    flex: 1;
+  }
+}
+
+.b-sidebar {
+  display: block;
+  position: absolute;
+  top: $top-offset;
+  height: 100%;
+  z-index: 100 !important;
+}
+
+#sidebar-done {
+  right: 0;
 }
 </style>
