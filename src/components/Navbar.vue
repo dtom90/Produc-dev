@@ -3,29 +3,31 @@
     <b-navbar-brand href="#">
       DevTrack
     </b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse" />
     
     <div id="time-container">
       <span>{{ displayTime }}</span>
     </div>
     
-    <b-collapse
-      id="nav-collapse"
-      is-nav
-    >
-      <b-navbar-nav class="ml-auto d-flex justify-content-end">
-        <b-nav-item v-b-modal.allActivityModal>
-          All Activity
-        </b-nav-item>
-        <b-nav-item v-b-modal.standupModal>
-          Standup
-        </b-nav-item>
-        <b-nav-item v-b-modal.tagModal>
-          Tags
-        </b-nav-item>
-        <NavbarOptionsDropdown />
-      </b-navbar-nav>
-    </b-collapse>
+    <div class="navbar-menu d-flex flex-column align-items-end">
+      <b-navbar-toggle target="nav-collapse" />
+      <b-collapse
+        id="nav-collapse"
+        is-nav
+      >
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item v-b-modal.allActivityModal>
+            All Activity
+          </b-nav-item>
+          <b-nav-item v-b-modal.standupModal>
+            Standup
+          </b-nav-item>
+          <b-nav-item v-b-modal.tagModal>
+            Tags
+          </b-nav-item>
+          <NavbarOptionsDropdown />
+        </b-navbar-nav>
+      </b-collapse>
+    </div>
   </nav>
 </template>
 
@@ -69,22 +71,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .navbar-brand {
   z-index: 2;
 }
 
-.navbar-toggler {
-  z-index: 2;
+.navbar-brand, .navbar-menu, .navbar-toggler {
+  flex: 1;
 }
 
-#time-container {
-  position: fixed;
-  z-index: 1;
-  width: 100%;
-  margin: 0 -16px;
-  display: flex;
-  justify-content: center;
-  font-size: larger;
+.navbar-toggler {
+  z-index: 2;
 }
 
 #navbarMenuOptions {
