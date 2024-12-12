@@ -5,26 +5,14 @@ import $ from 'jquery'
 
 const mutations = {
   
-  addTask (state, payload) {
-    const taskName = payload.name.trim()
-    if (taskName) {
-      const newTask = {
-        id: state.nextTaskID,
-        name: taskName,
-        tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
-        notes: '',
-        created: Date.now(),
-        log: [],
-        completed: null
-      }
-      if (state.insertAtTop) {
-        state.tasks.unshift(newTask)
-      } else {
-        state.tasks.push(newTask)
-      }
-      state.nextTaskID += 1
-      state.selectedTaskID = newTask.id
+  addTask (state, { task }) {
+    task.logs = []
+    if (state.insertAtTop) {
+      state.tasks.unshift(task)
+    } else {
+      state.tasks.push(task)
     }
+    state.selectedTaskID = task.id
   },
   
   setTopInsert (state, payload) {

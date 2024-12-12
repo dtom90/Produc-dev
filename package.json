@@ -43,6 +43,7 @@
     "color-manager": "https://github.com/dtom90/color-manager",
     "core-js": "^3.38.1",
     "dayjs": "^1.11.13",
+    "dexie": "^4.0.10",
     "dompurify": "^3.1.3",
     "electron-log": "^4.2.4",
     "electron-updater": "^4.6.5",

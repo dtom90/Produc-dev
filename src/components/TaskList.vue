@@ -144,7 +144,7 @@
       <!-- New Task Input Field -->
       <input
         id="new-task"
-        v-model="newTask"
+        v-model="newTaskName"
         type="text"
         class="form-control"
         placeholder="enter new task"
@@ -208,7 +208,7 @@
 <script>
 import Task from './Task.vue'
 import TagList from './TagList.vue'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -229,7 +229,7 @@ export default {
   },
   
   data: () => ({
-    newTask: '',
+    newTaskName: '',
     sortingOptions: ['Recent', 'Oldest'],
     sortOrder: 'Recent'
   }),
@@ -314,8 +314,11 @@ export default {
   
   methods: {
     
+    ...mapActions([
+      'addTask'
+    ]),
+
     ...mapMutations([
-      'addTask',
       'setTopInsert',
       'updateAddSelectedTags',
       'updateShowArchived',
@@ -326,9 +329,12 @@ export default {
       'removeTag',
       'selectTask'
     ]),
+    
     addNewTask () {
-      this.addTask({ name: this.newTask })
-      this.newTask = ''
+      this.addTask({
+        name: this.newTaskName
+      })
+      this.newTaskName = ''
     },
     selectTagFilter (tag, e) {
       e.stopPropagation()
