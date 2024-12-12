@@ -1,38 +1,32 @@
 <template>
-  <nav class="navbar navbar-expand-sm navbar-light bg-light">
-    <span class="navbar-brand mb-0 h1">DevTrack</span>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarMenuOptions"
-      aria-controls="navbarMenuOptions"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon" />
-    </button>
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <b-navbar-brand href="#">
+      DevTrack
+    </b-navbar-brand>
     
     <div id="time-container">
       <span>{{ displayTime }}</span>
     </div>
     
-    <div
-      id="navbarMenuOptions"
-      class="collapse navbar-collapse"
-    >
-      <ul class="navbar-nav ml-auto">
-        <b-nav-item v-b-modal.allActivityModal>
-          All Activity
-        </b-nav-item>
-        <b-nav-item v-b-modal.standupModal>
-          Standup
-        </b-nav-item>
-        <b-nav-item v-b-modal.tagModal>
-          Tags
-        </b-nav-item>
-        <NavbarOptionsDropdown />
-      </ul>
+    <div class="navbar-menu d-flex flex-column align-items-end">
+      <b-navbar-toggle target="nav-collapse" />
+      <b-collapse
+        id="nav-collapse"
+        is-nav
+      >
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item v-b-modal.allActivityModal>
+            All Activity
+          </b-nav-item>
+          <b-nav-item v-b-modal.standupModal>
+            Standup
+          </b-nav-item>
+          <b-nav-item v-b-modal.tagModal>
+            Tags
+          </b-nav-item>
+          <NavbarOptionsDropdown />
+        </b-navbar-nav>
+      </b-collapse>
     </div>
   </nav>
 </template>
@@ -77,22 +71,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .navbar-brand {
   z-index: 2;
 }
 
-.navbar-toggler {
-  z-index: 2;
+.navbar-brand, .navbar-menu, .navbar-toggler {
+  flex: 1;
 }
 
-#time-container {
-  position: fixed;
-  z-index: 1;
-  width: 100%;
-  margin: 0 -16px;
-  display: flex;
-  justify-content: center;
-  font-size: larger;
+.navbar-toggler {
+  z-index: 2;
 }
 
 #navbarMenuOptions {
