@@ -20,7 +20,7 @@ const state = {
 }
 
 const getters = {
-  incompleteTasks: jest.fn(),
+  incompleteTasks: () => tasks,
   completedTasks: () => tasks,
   unselectedTags: () => []
 }
