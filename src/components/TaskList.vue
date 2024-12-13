@@ -283,29 +283,32 @@ export default {
     },
     incompleteTaskList: {
       get () {
-        return this.selectedTags.length > 0
+        let incompleteTasks = this.selectedTags.length > 0
           ? (
             this.filterOperator === 'and'
               ? this.incompleteTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
               : this.incompleteTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
           )
           : this.incompleteTasks
+        incompleteTasks = this.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
+        return incompleteTasks
       },
       set (newTaskOrder) {
         this.updateIncompleteTasks({ newTaskOrder })
       }
     },
     completedTaskList () {
-      const filteredTasks = this.selectedTags.length > 0
+      let completedTasks = this.selectedTags.length > 0
         ? (
           this.filterOperator === 'and'
             ? this.completedTasks.filter(task => this.selectedTags.every(tag => task.tags.includes(tag)))
             : this.completedTasks.filter(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         )
         : this.completedTasks
-      return filteredTasks && this.sortOrder !== 'Oldest'
-        ? filteredTasks.slice().reverse()
-        : filteredTasks
+      completedTasks = this.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
+      return completedTasks && this.sortOrder !== 'Oldest'
+        ? completedTasks.slice().reverse()
+        : completedTasks
     }
   },
   
