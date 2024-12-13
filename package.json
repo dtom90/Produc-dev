@@ -88,7 +88,9 @@
     "eslint-plugin-testcafe": "^0.2.1",
     "eslint-plugin-vue": "^6.2.2",
     "express": "^4.21.1",
+    "fake-indexeddb": "^6.0.0",
     "moment": "^2.29.4",
+    "sinon": "^19.0.2",
     "testcafe": "^1.7.1",
     "vue-cli-plugin-electron-builder": "^2.0.0-rc.5",
     "vue-template-compiler": "^2.7.16",
@@ -96,7 +98,8 @@
     "webpack-bundle-analyzer": "^3.6.0"
   },
   "resolutions": {
-    "moment": ">=2.29.4"
+    "moment": ">=2.29.4",
+    "@achrinza/node-ipc": ">=9.2.9"
   },
   "postcss": {
     "plugins": {

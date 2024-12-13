@@ -6,7 +6,7 @@ import $ from 'jquery'
 const mutations = {
   
   addTask (state, { task }) {
-    task.logs = []
+    task.log = []
     if (state.insertAtTop) {
       state.tasks.unshift(task)
     } else {

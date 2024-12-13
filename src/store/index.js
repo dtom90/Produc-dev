@@ -15,5 +15,6 @@ export default new Vuex.Store(Object.assign({
 
 const initialState = config.state
 const mutations = config.mutations
+const actions = config.actions
 
-export { initialState, mutations }
+export { initialState, mutations, actions }

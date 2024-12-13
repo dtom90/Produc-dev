@@ -25,8 +25,11 @@ const getters = {
   unselectedTags: () => []
 }
 
+const actions = {
+  addTask: jest.fn()
+}
+
 const mutations = {
-  addTask: jest.fn(),
   archiveTasks: jest.fn(),
   deleteTasks: jest.fn()
 }
@@ -34,6 +37,7 @@ const mutations = {
 const store = new Vuex.Store({
   state,
   getters,
+  actions,
   mutations
 })
 
@@ -114,7 +118,7 @@ describe('TaskList', () => {
         taskInput.setValue('new task 4')
         await taskInput.trigger('keyup.enter')
         
-        expect(mutations.addTask).toHaveBeenCalledWith(state, { name: 'new task 4' })
+        expect(actions.addTask).toHaveBeenCalledWith(expect.anything(), { name: 'new task 4' })
         expect(taskInput.element.value).toBe('')
       }
       

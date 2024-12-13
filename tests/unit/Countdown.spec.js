@@ -10,8 +10,8 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
+jest.spyOn(storeConfig.actions, 'startTask')
 jest.spyOn(storeConfig.mutations, 'resetRunning')
-jest.spyOn(storeConfig.mutations, 'startTask')
 jest.spyOn(storeConfig.mutations, 'stopTask')
 jest.spyOn(storeConfig.mutations, 'updateActiveMinutes')
 jest.spyOn(storeConfig.mutations, 'updateRestMinutes')
@@ -77,14 +77,14 @@ describe('Countdown', () => {
     
     expect(wrapper.find('#play-pause-btn').attributes('disabled')).toBe('disabled')
     await wrapper.find('#play-pause-btn').trigger('click')
-    expect(storeConfig.mutations.startTask).not.toHaveBeenCalled()
+    expect(storeConfig.actions.startTask).not.toHaveBeenCalled()
     
   })
   
   it('should call startTask when the play button is clicked, but pausing should not call stopTask', async () => {
   
     await wrapper.find('#play-pause-btn').trigger('click')
-    expect(storeConfig.mutations.startTask).toHaveBeenCalledWith(storeConfig.state, { id: expectedTaskId })
+    expect(storeConfig.actions.startTask).toHaveBeenCalledWith(expect.anything(), { taskId: expectedTaskId })
   
     await wrapper.find('#play-pause-btn').trigger('click')
     expect(storeConfig.mutations.stopTask).toHaveBeenCalledWith(storeConfig.state, { id: expectedTaskId })
