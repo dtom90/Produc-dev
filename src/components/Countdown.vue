@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import CountdownTimer from '../lib/CountdownTimer'
 import notifications from '../lib/notifications'
 
@@ -260,8 +260,11 @@ export default {
   
   methods: {
     
+    ...mapActions([
+      'startTask'
+    ]),
+
     ...mapMutations([
-      'startTask',
       'stopTask',
       'unpauseTask',
       'updateActiveMinutes',
@@ -302,10 +305,10 @@ export default {
         this.endInterval()
       } else {
         if (!this.activeIntervalStarted && this.active) { // Mark when we started the timer if we're starting an active interval
-          this.startTask({ id: this.taskId })
+          this.startTask({ taskId: this.taskId })
           this.activeIntervalStarted = true
         } else if (this.active) {
-          this.startTask({ id: this.taskId })
+          this.startTask({ taskId: this.taskId })
         }
         this.timer.start()
         this.countingDown = true

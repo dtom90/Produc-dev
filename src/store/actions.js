@@ -21,6 +21,20 @@ const actions = {
       await dexieDb.settings.put({ key: 'nextTaskID', value: nextTaskID + 1 })
       commit('addTask', { task: newTask })
     }
+  },
+  
+  async startTask ({ state, commit }, { taskId }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (task) {
+      const log = {
+        taskId,
+        started: Date.now(),
+        stopped: null,
+        timeSpent: null
+      }
+      await dexieDb.logs.add(log)
+      commit('startTask', log)
+    }
   }
 }
 

@@ -74,14 +74,11 @@ const mutations = {
     state.continueOnComplete = newValue
   },
   
-  startTask (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
+  startTask (state, log) {
+    const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
-      task.log.push({
-        started: Date.now(),
-        stopped: null,
-        timeSpent: null
-      })
+      console.log(log)
+      task.log.push(log)
       state.activeTaskID = task.id
       state.running = true
     }

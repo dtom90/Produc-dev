@@ -231,7 +231,7 @@ import Checkbox from './Checkbox'
 import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 
@@ -301,8 +301,11 @@ export default {
   
   methods: {
     
+    ...mapActions([
+      'startTask'
+    ]),
+    
     ...mapMutations([
-      'startTask',
       'stopTask',
       'disableTaskNotifications',
       'addTaskTag',
@@ -367,7 +370,7 @@ export default {
     
     continueTimerHere () {
       this.stopTask({ id: this.activeTaskID })
-      this.startTask({ id: this.task.id })
+      this.startTask({ taskId: this.task.id })
     }
   }
 }
