@@ -334,31 +334,9 @@ export default {
       }
     },
     
-    tagInputChange () {
-      this.tagOptions = this.availableTags(this.task.id, this.newTag)
-    },
-    
-    addTag (newTag) {
-      this.addTaskTag({ id: this.task.id, tag: newTag })
-      this.newTag = ''
-      this.tagInputChange()
-      this.tagOptions = []
-      this.$refs.addTagInput.focus()
-    },
-    
     removeTag (tag) {
       this.removeTaskTag({ id: this.task.id, tag })
       this.$forceUpdate()
-    },
-    
-    clickOutside (event) {
-      if (!(event.relatedTarget && event.relatedTarget.classList &&
-        event.relatedTarget.classList.contains('tag-option'))) {
-        this.tagOptions = []
-        if (!(event.relatedTarget && event.relatedTarget.id === 'addTagButton')) {
-          this.showTagInput = false
-        }
-      }
     },
     
     editNotes () {

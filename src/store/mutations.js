@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import ColorManager from 'color-manager'
 import $ from 'jquery'
 
 const mutations = {
@@ -123,21 +122,14 @@ const mutations = {
     state.running = false
   },
   
-  addTaskTag (state, payload) {
-    const newTag = payload.tag.trim()
-    if (newTag) {
-      const task = state.tasks.find(t => t.id === payload.id)
-      if (task) {
-        if (!(newTag in state.tags)) {
-          const colors = Object.values(state.tags).map(tag => tag.color)
-          const colorManager = new ColorManager(colors)
-          Vue.set(state.tags, newTag, { color: colorManager.getRandomColor() })
-          state.tagOrder.push(newTag)
-        }
-        if (!(task.tags.includes(newTag))) {
-          task.tags.push(newTag)
-        }
-      }
+  addTaskTag (state, { taskId, name, color }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (name && color) {
+      Vue.set(state.tags, name, { color })
+      state.tagOrder.push(name)
+    }
+    if (!(task.tags.includes(name))) {
+      task.tags.push(name)
     }
   },
   

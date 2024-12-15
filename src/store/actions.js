@@ -1,5 +1,6 @@
 import dexieDb from './dexieDb'
 import { nanoid } from 'nanoid'
+import ColorManager from 'color-manager'
 
 const actions = {
   async addTask ({ state, commit }, { name }) {
@@ -25,7 +26,6 @@ const actions = {
   },
   
   async startTask ({ state, commit, dispatch }, { taskId }) {
-    console.log('startTask')
     // stop any running task
     await dispatch('stopTask')
 
@@ -56,7 +56,6 @@ const actions = {
   },
   
   async stopTask ({ commit }) {
-    console.log('stopTask')
     const runningLog = await dexieDb.logs.filter(log => log.stopped === null).first()
     if (runningLog) {
       runningLog.stopped = Date.now()
@@ -79,7 +78,6 @@ const actions = {
   },
   
   async addInterval ({ state, commit }, { taskId, stopped, timeSpent }) {
-    console.log('addInterval')
     const task = state.tasks.find(t => t.id === taskId)
     if (task) {
       const log = {
@@ -91,6 +89,25 @@ const actions = {
       }
       await dexieDb.logs.add(log)
       commit('startTask', { log })
+    }
+  },
+  
+  async addTaskTag ({ state, commit }, { taskId, tagName }) {
+    const newTagName = tagName.trim()
+    if (newTagName) {
+      const task = state.tasks.find(t => t.id === taskId)
+      if (task) {
+        if (!(newTagName in state.tags)) {
+          const colors = Object.values(state.tags).map(tag => tag.color)
+          const colorManager = new ColorManager(colors)
+          const tag = {
+            name: newTagName,
+            color: colorManager.getRandomColor()
+          }
+          await dexieDb.tags.add(tag)
+          commit('addTaskTag', { taskId, ...tag })
+        }
+      }
     }
   }
   

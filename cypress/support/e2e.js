@@ -24,6 +24,7 @@ Cypress.on('window:before:load', (win) => {
     // Fail the test if a console error occurs
     throw new Error(`Console error: ${args.join(' ')}`);
   })
+  win.indexedDB.deleteDatabase('DevTrackDatabase')
 })
 
 beforeEach(() => {

@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'TagList',
@@ -209,8 +209,11 @@ export default {
   
   methods: {
     
+    ...mapActions([
+      'addTaskTag'
+    ]),
+    
     ...mapMutations([
-      'addTaskTag',
       'removeTaskTag',
       'setFilterOperator',
       'setModalTag'
@@ -229,8 +232,8 @@ export default {
       this.tagOptions = this.availableTags(this.taskId, this.newTag)
     },
     
-    addTag: function (newTag) {
-      this.addTaskTag({ id: this.taskId, tag: newTag })
+    addTag: function (tagName) {
+      this.addTaskTag({ taskId: this.taskId, tagName })
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = this.availableTags(this.taskId, this.newTag)
