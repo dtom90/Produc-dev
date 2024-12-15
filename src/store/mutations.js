@@ -122,14 +122,14 @@ const mutations = {
     state.running = false
   },
   
-  addTaskTag (state, { taskId, name, color }) {
+  addTaskTag (state, { taskId, tagName, color }) {
     const task = state.tasks.find(t => t.id === taskId)
-    if (name && color) {
-      Vue.set(state.tags, name, { color })
-      state.tagOrder.push(name)
+    if (tagName && color) {
+      Vue.set(state.tags, tagName, { color })
+      state.tagOrder.push(tagName)
     }
-    if (!(task.tags.includes(name))) {
-      task.tags.push(name)
+    if (!(task.tags.includes(tagName))) {
+      task.tags.push(tagName)
     }
   },
   
@@ -149,8 +149,8 @@ const mutations = {
   
   upgradeTagColor (state) {
     if (typeof Object.values(state.tags)[0] === 'string') {
-      Object.keys(state.tags).map(tag => {
-        state.tags[tag] = { color: state.tags[tag] }
+      Object.keys(state.tags).map(tagName => {
+        state.tags[tagName] = { color: state.tags[tagName] }
       })
     }
   },

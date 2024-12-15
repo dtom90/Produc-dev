@@ -28,7 +28,7 @@
           >
             <font-awesome-icon icon="bars" />
           </button>
-          <TagSettingsButton :tag="tagName" />
+          <TagSettingsButton :tag-name="tagName" />
         </div>
       </div>
     </draggable>

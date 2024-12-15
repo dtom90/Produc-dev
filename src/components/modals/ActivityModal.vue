@@ -7,7 +7,7 @@
   >
     <template v-slot:modal-title>
       <span id="activity-for">Activity for</span>
-      <TagSettingsButton :tag="modalTag" />
+      <TagSettingsButton :tag-name="modalTag" />
     </template>
     <ActivityView
       v-if="modalTag"

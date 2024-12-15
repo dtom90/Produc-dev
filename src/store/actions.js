@@ -101,10 +101,15 @@ const actions = {
           const colors = Object.values(state.tags).map(tag => tag.color)
           const colorManager = new ColorManager(colors)
           const tag = {
-            name: newTagName,
+            tagName: newTagName,
             color: colorManager.getRandomColor()
           }
           await dexieDb.tags.add(tag)
+          await dexieDb.taskTagMap.add({
+            id: 'taskTag-' + nanoid(),
+            taskId,
+            tagName
+          })
           commit('addTaskTag', { taskId, ...tag })
         }
       }

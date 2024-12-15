@@ -19,25 +19,25 @@
     
     <div id="elements">
       <div
-        v-for="tag in sortedTagList"
-        :key="tag"
+        v-for="tagName in sortedTagList"
+        :key="tagName"
         class="tag btn-group"
       >
         <button
           class="tag-name btn"
-          :style="`backgroundColor: ${tags[tag].color}`"
+          :style="`backgroundColor: ${tags[tagName].color}`"
           :title="selectText"
-          @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
+          @click="modal ? viewActivityModal(tagName) : selectTag(tagName, $event)"
         >
-          {{ tag }}
+          {{ tagName }}
         </button>
         <button
           v-if="removeTag"
           class="tag-close btn"
-          :style="`backgroundColor: ${tags[tag].color}`"
+          :style="`backgroundColor: ${tags[tagName].color}`"
           :title="removeText"
           aria-label="Close"
-          @click.stop="removeTag(tag)"
+          @click.stop="removeTag(tagName)"
         >
           <span aria-hidden="true">&times;</span>
         </button>
@@ -101,13 +101,13 @@
               class="btn-group-vertical"
             >
               <button
-                v-for="tag in tagOptions"
-                :key="tag"
+                v-for="tagName in tagOptions"
+                :key="tagName"
                 class="tag-option btn btn-light"
-                :style="`backgroundColor: ${tags[tag].color}`"
-                @click="addTag(tag)"
+                :style="`backgroundColor: ${tags[tagName].color}`"
+                @click="addTag(tagName)"
               >
-                {{ tag }}
+                {{ tagName }}
               </button>
             </div>
           </div>

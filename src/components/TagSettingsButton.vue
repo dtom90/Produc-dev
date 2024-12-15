@@ -11,7 +11,7 @@
       data-toggle="dropdown"
       data-boundary="viewport"
     >
-      {{ tag }}
+      {{ tagName }}
     </button>
     <div
       id="tag-menu"
@@ -43,7 +43,7 @@
         type="button"
         class="btn btn-danger"
         title="Delete tag"
-        @click="deleteTag({tag})"
+        @click="deleteTag({tag:tagName})"
       >
         <font-awesome-icon icon="trash-alt" />
       </button>
@@ -63,7 +63,7 @@ export default {
   },
   
   props: {
-    tag: {
+    tagName: {
       type: String,
       default: null
     }
@@ -79,7 +79,7 @@ export default {
       'tags'
     ]),
     tagProperties: function () {
-      return this.tags[this.tag]
+      return this.tags[this.tagName]
     }
   },
   
@@ -91,7 +91,7 @@ export default {
   },
   
   mounted () {
-    this.newTagName = this.tag
+    this.newTagName = this.tagName
     this.color = this.tagProperties.color
   },
   
@@ -104,7 +104,7 @@ export default {
     
     updateTagName () {
       this.renameTag({
-        oldName: this.tag,
+        oldName: this.tagName,
         newName: this.newTagName
       })
       this.$refs.tagSettingsButton.classList.remove('show')
@@ -114,7 +114,7 @@ export default {
   
     updateTagColor (value) {
       this.setTagColor({
-        tag: this.tag,
+        tag: this.tagName,
         color: value.hex
       })
       this.color = this.tagProperties.color

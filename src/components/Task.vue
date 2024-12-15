@@ -24,10 +24,10 @@
     </div>
     <div class="d-flex flex-wrap">
       <span
-        v-for="tag in taskTags"
-        :key="tag"
+        v-for="tagName in taskTags"
+        :key="tagName"
         class="badge mini-tag"
-        :style="{backgroundColor: tags[tag].color}"
+        :style="{backgroundColor: tags[tagName].color}"
       >&nbsp;&nbsp;</span>
     </div>
   </li>
