@@ -89,7 +89,7 @@
         <p
           v-if="!editing"
           id="timer-display"
-          @click="editing = !countingDown"
+          @click="editing = !running"
         >
           {{ displayTime }}
         </p>
@@ -134,7 +134,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing"
-          :title="(overtime ? 'Stop' : (countingDown ? 'Pause' : 'Start')) + ' timer'"
+          :title="(overtime ? 'Stop' : (running ? 'Pause' : 'Start')) + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -164,7 +164,6 @@ export default {
     editing: false,
     active: true,
     activeIntervalStarted: false,
-    countingDown: false,
     overtime: false,
     secondReminderDisplayed: false,
     secondsRemaining: 0,
@@ -188,7 +187,7 @@ export default {
     },
     
     playPauseIcon () {
-      return this.overtime ? 'stop' : this.countingDown ? 'pause' : 'play'
+      return this.overtime ? 'stop' : this.running ? 'pause' : 'play'
     },
     
     cssProps () {
@@ -240,14 +239,15 @@ export default {
     
   },
   
-  watch: {
-    running (newValue, oldValue) {
-      if (this.countingDown && oldValue === true && newValue === false) {
-        this.toggleTimer()
-        this.setTaskInactive()
-      }
-    }
-  },
+  // watch: {
+  //   running (newValue, oldValue) {
+  //     console.log('runing', oldValue, newValue)
+  //     if (this.countingDown && oldValue === true && newValue === false) {
+  //       this.toggleTimer()
+  //       this.setTaskInactive()
+  //     }
+  //   }
+  // },
   
   mounted: function () {
     this.secondsRemaining = this.totalSeconds
@@ -261,17 +261,19 @@ export default {
   methods: {
     
     ...mapActions([
-      'startTask'
+      'startTask',
+      'updateTaskTimer',
+      'stopTask'
     ]),
 
     ...mapMutations([
-      'stopTask',
       'unpauseTask',
       'updateActiveMinutes',
       'updateSecondReminderEnabled',
       'updateSecondReminderMinutes',
       'updateRestMinutes',
       'updateContinueOnComplete',
+      'setRunning',
       'resetRunning',
       'setTaskInactive'
     ]),
@@ -300,7 +302,7 @@ export default {
       if (this.overtime) {
         this.overtime = false
         this.resetTimer()
-      } else if (this.countingDown) {
+      } else if (this.running) {
         this.timer.pause()
         this.endInterval()
       } else {
@@ -309,16 +311,17 @@ export default {
           this.activeIntervalStarted = true
         } else if (this.active) {
           this.startTask({ taskId: this.taskId })
+        } else { // this is a rest interval, simply toggle running
+          this.setRunning(!this.running)
         }
         this.timer.start()
-        this.countingDown = true
       }
     },
     
     decrementTimer (secondsRemaining) {
       this.secondsRemaining = secondsRemaining
       if (this.active) {
-        this.stopTask({ id: this.taskId, running: true })
+        this.updateTaskTimer({ taskId: this.taskId })
         if (this.notificationsEnabled && this.overtime && !this.secondReminderDisplayed && this.secondsRemaining <= this.secondReminderSeconds) {
           const notification = notifications.notify('Finished Working, Take a Break!')
           this.secondReminderDisplayed = true
@@ -331,10 +334,9 @@ export default {
     },
     
     endInterval () {
-      if (this.active && this.countingDown) {
-        this.stopTask({ id: this.taskId })
+      if (this.active && this.running) {
+        this.stopTask()
       }
-      this.countingDown = false
     },
     
     finishTimer (secondsRemaining = null) {
@@ -380,6 +382,7 @@ export default {
       this.timer.clear()
       this.endInterval()
       this.setTaskInactive()
+      this.setRunning(false)
       if (this.active) {
         this.activeIntervalStarted = false
       }

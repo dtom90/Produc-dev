@@ -4,8 +4,9 @@ import Dexie from 'dexie'
 const dexieDb = new Dexie('DevTrackDatabase')
 dexieDb.version(1).stores({
   tasks: 'id, name, notes, completed, archived, created',
-  tags: 'taskId, name, color',
-  logs: 'taskId, started, stopped, timeSpent',
+  tags: 'name, color',
+  taskTagMap: 'taskId, tagId',
+  logs: 'id, taskId, started, stopped, timeSpent',
   settings: 'key'
 })
 

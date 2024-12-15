@@ -191,13 +191,13 @@
     <!-- Countdown Timer -->
     <keep-alive>
       <Countdown
-        v-if="!task.completed && (!running || activeTaskID === task.id)"
+        v-if="!task.completed && (!running || !activeTaskID || activeTaskID === task.id)"
         :task-id="task.id"
         class="top-margin"
       />
     </keep-alive>
     <div
-      v-if="!task.completed && (running && activeTaskID !== task.id)"
+      v-if="!task.completed && (running && activeTaskID && activeTaskID !== task.id)"
       class="d-flex flex-column align-items-center"
       style="color: darkred"
     >
@@ -302,11 +302,11 @@ export default {
   methods: {
     
     ...mapActions([
-      'startTask'
+      'startTask',
+      'stopTask'
     ]),
     
     ...mapMutations([
-      'stopTask',
       'disableTaskNotifications',
       'addTaskTag',
       'removeTaskTag',
@@ -368,9 +368,8 @@ export default {
       })
     },
     
-    continueTimerHere () {
-      this.stopTask({ id: this.activeTaskID })
-      this.startTask({ taskId: this.task.id })
+    async continueTimerHere () {
+      await this.startTask({ taskId: this.task.id })
     }
   }
 }

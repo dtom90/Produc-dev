@@ -1,4 +1,5 @@
 import dexieDb from './dexieDb'
+import { nanoid } from 'nanoid'
 
 const actions = {
   async addTask ({ state, commit }, { name }) {
@@ -23,19 +24,48 @@ const actions = {
     }
   },
   
-  async startTask ({ state, commit }, { taskId }) {
+  async startTask ({ state, commit, dispatch }, { taskId }) {
+    console.log('startTask')
+    // stop any running task
+    await dispatch('stopTask')
+
     const task = state.tasks.find(t => t.id === taskId)
     if (task) {
       const log = {
+        id: 'log-' + nanoid(),
         taskId,
         started: Date.now(),
         stopped: null,
         timeSpent: null
       }
       await dexieDb.logs.add(log)
-      commit('startTask', log)
+      commit('startTask', { log })
+    }
+  },
+  
+  async updateTaskTimer ({ state, commit }, { taskId }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (task && task.log.length > 0) {
+      const runningLog = await dexieDb.logs.where('taskId').equals(taskId).and(log => log.stopped == null).first()
+      if (runningLog) {
+        runningLog.timeSpent = Date.now() - runningLog.started
+        await dexieDb.logs.put(runningLog)
+        commit('updateLog', { log: runningLog })
+      }
+    }
+  },
+  
+  async stopTask ({ state, commit }) {
+    console.log('stopTask')
+    const runningLog = await dexieDb.logs.filter(log => log.stopped === null).first()
+    if (runningLog) {
+      runningLog.stopped = Date.now()
+      runningLog.timeSpent = runningLog.stopped - runningLog.started
+      await dexieDb.logs.put(runningLog)
+      commit('updateLog', { log: runningLog })
     }
   }
+
 }
 
 export default actions

@@ -1,4 +1,3 @@
-import getters from './getters'
 import Vue from 'vue'
 import ColorManager from 'color-manager'
 import $ from 'jquery'
@@ -28,10 +27,11 @@ const mutations = {
   },
   
   updateIncompleteTasks (state, { newTaskOrder }) {
-    const incompleteTasks = getters.incompleteTasks(state)
+    const incompleteTasks = state.tasks.filter(t => !t.completed)
+    const completedTasks = state.tasks.filter(t => t.completed)
     const origLength = incompleteTasks.length
     if (newTaskOrder.length === origLength) {
-      state.tasks = newTaskOrder.concat(getters.completedTasks(state))
+      state.tasks = newTaskOrder.concat(completedTasks)
     } else {
       const reorderTaskIds = {}
       newTaskOrder.forEach(task => {
@@ -45,7 +45,7 @@ const mutations = {
         }
       }
       if (incompleteTasks.length === origLength) { // ensure that the length has not changed
-        state.tasks = incompleteTasks.concat(getters.completedTasks(state))
+        state.tasks = incompleteTasks.concat(completedTasks)
       }
     }
   },
@@ -74,29 +74,22 @@ const mutations = {
     state.continueOnComplete = newValue
   },
   
-  startTask (state, log) {
+  startTask (state, { log }) {
     const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
-      console.log(log)
       task.log.push(log)
       state.activeTaskID = task.id
       state.running = true
     }
   },
   
-  stopTask (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (task && task.log.length > 0) {
-      const lastInterval = task.log[task.log.length - 1]
-      lastInterval.stopped = Date.now()
-      lastInterval.timeSpent = lastInterval.stopped - lastInterval.started
-      if ('running' in payload) {
-        lastInterval.running = payload.running
-      } else {
-        if ('running' in lastInterval) {
-          Vue.delete(lastInterval, 'running')
-        }
-        state.running = false
+  updateLog (state, { log }) {
+    const task = state.tasks.find(t => t.id === log.taskId)
+    if (task) {
+      const i = task.log.findIndex(l => l.id === log.id)
+      if (i !== -1) {
+        Vue.set(task.log, i, log)
+        state.running = log.stopped === null
       }
     }
   },
@@ -126,6 +119,10 @@ const mutations = {
     }
   },
   
+  setRunning (state, value) {
+    state.running = value
+  },
+
   resetRunning (state) {
     if (state.activeTaskID) {
       const activeTask = state.tasks.find(t => t.id === state.activeTaskID)

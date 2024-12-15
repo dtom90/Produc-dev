@@ -88,6 +88,7 @@ export default {
     displayFullDateHuman,
     
     displayTimeHuman (time) {
+      time = time || Date.now()
       return dayjs(time).format(this.displayTimeFormat())
     },
     
