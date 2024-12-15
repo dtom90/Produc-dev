@@ -98,19 +98,6 @@ const mutations = {
     state.activeTaskID = null
   },
   
-  addInterval (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (task) {
-      const interval = {
-        started: null,
-        stopped: payload.stopped,
-        timeSpent: payload.timeSpent
-      }
-      interval.started = interval.stopped - interval.timeSpent
-      task.log.push(interval)
-    }
-  },
-  
   deleteInterval (state, { taskId, startedTime }) {
     const task = state.tasks.find(t => t.id === taskId)
     if (task) {
@@ -205,16 +192,9 @@ const mutations = {
     task.tags.splice(task.tags.indexOf(payload.tag), 1)
   },
   
-  completeTask (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (!task.completed) {
-      task.completed = Date.now()
-      if (task.id === state.activeTaskID && state.running) {
-        state.running = false
-      }
-    } else {
-      task.completed = null
-    }
+  completeTask (state, { taskId, completedValue }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    task.completed = completedValue
   },
   
   renameTag (state, payload) {

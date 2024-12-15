@@ -55,7 +55,7 @@ const actions = {
     }
   },
   
-  async stopTask ({ state, commit }) {
+  async stopTask ({ commit }) {
     console.log('stopTask')
     const runningLog = await dexieDb.logs.filter(log => log.stopped === null).first()
     if (runningLog) {
@@ -64,8 +64,36 @@ const actions = {
       await dexieDb.logs.put(runningLog)
       commit('updateLog', { log: runningLog })
     }
+  },
+  
+  async completeTask ({ state, commit, dispatch }, { taskId }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (!task.completed) {
+      if (task.id === state.activeTaskID && state.running) {
+        await dispatch('stopTask')
+      }
+      commit('completeTask', { taskId, completedValue: Date.now() })
+    } else {
+      commit('completeTask', { taskId, completedValue: null })
+    }
+  },
+  
+  async addInterval ({ state, commit }, { taskId, stopped, timeSpent }) {
+    console.log('addInterval')
+    const task = state.tasks.find(t => t.id === taskId)
+    if (task) {
+      const log = {
+        id: 'log-' + nanoid(),
+        taskId,
+        started: stopped - timeSpent,
+        stopped: stopped,
+        timeSpent: timeSpent
+      }
+      await dexieDb.logs.add(log)
+      commit('startTask', { log })
+    }
   }
-
+  
 }
 
 export default actions
