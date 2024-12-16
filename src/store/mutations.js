@@ -193,8 +193,8 @@ const mutations = {
     }
   },
   
-  removeTag (state, payload) {
-    state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
+  removeTag (state, { tagName }) {
+    state.selectedTags = state.selectedTags.filter(tag => tag !== tagName)
   },
   
   renameTag (state, payload) {

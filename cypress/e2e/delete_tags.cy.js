@@ -1,4 +1,4 @@
-describe('delete tasks', () => {
+describe('delete tags', () => {
   const firstTagName = 'my first tag'
   const secondTagName = 'my second tag'
 
@@ -14,10 +14,10 @@ describe('delete tasks', () => {
   it('removes the first tag', () => {
     // Arrange
     // (No specific arrangement needed for this test)
-    
+
     // Act
     cy.get('#taskTags div.tag.btn-group button > svg.fa-times').click()
-    
+
     // Assert
     cy.get('#taskTags').contains(firstTagName).should('not.exist')
   })
@@ -26,12 +26,23 @@ describe('delete tasks', () => {
     // Arrange
     cy.get('input[placeholder="add new tag"]')
       .should('have.focus').type(secondTagName + '{enter}')
-    
+
     // Act
     cy.get('#taskTags div.tag.btn-group button > svg.fa-times').first().click()
-    
+
     // Assert
     cy.get('#taskTags').contains(firstTagName).should('not.exist')
     cy.get('#taskTags').contains(secondTagName).should('exist')
+  })
+  
+  it('should keep tag removed on page reload', () => {
+    // Arrange
+    cy.get('#taskTags div.tag.btn-group button > svg.fa-times').click()
+    
+    // Act
+    cy.reload()
+    
+    // Assert
+    cy.get('#taskTags').contains(firstTagName).should('not.exist')
   })
 })

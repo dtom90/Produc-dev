@@ -351,8 +351,8 @@ export default {
         }
       }
     },
-    removeTagFilter (tag) {
-      this.removeTag({ tag })
+    removeTagFilter ({ tagName }) {
+      this.removeTag({ tagName })
     },
     startDrag () {
       this.$el.closest('html').classList.add('draggable-cursor')

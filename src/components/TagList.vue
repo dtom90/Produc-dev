@@ -32,11 +32,12 @@
           {{ tagName }}
         </button>
         <button
+          v-if="removeTag"
           class="tag-close btn"
           :style="`backgroundColor: ${tags[tagName].color}`"
           :title="removeText"
           aria-label="Close"
-          @click.stop="removeTag(tagName)"
+          @click.stop="removeTag({tagName})"
         >
           <font-awesome-icon icon="times" />
         </button>
@@ -163,6 +164,10 @@ export default {
     removeText: {
       type: String,
       default: 'Remove tag from task'
+    },
+    removeTag: {
+      type: Function,
+      default: null
     }
   },
   
@@ -234,11 +239,6 @@ export default {
       this.tagInputChange()
       this.tagOptions = this.availableTags(this.taskId, this.newTag)
       this.$refs.addTagInput.focus()
-    },
-    
-    removeTag (tagName) {
-      this.removeTaskTag({ taskId: this.taskId, tagName })
-      this.$forceUpdate()
     },
     
     viewActivityModal: function (newTag) {

@@ -134,6 +134,7 @@
       :tag-list="taskTags"
       :task-id="task.id"
       :modal="true"
+      :remove-tag="removeTag"
     />
     
     <!-- Notes Section -->
@@ -327,6 +328,11 @@ export default {
           this.$refs.addTagInput.focus()
         })
       }
+    },
+    
+    removeTag (tagName) {
+      this.removeTaskTag({ taskId: this.taskId, tagName })
+      this.$forceUpdate()
     },
     
     editNotes () {
