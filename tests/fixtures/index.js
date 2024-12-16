@@ -44,7 +44,7 @@ export function newTask (includeTags = false) {
     id: 1,
     name: 'new task 1',
     tags,
-    created: moment.now(),
+    created_at: moment.now(),
     log: [],
     completed: null
   }

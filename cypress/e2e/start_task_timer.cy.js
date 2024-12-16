@@ -167,4 +167,25 @@ describe('start task timer', () => {
     cy.get('#countdown-container').contains('+0:03')
   })
   
+  it('on refresh, task interval should be stopped', () => {
+    // Arrange
+    cy.get('div').contains('25:00').click()
+    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.1{enter}')
+    cy.get('button > svg.fa-cog').click()
+    cy.get('.form-check').contains('Continue Timer when Interval Complete').click()
+    cy.get('button > svg.fa-play').click()
+    cy.get('#countdown-container').contains('0:06')
+    cy.get('#countdown-container').contains('0:05')
+    cy.get('#countdown-container').contains('0:04')
+    cy.get('#countdown-container').contains('0:03')
+    
+    // Act
+    cy.reload()
+    
+    // Assert
+    cy.get('button').contains('Activity Log').click()
+    cy.get('tr').last().within(() => {
+      cy.get('td').contains('Stopped')
+    })
+  })
 })

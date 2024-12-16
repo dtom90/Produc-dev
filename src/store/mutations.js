@@ -29,6 +29,17 @@ const mutations = {
     }
   },
   
+  setTasks (state, { tasks }) {
+    state.tasks = tasks
+  },
+  
+  updateTask (state, { taskId, taskUpdates }) {
+    const index = state.tasks.findIndex(t => t.id === taskId)
+    if (index !== -1) {
+      Vue.set(state.tasks, index, { ...state.tasks[index], ...taskUpdates })
+    }
+  },
+  
   addTask (state, { task }) {
     task.log = []
     if (state.insertAtTop) {
@@ -49,30 +60,6 @@ const mutations = {
   
   updateShowArchived (state, newValue) {
     state.showArchived = newValue
-  },
-  
-  updateIncompleteTasks (state, { newTaskOrder }) {
-    const incompleteTasks = state.tasks.filter(t => !t.completed)
-    const completedTasks = state.tasks.filter(t => t.completed)
-    const origLength = incompleteTasks.length
-    if (newTaskOrder.length === origLength) {
-      state.tasks = newTaskOrder.concat(completedTasks)
-    } else {
-      const reorderTaskIds = {}
-      newTaskOrder.forEach(task => {
-        reorderTaskIds[task.id] = true
-      })
-      let r = 0
-      for (let i = 0; i < incompleteTasks.length; i++) {
-        if (incompleteTasks[i].id in reorderTaskIds) {
-          incompleteTasks[i] = newTaskOrder[r]
-          r++
-        }
-      }
-      if (incompleteTasks.length === origLength) { // ensure that the length has not changed
-        state.tasks = incompleteTasks.concat(completedTasks)
-      }
-    }
   },
   
   selectTask (state, { taskId }) {
@@ -210,11 +197,6 @@ const mutations = {
     state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
   },
   
-  completeTask (state, { taskId, completedValue }) {
-    const task = state.tasks.find(t => t.id === taskId)
-    task.completed = completedValue
-  },
-  
   renameTag (state, payload) {
     if (payload.newName !== payload.oldName) {
       if (payload.newName in state.tags) {
@@ -246,14 +228,6 @@ const mutations = {
       Vue.delete(state.tags, payload.tag)
       state.tagOrder = state.tagOrder.filter(tag => tag !== payload.tag)
       $('#activityModal').modal('hide')
-    }
-  },
-  
-  archiveTask (state, { id }) {
-    const index = state.tasks.findIndex(t => t.id === id)
-    if (index !== -1) {
-      const archived = state.tasks[index].archived
-      state.tasks.splice(index, 1, { ...state.tasks[index], archived: !archived })
     }
   },
   

@@ -294,7 +294,7 @@ export default {
         return incompleteTasks
       },
       set (newTaskOrder) {
-        this.updateIncompleteTasks({ newTaskOrder })
+        this.reorderIncompleteTasks({ newTaskOrder })
       }
     },
     completedTaskList () {
@@ -316,7 +316,8 @@ export default {
 
     ...mapActions([
       'addTask',
-      'selectTask'
+      'selectTask',
+      'reorderIncompleteTasks'
     ]),
 
     ...mapMutations([
@@ -325,7 +326,6 @@ export default {
       'updateShowArchived',
       'archiveTasks',
       'deleteTasks',
-      'updateIncompleteTasks',
       'selectTag',
       'removeTag'
     ]),

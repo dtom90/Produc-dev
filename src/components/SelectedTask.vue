@@ -103,7 +103,7 @@
               block
               variant="archive-color"
               title="Archive task"
-              @click="archiveTask({id: task.id})"
+              @click="archiveTask({taskId: task.id})"
             >
               <span v-if="!task.archived">
                 <font-awesome-icon icon="download" />
@@ -301,11 +301,11 @@ export default {
   methods: {
     
     ...mapActions([
-      'startTask'
+      'startTask',
+      'archiveTask'
     ]),
     
     ...mapMutations([
-      'archiveTask',
       'deleteTask'
     ]),
     

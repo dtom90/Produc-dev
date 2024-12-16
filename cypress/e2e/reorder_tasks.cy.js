@@ -21,6 +21,19 @@ describe('reorder tasks', () => {
   //   cy.get('#incomplete-task-list .task').last().contains('My First Task')
   // })
 
+  it('keeps new order after page reload', () => {
+    // Arrange
+    cy.get('#incomplete-task-list .task').contains('My Second Task')
+      .drag('.task', { destination: '#incomplete-task-list .task', position: 'top' })
+
+    // Act
+    cy.reload()
+
+    // Assert
+    cy.get('#incomplete-task-list .task').first().contains('My Second Task')
+    cy.get('#incomplete-task-list .task').last().contains('My First Task')
+  })
+
   it('keeps completed archived task even after dragging', () => {
     // Arrange
     cy.get('input[placeholder="enter new task"]')

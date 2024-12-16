@@ -4,7 +4,7 @@ import ColorManager from 'color-manager'
 
 const actions = {
   async loadInitialData ({ commit }) {
-    const tasks = await dexieDb.tasks.toArray()
+    const tasks = await dexieDb.tasks.orderBy('order').toArray()
     const tags = await dexieDb.tags.toArray()
     const taskTagMaps = await dexieDb.taskTagMap.toArray()
     const logs = await dexieDb.logs.toArray()
@@ -15,13 +15,15 @@ const actions = {
   async addTask ({ state, commit }, { name }) {
     const taskName = name.trim()
     if (taskName) {
+      const count = await dexieDb.tasks.count()
       const newTask = {
         id: 'task-' + nanoid(),
         name: taskName,
         tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
         notes: '',
+        order: count,
         log: [],
-        created: Date.now(),
+        created_at: Date.now(),
         completed: null,
         archived: null
       }
@@ -35,6 +37,40 @@ const actions = {
   async selectTask ({ state, commit }, { taskId }) {
     await dexieDb.settings.put({ key: 'selectedTaskID', value: taskId })
     commit('selectTask', { taskId })
+  },
+  
+  async reorderIncompleteTasks ({ state, commit }, { newTaskOrder }) {
+    const incompleteTasks = state.tasks.filter(t => !t.completed)
+    const completedTasks = state.tasks.filter(t => t.completed)
+    const origLength = incompleteTasks.length
+    if (newTaskOrder.length === origLength) {
+      const fullTaskOrder = newTaskOrder.concat(completedTasks)
+      for (const [i, task] of fullTaskOrder.entries()) {
+        task.order = i
+      }
+      await dexieDb.tasks.bulkPut(fullTaskOrder)
+      commit('setTasks', { tasks: newTaskOrder })
+    } else {
+      const reorderTaskIds = {}
+      newTaskOrder.forEach(task => {
+        reorderTaskIds[task.id] = true
+      })
+      let r = 0
+      for (let i = 0; i < incompleteTasks.length; i++) {
+        if (incompleteTasks[i].id in reorderTaskIds) {
+          incompleteTasks[i] = newTaskOrder[r]
+          r++
+        }
+      }
+      if (incompleteTasks.length === origLength) { // ensure that the length has not changed
+        const fullTaskOrder = incompleteTasks.concat(completedTasks)
+        for (const [i, task] of fullTaskOrder.entries()) {
+          task.order = i
+        }
+        await dexieDb.tasks.bulkPut(fullTaskOrder)
+        commit('setTasks', { tasks: fullTaskOrder })
+      }
+    }
   },
   
   async startTask ({ state, commit, dispatch }, { taskId }) {
@@ -79,13 +115,26 @@ const actions = {
   
   async completeTask ({ state, commit, dispatch }, { taskId }) {
     const task = state.tasks.find(t => t.id === taskId)
-    if (!task.completed) {
-      if (task.id === state.activeTaskID && state.running) {
-        await dispatch('stopTask')
+    if (task) {
+      let completedValue = null
+      if (!task.completed) {
+        if (task.id === state.activeTaskID && state.running) {
+          await dispatch('stopTask')
+        }
+        completedValue = Date.now()
       }
-      commit('completeTask', { taskId, completedValue: Date.now() })
-    } else {
-      commit('completeTask', { taskId, completedValue: null })
+      const taskUpdates = { completed: completedValue }
+      await dexieDb.tasks.update(taskId, taskUpdates)
+      commit('updateTask', { taskId, taskUpdates })
+    }
+  },
+  
+  async archiveTask ({ state, commit }, { taskId }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (task) {
+      const taskUpdates = { archived: !task.archived }
+      await dexieDb.tasks.update(taskId, taskUpdates)
+      commit('updateTask', { taskId, taskUpdates })
     }
   },
   

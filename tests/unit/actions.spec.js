@@ -14,7 +14,7 @@ describe('actions', () => {
   
   beforeAll(() => {
     dexieDb.version(1).stores({
-      tasks: 'id, name, notes, completed, archived, created',
+      tasks: 'id, name, notes, completed, archived, created_at',
       tags: 'taskId, name, color',
       logs: 'taskId, started, stopped, timeSpent',
       settings: 'key'
@@ -33,7 +33,7 @@ describe('actions', () => {
       mutations
     })
     await actions.addTask({ state: myState, commit: store.commit }, { name: 'my first task' })
-    createdTime = myState.tasks[0].created
+    createdTime = myState.tasks[0].created_at
     origState = JSON.parse(JSON.stringify(myState))
     
   })
@@ -54,7 +54,7 @@ describe('actions', () => {
           name: 'my first task',
           tags: [],
           notes: '',
-          created: createdTime,
+          created_at: createdTime,
           log: [],
           completed: null,
           archived: null
@@ -85,7 +85,7 @@ describe('actions', () => {
           name: 'my first task',
           tags: [],
           notes: '',
-          created: createdTime,
+          created_at: createdTime,
           log: [],
           completed: null,
           archived: null
@@ -95,7 +95,7 @@ describe('actions', () => {
           name: 'my second task',
           tags: [],
           notes: '',
-          created: myState.tasks[1].created,
+          created_at: myState.tasks[1].created_at,
           log: [],
           completed: null,
           archived: null
@@ -105,7 +105,7 @@ describe('actions', () => {
           name: 'my third task',
           tags: [],
           notes: '',
-          created: myState.tasks[2].created,
+          created_at: myState.tasks[2].created_at,
           log: [],
           completed: null,
           archived: null
@@ -121,7 +121,7 @@ describe('actions', () => {
           name: 'my first task',
           tags: [],
           notes: '',
-          created: createdTime,
+          created_at: createdTime,
           log: [],
           completed: null,
           archived: null
@@ -131,7 +131,7 @@ describe('actions', () => {
           name: 'my third task',
           tags: [],
           notes: '',
-          created: myState.tasks[1].created,
+          created_at: myState.tasks[1].created_at,
           log: [],
           completed: null,
           archived: null
@@ -141,7 +141,7 @@ describe('actions', () => {
           name: 'my fourth task',
           tags: [],
           notes: '',
-          created: myState.tasks[2].created,
+          created_at: myState.tasks[2].created_at,
           log: [],
           completed: null,
           archived: null
@@ -336,7 +336,7 @@ describe('actions', () => {
   //         name: 'my first task',
   //         tags: [],
   //         notes: '',
-  //         created: createdTime,
+  //         created_at: createdTime,
   //         log: [],
   //         completed: myState.tasks[0].completed
   //       }

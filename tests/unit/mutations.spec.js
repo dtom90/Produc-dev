@@ -14,7 +14,7 @@ describe('mutations', () => {
   
   beforeAll(() => {
     dexieDb.version(1).stores({
-      tasks: 'id, name, notes, completed, archived, created',
+      tasks: 'id, name, notes, completed, archived, created_at',
       tags: 'taskId, name, color',
       logs: 'taskId, started, stopped, timeSpent',
       settings: 'key'
@@ -33,7 +33,7 @@ describe('mutations', () => {
       mutations
     })
     await actions.addTask({ state: myState, commit: store.commit }, { name: 'my first task' })
-    createdTime = myState.tasks[0].created
+    createdTime = myState.tasks[0].created_at
     origState = JSON.parse(JSON.stringify(myState))
     
   })
@@ -189,7 +189,7 @@ describe('mutations', () => {
           name: 'my first task',
           tags: [],
           notes: '',
-          created: createdTime,
+          created_at: createdTime,
           log: [],
           completed: myState.tasks[0].completed,
           archived: null
