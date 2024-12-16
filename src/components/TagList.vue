@@ -32,14 +32,13 @@
           {{ tagName }}
         </button>
         <button
-          v-if="removeTag"
           class="tag-close btn"
           :style="`backgroundColor: ${tags[tagName].color}`"
           :title="removeText"
           aria-label="Close"
           @click.stop="removeTag(tagName)"
         >
-          <span aria-hidden="true">&times;</span>
+          <font-awesome-icon icon="times" />
         </button>
       </div>
       <div v-if="label === 'Filtering on tasks with' && tagList.length > 1">
@@ -94,6 +93,7 @@
             />
           </button>
           <div
+            v-if="showTagInput"
             id="tagDropdown"
           >
             <div
@@ -101,7 +101,7 @@
               class="btn-group-vertical"
             >
               <button
-                v-for="tagName in tagOptions"
+                v-for="tagName in availableTags(taskId, newTag)"
                 :key="tagName"
                 class="tag-option btn btn-light"
                 :style="`backgroundColor: ${tags[tagName].color}`"
@@ -163,10 +163,6 @@ export default {
     removeText: {
       type: String,
       default: 'Remove tag from task'
-    },
-    removeTag: {
-      type: Function,
-      default: null
     }
   },
   
@@ -210,11 +206,11 @@ export default {
   methods: {
     
     ...mapActions([
-      'addTaskTag'
+      'addTaskTag',
+      'removeTaskTag'
     ]),
     
     ...mapMutations([
-      'removeTaskTag',
       'setFilterOperator',
       'setModalTag'
     ]),
@@ -238,6 +234,11 @@ export default {
       this.tagInputChange()
       this.tagOptions = this.availableTags(this.taskId, this.newTag)
       this.$refs.addTagInput.focus()
+    },
+    
+    removeTag (tagName) {
+      this.removeTaskTag({ taskId: this.taskId, tagName })
+      this.$forceUpdate()
     },
     
     viewActivityModal: function (newTag) {

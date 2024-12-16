@@ -134,7 +134,6 @@
       :tag-list="taskTags"
       :task-id="task.id"
       :modal="true"
-      :remove-tag="removeTag"
     />
     
     <!-- Notes Section -->
@@ -302,14 +301,10 @@ export default {
   methods: {
     
     ...mapActions([
-      'startTask',
-      'stopTask'
+      'startTask'
     ]),
     
     ...mapMutations([
-      'disableTaskNotifications',
-      'addTaskTag',
-      'removeTaskTag',
       'archiveTask',
       'deleteTask'
     ]),
@@ -332,11 +327,6 @@ export default {
           this.$refs.addTagInput.focus()
         })
       }
-    },
-    
-    removeTag (tag) {
-      this.removeTaskTag({ id: this.task.id, tag })
-      this.$forceUpdate()
     },
     
     editNotes () {

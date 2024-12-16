@@ -133,6 +133,11 @@ const mutations = {
     }
   },
   
+  updateTaskTags (state, { taskId, newTagNames }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    task.tags = newTagNames
+  },
+  
   ensureTagOrder (state) {
     if (state.tagOrder.length === 0) {
       state.tagOrder = Object.keys(state.tags)
@@ -177,11 +182,6 @@ const mutations = {
   
   removeTag (state, payload) {
     state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
-  },
-  
-  removeTaskTag (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    task.tags.splice(task.tags.indexOf(payload.tag), 1)
   },
   
   completeTask (state, { taskId, completedValue }) {
