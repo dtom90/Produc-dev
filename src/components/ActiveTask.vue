@@ -2,7 +2,7 @@
   <button
     id="active-task-container"
     class="btn btn-light border d-flex justify-content-center align-items-center"
-    @click="selectTask(task.id)"
+    @click="selectTask({ taskId: task.id })"
   >
     <font-awesome-icon
       id="active-indicator-icon"
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'ActiveTask',
@@ -26,7 +26,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['selectTask'])
+    ...mapActions(['selectTask'])
   }
 }
 </script>

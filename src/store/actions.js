@@ -3,13 +3,20 @@ import { nanoid } from 'nanoid'
 import ColorManager from 'color-manager'
 
 const actions = {
+  async loadInitialData ({ commit }) {
+    const tasks = await dexieDb.tasks.toArray()
+    const tags = await dexieDb.tags.toArray()
+    const taskTagMaps = await dexieDb.taskTagMap.toArray()
+    const logs = await dexieDb.logs.toArray()
+    const settings = await dexieDb.settings.toArray()
+    commit('setState', { tasks, tags, taskTagMaps, logs, settings })
+  },
+
   async addTask ({ state, commit }, { name }) {
     const taskName = name.trim()
     if (taskName) {
-      const nextTaskIdDb = await dexieDb.settings.get('nextTaskID')
-      const nextTaskID = nextTaskIdDb ? nextTaskIdDb.value : 0
       const newTask = {
-        id: nextTaskID,
+        id: 'task-' + nanoid(),
         name: taskName,
         tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
         notes: '',
@@ -20,9 +27,14 @@ const actions = {
       }
       // add to dexie
       await dexieDb.tasks.add(newTask)
-      await dexieDb.settings.put({ key: 'nextTaskID', value: nextTaskID + 1 })
+      await dexieDb.settings.put({ key: 'selectedTaskID', value: newTask.id })
       commit('addTask', { task: newTask })
     }
+  },
+  
+  async selectTask ({ state, commit }, { taskId }) {
+    await dexieDb.settings.put({ key: 'selectedTaskID', value: taskId })
+    commit('selectTask', { taskId })
   },
   
   async startTask ({ state, commit, dispatch }, { taskId }) {

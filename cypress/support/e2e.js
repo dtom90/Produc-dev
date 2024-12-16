@@ -24,11 +24,15 @@ Cypress.on('window:before:load', (win) => {
     // Fail the test if a console error occurs
     throw new Error(`Console error: ${args.join(' ')}`);
   })
-  win.indexedDB.deleteDatabase('DevTrackDatabase')
 })
 
 beforeEach(() => {
   const hostname = Cypress.env('DEVTRACK_HOSTNAME') || 'localhost'
   cy.visit(`http://${hostname}:8080`)
   cy.contains('DevTrack')
+  indexedDB.databases().then((databases) => {
+    databases.forEach((db) => {
+      indexedDB.deleteDatabase(db.name)
+    })
+  })
 })

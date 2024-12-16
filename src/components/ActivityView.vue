@@ -153,12 +153,12 @@ export default {
       default: 'taskActivity'
     },
     taskId: {
-      type: Number,
+      type: String,
       default: null
     },
     element: {
       type: String,
-      default: ''
+      default: null
     },
     log: {
       type: Array,

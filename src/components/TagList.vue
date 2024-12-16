@@ -141,8 +141,8 @@ export default {
       default: () => []
     },
     taskId: {
-      type: Number,
-      default: NaN
+      type: String,
+      default: null
     },
     label: {
       type: String,
@@ -186,7 +186,7 @@ export default {
     ]),
     
     taskTags () {
-      return !isNaN(this.taskId)
+      return this.taskId != null
     },
     
     sortedTagList () {

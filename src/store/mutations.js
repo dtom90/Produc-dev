@@ -3,6 +3,32 @@ import $ from 'jquery'
 
 const mutations = {
   
+  setState (state, { tasks, tags, taskTagMaps, logs, settings }) {
+    state.tasks = tasks
+    state.tags = {}
+    for (const tag of tags) {
+      Vue.set(state.tags, tag.tagName, { color: tag.color })
+    }
+    for (const taskTagMap of taskTagMaps) {
+      const task = state.tasks.find(t => t.id === taskTagMap.taskId)
+      if (task) {
+        task.tags.push(taskTagMap.tagName)
+      }
+    }
+    for (const log of logs) {
+      const task = state.tasks.find(t => t.id === log.taskId)
+      if (task) {
+        const logsForTask = logs.filter(l => l.taskId === log.taskId)
+        logsForTask.sort((a, b) => a.started - b.started)
+        task.log = logsForTask
+      }
+    }
+    for (const key of ['selectedTaskID']) {
+      const setting = settings.find(s => s.key === key)
+      state[key] = setting ? setting.value : null
+    }
+  },
+  
   addTask (state, { task }) {
     task.log = []
     if (state.insertAtTop) {
@@ -49,8 +75,8 @@ const mutations = {
     }
   },
   
-  selectTask (state, id) {
-    state.selectedTaskID = id
+  selectTask (state, { taskId }) {
+    state.selectedTaskID = taskId
   },
   
   updateActiveMinutes (state, { activeMinutes }) {

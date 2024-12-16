@@ -13,7 +13,7 @@ describe('create tasks', () => {
     // (No specific action needed for this test)
 
     // Assert
-    cy.get('#incomplete-task-list').contains('My First Task')
+    cy.contains('#incomplete-task-list .task', 'My First Task').should('have.length', 1)
     cy.get('#main-section').contains('My First Task')
     cy.get('#main-section').contains('Tags:')
     cy.get('#main-section').contains('Notes:')

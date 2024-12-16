@@ -67,7 +67,7 @@ export default {
   
   props: {
     taskId: {
-      type: Number,
+      type: String,
       default: null
     }
   },

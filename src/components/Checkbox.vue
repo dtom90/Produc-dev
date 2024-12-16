@@ -28,7 +28,7 @@ export default {
       default: false
     },
     taskId: {
-      type: Number,
+      type: String,
       default: null
     }
   },

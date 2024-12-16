@@ -313,9 +313,10 @@ export default {
   },
   
   methods: {
-    
+
     ...mapActions([
-      'addTask'
+      'addTask',
+      'selectTask'
     ]),
 
     ...mapMutations([
@@ -326,8 +327,7 @@ export default {
       'deleteTasks',
       'updateIncompleteTasks',
       'selectTag',
-      'removeTag',
-      'selectTask'
+      'removeTag'
     ]),
     
     addNewTask () {
@@ -345,9 +345,9 @@ export default {
           tasksWithTag = this.completedTasks.find(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         }
         if (tasksWithTag) {
-          this.selectTask(tasksWithTag.id)
+          this.selectTask({ taskId: tasksWithTag.id })
         } else {
-          this.selectTask(null)
+          this.selectTask({ taskId: null })
         }
       }
     },

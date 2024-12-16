@@ -2,7 +2,7 @@
   <!--  Task List Group Item Wrapper  -->
   <li
     :class="'task list-group-item list-group-item-action form-check'+active"
-    @click="selectTask(task.id)"
+    @click="selectTask({ taskId: task.id })"
   >
     <div class="d-flex align-items-center">
       <Checkbox
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import Checkbox from './Checkbox'
 
 export default {
@@ -82,7 +82,7 @@ export default {
   },
   
   methods: {
-    ...mapMutations([
+    ...mapActions([
       'selectTask'
     ])
   }
