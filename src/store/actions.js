@@ -138,6 +138,21 @@ const actions = {
     }
   },
   
+  async archiveTasks ({ state, commit }) {
+    const completedTasks = state.tasks.filter(t => t.completed && !t.archived)
+    if (completedTasks.length === 0) {
+      alert('No completed tasks to archive')
+      return
+    }
+    if (completedTasks.length === 1 || confirm(`Are you sure that you want to archive all ${completedTasks.length} completed tasks?`)) {
+      const taskIds = completedTasks.map(task => task.id)
+      await dexieDb.tasks.where('id').anyOf(taskIds).modify({ archived: true })
+
+      const tasksToUpdate = await dexieDb.tasks.where('id').anyOf(taskIds).toArray()
+      commit('updateTasks', { tasksToUpdate })
+    }
+  },
+  
   async addInterval ({ state, commit }, { taskId, stopped, timeSpent }) {
     const task = state.tasks.find(t => t.id === taskId)
     if (task) {

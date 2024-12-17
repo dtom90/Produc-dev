@@ -45,8 +45,8 @@ describe('create tasks', () => {
     })
 
     // Assert
-    cy.get('#completed-task-list').contains('My First Task').should('not.exist')
-    cy.get('#completed-task-list').contains('My Second Task').should('not.exist')
+    cy.reload()
+    cy.get('#completed-task-list .task').should('not.exist')
   })
 
   it('hides an incomplete archived task from the list', () => {

@@ -317,14 +317,14 @@ export default {
     ...mapActions([
       'addTask',
       'selectTask',
-      'reorderIncompleteTasks'
+      'reorderIncompleteTasks',
+      'archiveTasks'
     ]),
 
     ...mapMutations([
       'setTopInsert',
       'updateAddSelectedTags',
       'updateShowArchived',
-      'archiveTasks',
       'deleteTasks',
       'selectTag',
       'removeTag'

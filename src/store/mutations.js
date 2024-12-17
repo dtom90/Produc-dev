@@ -40,6 +40,15 @@ const mutations = {
     }
   },
   
+  updateTasks (state, { tasksToUpdate }) {
+    tasksToUpdate.forEach(taskUpdate => {
+      const index = state.tasks.findIndex(t => t.id === taskUpdate.id)
+      if (index !== -1) {
+        Vue.set(state.tasks, index, { ...state.tasks[index], ...taskUpdate })
+      }
+    })
+  },
+  
   addTask (state, { task }) {
     task.log = []
     if (state.insertAtTop) {
@@ -242,24 +251,6 @@ const mutations = {
       } else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
         state.selectedTaskID = state.activeTaskID
       }
-    }
-  },
-  
-  archiveTasks (state) {
-    const completedTasks = state.tasks.filter(t => t.completed && !t.archived)
-    if (completedTasks.length === 0) {
-      alert('No completed tasks to archive')
-      return
-    }
-    if (completedTasks.length === 1 || confirm(`Are you sure that you want to archive all ${completedTasks.length} completed tasks?`)) {
-      const updatedTasks = []
-      for (let i = 0; i < state.tasks.length; i++) {
-        if (state.tasks[i].completed && !state.tasks[i].archived) {
-          state.tasks[i].archived = true
-        }
-        updatedTasks.push(state.tasks[i])
-      }
-      state.tasks = updatedTasks
     }
   },
   
