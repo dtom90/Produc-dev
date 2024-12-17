@@ -133,7 +133,7 @@
 import Log from './Log'
 import ActivityChart from './ActivityChart'
 import AddIntervalDropdown from './dropdowns/AddIntervalDropdown'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import time from '../lib/time'
 
 export default {
@@ -258,9 +258,12 @@ export default {
   
   methods: {
     
-    ...mapMutations([
-      'setTarget',
+    ...mapActions([
       'deleteInterval'
+    ]),
+    
+    ...mapMutations([
+      'setTarget'
     ]),
     
     calculateTimeSpent (log) {
@@ -272,11 +275,8 @@ export default {
       this.logVisible = !this.logVisible
     },
     
-    deleteIntervalButtonClicked (startedTime) {
-      this.deleteInterval({
-        taskId: this.taskId,
-        startedTime
-      })
+    deleteIntervalButtonClicked ({ logId }) {
+      this.deleteInterval({ logId })
     }
   }
 }

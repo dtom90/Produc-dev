@@ -56,7 +56,7 @@
               <button
                 class="btn btn-danger"
                 style="width: 100%"
-                @click="deleteInterval(event.started, index)"
+                @click="deleteInterval({ log: event, index })"
               >
                 Delete Interval
               </button>
@@ -111,11 +111,11 @@ export default {
       return displayDuration(end - event.started)
     },
   
-    deleteInterval (startedTime, index) {
+    deleteInterval ({ log, index }) {
       this.$refs[`intervalMenu${index}`][0].classList.remove('show')
       this.$refs[`intervalMenu${index}`][0].querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
       this.$refs[`intervalMenu${index}`][0].querySelector('.dropdown-menu').classList.remove('show')
-      this.deleteIntervalButtonClicked(startedTime)
+      this.deleteIntervalButtonClicked({ logId: log.id })
     }
   }
 }

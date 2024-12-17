@@ -33,6 +33,16 @@ const mutations = {
     state.tasks = tasks
   },
   
+  addTask (state, { task }) {
+    task.log = []
+    if (state.insertAtTop) {
+      state.tasks.unshift(task)
+    } else {
+      state.tasks.push(task)
+    }
+    state.selectedTaskID = task.id
+  },
+  
   updateTask (state, { taskId, taskUpdates }) {
     const index = state.tasks.findIndex(t => t.id === taskId)
     if (index !== -1) {
@@ -47,16 +57,6 @@ const mutations = {
         Vue.set(state.tasks, index, { ...state.tasks[index], ...taskUpdate })
       }
     })
-  },
-  
-  addTask (state, { task }) {
-    task.log = []
-    if (state.insertAtTop) {
-      state.tasks.unshift(task)
-    } else {
-      state.tasks.push(task)
-    }
-    state.selectedTaskID = task.id
   },
   
   setTopInsert (state, payload) {
@@ -119,11 +119,11 @@ const mutations = {
     state.activeTaskID = null
   },
   
-  deleteInterval (state, { taskId, startedTime }) {
+  deleteInterval (state, { logId, taskId }) {
     const task = state.tasks.find(t => t.id === taskId)
     if (task) {
-      const intervalIndex = task.log.findIndex(interval => interval.started === startedTime)
-      task.log.splice(intervalIndex, 1)
+      const logIndex = task.log.findIndex(log => log.id === logId)
+      task.log.splice(logIndex, 1)
     }
   },
   
