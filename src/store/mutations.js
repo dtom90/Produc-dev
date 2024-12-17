@@ -6,8 +6,10 @@ const mutations = {
   setState (state, { tasks, tags, taskTagMaps, logs, settings }) {
     state.tasks = tasks
     state.tags = {}
+    state.tagOrder = []
     for (const tag of tags) {
       Vue.set(state.tags, tag.tagName, { color: tag.color })
+      state.tagOrder.push(tag.tagName)
     }
     for (const taskTagMap of taskTagMaps) {
       const task = state.tasks.find(t => t.id === taskTagMap.taskId)

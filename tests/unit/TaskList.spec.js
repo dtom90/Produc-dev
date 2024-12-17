@@ -9,9 +9,9 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
 const tasks = [
-  { id: 1, name: 'new task 1' },
-  { id: 2, name: 'new task 2' },
-  { id: 3, name: 'new task 3' }
+  { id: '1', name: 'new task 1' },
+  { id: '2', name: 'new task 2' },
+  { id: '3', name: 'new task 3' }
 ]
 
 const state = {
@@ -26,11 +26,11 @@ const getters = {
 }
 
 const actions = {
-  addTask: jest.fn()
+  addTask: jest.fn(),
+  archiveTasks: jest.fn()
 }
 
 const mutations = {
-  archiveTasks: jest.fn(),
   deleteTasks: jest.fn()
 }
 
@@ -129,7 +129,7 @@ describe('TaskList', () => {
       if (title === 'Done') {
         const archiveAllBtn = wrapper.find('button[title="Archive all list tasks"]')
         archiveAllBtn.trigger('click')
-        expect(mutations.archiveTasks).toHaveBeenCalled()
+        expect(actions.archiveTasks).toHaveBeenCalled()
       }
       
     })

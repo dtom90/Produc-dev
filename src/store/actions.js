@@ -39,26 +39,26 @@ const actions = {
     commit('selectTask', { taskId })
   },
   
-  async reorderIncompleteTasks ({ state, commit }, { newTaskOrder }) {
+  async reorderIncompleteTasks ({ state, commit }, { newIncompleteTaskOrder }) {
     const incompleteTasks = state.tasks.filter(t => !t.completed)
     const completedTasks = state.tasks.filter(t => t.completed)
     const origLength = incompleteTasks.length
-    if (newTaskOrder.length === origLength) {
-      const fullTaskOrder = newTaskOrder.concat(completedTasks)
+    if (newIncompleteTaskOrder.length === origLength) {
+      const fullTaskOrder = newIncompleteTaskOrder.concat(completedTasks)
       for (const [i, task] of fullTaskOrder.entries()) {
         task.order = i
       }
       await dexieDb.tasks.bulkPut(fullTaskOrder)
-      commit('setTasks', { tasks: newTaskOrder })
+      commit('setTasks', { tasks: fullTaskOrder })
     } else {
       const reorderTaskIds = {}
-      newTaskOrder.forEach(task => {
+      newIncompleteTaskOrder.forEach(task => {
         reorderTaskIds[task.id] = true
       })
       let r = 0
       for (let i = 0; i < incompleteTasks.length; i++) {
         if (incompleteTasks[i].id in reorderTaskIds) {
-          incompleteTasks[i] = newTaskOrder[r]
+          incompleteTasks[i] = newIncompleteTaskOrder[r]
           r++
         }
       }

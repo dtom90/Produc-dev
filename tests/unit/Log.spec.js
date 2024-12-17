@@ -75,7 +75,9 @@ describe('Log', () => {
       })
   
       expect(startedWrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + '   ' + DELETE_INTERVAL
+        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + '  ' +
+        'Running ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + ' ' +
+        DELETE_INTERVAL
       )
   
     })
@@ -218,7 +220,9 @@ describe('Log', () => {
       })
   
       expect(startedWrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + '   ' + DELETE_INTERVAL
+        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + '  ' +
+        'Running ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + ' ' +
+        DELETE_INTERVAL
       )
   
     })

@@ -7,12 +7,12 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const mutations = {
+const actions = {
   completeTask: jest.fn()
 }
 
 const store = new Vuex.Store({
-  mutations
+  actions
 })
 
 const taskId = 0
@@ -45,7 +45,7 @@ describe('Checkbox', () => {
     
     const wrapper = checkboxWrapper()
     wrapper.find('input[type="checkbox"]').trigger('click')
-    expect(mutations.completeTask).toHaveBeenCalledWith({}, { id: taskId })
+    expect(actions.completeTask).toHaveBeenCalledWith(expect.anything(), { taskId: taskId })
     
   })
   

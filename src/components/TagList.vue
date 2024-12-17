@@ -211,8 +211,7 @@ export default {
   methods: {
     
     ...mapActions([
-      'addTaskTag',
-      'removeTaskTag'
+      'addTaskTag'
     ]),
     
     ...mapMutations([

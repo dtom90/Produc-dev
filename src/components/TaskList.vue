@@ -293,8 +293,8 @@ export default {
         incompleteTasks = this.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
         return incompleteTasks
       },
-      set (newTaskOrder) {
-        this.reorderIncompleteTasks({ newTaskOrder })
+      set (newIncompleteTaskOrder) {
+        this.reorderIncompleteTasks({ newIncompleteTaskOrder })
       }
     },
     completedTaskList () {

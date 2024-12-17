@@ -303,7 +303,8 @@ export default {
     
     ...mapActions([
       'startTask',
-      'archiveTask'
+      'archiveTask',
+      'removeTaskTag'
     ]),
     
     ...mapMutations([
@@ -330,8 +331,8 @@ export default {
       }
     },
     
-    removeTag (tagName) {
-      this.removeTaskTag({ taskId: this.taskId, tagName })
+    removeTag ({ tagName }) {
+      this.removeTaskTag({ taskId: this.task.id, tagName })
       this.$forceUpdate()
     },
     

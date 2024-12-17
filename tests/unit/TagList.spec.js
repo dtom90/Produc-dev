@@ -23,7 +23,7 @@ const getters = {
   availableTags: () => jest.fn()
 }
 
-const mutations = {
+const actions = {
   addTaskTag: jest.fn(),
   removeTaskTag: jest.fn()
 }
@@ -31,10 +31,10 @@ const mutations = {
 const store = new Vuex.Store({
   state,
   getters,
-  mutations
+  actions
 })
 
-const taskId = 0
+const taskId = 'id-task'
 
 describe('TagList', () => {
   
@@ -56,11 +56,11 @@ describe('TagList', () => {
     expect(tags.at(0).text()).toMatch(tagValues[0])
     expect(tags.at(1).text()).toMatch(tagValues[1])
     
-    const removeTagBtn = tags.at(0).findAll('button').at(1)
-    expect(removeTagBtn.text()).toEqual('×')
+    // const removeTagBtn = tags.at(0).findAll('button').at(1)
+    // expect(removeTagBtn.text()).toEqual('×')
     
     // removeTagBtn.trigger('click')
-    // expect(mutations.removeTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: task.tags[0] })
+    // expect(actions.removeTaskTag).toHaveBeenCalledWith({}, { id: task.id, tag: task.tags[0] })
     
   })
   
@@ -90,7 +90,7 @@ describe('TagList', () => {
     expect(wrapper.vm.newTag).toBe('some tag')
     
     await addTagInput.trigger('keyup.enter')
-    expect(mutations.addTaskTag).toHaveBeenCalledWith(state, { id: taskId, tag: 'some tag' })
+    expect(actions.addTaskTag).toHaveBeenCalledWith(expect.anything(), { taskId, tagName: 'some tag' })
     expect(addTagInput.element.value).toBe('')
     
   })

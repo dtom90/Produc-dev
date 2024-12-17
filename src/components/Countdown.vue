@@ -239,16 +239,6 @@ export default {
     
   },
   
-  // watch: {
-  //   running (newValue, oldValue) {
-  //     console.log('runing', oldValue, newValue)
-  //     if (this.countingDown && oldValue === true && newValue === false) {
-  //       this.toggleTimer()
-  //       this.setTaskInactive()
-  //     }
-  //   }
-  // },
-  
   mounted: function () {
     this.secondsRemaining = this.totalSeconds
     this.timer = new CountdownTimer(this.totalSeconds, this.decrementTimer, this.finishTimer)
