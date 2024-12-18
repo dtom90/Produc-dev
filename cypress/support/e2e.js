@@ -30,4 +30,9 @@ beforeEach(() => {
   const hostname = Cypress.env('DEVTRACK_HOSTNAME') || 'localhost'
   cy.visit(`http://${hostname}:8080`)
   cy.contains('DevTrack')
+  indexedDB.databases().then((databases) => {
+    databases.forEach((db) => {
+      indexedDB.deleteDatabase(db.name)
+    })
+  })
 })

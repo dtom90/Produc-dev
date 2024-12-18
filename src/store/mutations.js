@@ -1,30 +1,64 @@
-import getters from './getters'
 import Vue from 'vue'
-import ColorManager from 'color-manager'
 import $ from 'jquery'
 
 const mutations = {
   
-  addTask (state, payload) {
-    const taskName = payload.name.trim()
-    if (taskName) {
-      const newTask = {
-        id: state.nextTaskID,
-        name: taskName,
-        tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
-        notes: '',
-        created: Date.now(),
-        log: [],
-        completed: null
-      }
-      if (state.insertAtTop) {
-        state.tasks.unshift(newTask)
-      } else {
-        state.tasks.push(newTask)
-      }
-      state.nextTaskID += 1
-      state.selectedTaskID = newTask.id
+  setState (state, { tasks, tags, taskTagMaps, logs, settings }) {
+    state.tasks = tasks
+    state.tags = {}
+    state.tagOrder = []
+    for (const tag of tags) {
+      Vue.set(state.tags, tag.tagName, { color: tag.color })
+      state.tagOrder.push(tag.tagName)
     }
+    for (const taskTagMap of taskTagMaps) {
+      const task = state.tasks.find(t => t.id === taskTagMap.taskId)
+      if (task) {
+        task.tags.push(taskTagMap.tagName)
+      }
+    }
+    for (const log of logs) {
+      const task = state.tasks.find(t => t.id === log.taskId)
+      if (task) {
+        const logsForTask = logs.filter(l => l.taskId === log.taskId)
+        logsForTask.sort((a, b) => a.started - b.started)
+        task.log = logsForTask
+      }
+    }
+    for (const key of ['selectedTaskID']) {
+      const setting = settings.find(s => s.key === key)
+      state[key] = setting ? setting.value : null
+    }
+  },
+  
+  setTasks (state, { tasks }) {
+    state.tasks = tasks
+  },
+  
+  addTask (state, { task }) {
+    task.log = []
+    if (state.insertAtTop) {
+      state.tasks.unshift(task)
+    } else {
+      state.tasks.push(task)
+    }
+    state.selectedTaskID = task.id
+  },
+  
+  updateTask (state, { taskId, taskUpdates }) {
+    const index = state.tasks.findIndex(t => t.id === taskId)
+    if (index !== -1) {
+      Vue.set(state.tasks, index, { ...state.tasks[index], ...taskUpdates })
+    }
+  },
+  
+  updateTasks (state, { tasksToUpdate }) {
+    tasksToUpdate.forEach(taskUpdate => {
+      const index = state.tasks.findIndex(t => t.id === taskUpdate.id)
+      if (index !== -1) {
+        Vue.set(state.tasks, index, { ...state.tasks[index], ...taskUpdate })
+      }
+    })
   },
   
   setTopInsert (state, payload) {
@@ -39,31 +73,8 @@ const mutations = {
     state.showArchived = newValue
   },
   
-  updateIncompleteTasks (state, { newTaskOrder }) {
-    const incompleteTasks = getters.incompleteTasks(state)
-    const origLength = incompleteTasks.length
-    if (newTaskOrder.length === origLength) {
-      state.tasks = newTaskOrder.concat(getters.completedTasks(state))
-    } else {
-      const reorderTaskIds = {}
-      newTaskOrder.forEach(task => {
-        reorderTaskIds[task.id] = true
-      })
-      let r = 0
-      for (let i = 0; i < incompleteTasks.length; i++) {
-        if (incompleteTasks[i].id in reorderTaskIds) {
-          incompleteTasks[i] = newTaskOrder[r]
-          r++
-        }
-      }
-      if (incompleteTasks.length === origLength) { // ensure that the length has not changed
-        state.tasks = incompleteTasks.concat(getters.completedTasks(state))
-      }
-    }
-  },
-  
-  selectTask (state, id) {
-    state.selectedTaskID = id
+  selectTask (state, { taskId }) {
+    state.selectedTaskID = taskId
   },
   
   updateActiveMinutes (state, { activeMinutes }) {
@@ -86,32 +97,22 @@ const mutations = {
     state.continueOnComplete = newValue
   },
   
-  startTask (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
+  startTask (state, { log }) {
+    const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
-      task.log.push({
-        started: Date.now(),
-        stopped: null,
-        timeSpent: null
-      })
+      task.log.push(log)
       state.activeTaskID = task.id
       state.running = true
     }
   },
   
-  stopTask (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (task && task.log.length > 0) {
-      const lastInterval = task.log[task.log.length - 1]
-      lastInterval.stopped = Date.now()
-      lastInterval.timeSpent = lastInterval.stopped - lastInterval.started
-      if ('running' in payload) {
-        lastInterval.running = payload.running
-      } else {
-        if ('running' in lastInterval) {
-          Vue.delete(lastInterval, 'running')
-        }
-        state.running = false
+  updateLog (state, { log }) {
+    const task = state.tasks.find(t => t.id === log.taskId)
+    if (task) {
+      const i = task.log.findIndex(l => l.id === log.id)
+      if (i !== -1) {
+        Vue.set(task.log, i, log)
+        state.running = log.stopped === null
       }
     }
   },
@@ -120,27 +121,18 @@ const mutations = {
     state.activeTaskID = null
   },
   
-  addInterval (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (task) {
-      const interval = {
-        started: null,
-        stopped: payload.stopped,
-        timeSpent: payload.timeSpent
-      }
-      interval.started = interval.stopped - interval.timeSpent
-      task.log.push(interval)
-    }
-  },
-  
-  deleteInterval (state, { taskId, startedTime }) {
+  deleteInterval (state, { logId, taskId }) {
     const task = state.tasks.find(t => t.id === taskId)
     if (task) {
-      const intervalIndex = task.log.findIndex(interval => interval.started === startedTime)
-      task.log.splice(intervalIndex, 1)
+      const logIndex = task.log.findIndex(log => log.id === logId)
+      task.log.splice(logIndex, 1)
     }
   },
   
+  setRunning (state, value) {
+    state.running = value
+  },
+
   resetRunning (state) {
     if (state.activeTaskID) {
       const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
@@ -154,22 +146,20 @@ const mutations = {
     state.running = false
   },
   
-  addTaskTag (state, payload) {
-    const newTag = payload.tag.trim()
-    if (newTag) {
-      const task = state.tasks.find(t => t.id === payload.id)
-      if (task) {
-        if (!(newTag in state.tags)) {
-          const colors = Object.values(state.tags).map(tag => tag.color)
-          const colorManager = new ColorManager(colors)
-          Vue.set(state.tags, newTag, { color: colorManager.getRandomColor() })
-          state.tagOrder.push(newTag)
-        }
-        if (!(task.tags.includes(newTag))) {
-          task.tags.push(newTag)
-        }
-      }
+  addTaskTag (state, { taskId, tagName, color }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    if (tagName && color) {
+      Vue.set(state.tags, tagName, { color })
+      state.tagOrder.push(tagName)
     }
+    if (!(task.tags.includes(tagName))) {
+      task.tags.push(tagName)
+    }
+  },
+  
+  updateTaskTags (state, { taskId, newTagNames }) {
+    const task = state.tasks.find(t => t.id === taskId)
+    task.tags = newTagNames
   },
   
   ensureTagOrder (state) {
@@ -188,8 +178,8 @@ const mutations = {
   
   upgradeTagColor (state) {
     if (typeof Object.values(state.tags)[0] === 'string') {
-      Object.keys(state.tags).map(tag => {
-        state.tags[tag] = { color: state.tags[tag] }
+      Object.keys(state.tags).map(tagName => {
+        state.tags[tagName] = { color: state.tags[tagName] }
       })
     }
   },
@@ -214,25 +204,8 @@ const mutations = {
     }
   },
   
-  removeTag (state, payload) {
-    state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
-  },
-  
-  removeTaskTag (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    task.tags.splice(task.tags.indexOf(payload.tag), 1)
-  },
-  
-  completeTask (state, payload) {
-    const task = state.tasks.find(t => t.id === payload.id)
-    if (!task.completed) {
-      task.completed = Date.now()
-      if (task.id === state.activeTaskID && state.running) {
-        state.running = false
-      }
-    } else {
-      task.completed = null
-    }
+  removeTag (state, { tagName }) {
+    state.selectedTags = state.selectedTags.filter(tag => tag !== tagName)
   },
   
   renameTag (state, payload) {
@@ -269,14 +242,6 @@ const mutations = {
     }
   },
   
-  archiveTask (state, { id }) {
-    const index = state.tasks.findIndex(t => t.id === id)
-    if (index !== -1) {
-      const archived = state.tasks[index].archived
-      state.tasks.splice(index, 1, { ...state.tasks[index], archived: !archived })
-    }
-  },
-  
   deleteTask (state, payload) {
     const index = state.tasks.findIndex(t => t.id === payload.id)
     const task = state.tasks[index]
@@ -288,24 +253,6 @@ const mutations = {
       } else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
         state.selectedTaskID = state.activeTaskID
       }
-    }
-  },
-  
-  archiveTasks (state) {
-    const completedTasks = state.tasks.filter(t => t.completed && !t.archived)
-    if (completedTasks.length === 0) {
-      alert('No completed tasks to archive')
-      return
-    }
-    if (completedTasks.length === 1 || confirm(`Are you sure that you want to archive all ${completedTasks.length} completed tasks?`)) {
-      const updatedTasks = []
-      for (let i = 0; i < state.tasks.length; i++) {
-        if (state.tasks[i].completed && !state.tasks[i].archived) {
-          state.tasks[i].archived = true
-        }
-        updatedTasks.push(state.tasks[i])
-      }
-      state.tasks = updatedTasks
     }
   },
   

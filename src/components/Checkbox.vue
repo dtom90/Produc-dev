@@ -6,14 +6,14 @@
       type="checkbox"
       :title="'Mark task ' + (checked ? 'in' : '') + 'complete'"
       :disabled="disabled"
-      @change="completeTask({id: taskId})"
+      @change="completeTask({taskId})"
     >
     <span class="check-custom" />
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Checkbox',
@@ -28,13 +28,13 @@ export default {
       default: false
     },
     taskId: {
-      type: Number,
+      type: String,
       default: null
     }
   },
   
   methods: {
-    ...mapMutations([
+    ...mapActions([
       'completeTask'
     ])
   }

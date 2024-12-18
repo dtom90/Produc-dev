@@ -101,7 +101,7 @@ describe('ActivityView', () => {
       })
       
       wrapper = shallowMount(ActivityView, {
-        propsData: { log: log, element: 'My Task', taskId: 1 },
+        propsData: { log: log, element: 'My Task', taskId: 'id-1' },
         localVue,
         store
       })
@@ -112,13 +112,13 @@ describe('ActivityView', () => {
     it('should calculate time spent even when an interval is running', () => {
       store = new Vuex.Store({
         state: {
-          tasks: [{ id: 0 }]
+          tasks: [{ id: 'id-0' }]
         }
       })
       
       const startedTask = shallowMount(ActivityView, {
         propsData: {
-          taskId: 0,
+          taskId: 'id-0',
           log: [{ started: Date.now(), stopped: null }],
           element: 'My Task'
         },

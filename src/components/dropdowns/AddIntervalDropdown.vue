@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 import time from '../../lib/time'
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
@@ -67,7 +67,7 @@ export default {
   
   props: {
     taskId: {
-      type: Number,
+      type: String,
       default: null
     }
   },
@@ -83,7 +83,7 @@ export default {
   },
   
   methods: {
-    ...mapMutations(['addInterval']),
+    ...mapActions(['addInterval']),
     
     dropdownWillShow () {
       this.endTime = this.displayDateTimeHuman()
@@ -115,7 +115,7 @@ export default {
       this.intentionalEnter = true
       event.preventDefault()
       this.addInterval({
-        id: this.taskId,
+        taskId: this.taskId,
         stopped: this.stringToMs(this.endTime),
         timeSpent: this.minutesToMs(this.appendMinutes)
       })

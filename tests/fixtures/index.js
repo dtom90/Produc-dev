@@ -41,10 +41,10 @@ export function newTask (includeTags = false) {
   const tags = includeTags ? ['one tag', 'another tag'] : []
   
   return {
-    id: 1,
+    id: 'id-1',
     name: 'new task 1',
     tags,
-    created: moment.now(),
+    created_at: moment.now(),
     log: [],
     completed: null
   }

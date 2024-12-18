@@ -103,7 +103,7 @@
               block
               variant="archive-color"
               title="Archive task"
-              @click="archiveTask({id: task.id})"
+              @click="archiveTask({taskId: task.id})"
             >
               <span v-if="!task.archived">
                 <font-awesome-icon icon="download" />
@@ -191,13 +191,13 @@
     <!-- Countdown Timer -->
     <keep-alive>
       <Countdown
-        v-if="!task.completed && (!running || activeTaskID === task.id)"
+        v-if="!task.completed && (!running || !activeTaskID || activeTaskID === task.id)"
         :task-id="task.id"
         class="top-margin"
       />
     </keep-alive>
     <div
-      v-if="!task.completed && (running && activeTaskID !== task.id)"
+      v-if="!task.completed && (running && activeTaskID && activeTaskID !== task.id)"
       class="d-flex flex-column align-items-center"
       style="color: darkred"
     >
@@ -231,7 +231,7 @@ import Checkbox from './Checkbox'
 import TagList from './TagList'
 import Countdown from './Countdown'
 import ActivityView from './ActivityView'
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 
@@ -301,13 +301,13 @@ export default {
   
   methods: {
     
-    ...mapMutations([
+    ...mapActions([
       'startTask',
-      'stopTask',
-      'disableTaskNotifications',
-      'addTaskTag',
-      'removeTaskTag',
       'archiveTask',
+      'removeTaskTag'
+    ]),
+    
+    ...mapMutations([
       'deleteTask'
     ]),
     
@@ -331,31 +331,9 @@ export default {
       }
     },
     
-    tagInputChange () {
-      this.tagOptions = this.availableTags(this.task.id, this.newTag)
-    },
-    
-    addTag (newTag) {
-      this.addTaskTag({ id: this.task.id, tag: newTag })
-      this.newTag = ''
-      this.tagInputChange()
-      this.tagOptions = []
-      this.$refs.addTagInput.focus()
-    },
-    
-    removeTag (tag) {
-      this.removeTaskTag({ id: this.task.id, tag })
+    removeTag ({ tagName }) {
+      this.removeTaskTag({ taskId: this.task.id, tagName })
       this.$forceUpdate()
-    },
-    
-    clickOutside (event) {
-      if (!(event.relatedTarget && event.relatedTarget.classList &&
-        event.relatedTarget.classList.contains('tag-option'))) {
-        this.tagOptions = []
-        if (!(event.relatedTarget && event.relatedTarget.id === 'addTagButton')) {
-          this.showTagInput = false
-        }
-      }
     },
     
     editNotes () {
@@ -365,9 +343,8 @@ export default {
       })
     },
     
-    continueTimerHere () {
-      this.stopTask({ id: this.activeTaskID })
-      this.startTask({ id: this.task.id })
+    async continueTimerHere () {
+      await this.startTask({ taskId: this.task.id })
     }
   }
 }

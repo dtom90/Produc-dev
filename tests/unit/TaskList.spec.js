@@ -9,9 +9,9 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
 const tasks = [
-  { id: 1, name: 'new task 1' },
-  { id: 2, name: 'new task 2' },
-  { id: 3, name: 'new task 3' }
+  { id: '1', name: 'new task 1' },
+  { id: '2', name: 'new task 2' },
+  { id: '3', name: 'new task 3' }
 ]
 
 const state = {
@@ -25,15 +25,19 @@ const getters = {
   unselectedTags: () => []
 }
 
-const mutations = {
+const actions = {
   addTask: jest.fn(),
-  archiveTasks: jest.fn(),
+  archiveTasks: jest.fn()
+}
+
+const mutations = {
   deleteTasks: jest.fn()
 }
 
 const store = new Vuex.Store({
   state,
   getters,
+  actions,
   mutations
 })
 
@@ -114,7 +118,7 @@ describe('TaskList', () => {
         taskInput.setValue('new task 4')
         await taskInput.trigger('keyup.enter')
         
-        expect(mutations.addTask).toHaveBeenCalledWith(state, { name: 'new task 4' })
+        expect(actions.addTask).toHaveBeenCalledWith(expect.anything(), { name: 'new task 4' })
         expect(taskInput.element.value).toBe('')
       }
       
@@ -125,7 +129,7 @@ describe('TaskList', () => {
       if (title === 'Done') {
         const archiveAllBtn = wrapper.find('button[title="Archive all list tasks"]')
         archiveAllBtn.trigger('click')
-        expect(mutations.archiveTasks).toHaveBeenCalled()
+        expect(actions.archiveTasks).toHaveBeenCalled()
       }
       
     })

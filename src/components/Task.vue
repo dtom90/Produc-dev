@@ -2,7 +2,7 @@
   <!--  Task List Group Item Wrapper  -->
   <li
     :class="'task list-group-item list-group-item-action form-check'+active"
-    @click="selectTask(task.id)"
+    @click="selectTask({ taskId: task.id })"
   >
     <div class="d-flex align-items-center">
       <Checkbox
@@ -24,17 +24,17 @@
     </div>
     <div class="d-flex flex-wrap">
       <span
-        v-for="tag in taskTags"
-        :key="tag"
+        v-for="tagName in taskTags"
+        :key="tagName"
         class="badge mini-tag"
-        :style="{backgroundColor: tags[tag].color}"
+        :style="{backgroundColor: tags[tagName].color}"
       >&nbsp;&nbsp;</span>
     </div>
   </li>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Checkbox from './Checkbox'
 
 export default {
@@ -82,7 +82,7 @@ export default {
   },
   
   methods: {
-    ...mapMutations([
+    ...mapActions([
       'selectTask'
     ])
   }

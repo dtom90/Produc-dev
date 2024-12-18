@@ -19,27 +19,27 @@
     
     <div id="elements">
       <div
-        v-for="tag in sortedTagList"
-        :key="tag"
+        v-for="tagName in sortedTagList"
+        :key="tagName"
         class="tag btn-group"
       >
         <button
           class="tag-name btn"
-          :style="`backgroundColor: ${tags[tag].color}`"
+          :style="`backgroundColor: ${tags[tagName].color}`"
           :title="selectText"
-          @click="modal ? viewActivityModal(tag) : selectTag(tag, $event)"
+          @click="modal ? viewActivityModal(tagName) : selectTag(tagName, $event)"
         >
-          {{ tag }}
+          {{ tagName }}
         </button>
         <button
           v-if="removeTag"
           class="tag-close btn"
-          :style="`backgroundColor: ${tags[tag].color}`"
+          :style="`backgroundColor: ${tags[tagName].color}`"
           :title="removeText"
           aria-label="Close"
-          @click.stop="removeTag(tag)"
+          @click.stop="removeTag({tagName})"
         >
-          <span aria-hidden="true">&times;</span>
+          <font-awesome-icon icon="times" />
         </button>
       </div>
       <div v-if="label === 'Filtering on tasks with' && tagList.length > 1">
@@ -94,6 +94,7 @@
             />
           </button>
           <div
+            v-if="showTagInput"
             id="tagDropdown"
           >
             <div
@@ -101,13 +102,13 @@
               class="btn-group-vertical"
             >
               <button
-                v-for="tag in tagOptions"
-                :key="tag"
+                v-for="tagName in availableTags(taskId, newTag)"
+                :key="tagName"
                 class="tag-option btn btn-light"
-                :style="`backgroundColor: ${tags[tag].color}`"
-                @click="addTag(tag)"
+                :style="`backgroundColor: ${tags[tagName].color}`"
+                @click="addTag(tagName)"
               >
-                {{ tag }}
+                {{ tagName }}
               </button>
             </div>
           </div>
@@ -131,7 +132,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'TagList',
@@ -141,8 +142,8 @@ export default {
       default: () => []
     },
     taskId: {
-      type: Number,
-      default: NaN
+      type: String,
+      default: null
     },
     label: {
       type: String,
@@ -190,7 +191,7 @@ export default {
     ]),
     
     taskTags () {
-      return !isNaN(this.taskId)
+      return this.taskId != null
     },
     
     sortedTagList () {
@@ -209,9 +210,11 @@ export default {
   
   methods: {
     
+    ...mapActions([
+      'addTaskTag'
+    ]),
+    
     ...mapMutations([
-      'addTaskTag',
-      'removeTaskTag',
       'setFilterOperator',
       'setModalTag'
     ]),
@@ -229,8 +232,8 @@ export default {
       this.tagOptions = this.availableTags(this.taskId, this.newTag)
     },
     
-    addTag: function (newTag) {
-      this.addTaskTag({ id: this.taskId, tag: newTag })
+    addTag: function (tagName) {
+      this.addTaskTag({ taskId: this.taskId, tagName })
       this.newTag = ''
       this.tagInputChange()
       this.tagOptions = this.availableTags(this.taskId, this.newTag)

@@ -9,12 +9,12 @@ const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
-const mutations = {
+const actions = {
   selectTask: jest.fn()
 }
 
 const store = new Vuex.Store({
-  mutations
+  actions
 })
 
 const taskName = 'new task 1'
@@ -70,7 +70,7 @@ describe('Task', () => {
   it('selects the task when clicked', () => {
     
     wrapper.trigger('click')
-    expect(mutations.selectTask).toHaveBeenCalledWith({}, task.id)
+    expect(actions.selectTask).toHaveBeenCalledWith(expect.anything(), { taskId: task.id })
     
   })
   

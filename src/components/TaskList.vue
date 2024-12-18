@@ -144,7 +144,7 @@
       <!-- New Task Input Field -->
       <input
         id="new-task"
-        v-model="newTask"
+        v-model="newTaskName"
         type="text"
         class="form-control"
         placeholder="enter new task"
@@ -208,7 +208,7 @@
 <script>
 import Task from './Task.vue'
 import TagList from './TagList.vue'
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -229,7 +229,7 @@ export default {
   },
   
   data: () => ({
-    newTask: '',
+    newTaskName: '',
     sortingOptions: ['Recent', 'Oldest'],
     sortOrder: 'Recent'
   }),
@@ -293,8 +293,8 @@ export default {
         incompleteTasks = this.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
         return incompleteTasks
       },
-      set (newTaskOrder) {
-        this.updateIncompleteTasks({ newTaskOrder })
+      set (newIncompleteTaskOrder) {
+        this.reorderIncompleteTasks({ newIncompleteTaskOrder })
       }
     },
     completedTaskList () {
@@ -313,22 +313,28 @@ export default {
   },
   
   methods: {
-    
-    ...mapMutations([
+
+    ...mapActions([
       'addTask',
+      'selectTask',
+      'reorderIncompleteTasks',
+      'archiveTasks'
+    ]),
+
+    ...mapMutations([
       'setTopInsert',
       'updateAddSelectedTags',
       'updateShowArchived',
-      'archiveTasks',
       'deleteTasks',
-      'updateIncompleteTasks',
       'selectTag',
-      'removeTag',
-      'selectTask'
+      'removeTag'
     ]),
+    
     addNewTask () {
-      this.addTask({ name: this.newTask })
-      this.newTask = ''
+      this.addTask({
+        name: this.newTaskName
+      })
+      this.newTaskName = ''
     },
     selectTagFilter (tag, e) {
       e.stopPropagation()
@@ -339,14 +345,14 @@ export default {
           tasksWithTag = this.completedTasks.find(task => this.selectedTags.some(tag => task.tags.includes(tag)))
         }
         if (tasksWithTag) {
-          this.selectTask(tasksWithTag.id)
+          this.selectTask({ taskId: tasksWithTag.id })
         } else {
-          this.selectTask(null)
+          this.selectTask({ taskId: null })
         }
       }
     },
-    removeTagFilter (tag) {
-      this.removeTag({ tag })
+    removeTagFilter ({ tagName }) {
+      this.removeTag({ tagName })
     },
     startDrag () {
       this.$el.closest('html').classList.add('draggable-cursor')

@@ -25,11 +25,11 @@
         <td v-if="event.started">
           <span>Started {{ displayTimeHuman(event.started) }}</span>
         </td>
-        <td v-if="event.stopped">
+        <td>
           <font-awesome-icon icon="arrow-right" />
         </td>
-        <td v-if="event.stopped">
-          <span>{{ event.running ? 'Running' : 'Stopped' }} {{ displayTimeHuman(event.stopped) }}</span>
+        <td>
+          <span>{{ event.stopped ? 'Stopped' : 'Running' }} {{ displayTimeHuman(event.stopped || Date.now()) }}</span>
         </td>
         <td v-if="event.timeSpent">
           <span>Time Spent: {{ displayDuration(event.timeSpent) }}</span>
@@ -56,7 +56,7 @@
               <button
                 class="btn btn-danger"
                 style="width: 100%"
-                @click="deleteInterval(event.started, index)"
+                @click="deleteInterval({ log: event, index })"
               >
                 Delete Interval
               </button>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import time from '../lib/time'
+import time, { displayDuration } from '../lib/time'
 
 export default {
   name: 'Log',
@@ -105,12 +105,17 @@ export default {
   },
   
   methods: {
+    
+    displayEventDuration (event) {
+      const end = event.stopped || Date.now()
+      return displayDuration(end - event.started)
+    },
   
-    deleteInterval (startedTime, index) {
+    deleteInterval ({ log, index }) {
       this.$refs[`intervalMenu${index}`][0].classList.remove('show')
       this.$refs[`intervalMenu${index}`][0].querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
       this.$refs[`intervalMenu${index}`][0].querySelector('.dropdown-menu').classList.remove('show')
-      this.deleteIntervalButtonClicked(startedTime)
+      this.deleteIntervalButtonClicked({ logId: log.id })
     }
   }
 }

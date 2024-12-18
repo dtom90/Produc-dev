@@ -1,4 +1,4 @@
-describe('create tasks', () => {
+describe('create tags', () => {
   const firstTagName = 'my first tag'
   const secondTagName = 'my second tag'
 
@@ -19,7 +19,7 @@ describe('create tasks', () => {
     // (No specific action needed for this test)
 
     // Assert
-    cy.get('div.tag.btn-group').contains(firstTagName)
+    cy.get('.btn-group > button.tag-name').contains(firstTagName)
   })
 
   it('selects previous tag to the second task', () => {
@@ -34,7 +34,10 @@ describe('create tasks', () => {
     cy.get('#tagDropdownMenu > button').contains(firstTagName).click()
 
     // Assert
-    cy.get('div.tag.btn-group').contains(firstTagName)
+    cy.get('#selected-task-container').within(() => {
+      cy.get('#tagDropdownMenu > button').should('not.exist')
+      cy.get('div.tag > button.tag-name').contains(firstTagName).should('be.visible')
+    })
   })
 
   it('adds a second tag to the first task', () => {
@@ -46,8 +49,8 @@ describe('create tasks', () => {
       .should('have.focus').type(secondTagName + '{enter}')
 
     // Assert
-    cy.get('div.tag.btn-group').contains(firstTagName)
-    cy.get('div.tag.btn-group').contains(secondTagName)
+    cy.get('.btn-group > button.tag-name').contains(firstTagName)
+    cy.get('.btn-group > button.tag-name').contains(secondTagName)
   })
 
   it('clicks the Tags button to show the Tags Modal', () => {
