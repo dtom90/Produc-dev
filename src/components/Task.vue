@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Checkbox from './Checkbox'
 
 export default {

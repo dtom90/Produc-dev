@@ -39,7 +39,7 @@ const store = new Vuex.Store({
   mutations
 })
 
-const delay = t => new Promise(resolve => setTimeout(resolve, t))
+// const delay = t => new Promise(resolve => setTimeout(resolve, t))
 
 const expectedTaskId = '5'
 

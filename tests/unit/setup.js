@@ -6,9 +6,9 @@ window.electronAPI = {
 }
 
 if (typeof queueMicrotask === 'undefined') {
-  global.queueMicrotask = (callback) => Promise.resolve().then(callback).catch((err) => setTimeout(() => { throw err; }));
+  global.queueMicrotask = (callback) => Promise.resolve().then(callback).catch((err) => setTimeout(() => { throw err }))
 }
 
 if (typeof structuredClone === 'undefined') {
-  global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
+  global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj))
 }

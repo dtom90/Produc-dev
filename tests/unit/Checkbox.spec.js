@@ -15,7 +15,7 @@ const store = new Vuex.Store({
   actions
 })
 
-const taskId = 0
+const taskId = 'id-0'
 
 function checkboxWrapper (checked = false) {
   
