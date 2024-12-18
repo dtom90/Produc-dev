@@ -33,7 +33,7 @@ jobs:
 
   build-web:
     docker:
-      - image: cimg/node:18.20.5
+      - image: cimg/node:16.20.2
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -70,8 +70,8 @@ jobs:
           name: Set Node Version
           command: |
             set +e
-            nvm install v18.20.5
-            nvm alias default v18.20.5
+            nvm install v16.20.2
+            nvm alias default v16.20.2
       - run:
           name: Install dependencies
           command: |
