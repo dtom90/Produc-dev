@@ -5,7 +5,7 @@ import ColorManager from 'color-manager'
 const actions = {
   async loadInitialData ({ commit }) {
     const tasks = await dexieDb.tasks.orderBy('order').toArray()
-    const tags = await dexieDb.tags.toArray()
+    const tags = await dexieDb.tags.orderBy('order').toArray()
     const taskTagMaps = await dexieDb.taskTagMap.toArray()
     const logs = await dexieDb.logs.toArray()
     const settings = await dexieDb.settings.toArray()
@@ -184,10 +184,14 @@ const actions = {
         if (isNewTag) {
           const colors = Object.values(state.tags).map(tag => tag.color)
           const colorManager = new ColorManager(colors)
+          // get the maximum order value in all tags in dexie
+          const maxOrder = await dexieDb.tags.orderBy('order').last()
+          const order = maxOrder ? maxOrder.order + 1 : 0
           tag = {
             id: 'tag-' + nanoid(),
             tagName: tagName,
-            color: colorManager.getRandomColor()
+            color: colorManager.getRandomColor(),
+            order
           }
           await dexieDb.tags.add(tag)
         }
@@ -239,6 +243,19 @@ const actions = {
       await dexieDb.tags.put(tag)
       commit('updateTag', { tagId, tag })
     }
+  },
+  
+  async reorderTags ({ state, commit }, { newOrder }) {
+    const reorderedTags = []
+    for (const [i, tagId] of newOrder.entries()) {
+      const tag = state.tags[tagId]
+      if (tag.order !== i) {
+        tag.order = i
+        await dexieDb.tags.put(tag)
+        reorderedTags.push(tag)
+      }
+    }
+    commit('updateTagOrder', { reorderedTags })
   },
   
   async removeTaskTag ({ state, commit }, { taskId, tagId }) {

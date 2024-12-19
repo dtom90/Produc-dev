@@ -1,5 +1,6 @@
 describe('edit tags', () => {
   const firstTagName = 'my first tag'
+  const secondTagName = 'my second tag'
 
   beforeEach(() => {
     cy.get('input[placeholder="enter new task"]')
@@ -63,5 +64,42 @@ describe('edit tags', () => {
 
     // Assert
     cy.get('.btn-group > button.tag-name').contains(firstTagName + ' updated')
+  })
+
+  it('should reorder tags', () => {
+    // Arrange
+    cy.get('input[placeholder="add new tag"]')
+      .should('have.focus').type(secondTagName + '{enter}')
+    cy.get('.navbar-nav').get('a.nav-link').contains('Tags').click()
+
+    // Act
+    cy.contains('.modal-dialog', 'Tags').within(() => {
+      // const firstElement = cy.get('.tag-button').contains(firstTagName).parents('.tag').find('.move-btn')
+      cy.get('.tag-button').contains(secondTagName).parents('.tag').find('.move-btn')
+        .drag('.move-btn', { destination: '.tag' })
+    })
+    
+    // Assert
+    cy.get('.btn-group > button.tag-name').first().contains(secondTagName)
+    cy.get('.btn-group > button.tag-name').last().contains(firstTagName)
+  })
+
+  it('should reorder tags on task', () => {
+    // Arrange
+    cy.get('input[placeholder="add new tag"]')
+      .should('have.focus').type(secondTagName + '{enter}')
+    cy.get('.navbar-nav').get('a.nav-link').contains('Tags').click()
+
+    // Act
+    cy.contains('.modal-dialog', 'Tags').within(() => {
+      // const firstElement = cy.get('.tag-button').contains(firstTagName).parents('.tag').find('.move-btn')
+      cy.get('.tag-button').contains(secondTagName).parents('.tag').find('.move-btn')
+        .drag('.move-btn', { destination: '.tag' })
+      cy.get('button').contains('OK').click()
+    })
+    
+    // Assert
+    cy.get('#selected-task-container .btn-group > button.tag-name').first().contains(secondTagName)
+    cy.get('#selected-task-container .btn-group > button.tag-name').last().contains(firstTagName)
   })
 })

@@ -37,7 +37,7 @@
 
 <script>
 import TagSettingsButton from '../TagSettingsButton'
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import draggable from 'vuedraggable'
 
 export default {
@@ -58,14 +58,14 @@ export default {
         return this.tagOrder
       },
       set (newOrder) {
-        this.updateTagOrder({ newOrder })
+        this.reorderTags({ newOrder })
       }
     }
   },
   
   methods: {
-    ...mapMutations([
-      'updateTagOrder'
+    ...mapActions([
+      'reorderTags'
     ]),
     startDrag () {
       document.body.classList.add('draggable-cursor')

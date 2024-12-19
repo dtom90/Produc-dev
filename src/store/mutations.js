@@ -166,8 +166,11 @@ const mutations = {
     }
   },
   
-  updateTagOrder (state, { newOrder }) {
-    state.tagOrder = newOrder
+  updateTagOrder (state, { reorderedTags }) {
+    reorderedTags.forEach(tag => {
+      state.tags[tag.id] = tag
+    })
+    state.tagOrder = reorderedTags.map(tag => tag.id)
   },
   
   setTagColor (state, payload) {
