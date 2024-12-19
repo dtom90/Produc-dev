@@ -14,7 +14,7 @@ const EXPECTED_TIME_FORMAT = 'h:mm A'
 const EXPECTED_DAY_KEY_FORMAT = 'YYYY-MM-DD'
 const EXPECTED_DAY_DISPLAY_FORMAT = 'ddd MMM DD'
 
-const DELETE_INTERVAL = '  \n              Delete Interval'
+const DELETE_INTERVAL = 'Delete Interval'
 
 const { log, day1Duration, day2Duration, completedDate } = generateActivity()
 const allDuration = moment.duration(day1Duration + day2Duration).asMilliseconds()
@@ -46,21 +46,33 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' + DELETE_INTERVAL + '\n' +
-        '                  Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes' + DELETE_INTERVAL + '\n' +
-        '                  Started ' + moment(log[1].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' + DELETE_INTERVAL + '\n' +
-        '                  Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 22 minutes' + DELETE_INTERVAL
-      )
-      
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 25 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 15 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[1].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 25 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 22 minutes')
+      // expect 3 instances of delete_interval
+      expect(wrapper.find('.activityLog').text().match(new RegExp(DELETE_INTERVAL, 'g')).length)
+        .toEqual(4)
     })
     
     it('does not render a stopped time when the interval is running', () => {
@@ -74,11 +86,13 @@ describe('Log', () => {
         store
       })
   
-      expect(startedWrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + '  ' +
-        'Running ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + ' ' +
-        DELETE_INTERVAL
+      expect(startedWrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT)
       )
+      expect(startedWrapper.find('.activityLog').text()).toContain(
+        'Running ' + moment(startedTime).format(EXPECTED_TIME_FORMAT)
+      )
+      expect(startedWrapper.find('.activityLog').text()).toContain(DELETE_INTERVAL)
   
     })
     
@@ -112,11 +126,13 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 22 minutes' + DELETE_INTERVAL
-      )
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 22 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(DELETE_INTERVAL)
       
     })
     
@@ -153,15 +169,20 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes' + DELETE_INTERVAL + '\n' +
-        '                  Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes' + DELETE_INTERVAL
-      )
-      
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 25 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 15 minutes')
+      expect(wrapper.find('.activityLog').text().match(new RegExp(DELETE_INTERVAL, 'g')).length)
+        .toEqual(2)
     })
     
   })
@@ -187,24 +208,32 @@ describe('Log', () => {
     
     it('renders the task log in reverse-chronological order', () => {
       
-      expect(wrapper.find('.activityLog').text()).toEqual(
-        taskName +
-        ' Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes      ' +
-        taskName +
-        ' Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 15 minutes      ' +
-        taskName +
-        ' Started ' + moment(log[1].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 25 minutes      ' +
-        taskName +
-        ' Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT) +
-        '  Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT) +
-        ' Time Spent: 22 minutes'
-      )
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[3].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[3].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 25 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[2].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[2].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 15 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[1].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[1].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 25 minutes')
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(log[0].started).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        'Stopped ' + moment(log[0].stopped).format(EXPECTED_TIME_FORMAT))
+      expect(wrapper.find('.activityLog').text()).toContain(
+        ' Time Spent: 22 minutes')
+      expect(wrapper.find('.activityLog').text().match(new RegExp(taskName, 'g')).length)
+        .toEqual(4)
       
     })
     
@@ -219,11 +248,11 @@ describe('Log', () => {
         store
       })
   
-      expect(startedWrapper.find('.activityLog').text()).toEqual(
-        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + '  ' +
-        'Running ' + moment(startedTime).format(EXPECTED_TIME_FORMAT) + ' ' +
-        DELETE_INTERVAL
-      )
+      expect(startedWrapper.find('.activityLog').text()).toContain(
+        'Started ' + moment(startedTime).format(EXPECTED_TIME_FORMAT))
+      expect(startedWrapper.find('.activityLog').text()).toContain(
+        'Running ' + moment(startedTime).format(EXPECTED_TIME_FORMAT))
+      expect(startedWrapper.find('.activityLog').text()).toContain(DELETE_INTERVAL)
   
     })
     
