@@ -8,13 +8,13 @@ const mutations = {
     state.tags = {}
     state.tagOrder = []
     for (const tag of tags) {
-      Vue.set(state.tags, tag.tagName, { color: tag.color })
-      state.tagOrder.push(tag.tagName)
+      Vue.set(state.tags, tag.id, tag)
+      state.tagOrder.push(tag.id)
     }
     for (const taskTagMap of taskTagMaps) {
       const task = state.tasks.find(t => t.id === taskTagMap.taskId)
       if (task) {
-        task.tags.push(taskTagMap.tagName)
+        task.tags.push(taskTagMap.tagId)
       }
     }
     for (const log of logs) {
@@ -146,15 +146,13 @@ const mutations = {
     state.running = false
   },
   
-  addTaskTag (state, { taskId, tagName, color }) {
+  addTaskTag (state, { taskId, tag, isNewTag }) {
+    if (isNewTag) {
+      Vue.set(state.tags, tag.id, tag)
+      state.tagOrder.push(tag.id)
+    }
     const task = state.tasks.find(t => t.id === taskId)
-    if (tagName && color) {
-      Vue.set(state.tags, tagName, { color })
-      state.tagOrder.push(tagName)
-    }
-    if (!(task.tags.includes(tagName))) {
-      task.tags.push(tagName)
-    }
+    task.tags.push(tag.id)
   },
   
   updateTaskTags (state, { taskId, newTagNames }) {
@@ -190,8 +188,8 @@ const mutations = {
     Vue.set(targetElement, targetType, payload[targetType])
   },
   
-  setModalTag (state, { newTag }) {
-    state.modalTag = newTag
+  setModalTag (state, { tagId }) {
+    state.modalTagId = tagId
   },
   
   selectTag (state, payload) {
@@ -208,26 +206,8 @@ const mutations = {
     state.selectedTags = state.selectedTags.filter(tag => tag !== tagName)
   },
   
-  renameTag (state, payload) {
-    if (payload.newName !== payload.oldName) {
-      if (payload.newName in state.tags) {
-        alert('Error: the new tag name you entered already exists. Please rename it to something else.')
-      } else {
-        state.tasks.forEach(task => {
-          task.tags = task.tags.map(tag => tag === payload.oldName ? payload.newName : tag)
-        })
-        state.tags[payload.newName] = state.tags[payload.oldName]
-        const idx = state.selectedTags.indexOf(payload.oldName)
-        if (idx >= 0) {
-          state.selectedTags[idx] = payload.newName
-        }
-        Vue.delete(state.tags, payload.oldName)
-        Vue.set(state.tagOrder, state.tagOrder.indexOf(payload.oldName), payload.newName)
-        if (state.modalTag === payload.oldName) {
-          state.modalTag = payload.newName
-        }
-      }
-    }
+  updateTag (state, { tagId, tag }) {
+    state.tags[tagId] = tag
   },
   
   deleteTag (state, payload) {

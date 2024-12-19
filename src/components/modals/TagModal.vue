@@ -13,8 +13,8 @@
       @end="endDrag"
     >
       <div
-        v-for="tagName in tagOrder"
-        :key="tagName"
+        v-for="tagId in tagOrder"
+        :key="tagId"
         class="tag btn-toolbar"
       >
         <div
@@ -24,11 +24,11 @@
           <button
             type="button"
             class="btn move-btn"
-            :style="`backgroundColor: ${tags[tagName].color}`"
+            :style="`backgroundColor: ${tags[tagId].color}`"
           >
             <font-awesome-icon icon="bars" />
           </button>
-          <TagSettingsButton :tag-name="tagName" />
+          <TagSettingsButton :tag-id="tagId" />
         </div>
       </div>
     </draggable>

@@ -331,8 +331,8 @@ export default {
       }
     },
     
-    removeTag ({ tagName }) {
-      this.removeTaskTag({ taskId: this.task.id, tagName })
+    removeTag ({ tagId }) {
+      this.removeTaskTag({ taskId: this.task.id, tagId })
       this.$forceUpdate()
     },
     

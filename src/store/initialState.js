@@ -2,7 +2,7 @@ const initialState = {
   tasks: [],
   tags: {},
   tagOrder: [],
-  modalTag: null,
+  modalTagId: null,
   totalTarget: {},
   selectedTags: [],
   filterOperator: 'and',
