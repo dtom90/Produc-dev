@@ -267,6 +267,12 @@ const actions = {
     const newTags = await dexieDb.taskTagMap.where('taskId').equals(taskId).toArray()
     const newTagIds = newTags.map(tag => tag.tagId)
     commit('updateTask', { taskId, taskUpdates: { tags: newTagIds } })
+  },
+  
+  async updateSetting ({ state, commit }, { key, value }) {
+    console.log('updateSetting', key, value)
+    await dexieDb.settings.put({ key, value })
+    commit('updateSetting', { key, value })
   }
   
 }

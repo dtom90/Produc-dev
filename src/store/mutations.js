@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import $ from 'jquery'
+import initialState from './initialState'
 
 const mutations = {
   
@@ -25,9 +26,10 @@ const mutations = {
         task.log = logsForTask
       }
     }
-    for (const key of ['selectedTaskID']) {
+    for (const key of Object.keys(initialState.settings)) {
       const setting = settings.find(s => s.key === key)
-      state[key] = setting ? setting.value : null
+      state[key] = setting ? setting.value : initialState.settings[key]
+      state.settings[key] = setting ? setting.value : initialState.settings[key]
     }
   },
   
@@ -77,20 +79,12 @@ const mutations = {
     state.selectedTaskID = taskId
   },
   
-  updateActiveMinutes (state, { activeMinutes }) {
-    state.activeMinutes = activeMinutes
-  },
-  
   updateSecondReminderEnabled (state, { value }) {
     state.secondReminderEnabled = value
   },
   
   updateSecondReminderMinutes (state, { value }) {
     state.secondReminderMinutes = value
-  },
-  
-  updateRestMinutes (state, { restMinutes }) {
-    state.restMinutes = restMinutes
   },
   
   updateContinueOnComplete (state, newValue) {
@@ -261,6 +255,10 @@ const mutations = {
   
   setTimeFormat (state, timeFormat24) {
     state.timeFormat24 = timeFormat24
+  },
+
+  updateSetting (state, { key, value }) {
+    state.settings[key] = value
   }
 }
 

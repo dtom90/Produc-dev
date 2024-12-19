@@ -27,8 +27,6 @@ const actions = {
 
 const mutations = {
   resetRunning: jest.fn(),
-  updateActiveMinutes: jest.fn(),
-  updateRestMinutes: jest.fn(),
   setTaskInactive: jest.fn()
 }
 
@@ -138,7 +136,7 @@ describe('Countdown', () => {
   //   await wrapper.find('#timer-save-button').trigger('click')
   //   const expectedState = cloneDeep(state)
   //   expectedState.activeMinutes = 0.05
-  //   expect(mutations.updateActiveMinutes).toHaveBeenCalledWith(expectedState, { activeMinutes: 0.05 })
+  //   expect(mutations.updateSetting).toHaveBeenCalledWith(expectedState, { activeMinutes: 0.05 })
   //
   //   // Check new state
   //   expect(wrapper.find('#timer-display').element).toBeVisible()
@@ -189,7 +187,7 @@ describe('Countdown', () => {
   //   await wrapper.find('#timer-save-button').trigger('click')
   //   const expectedState = cloneDeep(state)
   //   expectedState.restMinutes = 0.05
-  //   expect(mutations.updateRestMinutes).toHaveBeenCalledWith(expectedState, { restMinutes: 0.05 })
+  //   expect(mutations.updateSetting).toHaveBeenCalledWith(expectedState, { restMinutes: 0.05 })
   //   expect(wrapper.find('#timer-display').element).toBeVisible()
   //   expect(wrapper.find('#timer-display').text()).toBe('0:03')
   //   expect(wrapper.vm.secondsRemaining).toBe(3)
