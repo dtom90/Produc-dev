@@ -9,7 +9,7 @@ const getters = {
   
   notificationsEnabled (state) {
     const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
-    return state.globalNotificationsEnabled && (
+    return state.settings.globalNotificationsEnabled && (
       activeTask ? !(activeTask.disableNotifications === true) : true
     )
   },

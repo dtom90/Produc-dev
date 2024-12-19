@@ -207,28 +207,37 @@ export default {
     
     continueOnComplete: {
       get () {
-        return this.$store.state.continueOnComplete
+        return this.$store.state.settings.continueOnComplete
       },
-      set (value) {
-        this.updateContinueOnComplete(value)
+      async set (value) {
+        await this.updateSetting({
+          key: 'continueOnComplete',
+          value
+        })
       }
     },
     
     secondReminderEnabled: {
       get () {
-        return this.$store.state.secondReminderEnabled
+        return this.$store.state.settings.secondReminderEnabled
       },
-      set (value) {
-        this.updateSecondReminderEnabled({ value })
+      async set (value) {
+        await this.updateSetting({
+          key: 'secondReminderEnabled',
+          value
+        })
       }
     },
     
     secondReminderMinutes: {
       get () {
-        return this.$store.state.secondReminderMinutes
+        return this.$store.state.settings.secondReminderMinutes
       },
-      set (value) {
-        this.updateSecondReminderMinutes({ value })
+      async set (value) {
+        await this.updateSetting({
+          key: 'secondReminderMinutes',
+          value
+        })
       }
     },
     
@@ -258,9 +267,6 @@ export default {
 
     ...mapMutations([
       'unpauseTask',
-      'updateSecondReminderEnabled',
-      'updateSecondReminderMinutes',
-      'updateContinueOnComplete',
       'setRunning',
       'resetRunning',
       'setTaskInactive'

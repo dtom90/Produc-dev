@@ -74,18 +74,6 @@ const mutations = {
     state.showArchived = newValue
   },
   
-  updateSecondReminderEnabled (state, { value }) {
-    state.secondReminderEnabled = value
-  },
-  
-  updateSecondReminderMinutes (state, { value }) {
-    state.secondReminderMinutes = value
-  },
-  
-  updateContinueOnComplete (state, newValue) {
-    state.continueOnComplete = newValue
-  },
-  
   startTask (state, { log }) {
     const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
@@ -245,14 +233,6 @@ const mutations = {
     }
   },
   
-  setGlobalNotificationsEnabled (state, newValue) {
-    state.globalNotificationsEnabled = newValue
-  },
-  
-  setTimeFormat (state, timeFormat24) {
-    state.timeFormat24 = timeFormat24
-  },
-
   updateSetting (state, { key, value }) {
     state.settings[key] = value
   }

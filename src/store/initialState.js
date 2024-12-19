@@ -10,11 +10,7 @@ const initialState = {
   showArchived: false,
   insertAtTop: false,
   activeTaskID: null,
-  secondReminderEnabled: true,
-  secondReminderMinutes: 5,
   running: false,
-  globalNotificationsEnabled: true,
-  continueOnComplete: false,
   timeFormat24: false,
   
   settings: {
@@ -22,10 +18,10 @@ const initialState = {
     // activeTaskID: null,
     activeMinutes: 25,
     restMinutes: 5,
-    // secondReminderMinutes: 5,
-    // secondReminderEnabled: true,
-    // globalNotificationsEnabled: true,
-    // continueOnComplete: false,
+    continueOnComplete: false,
+    secondReminderMinutes: 5,
+    secondReminderEnabled: true,
+    globalNotificationsEnabled: true,
     
     // selectedTagIds: [],
     // filterOperator: 'and',
