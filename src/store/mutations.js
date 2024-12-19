@@ -44,7 +44,6 @@ const mutations = {
     } else {
       state.tasks.push(task)
     }
-    state.selectedTaskID = task.id
   },
   
   updateTask (state, { taskId, taskUpdates }) {
@@ -73,10 +72,6 @@ const mutations = {
   
   updateShowArchived (state, newValue) {
     state.showArchived = newValue
-  },
-  
-  selectTask (state, { taskId }) {
-    state.selectedTaskID = taskId
   },
   
   updateSecondReminderEnabled (state, { value }) {
@@ -227,9 +222,10 @@ const mutations = {
       if (state.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
         state.activeTaskID = null
         state.running = false
-      } else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
-        state.selectedTaskID = state.activeTaskID
       }
+      // else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
+      //   state.selectedTaskID = state.activeTaskID
+      // }
     }
   },
   

@@ -60,12 +60,12 @@ export default {
     ...mapState([
       'tags',
       'tagOrder',
-      'selectedTaskID',
+      'settings',
       'activeTaskID'
     ]),
     
     active () {
-      return this.selectedTaskID === this.task.id ? ' active' : ''
+      return this.settings.selectedTaskID === this.task.id ? ' active' : ''
     },
     
     checked () {

@@ -2,27 +2,39 @@ const initialState = {
   tasks: [],
   tags: {},
   tagOrder: [],
-  running: false,
+  selectedTagIds: [],
   modalTagId: null,
+  totalTarget: {},
+  filterOperator: 'and',
+  addSelectedTags: true,
+  showArchived: false,
+  insertAtTop: false,
+  activeTaskID: null,
+  secondReminderEnabled: true,
+  secondReminderMinutes: 5,
+  running: false,
+  globalNotificationsEnabled: true,
+  continueOnComplete: false,
+  timeFormat24: false,
   
   settings: {
     selectedTaskID: null,
-    activeTaskID: null,
+    // activeTaskID: null,
     activeMinutes: 25,
     restMinutes: 5,
-    secondReminderMinutes: 5,
-    secondReminderEnabled: true,
-    globalNotificationsEnabled: true,
-    continueOnComplete: false,
+    // secondReminderMinutes: 5,
+    // secondReminderEnabled: true,
+    // globalNotificationsEnabled: true,
+    // continueOnComplete: false,
     
-    selectedTagIds: [],
-    filterOperator: 'and',
-    addSelectedTags: true,
-    showArchived: false,
-    insertAtTop: false,
+    // selectedTagIds: [],
+    // filterOperator: 'and',
+    // addSelectedTags: true,
+    // showArchived: false,
+    // insertAtTop: false,
     
-    timeFormat24: false,
-    totalTarget: {}
+    // timeFormat24: false,
+    // totalTarget: {}
   }
 }
 

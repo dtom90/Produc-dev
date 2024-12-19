@@ -12,7 +12,7 @@ const actions = {
     commit('setState', { tasks, tags, taskTagMaps, logs, settings })
   },
 
-  async addTask ({ state, commit }, { name }) {
+  async addTask ({ state, commit, dispatch }, { name }) {
     const taskName = name.trim()
     if (taskName) {
       const count = await dexieDb.tasks.count()
@@ -29,14 +29,9 @@ const actions = {
       }
       // add to dexie
       await dexieDb.tasks.add(newTask)
-      await dexieDb.settings.put({ key: 'selectedTaskID', value: newTask.id })
       commit('addTask', { task: newTask })
+      await dispatch('updateSetting', { key: 'selectedTaskID', value: newTask.id })
     }
-  },
-  
-  async selectTask ({ state, commit }, { taskId }) {
-    await dexieDb.settings.put({ key: 'selectedTaskID', value: taskId })
-    commit('selectTask', { taskId })
   },
   
   async reorderIncompleteTasks ({ state, commit }, { newIncompleteTaskOrder }) {
@@ -267,6 +262,10 @@ const actions = {
     const newTags = await dexieDb.taskTagMap.where('taskId').equals(taskId).toArray()
     const newTagIds = newTags.map(tag => tag.tagId)
     commit('updateTask', { taskId, taskUpdates: { tags: newTagIds } })
+  },
+  
+  async selectTask ({ state, dispatch }, { taskId }) {
+    await dispatch('updateSetting', { key: 'selectedTaskID', value: taskId })
   },
   
   async updateSetting ({ state, commit }, { key, value }) {
