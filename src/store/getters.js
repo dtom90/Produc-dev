@@ -24,7 +24,7 @@ const getters = {
     return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
   },
   
-  unselectedTags: state => Object.keys(state.tags).filter(tag => !state.selectedTags.includes(tag)),
+  unselectedTags: state => Object.keys(state.tags).filter(tag => !state.selectedTagIds.includes(tag)),
   
   availableTags: state => (taskId, newTagName) => {
     const task = state.tasks.find(t => t.id === taskId)

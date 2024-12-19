@@ -196,7 +196,7 @@ const mutations = {
   },
   
   selectTag (state, payload) {
-    state.selectedTags.push(payload.tag)
+    state.selectedTagIds.push(payload.tag)
   },
   
   setFilterOperator (state, newFilterOperatorValue) {
@@ -205,8 +205,8 @@ const mutations = {
     }
   },
   
-  removeTag (state, { tagName }) {
-    state.selectedTags = state.selectedTags.filter(tag => tag !== tagName)
+  removeTag (state, { tagId }) {
+    state.selectedTagIds = state.selectedTagIds.filter(selectedTagId => selectedTagId !== tagId)
   },
   
   updateTag (state, { tagId, tag }) {
@@ -218,7 +218,7 @@ const mutations = {
       state.tasks.forEach(task => {
         task.tags = task.tags.filter(tag => tag !== payload.tag)
       })
-      state.selectedTags = state.selectedTags.filter(tag => tag !== payload.tag)
+      state.selectedTagIds = state.selectedTagIds.filter(tag => tag !== payload.tag)
       Vue.delete(state.tags, payload.tag)
       state.tagOrder = state.tagOrder.filter(tag => tag !== payload.tag)
       $('#activityModal').modal('hide')

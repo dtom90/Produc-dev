@@ -19,7 +19,7 @@ const actions = {
       const newTask = {
         id: 'task-' + nanoid(),
         name: taskName,
-        tags: state.addSelectedTags && state.selectedTags.length > 0 ? [...state.selectedTags] : [],
+        tags: state.addSelectedTags && state.selectedTagIds.length > 0 ? [...state.selectedTagIds] : [],
         notes: '',
         order: count,
         log: [],

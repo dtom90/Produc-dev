@@ -13,7 +13,7 @@ describe('reorder tasks', () => {
 
     // Act
     cy.get('#incomplete-task-list .task').contains('My Second Task')
-      .drag('.task', { destination: '#incomplete-task-list .task', position: 'top' })
+      .drag('.task', { destination: '#incomplete-task-list .task' })
 
     // Assert
     cy.get('#incomplete-task-list .task').first().contains('My Second Task')
@@ -23,7 +23,7 @@ describe('reorder tasks', () => {
   it('keeps new order after page reload', () => {
     // Arrange
     cy.get('#incomplete-task-list .task').contains('My Second Task')
-      .drag('.task', { destination: '#incomplete-task-list .task', position: 'top' })
+      .drag('.task', { destination: '#incomplete-task-list .task' })
 
     // Act
     cy.reload()
