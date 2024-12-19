@@ -406,7 +406,6 @@ export default {
 }
 
 .dropdown-menu {
-  padding: 8px;
 
   .selected-task-menu {
     margin: 8px;

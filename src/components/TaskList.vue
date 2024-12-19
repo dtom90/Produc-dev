@@ -411,7 +411,6 @@ export default {
 }
 
 #filter-menu {
-  padding: 8px;
   width: 200px;
 }
 
