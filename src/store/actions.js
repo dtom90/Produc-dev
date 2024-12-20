@@ -268,6 +268,17 @@ const actions = {
     await dispatch('updateSetting', { key: 'selectedTaskID', value: taskId })
   },
   
+  async addTagFilter ({ state, dispatch }, { tagId }) {
+    const selectedTagIds = state.settings.selectedTagIds
+    selectedTagIds.push(tagId)
+    await dispatch('updateSetting', { key: 'selectedTagIds', value: selectedTagIds })
+  },
+  
+  async removeTagFilter ({ state, dispatch }, { tagId }) {
+    const selectedTagIds = state.settings.selectedTagIds.filter(selectedTagId => selectedTagId !== tagId)
+    await dispatch('updateSetting', { key: 'selectedTagIds', value: selectedTagIds })
+  },
+  
   async updateSetting ({ state, commit }, { key, value }) {
     console.log('updateSetting', key, value)
     await dexieDb.settings.put({ key, value })

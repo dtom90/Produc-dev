@@ -4,7 +4,7 @@
     boundary="viewport"
   >
     <b-dropdown-item-button>
-      <b-form-checkbox v-model="globalNotificationsEnabledValue">
+      <b-form-checkbox v-model="globalNotificationsEnabled">
         Enable Notifications
       </b-form-checkbox>
     </b-dropdown-item-button>

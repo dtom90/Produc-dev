@@ -182,10 +182,6 @@ const mutations = {
     }
   },
   
-  removeTag (state, { tagId }) {
-    state.selectedTagIds = state.selectedTagIds.filter(selectedTagId => selectedTagId !== tagId)
-  },
-  
   updateTag (state, { tagId, tag }) {
     state.tags[tagId] = tag
   },

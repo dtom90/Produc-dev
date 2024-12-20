@@ -2,7 +2,6 @@ const initialState = {
   tasks: [],
   tags: {},
   tagOrder: [],
-  selectedTagIds: [],
   modalTagId: null,
   totalTarget: {},
   filterOperator: 'and',
@@ -23,7 +22,7 @@ const initialState = {
     secondReminderEnabled: true,
     globalNotificationsEnabled: true,
     
-    // selectedTagIds: [],
+    selectedTagIds: [],
     // filterOperator: 'and',
     // addSelectedTags: true,
     // showArchived: false,

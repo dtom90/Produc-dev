@@ -14,7 +14,7 @@
       >
         <button
           id="filter-menu-button"
-          :class="'btn btn-light' + (selectedTagIds.length > 0 ? ' filter-active' : '')"
+          :class="'btn btn-light' + (settings.selectedTagIds.length > 0 ? ' filter-active' : '')"
           :style="filterBtnStyle"
           title="Filter on tags"
           data-toggle="dropdown"
@@ -28,15 +28,15 @@
           class="dropdown-menu"
         >
           <TagList
-            v-if="selectedTagIds.length > 0"
+            v-if="settings.selectedTagIds.length > 0"
             label="Filtering on tasks with"
-            :tag-list="selectedTagIds"
+            :tag-list="settings.selectedTagIds"
             :modal="true"
-            :remove-tag="removeTagFilter"
+            :remove-tag-filter="removeTagFilter"
             remove-text="Clear Filter"
           />
           <div
-            v-if="selectedTagIds.length > 0"
+            v-if="settings.selectedTagIds.length > 0"
             class="form-check form-check-inline"
           >
             <input
@@ -51,12 +51,12 @@
             >Include in new tasks</label>
           </div>
           <div
-            v-if="selectedTagIds.length > 0 && unselectedTags.length > 0"
+            v-if="settings.selectedTagIds.length > 0 && unselectedTags.length > 0"
             class="dropdown-divider"
           />
           <TagList
             v-if="unselectedTags.length > 0"
-            :label="selectedTagIds.length > 0 ? 'Add to filter' : 'Filter on'"
+            :label="settings.selectedTagIds.length > 0 ? 'Add to filter' : 'Filter on'"
             :tag-list="unselectedTags"
             :select-tag="selectTagFilter"
           />
@@ -236,7 +236,7 @@ export default {
   
   computed: {
     ...mapState([
-      'selectedTagIds',
+      'settings',
       'addSelectedTags',
       'filterOperator',
       'showArchived',
@@ -261,8 +261,8 @@ export default {
       return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect'
     },
     filterBtnStyle () {
-      return this.selectedTagIds.length > 0 ? {
-        backgroundColor: this.tags[this.selectedTagIds[0]].color
+      return this.settings.selectedTagIds.length > 0 ? {
+        backgroundColor: this.tags[this.settings.selectedTagIds[0]].color
       } : {}
     },
     toggleAddSelectedTags: {
@@ -283,11 +283,11 @@ export default {
     },
     incompleteTaskList: {
       get () {
-        let incompleteTasks = this.selectedTagIds.length > 0
+        let incompleteTasks = this.settings.selectedTagIds.length > 0
           ? (
             this.filterOperator === 'and'
-              ? this.incompleteTasks.filter(task => this.selectedTagIds.every(tag => task.tags.includes(tag)))
-              : this.incompleteTasks.filter(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+              ? this.incompleteTasks.filter(task => this.settings.selectedTagIds.every(tag => task.tags.includes(tag)))
+              : this.incompleteTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
           )
           : this.incompleteTasks
         incompleteTasks = this.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
@@ -298,11 +298,11 @@ export default {
       }
     },
     completedTaskList () {
-      let completedTasks = this.selectedTagIds.length > 0
+      let completedTasks = this.settings.selectedTagIds.length > 0
         ? (
           this.filterOperator === 'and'
-            ? this.completedTasks.filter(task => this.selectedTagIds.every(tag => task.tags.includes(tag)))
-            : this.completedTasks.filter(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+            ? this.completedTasks.filter(task => this.settings.selectedTagIds.every(tag => task.tags.includes(tag)))
+            : this.completedTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         )
         : this.completedTasks
       completedTasks = this.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
@@ -317,6 +317,8 @@ export default {
     ...mapActions([
       'addTask',
       'selectTask',
+      'addTagFilter',
+      'removeTagFilter',
       'reorderIncompleteTasks',
       'archiveTasks'
     ]),
@@ -325,9 +327,7 @@ export default {
       'setTopInsert',
       'updateAddSelectedTags',
       'updateShowArchived',
-      'deleteTasks',
-      'selectTag',
-      'removeTag'
+      'deleteTasks'
     ]),
     
     addNewTask () {
@@ -336,27 +336,27 @@ export default {
       })
       this.newTaskName = ''
     },
-    selectTagFilter (tag, e) {
+
+    async selectTagFilter (tagId, e) {
       e.stopPropagation()
-      this.selectTag({ tag })
-      if (!this.selectedTask || (this.selectedTask && !this.selectedTagIds.some(tag => this.selectedTask.tags.includes(tag)))) {
-        let tasksWithTag = this.incompleteTasks.find(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+      await this.addTagFilter({ tagId })
+      if (!this.selectedTask || (this.selectedTask && !this.settings.selectedTagIds.some(tag => this.selectedTask.tags.includes(tag)))) {
+        let tasksWithTag = this.incompleteTasks.find(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         if (!tasksWithTag) {
-          tasksWithTag = this.completedTasks.find(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+          tasksWithTag = this.completedTasks.find(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         }
         if (tasksWithTag) {
-          this.selectTask({ taskId: tasksWithTag.id })
+          await this.selectTask({ taskId: tasksWithTag.id })
         } else {
-          this.selectTask({ taskId: null })
+          await this.selectTask({ taskId: null })
         }
       }
     },
-    removeTagFilter ({ tagId }) {
-      this.removeTag({ tagId })
-    },
+
     startDrag () {
       this.$el.closest('html').classList.add('draggable-cursor')
     },
+
     endDrag () {
       this.$el.closest('html').classList.remove('draggable-cursor')
     }
