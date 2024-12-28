@@ -113,7 +113,7 @@ const actions = {
     if (task) {
       let completedValue = null
       if (!task.completed) {
-        if (task.id === state.activeTaskID && state.running) {
+        if (task.id === state.tempState.activeTaskID && state.running) {
           await dispatch('stopTask')
         }
         completedValue = Date.now()

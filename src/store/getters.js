@@ -4,11 +4,11 @@ const getters = {
   },
   
   activeTask (state) {
-    return state.tasks.find(t => t.id === state.activeTaskID)
+    return state.tasks.find(t => t.id === state.tempState.activeTaskID)
   },
   
   notificationsEnabled (state) {
-    const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
+    const activeTask = state.tasks.find(t => t.id === state.tempState.activeTaskID)
     return state.settings.globalNotificationsEnabled && (
       activeTask ? !(activeTask.disableNotifications === true) : true
     )

@@ -132,7 +132,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing"
-          :title="(overtime ? 'Stop' : (running ? 'Pause' : 'Start')) + ' timer'"
+          :title="(overtime ? 'Stop' : (tempState.running ? 'Pause' : 'Start')) + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -173,9 +173,8 @@ export default {
   computed: {
     
     ...mapState([
-      'settings',
-      'restMinutes',
-      'running'
+      'tempState',
+      'settings'
     ]),
     
     ...mapGetters([
@@ -187,7 +186,7 @@ export default {
     },
     
     playPauseIcon () {
-      return this.overtime ? 'stop' : this.running ? 'pause' : 'play'
+      return this.overtime ? 'stop' : this.tempState.running ? 'pause' : 'play'
     },
     
     cssProps () {
@@ -274,7 +273,7 @@ export default {
     ]),
     
     onTimerClick () {
-      if (this.running) {
+      if (this.tempState.running) {
         return
       }
       this.editing = true
@@ -304,7 +303,7 @@ export default {
       if (this.overtime) {
         this.overtime = false
         this.resetTimer()
-      } else if (this.running) {
+      } else if (this.tempState.running) {
         this.timer.pause()
         this.endInterval()
       } else {
@@ -314,7 +313,7 @@ export default {
         } else if (this.active) {
           this.startTask({ taskId: this.taskId })
         } else { // this is a rest interval, simply toggle running
-          this.setRunning(!this.running)
+          this.setRunning(!this.tempState.running)
         }
         this.timer.start()
       }
@@ -336,7 +335,7 @@ export default {
     },
     
     endInterval () {
-      if (this.active && this.running) {
+      if (this.active && this.tempState.running) {
         this.stopTask()
       }
     },

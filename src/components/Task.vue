@@ -60,8 +60,8 @@ export default {
     ...mapState([
       'tags',
       'tagOrder',
-      'settings',
-      'activeTaskID'
+      'tempState',
+      'settings'
     ]),
     
     active () {
@@ -77,7 +77,7 @@ export default {
     },
     
     displayCountdownIndicator () {
-      return this.activeTaskID === this.task.id
+      return this.tempState.activeTaskID === this.task.id
     }
   },
   

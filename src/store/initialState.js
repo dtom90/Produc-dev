@@ -3,31 +3,33 @@ const initialState = {
   tags: {},
   tagOrder: [],
   totalTarget: {},
-  activeTaskID: null,
-  running: false,
-  timeFormat24: false,
   
-  tempSettings: {
+  tempState: {
+    activeTaskID: null,
+    running: false,
     modalTagId: null,
     showArchived: false
   },
   
   settings: {
+
+    // Timer settings
     selectedTaskID: null,
-    // activeTaskID: null,
     activeMinutes: 25,
     restMinutes: 5,
     continueOnComplete: false,
     secondReminderMinutes: 5,
     secondReminderEnabled: true,
-    globalNotificationsEnabled: true,
     
+    // TaskList settings
     selectedTagIds: [],
     filterOperator: 'and',
     addSelectedTags: true,
-    insertAtTop: false
+    insertAtTop: false,
     
-    // timeFormat24: false,
+    // Navbar settings
+    globalNotificationsEnabled: true,
+    timeFormat24: false
     // totalTarget: {}
   }
 }

@@ -107,7 +107,7 @@
           >
             <input
               id="showArchived"
-              v-model="tempSettings.showArchived"
+              v-model="tempState.showArchived"
               class="form-check-input"
               type="checkbox"
             >
@@ -236,7 +236,7 @@ export default {
   
   computed: {
     ...mapState([
-      'tempSettings',
+      'tempState',
       'settings',
       'tags'
     ]),
@@ -270,10 +270,10 @@ export default {
     },
     showArchived: {
       get () {
-        return this.tempSettings.showArchived
+        return this.tempState.showArchived
       },
       set (value) {
-        this.updateTempSetting({ key: 'showArchived', value })
+        this.updateTempState({ key: 'showArchived', value })
       }
     },
     insertAtTop: {
@@ -293,7 +293,7 @@ export default {
               : this.incompleteTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
           )
           : this.incompleteTasks
-        incompleteTasks = this.tempSettings.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
+        incompleteTasks = this.tempState.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
         return incompleteTasks
       },
       set (newIncompleteTaskOrder) {
@@ -308,7 +308,7 @@ export default {
             : this.completedTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         )
         : this.completedTasks
-      completedTasks = this.tempSettings.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
+      completedTasks = this.tempState.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
       return completedTasks && this.sortOrder !== 'Oldest'
         ? completedTasks.slice().reverse()
         : completedTasks
@@ -328,7 +328,7 @@ export default {
     ]),
 
     ...mapMutations([
-      'updateTempSetting',
+      'updateTempState',
       'deleteTasks'
     ]),
     

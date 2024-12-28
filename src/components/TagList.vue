@@ -217,7 +217,7 @@ export default {
     ]),
     
     ...mapMutations([
-      'updateTempSetting'
+      'updateTempState'
     ]),
     
     addTagButton: function () {
@@ -246,7 +246,7 @@ export default {
     },
     
     viewActivityModal: function (tagId) {
-      this.updateTempSetting({ key: 'modalTagId', value: tagId })
+      this.updateTempState({ key: 'modalTagId', value: tagId })
       this.$root.$emit('bv::toggle::modal', 'activityModal')
     },
     

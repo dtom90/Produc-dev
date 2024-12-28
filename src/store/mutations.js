@@ -66,8 +66,8 @@ const mutations = {
     const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
       task.log.push(log)
-      state.activeTaskID = task.id
-      state.running = true
+      state.tempState.activeTaskID = task.id
+      state.tempState.running = true
     }
   },
   
@@ -77,13 +77,13 @@ const mutations = {
       const i = task.log.findIndex(l => l.id === log.id)
       if (i !== -1) {
         Vue.set(task.log, i, log)
-        state.running = log.stopped === null
+        state.tempState.running = log.stopped === null
       }
     }
   },
   
   setTaskInactive (state) {
-    state.activeTaskID = null
+    state.tempState.activeTaskID = null
   },
   
   deleteInterval (state, { logId, taskId }) {
@@ -95,12 +95,12 @@ const mutations = {
   },
   
   setRunning (state, value) {
-    state.running = value
+    state.tempState.running = value
   },
 
   resetRunning (state) {
-    if (state.activeTaskID) {
-      const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
+    if (state.tempState.activeTaskID) {
+      const activeTask = state.tasks.find(t => t.id === state.tempState.activeTaskID)
       if (activeTask && activeTask.log.length > 0) {
         const lastInterval = activeTask.log[activeTask.log.length - 1]
         if ('running' in lastInterval) {
@@ -108,7 +108,7 @@ const mutations = {
         }
       }
     }
-    state.running = false
+    state.tempState.running = false
   },
   
   addTaskTag (state, { taskId, tag, isNewTag }) {
@@ -177,12 +177,12 @@ const mutations = {
     const task = state.tasks[index]
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
       state.tasks.splice(index, 1)
-      if (state.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
-        state.activeTaskID = null
-        state.running = false
+      if (state.tempState.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
+        state.tempState.activeTaskID = null
+        state.tempState.running = false
       }
-      // else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
-      //   state.selectedTaskID = state.activeTaskID
+      // else if (state.selectedTaskID === task.id && state.tempState.activeTaskID) { // If another task is active while we delete this, switch to it
+      //   state.selectedTaskID = state.tempState.activeTaskID
       // }
     }
   },
@@ -203,8 +203,8 @@ const mutations = {
     }
   },
   
-  updateTempSetting (state, { key, value }) {
-    state.tempSettings[key] = value
+  updateTempState (state, { key, value }) {
+    state.tempState[key] = value
   },
   
   updateSetting (state, { key, value }) {

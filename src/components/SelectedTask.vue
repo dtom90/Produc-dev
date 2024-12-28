@@ -191,13 +191,13 @@
     <!-- Countdown Timer -->
     <keep-alive>
       <Countdown
-        v-if="!task.completed && (!running || !activeTaskID || activeTaskID === task.id)"
+        v-if="!task.completed && (!tempState.running || !tempState.activeTaskID || tempState.activeTaskID === task.id)"
         :task-id="task.id"
         class="top-margin"
       />
     </keep-alive>
     <div
-      v-if="!task.completed && (running && activeTaskID && activeTaskID !== task.id)"
+      v-if="!task.completed && (tempState.running && tempState.activeTaskID && tempState.activeTaskID !== task.id)"
       class="d-flex flex-column align-items-center"
       style="color: darkred"
     >
@@ -280,8 +280,7 @@ export default {
   computed: {
     
     ...mapState([
-      'activeTaskID',
-      'running',
+      'tempState',
       'tagOrder'
     ]),
     

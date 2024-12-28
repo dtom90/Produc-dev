@@ -108,8 +108,8 @@ describe('Countdown', () => {
   
   it('should call stopTask when running', async () => {
   
-    state.active = true
-    state.running = true
+    state.tempState.active = true
+    state.tempState.running = true
     await wrapper.find('#play-pause-btn').trigger('click')
     expect(actions.stopTask).toHaveBeenCalled()
     
