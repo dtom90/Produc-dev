@@ -2,23 +2,36 @@ const initialState = {
   tasks: [],
   tags: {},
   tagOrder: [],
-  selectedTagIds: [],
-  modalTagId: null,
   totalTarget: {},
-  filterOperator: 'and',
-  addSelectedTags: true,
-  showArchived: false,
-  insertAtTop: false,
-  selectedTaskID: null,
-  activeTaskID: null,
-  activeMinutes: 25,
-  secondReminderEnabled: true,
-  secondReminderMinutes: 5,
-  restMinutes: 5,
-  running: false,
-  globalNotificationsEnabled: true,
-  continueOnComplete: false,
-  timeFormat24: false
+  
+  tempState: {
+    activeTaskID: null,
+    running: false,
+    modalTagId: null,
+    showArchived: false
+  },
+  
+  settings: {
+
+    // Timer settings
+    selectedTaskID: null,
+    activeMinutes: 25,
+    restMinutes: 5,
+    continueOnComplete: false,
+    secondReminderMinutes: 5,
+    secondReminderEnabled: true,
+    
+    // TaskList settings
+    selectedTagIds: [],
+    filterOperator: 'and',
+    addSelectedTags: true,
+    insertAtTop: false,
+    
+    // Navbar settings
+    globalNotificationsEnabled: true,
+    timeFormat24: false
+    // totalTarget: {}
+  }
 }
 
 // // Load state from sample file

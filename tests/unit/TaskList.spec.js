@@ -3,6 +3,8 @@ import TaskList from '@/components/TaskList.vue'
 import Task from '@/components/Task.vue'
 import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import Vuex from 'vuex'
+import { cloneDeep } from 'lodash'
+import initialState from '../../src/store/initialState'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
@@ -14,10 +16,7 @@ const tasks = [
   { id: '3', name: 'new task 3' }
 ]
 
-const state = {
-  tags: {},
-  selectedTagIds: []
-}
+const state = cloneDeep(initialState)
 
 const getters = {
   incompleteTasks: () => tasks,

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import $ from 'jquery'
+import initialState from './initialState'
 
 const mutations = {
   
@@ -25,9 +26,10 @@ const mutations = {
         task.log = logsForTask
       }
     }
-    for (const key of ['selectedTaskID']) {
+    for (const key of Object.keys(initialState.settings)) {
       const setting = settings.find(s => s.key === key)
-      state[key] = setting ? setting.value : null
+      state[key] = setting ? setting.value : initialState.settings[key]
+      state.settings[key] = setting ? setting.value : initialState.settings[key]
     }
   },
   
@@ -37,12 +39,11 @@ const mutations = {
   
   addTask (state, { task }) {
     task.log = []
-    if (state.insertAtTop) {
+    if (state.settings.insertAtTop) {
       state.tasks.unshift(task)
     } else {
       state.tasks.push(task)
     }
-    state.selectedTaskID = task.id
   },
   
   updateTask (state, { taskId, taskUpdates }) {
@@ -61,48 +62,12 @@ const mutations = {
     })
   },
   
-  setTopInsert (state, payload) {
-    state.insertAtTop = payload
-  },
-  
-  updateAddSelectedTags (state, newValue) {
-    state.addSelectedTags = newValue
-  },
-  
-  updateShowArchived (state, newValue) {
-    state.showArchived = newValue
-  },
-  
-  selectTask (state, { taskId }) {
-    state.selectedTaskID = taskId
-  },
-  
-  updateActiveMinutes (state, { activeMinutes }) {
-    state.activeMinutes = activeMinutes
-  },
-  
-  updateSecondReminderEnabled (state, { value }) {
-    state.secondReminderEnabled = value
-  },
-  
-  updateSecondReminderMinutes (state, { value }) {
-    state.secondReminderMinutes = value
-  },
-  
-  updateRestMinutes (state, { restMinutes }) {
-    state.restMinutes = restMinutes
-  },
-  
-  updateContinueOnComplete (state, newValue) {
-    state.continueOnComplete = newValue
-  },
-  
   startTask (state, { log }) {
     const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
       task.log.push(log)
-      state.activeTaskID = task.id
-      state.running = true
+      state.tempState.activeTaskID = task.id
+      state.tempState.running = true
     }
   },
   
@@ -112,13 +77,13 @@ const mutations = {
       const i = task.log.findIndex(l => l.id === log.id)
       if (i !== -1) {
         Vue.set(task.log, i, log)
-        state.running = log.stopped === null
+        state.tempState.running = log.stopped === null
       }
     }
   },
   
   setTaskInactive (state) {
-    state.activeTaskID = null
+    state.tempState.activeTaskID = null
   },
   
   deleteInterval (state, { logId, taskId }) {
@@ -130,12 +95,12 @@ const mutations = {
   },
   
   setRunning (state, value) {
-    state.running = value
+    state.tempState.running = value
   },
 
   resetRunning (state) {
-    if (state.activeTaskID) {
-      const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
+    if (state.tempState.activeTaskID) {
+      const activeTask = state.tasks.find(t => t.id === state.tempState.activeTaskID)
       if (activeTask && activeTask.log.length > 0) {
         const lastInterval = activeTask.log[activeTask.log.length - 1]
         if ('running' in lastInterval) {
@@ -143,7 +108,7 @@ const mutations = {
         }
       }
     }
-    state.running = false
+    state.tempState.running = false
   },
   
   addTaskTag (state, { taskId, tag, isNewTag }) {
@@ -191,24 +156,6 @@ const mutations = {
     Vue.set(targetElement, targetType, payload[targetType])
   },
   
-  setModalTag (state, { tagId }) {
-    state.modalTagId = tagId
-  },
-  
-  selectTag (state, payload) {
-    state.selectedTagIds.push(payload.tag)
-  },
-  
-  setFilterOperator (state, newFilterOperatorValue) {
-    if (['and', 'or'].includes(newFilterOperatorValue)) {
-      state.filterOperator = newFilterOperatorValue
-    }
-  },
-  
-  removeTag (state, { tagId }) {
-    state.selectedTagIds = state.selectedTagIds.filter(selectedTagId => selectedTagId !== tagId)
-  },
-  
   updateTag (state, { tagId, tag }) {
     state.tags[tagId] = tag
   },
@@ -230,12 +177,13 @@ const mutations = {
     const task = state.tasks[index]
     if (task.completed || confirm(`Are you sure you want to delete task ${task.name}? the task is not yet complete!`)) {
       state.tasks.splice(index, 1)
-      if (state.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
-        state.activeTaskID = null
-        state.running = false
-      } else if (state.selectedTaskID === task.id && state.activeTaskID) { // If another task is active while we delete this, switch to it
-        state.selectedTaskID = state.activeTaskID
+      if (state.tempState.activeTaskID === payload.id) { // If we are deleting the active task, clear activeTaskID
+        state.tempState.activeTaskID = null
+        state.tempState.running = false
       }
+      // else if (state.selectedTaskID === task.id && state.tempState.activeTaskID) { // If another task is active while we delete this, switch to it
+      //   state.selectedTaskID = state.tempState.activeTaskID
+      // }
     }
   },
   
@@ -255,12 +203,12 @@ const mutations = {
     }
   },
   
-  setGlobalNotificationsEnabled (state, newValue) {
-    state.globalNotificationsEnabled = newValue
+  updateTempState (state, { key, value }) {
+    state.tempState[key] = value
   },
   
-  setTimeFormat (state, timeFormat24) {
-    state.timeFormat24 = timeFormat24
+  updateSetting (state, { key, value }) {
+    state.settings[key] = value
   }
 }
 

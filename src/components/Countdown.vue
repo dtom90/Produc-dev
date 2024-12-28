@@ -89,7 +89,7 @@
         <p
           v-if="!editing"
           id="timer-display"
-          @click="editing = !running"
+          @click="onTimerClick"
         >
           {{ displayTime }}
         </p>
@@ -102,26 +102,24 @@
           >
             <input
               v-if="active"
-              :value="activeMinutes"
+              v-model="newActiveMinutes"
               type="number"
               class="form-control"
-              @input="changeActiveMinutes"
-              @keyup.enter="updateMinutes"
+              @keyup.enter="changeMinutes"
             >
             <input
               v-if="!active"
-              :value="restMinutes"
+              v-model="newRestMinutes"
               type="number"
               class="form-control"
-              @input="changeRestMinutes"
-              @keyup.enter="updateMinutes"
+              @keyup.enter="changeMinutes"
             >
             <div class="input-group-append">
               <button
                 id="timer-save-button"
                 type="button"
                 class="btn btn-primary"
-                @click="updateMinutes"
+                @click="changeMinutes"
               >
                 <font-awesome-icon icon="save" />
               </button>
@@ -134,7 +132,7 @@
           type="button"
           class="btn btn-light btn-lg"
           :disabled="editing"
-          :title="(overtime ? 'Stop' : (running ? 'Pause' : 'Start')) + ' timer'"
+          :title="(overtime ? 'Stop' : (tempState.running ? 'Pause' : 'Start')) + ' timer'"
           @click="toggleTimer"
         >
           <font-awesome-icon :icon="playPauseIcon" />
@@ -162,6 +160,8 @@ export default {
   
   data: () => ({
     editing: false,
+    newActiveMinutes: 0,
+    newRestMinutes: 0,
     active: true,
     activeIntervalStarted: false,
     overtime: false,
@@ -173,9 +173,8 @@ export default {
   computed: {
     
     ...mapState([
-      'activeMinutes',
-      'restMinutes',
-      'running'
+      'tempState',
+      'settings'
     ]),
     
     ...mapGetters([
@@ -183,11 +182,11 @@ export default {
     ]),
     
     totalSeconds () {
-      return (this.active ? this.activeMinutes : this.restMinutes) * 60
+      return (this.active ? this.settings.activeMinutes : this.settings.restMinutes) * 60
     },
     
     playPauseIcon () {
-      return this.overtime ? 'stop' : this.running ? 'pause' : 'play'
+      return this.overtime ? 'stop' : this.tempState.running ? 'pause' : 'play'
     },
     
     cssProps () {
@@ -208,28 +207,37 @@ export default {
     
     continueOnComplete: {
       get () {
-        return this.$store.state.continueOnComplete
+        return this.$store.state.settings.continueOnComplete
       },
-      set (value) {
-        this.updateContinueOnComplete(value)
+      async set (value) {
+        await this.updateSetting({
+          key: 'continueOnComplete',
+          value
+        })
       }
     },
     
     secondReminderEnabled: {
       get () {
-        return this.$store.state.secondReminderEnabled
+        return this.$store.state.settings.secondReminderEnabled
       },
-      set (value) {
-        this.updateSecondReminderEnabled({ value })
+      async set (value) {
+        await this.updateSetting({
+          key: 'secondReminderEnabled',
+          value
+        })
       }
     },
     
     secondReminderMinutes: {
       get () {
-        return this.$store.state.secondReminderMinutes
+        return this.$store.state.settings.secondReminderMinutes
       },
-      set (value) {
-        this.updateSecondReminderMinutes({ value })
+      async set (value) {
+        await this.updateSetting({
+          key: 'secondReminderMinutes',
+          value
+        })
       }
     },
     
@@ -253,32 +261,35 @@ export default {
     ...mapActions([
       'startTask',
       'updateTaskTimer',
-      'stopTask'
+      'stopTask',
+      'updateSetting'
     ]),
 
     ...mapMutations([
       'unpauseTask',
-      'updateActiveMinutes',
-      'updateSecondReminderEnabled',
-      'updateSecondReminderMinutes',
-      'updateRestMinutes',
-      'updateContinueOnComplete',
       'setRunning',
       'resetRunning',
       'setTaskInactive'
     ]),
     
-    changeActiveMinutes (e) {
-      this.updateActiveMinutes({ activeMinutes: parseFloat(e.target.value) })
-      this.secondsRemaining = this.totalSeconds
+    onTimerClick () {
+      if (this.tempState.running) {
+        return
+      }
+      this.editing = true
+      if (this.active) {
+        this.newActiveMinutes = this.settings.activeMinutes
+      } else {
+        this.newRestMinutes = this.settings.restMinutes
+      }
     },
     
-    changeRestMinutes (e) {
-      this.updateRestMinutes({ restMinutes: parseFloat(e.target.value) })
+    async changeMinutes () {
+      await this.updateSetting({
+        key: this.active ? 'activeMinutes' : 'restMinutes',
+        value: this.active ? this.newActiveMinutes : this.newRestMinutes
+      })
       this.secondsRemaining = this.totalSeconds
-    },
-    
-    updateMinutes () {
       this.timer.setSeconds(this.totalSeconds)
       this.editing = false
     },
@@ -292,7 +303,7 @@ export default {
       if (this.overtime) {
         this.overtime = false
         this.resetTimer()
-      } else if (this.running) {
+      } else if (this.tempState.running) {
         this.timer.pause()
         this.endInterval()
       } else {
@@ -302,7 +313,7 @@ export default {
         } else if (this.active) {
           this.startTask({ taskId: this.taskId })
         } else { // this is a rest interval, simply toggle running
-          this.setRunning(!this.running)
+          this.setRunning(!this.tempState.running)
         }
         this.timer.start()
       }
@@ -324,7 +335,7 @@ export default {
     },
     
     endInterval () {
-      if (this.active && this.running) {
+      if (this.active && this.tempState.running) {
         this.stopTask()
       }
     },

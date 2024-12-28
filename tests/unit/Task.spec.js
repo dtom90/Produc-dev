@@ -4,16 +4,20 @@ import Checkbox from '@/components/Checkbox.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { newTask, taskWithActivity } from '../fixtures'
 import Vuex from 'vuex'
+import { cloneDeep } from 'lodash'
+import initialState from '../../src/store/initialState'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 
+const state = cloneDeep(initialState)
 const actions = {
   selectTask: jest.fn()
 }
 
 const store = new Vuex.Store({
+  state,
   actions
 })
 

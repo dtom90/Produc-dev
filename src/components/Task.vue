@@ -60,12 +60,12 @@ export default {
     ...mapState([
       'tags',
       'tagOrder',
-      'selectedTaskID',
-      'activeTaskID'
+      'tempState',
+      'settings'
     ]),
     
     active () {
-      return this.selectedTaskID === this.task.id ? ' active' : ''
+      return this.settings.selectedTaskID === this.task.id ? ' active' : ''
     },
     
     checked () {
@@ -77,7 +77,7 @@ export default {
     },
     
     displayCountdownIndicator () {
-      return this.activeTaskID === this.task.id
+      return this.tempState.activeTaskID === this.task.id
     }
   },
   

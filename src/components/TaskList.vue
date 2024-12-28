@@ -14,7 +14,7 @@
       >
         <button
           id="filter-menu-button"
-          :class="'btn btn-light' + (selectedTagIds.length > 0 ? ' filter-active' : '')"
+          :class="'btn btn-light' + (settings.selectedTagIds.length > 0 ? ' filter-active' : '')"
           :style="filterBtnStyle"
           title="Filter on tags"
           data-toggle="dropdown"
@@ -28,20 +28,20 @@
           class="dropdown-menu"
         >
           <TagList
-            v-if="selectedTagIds.length > 0"
+            v-if="settings.selectedTagIds.length > 0"
             label="Filtering on tasks with"
-            :tag-list="selectedTagIds"
-            :modal="true"
-            :remove-tag="removeTagFilter"
+            :tag-list="settings.selectedTagIds"
+            :is-modal="true"
+            :remove-tag-filter="removeTagFilter"
             remove-text="Clear Filter"
           />
           <div
-            v-if="selectedTagIds.length > 0"
+            v-if="settings.selectedTagIds.length > 0"
             class="form-check form-check-inline"
           >
             <input
               id="addTagsSelect"
-              v-model="toggleAddSelectedTags"
+              v-model="addSelectedTags"
               class="form-check-input"
               type="checkbox"
             >
@@ -51,12 +51,12 @@
             >Include in new tasks</label>
           </div>
           <div
-            v-if="selectedTagIds.length > 0 && unselectedTags.length > 0"
+            v-if="settings.selectedTagIds.length > 0 && unselectedTags.length > 0"
             class="dropdown-divider"
           />
           <TagList
             v-if="unselectedTags.length > 0"
-            :label="selectedTagIds.length > 0 ? 'Add to filter' : 'Filter on'"
+            :label="settings.selectedTagIds.length > 0 ? 'Add to filter' : 'Filter on'"
             :tag-list="unselectedTags"
             :select-tag="selectTagFilter"
           />
@@ -107,7 +107,7 @@
           >
             <input
               id="showArchived"
-              v-model="toggleShowArchived"
+              v-model="tempState.showArchived"
               class="form-check-input"
               type="checkbox"
             >
@@ -157,7 +157,7 @@
           id="add-position-button"
           class="btn btn-light custom-icons"
           :title="`Adding tasks to ${insertAtTop === true ? 'top' : 'bottom'} of list`"
-          @click="setTopInsert(!insertAtTop)"
+          @click="insertAtTop = !insertAtTop"
         >
           <img
             v-if="insertAtTop"
@@ -236,13 +236,8 @@ export default {
   
   computed: {
     ...mapState([
-      'selectedTagIds',
-      'addSelectedTags',
-      'filterOperator',
-      'showArchived',
-      'insertAtTop'
-    ]),
-    ...mapState([
+      'tempState',
+      'settings',
       'tags'
     ]),
     ...mapGetters([
@@ -261,36 +256,44 @@ export default {
       return (this.completed ? 'completed' : 'toDo') + 'OrderGroupSelect'
     },
     filterBtnStyle () {
-      return this.selectedTagIds.length > 0 ? {
-        backgroundColor: this.tags[this.selectedTagIds[0]].color
+      return this.settings.selectedTagIds.length > 0 ? {
+        backgroundColor: this.tags[this.settings.selectedTagIds[0]].color
       } : {}
     },
-    toggleAddSelectedTags: {
+    addSelectedTags: {
       get () {
-        return this.addSelectedTags
+        return this.settings.addSelectedTags
       },
       set (value) {
-        this.updateAddSelectedTags(value)
+        this.updateSetting({ key: 'addSelectedTags', value })
       }
     },
-    toggleShowArchived: {
+    showArchived: {
       get () {
-        return this.showArchived
+        return this.tempState.showArchived
       },
       set (value) {
-        this.updateShowArchived(value)
+        this.updateTempState({ key: 'showArchived', value })
+      }
+    },
+    insertAtTop: {
+      get () {
+        return this.settings.insertAtTop
+      },
+      set (value) {
+        this.updateSetting({ key: 'insertAtTop', value })
       }
     },
     incompleteTaskList: {
       get () {
-        let incompleteTasks = this.selectedTagIds.length > 0
+        let incompleteTasks = this.settings.selectedTagIds.length > 0
           ? (
-            this.filterOperator === 'and'
-              ? this.incompleteTasks.filter(task => this.selectedTagIds.every(tag => task.tags.includes(tag)))
-              : this.incompleteTasks.filter(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+            this.settings.filterOperator === 'and'
+              ? this.incompleteTasks.filter(task => this.settings.selectedTagIds.every(tag => task.tags.includes(tag)))
+              : this.incompleteTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
           )
           : this.incompleteTasks
-        incompleteTasks = this.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
+        incompleteTasks = this.tempState.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
         return incompleteTasks
       },
       set (newIncompleteTaskOrder) {
@@ -298,14 +301,14 @@ export default {
       }
     },
     completedTaskList () {
-      let completedTasks = this.selectedTagIds.length > 0
+      let completedTasks = this.settings.selectedTagIds.length > 0
         ? (
-          this.filterOperator === 'and'
-            ? this.completedTasks.filter(task => this.selectedTagIds.every(tag => task.tags.includes(tag)))
-            : this.completedTasks.filter(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+          this.settings.filterOperator === 'and'
+            ? this.completedTasks.filter(task => this.settings.selectedTagIds.every(tag => task.tags.includes(tag)))
+            : this.completedTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         )
         : this.completedTasks
-      completedTasks = this.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
+      completedTasks = this.tempState.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
       return completedTasks && this.sortOrder !== 'Oldest'
         ? completedTasks.slice().reverse()
         : completedTasks
@@ -317,17 +320,16 @@ export default {
     ...mapActions([
       'addTask',
       'selectTask',
+      'addTagFilter',
+      'removeTagFilter',
       'reorderIncompleteTasks',
-      'archiveTasks'
+      'archiveTasks',
+      'updateSetting'
     ]),
 
     ...mapMutations([
-      'setTopInsert',
-      'updateAddSelectedTags',
-      'updateShowArchived',
-      'deleteTasks',
-      'selectTag',
-      'removeTag'
+      'updateTempState',
+      'deleteTasks'
     ]),
     
     addNewTask () {
@@ -336,27 +338,27 @@ export default {
       })
       this.newTaskName = ''
     },
-    selectTagFilter (tag, e) {
+
+    async selectTagFilter (tagId, e) {
       e.stopPropagation()
-      this.selectTag({ tag })
-      if (!this.selectedTask || (this.selectedTask && !this.selectedTagIds.some(tag => this.selectedTask.tags.includes(tag)))) {
-        let tasksWithTag = this.incompleteTasks.find(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+      await this.addTagFilter({ tagId })
+      if (!this.selectedTask || (this.selectedTask && !this.settings.selectedTagIds.some(tag => this.selectedTask.tags.includes(tag)))) {
+        let tasksWithTag = this.incompleteTasks.find(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         if (!tasksWithTag) {
-          tasksWithTag = this.completedTasks.find(task => this.selectedTagIds.some(tag => task.tags.includes(tag)))
+          tasksWithTag = this.completedTasks.find(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         }
         if (tasksWithTag) {
-          this.selectTask({ taskId: tasksWithTag.id })
+          await this.selectTask({ taskId: tasksWithTag.id })
         } else {
-          this.selectTask({ taskId: null })
+          await this.selectTask({ taskId: null })
         }
       }
     },
-    removeTagFilter ({ tagId }) {
-      this.removeTag({ tagId })
-    },
+
     startDrag () {
       this.$el.closest('html').classList.add('draggable-cursor')
     },
+
     endDrag () {
       this.$el.closest('html').classList.remove('draggable-cursor')
     }

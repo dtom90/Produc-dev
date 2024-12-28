@@ -167,6 +167,7 @@ describe('start task timer', () => {
     cy.get('#countdown-container').contains('+0:03')
   })
   
+  // TODO: implement this
   // it('on refresh, task interval should be stopped', () => {
   //   // Arrange
   //   cy.get('div').contains('25:00').click()

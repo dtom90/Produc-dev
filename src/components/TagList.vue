@@ -27,17 +27,17 @@
           class="tag-name btn"
           :style="`backgroundColor: ${tags[tagId].color}`"
           :title="selectText"
-          @click="modal ? viewActivityModal(tagId) : selectTag(tagId, $event)"
+          @click="isModal ? viewActivityModal(tagId) : selectTag(tagId, $event)"
         >
           {{ tags[tagId].tagName }}
         </button>
         <button
-          v-if="removeTag"
+          v-if="removeTagFilter"
           class="tag-close btn"
           :style="`backgroundColor: ${tags[tagId].color}`"
           :title="removeText"
           aria-label="Close"
-          @click.stop="removeTag({tagId})"
+          @click.stop="removeTagFilter({tagId})"
         >
           <font-awesome-icon icon="times" />
         </button>
@@ -47,22 +47,22 @@
           class="btn-group btn-group-toggle"
         >
           <label
-            :class="'btn btn-light' + (filterOperatorValue === 'and' ? ' active' : '')"
+            :class="'btn btn-light' + (filterOperator === 'and' ? ' active' : '')"
             title="Show tasks with all of the selected tags"
           >
             <input
-              v-model="filterOperatorValue"
+              v-model="filterOperator"
               type="radio"
               value="and"
             >
             <span>All</span>
           </label>
           <label
-            :class="'btn btn-light' + (filterOperatorValue === 'or' ? ' active' : '')"
+            :class="'btn btn-light' + (filterOperator === 'or' ? ' active' : '')"
             title="Show tasks with any of the selected tags"
           >
             <input
-              v-model="filterOperatorValue"
+              v-model="filterOperator"
               type="radio"
               value="or"
             >
@@ -157,7 +157,7 @@ export default {
       type: Function,
       default: () => null
     },
-    modal: {
+    isModal: {
       type: Boolean,
       default: false
     },
@@ -165,7 +165,7 @@ export default {
       type: String,
       default: 'Remove tag from task'
     },
-    removeTag: {
+    removeTagFilter: {
       type: Function,
       default: null
     }
@@ -183,7 +183,7 @@ export default {
     ...mapState([
       'tags',
       'tagOrder',
-      'filterOperator'
+      'settings'
     ]),
     
     ...mapGetters([
@@ -198,12 +198,12 @@ export default {
       return this.tagList.slice().sort((a, b) => this.tagOrder.indexOf(a) - this.tagOrder.indexOf(b))
     },
     
-    filterOperatorValue: {
+    filterOperator: {
       get () {
-        return this.filterOperator
+        return this.$store.state.settings.filterOperator
       },
       set (value) {
-        this.setFilterOperator(value)
+        this.updateSetting({ key: 'filterOperator', value })
       }
     }
   },
@@ -212,12 +212,12 @@ export default {
     
     ...mapActions([
       'addTaskTagById',
-      'addTaskTagByName'
+      'addTaskTagByName',
+      'updateSetting'
     ]),
     
     ...mapMutations([
-      'setFilterOperator',
-      'setModalTag'
+      'updateTempState'
     ]),
     
     addTagButton: function () {
@@ -246,7 +246,7 @@ export default {
     },
     
     viewActivityModal: function (tagId) {
-      this.setModalTag({ tagId })
+      this.updateTempState({ key: 'modalTagId', value: tagId })
       this.$root.$emit('bv::toggle::modal', 'activityModal')
     },
     

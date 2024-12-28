@@ -12,16 +12,18 @@ const actions = {
     commit('setState', { tasks, tags, taskTagMaps, logs, settings })
   },
 
-  async addTask ({ state, commit }, { name }) {
+  async addTask ({ state, commit, dispatch }, { name }) {
     const taskName = name.trim()
     if (taskName) {
-      const count = await dexieDb.tasks.count()
+      const order = state.settings.insertAtTop
+        ? state.tasks.reduce((min, t) => t.order < min ? t.order : min, 0) - 1
+        : state.tasks.reduce((max, t) => t.order > max ? t.order : max, 0) + 1
       const newTask = {
         id: 'task-' + nanoid(),
         name: taskName,
-        tags: state.addSelectedTags && state.selectedTagIds.length > 0 ? [...state.selectedTagIds] : [],
+        tags: state.settings.addSelectedTags && state.selectedTagIds.length > 0 ? [...state.selectedTagIds] : [],
         notes: '',
-        order: count,
+        order,
         log: [],
         created_at: Date.now(),
         completed: null,
@@ -29,14 +31,9 @@ const actions = {
       }
       // add to dexie
       await dexieDb.tasks.add(newTask)
-      await dexieDb.settings.put({ key: 'selectedTaskID', value: newTask.id })
       commit('addTask', { task: newTask })
+      await dispatch('updateSetting', { key: 'selectedTaskID', value: newTask.id })
     }
-  },
-  
-  async selectTask ({ state, commit }, { taskId }) {
-    await dexieDb.settings.put({ key: 'selectedTaskID', value: taskId })
-    commit('selectTask', { taskId })
   },
   
   async reorderIncompleteTasks ({ state, commit }, { newIncompleteTaskOrder }) {
@@ -118,7 +115,7 @@ const actions = {
     if (task) {
       let completedValue = null
       if (!task.completed) {
-        if (task.id === state.activeTaskID && state.running) {
+        if (task.id === state.tempState.activeTaskID && state.tempState.running) {
           await dispatch('stopTask')
         }
         completedValue = Date.now()
@@ -267,6 +264,26 @@ const actions = {
     const newTags = await dexieDb.taskTagMap.where('taskId').equals(taskId).toArray()
     const newTagIds = newTags.map(tag => tag.tagId)
     commit('updateTask', { taskId, taskUpdates: { tags: newTagIds } })
+  },
+  
+  async selectTask ({ state, dispatch }, { taskId }) {
+    await dispatch('updateSetting', { key: 'selectedTaskID', value: taskId })
+  },
+  
+  async addTagFilter ({ state, dispatch }, { tagId }) {
+    const selectedTagIds = state.settings.selectedTagIds
+    selectedTagIds.push(tagId)
+    await dispatch('updateSetting', { key: 'selectedTagIds', value: selectedTagIds })
+  },
+  
+  async removeTagFilter ({ state, dispatch }, { tagId }) {
+    const selectedTagIds = state.settings.selectedTagIds.filter(selectedTagId => selectedTagId !== tagId)
+    await dispatch('updateSetting', { key: 'selectedTagIds', value: selectedTagIds })
+  },
+  
+  async updateSetting ({ state, commit }, { key, value }) {
+    await dexieDb.settings.put({ key, value })
+    commit('updateSetting', { key, value })
   }
   
 }

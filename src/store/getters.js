@@ -1,15 +1,15 @@
 const getters = {
   selectedTask (state) {
-    return state.tasks.find(t => t.id === state.selectedTaskID)
+    return state.tasks.find(t => t.id === state.settings.selectedTaskID)
   },
   
   activeTask (state) {
-    return state.tasks.find(t => t.id === state.activeTaskID)
+    return state.tasks.find(t => t.id === state.tempState.activeTaskID)
   },
   
   notificationsEnabled (state) {
-    const activeTask = state.tasks.find(t => t.id === state.activeTaskID)
-    return state.globalNotificationsEnabled && (
+    const activeTask = state.tasks.find(t => t.id === state.tempState.activeTaskID)
+    return state.settings.globalNotificationsEnabled && (
       activeTask ? !(activeTask.disableNotifications === true) : true
     )
   },
@@ -24,7 +24,7 @@ const getters = {
     return state.completedOrder === 'Recent' ? completedTasks.reverse() : completedTasks
   },
   
-  unselectedTags: state => Object.keys(state.tags).filter(tag => !state.selectedTagIds.includes(tag)),
+  unselectedTags: state => Object.keys(state.tags).filter(tag => !state.settings.selectedTagIds.includes(tag)),
   
   availableTags: state => (taskId, newTagName) => {
     const task = state.tasks.find(t => t.id === taskId)
