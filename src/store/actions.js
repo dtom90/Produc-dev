@@ -115,7 +115,7 @@ const actions = {
     if (task) {
       let completedValue = null
       if (!task.completed) {
-        if (task.id === state.tempState.activeTaskID && state.running) {
+        if (task.id === state.tempState.activeTaskID && state.tempState.running) {
           await dispatch('stopTask')
         }
         completedValue = Date.now()
@@ -282,7 +282,6 @@ const actions = {
   },
   
   async updateSetting ({ state, commit }, { key, value }) {
-    console.log('updateSetting', key, value)
     await dexieDb.settings.put({ key, value })
     commit('updateSetting', { key, value })
   }
