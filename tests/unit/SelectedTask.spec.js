@@ -7,13 +7,15 @@ import { FontAwesomeIcon } from '@/lib/font-awesome-icons'
 import { newTask, taskWithActivity } from '../fixtures'
 import Vuex from 'vuex'
 import { ButtonPlugin } from 'bootstrap-vue'
+import { cloneDeep } from 'lodash'
+import initialState from '../../src/store/initialState'
 
 const localVue = createLocalVue()
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(Vuex)
 localVue.use(ButtonPlugin)
 
-const state = { tags: {} }
+const state = cloneDeep(initialState)
 
 const mutations = {
   deleteTask: jest.fn()
@@ -102,7 +104,7 @@ describe('SelectedTask', () => {
         expect.objectContaining({
           tagList: task.tags,
           selectText: 'View tag activity',
-          modal: true,
+          isModal: true,
           removeText: 'Remove tag from task'
         })
       )

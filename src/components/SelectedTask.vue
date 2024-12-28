@@ -133,7 +133,7 @@
     <TagList
       :tag-list="taskTags"
       :task-id="task.id"
-      :modal="true"
+      :is-modal="true"
       :remove-tag-filter="removeTag"
     />
     

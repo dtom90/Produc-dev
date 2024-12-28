@@ -31,7 +31,7 @@
             v-if="settings.selectedTagIds.length > 0"
             label="Filtering on tasks with"
             :tag-list="settings.selectedTagIds"
-            :modal="true"
+            :is-modal="true"
             :remove-tag-filter="removeTagFilter"
             remove-text="Clear Filter"
           />
@@ -41,7 +41,7 @@
           >
             <input
               id="addTagsSelect"
-              v-model="toggleAddSelectedTags"
+              v-model="addSelectedTags"
               class="form-check-input"
               type="checkbox"
             >
@@ -107,7 +107,7 @@
           >
             <input
               id="showArchived"
-              v-model="toggleShowArchived"
+              v-model="tempSettings.showArchived"
               class="form-check-input"
               type="checkbox"
             >
@@ -157,7 +157,7 @@
           id="add-position-button"
           class="btn btn-light custom-icons"
           :title="`Adding tasks to ${insertAtTop === true ? 'top' : 'bottom'} of list`"
-          @click="setTopInsert(!insertAtTop)"
+          @click="insertAtTop = !insertAtTop"
         >
           <img
             v-if="insertAtTop"
@@ -236,13 +236,8 @@ export default {
   
   computed: {
     ...mapState([
+      'tempSettings',
       'settings',
-      'addSelectedTags',
-      'filterOperator',
-      'showArchived',
-      'insertAtTop'
-    ]),
-    ...mapState([
       'tags'
     ]),
     ...mapGetters([
@@ -265,32 +260,40 @@ export default {
         backgroundColor: this.tags[this.settings.selectedTagIds[0]].color
       } : {}
     },
-    toggleAddSelectedTags: {
+    addSelectedTags: {
       get () {
-        return this.addSelectedTags
+        return this.settings.addSelectedTags
       },
       set (value) {
-        this.updateAddSelectedTags(value)
+        this.updateSetting({ key: 'addSelectedTags', value })
       }
     },
-    toggleShowArchived: {
+    showArchived: {
       get () {
-        return this.showArchived
+        return this.tempSettings.showArchived
       },
       set (value) {
-        this.updateShowArchived(value)
+        this.updateTempSetting({ key: 'showArchived', value })
+      }
+    },
+    insertAtTop: {
+      get () {
+        return this.settings.insertAtTop
+      },
+      set (value) {
+        this.updateSetting({ key: 'insertAtTop', value })
       }
     },
     incompleteTaskList: {
       get () {
         let incompleteTasks = this.settings.selectedTagIds.length > 0
           ? (
-            this.filterOperator === 'and'
+            this.settings.filterOperator === 'and'
               ? this.incompleteTasks.filter(task => this.settings.selectedTagIds.every(tag => task.tags.includes(tag)))
               : this.incompleteTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
           )
           : this.incompleteTasks
-        incompleteTasks = this.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
+        incompleteTasks = this.tempSettings.showArchived ? incompleteTasks : incompleteTasks.filter(t => !t.archived)
         return incompleteTasks
       },
       set (newIncompleteTaskOrder) {
@@ -300,12 +303,12 @@ export default {
     completedTaskList () {
       let completedTasks = this.settings.selectedTagIds.length > 0
         ? (
-          this.filterOperator === 'and'
+          this.settings.filterOperator === 'and'
             ? this.completedTasks.filter(task => this.settings.selectedTagIds.every(tag => task.tags.includes(tag)))
             : this.completedTasks.filter(task => this.settings.selectedTagIds.some(tag => task.tags.includes(tag)))
         )
         : this.completedTasks
-      completedTasks = this.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
+      completedTasks = this.tempSettings.showArchived ? completedTasks : completedTasks.filter(t => !t.archived)
       return completedTasks && this.sortOrder !== 'Oldest'
         ? completedTasks.slice().reverse()
         : completedTasks
@@ -320,13 +323,12 @@ export default {
       'addTagFilter',
       'removeTagFilter',
       'reorderIncompleteTasks',
-      'archiveTasks'
+      'archiveTasks',
+      'updateSetting'
     ]),
 
     ...mapMutations([
-      'setTopInsert',
-      'updateAddSelectedTags',
-      'updateShowArchived',
+      'updateTempSetting',
       'deleteTasks'
     ]),
     

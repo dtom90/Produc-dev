@@ -119,7 +119,8 @@
                 id="timer-save-button"
                 type="button"
                 class="btn btn-primary"
-                @click="changeMinutes">
+                @click="changeMinutes"
+              >
                 <font-awesome-icon icon="save" />
               </button>
             </div>

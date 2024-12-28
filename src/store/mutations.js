@@ -39,7 +39,7 @@ const mutations = {
   
   addTask (state, { task }) {
     task.log = []
-    if (state.insertAtTop) {
+    if (state.settings.insertAtTop) {
       state.tasks.unshift(task)
     } else {
       state.tasks.push(task)
@@ -60,18 +60,6 @@ const mutations = {
         Vue.set(state.tasks, index, { ...state.tasks[index], ...taskUpdate })
       }
     })
-  },
-  
-  setTopInsert (state, payload) {
-    state.insertAtTop = payload
-  },
-  
-  updateAddSelectedTags (state, newValue) {
-    state.addSelectedTags = newValue
-  },
-  
-  updateShowArchived (state, newValue) {
-    state.showArchived = newValue
   },
   
   startTask (state, { log }) {
@@ -168,20 +156,6 @@ const mutations = {
     Vue.set(targetElement, targetType, payload[targetType])
   },
   
-  setModalTag (state, { tagId }) {
-    state.modalTagId = tagId
-  },
-  
-  selectTag (state, payload) {
-    state.selectedTagIds.push(payload.tag)
-  },
-  
-  setFilterOperator (state, newFilterOperatorValue) {
-    if (['and', 'or'].includes(newFilterOperatorValue)) {
-      state.filterOperator = newFilterOperatorValue
-    }
-  },
-  
   updateTag (state, { tagId, tag }) {
     state.tags[tagId] = tag
   },
@@ -227,6 +201,10 @@ const mutations = {
         state[key] = newState[key]
       })
     }
+  },
+  
+  updateTempSetting (state, { key, value }) {
+    state.tempSettings[key] = value
   },
   
   updateSetting (state, { key, value }) {

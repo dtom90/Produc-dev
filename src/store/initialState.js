@@ -2,15 +2,15 @@ const initialState = {
   tasks: [],
   tags: {},
   tagOrder: [],
-  modalTagId: null,
   totalTarget: {},
-  filterOperator: 'and',
-  addSelectedTags: true,
-  showArchived: false,
-  insertAtTop: false,
   activeTaskID: null,
   running: false,
   timeFormat24: false,
+  
+  tempSettings: {
+    modalTagId: null,
+    showArchived: false
+  },
   
   settings: {
     selectedTaskID: null,
@@ -23,10 +23,9 @@ const initialState = {
     globalNotificationsEnabled: true,
     
     selectedTagIds: [],
-    // filterOperator: 'and',
-    // addSelectedTags: true,
-    // showArchived: false,
-    // insertAtTop: false,
+    filterOperator: 'and',
+    addSelectedTags: true,
+    insertAtTop: false
     
     // timeFormat24: false,
     // totalTarget: {}
