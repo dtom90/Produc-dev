@@ -69,4 +69,44 @@ describe('reorder tasks', () => {
     cy.contains('label', 'Show archived').click()
     cy.get('#incomplete-task-list').contains('My Archvied Task').should('exist')
   })
+  
+  it('inserts new task at bottom of list by default', () => {
+    // Arrange
+
+    // Act
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Third Task{enter}')
+
+    // Assert
+    cy.get('#incomplete-task-list .task').last().contains('My Third Task')
+  })
+
+  it('toggles insertion and inserts new task at bottom of list', () => {
+    // Arrange
+    cy.get('button[title="Adding tasks to bottom of list"]').click()
+    cy.get('button[title="Adding tasks to top of list"]').should('exist')
+
+    // Act
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Third Task{enter}')
+
+    // Assert
+    cy.get('#incomplete-task-list .task').first().contains('My Third Task')
+  })
+  
+  it('preserves tasks inserted at the top of the list on page reload', () => {
+    // Arrange
+    cy.get('button[title="Adding tasks to bottom of list"]').click()
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Third Task{enter}')
+    
+    // Act
+    cy.reload()
+
+    // Assert
+    cy.get('#incomplete-task-list .task').first().contains('My Third Task')
+  })
 })
