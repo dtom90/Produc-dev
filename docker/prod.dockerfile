@@ -7,6 +7,7 @@ COPY package.json yarn.lock ./
 RUN yarn install
 COPY public public
 COPY src src
+COPY vue.config.js .
 RUN yarn run web:build
 
 # production stage

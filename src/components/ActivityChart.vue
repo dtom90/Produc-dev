@@ -49,6 +49,9 @@ const defaultChartOptions = {
       clip: true,
       color: 'white',
       formatter: displayChartDurationNewline
+    },
+    annotation: {
+      annotations: {}
     }
   },
   animation: {
@@ -60,37 +63,31 @@ const defaultChartOptions = {
         chartWrapper.scrollLeft = canvas.clientWidth
       }
     }
-  },
-  annotation: {
-    events: ['click'],
-    annotations: []
-  },
-  responsive: true,
-  maintainAspectRatio: false
+  }
 }
 
 const baseTargetLine = Object.freeze({
   type: 'line',
-  mode: 'horizontal',
-  scaleID: 'y-axis-0',
-  value: 0,
+  yMin: 0,
+  yMax: 0,
   borderColor: 'red',
   borderWidth: 2,
   label: {
     backgroundColor: 'red',
     content: '',
     yAdjust: 10,
-    enabled: true
+    display: true
   }
 })
 
 function chartOptions (target = null, scrollRight = false) {
   const chartOptions = cloneDeep(defaultChartOptions)
-  if (target !== null) {
+  if (target) {
     const annotation = cloneDeep(baseTargetLine)
-    annotation.value = target
+    annotation.yMin = target
+    annotation.yMax = target
     annotation.label.content = 'Target: ' + displayChartDuration(target)
-    chartOptions.annotation.annotations = [annotation]
+    chartOptions.plugins.annotation.annotations.targetLine = annotation
   }
   if (scrollRight === false) {
     chartOptions.animation.onComplete = () => {}

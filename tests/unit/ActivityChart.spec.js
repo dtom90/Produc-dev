@@ -12,7 +12,7 @@ const datasets = [{
 describe('ActivityChart', () => {
   
   it('should not display a legend', () => {
-    expect(defaultChartOptions.legend.display).toEqual(false)
+    expect(defaultChartOptions.plugins.legend.display).toEqual(false)
   })
   
   it('should display the correct data label', () => {
