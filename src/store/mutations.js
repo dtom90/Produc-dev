@@ -8,6 +8,7 @@ const mutations = {
     state.tasks = tasks
     state.tasks.forEach(task => {
       task.tags = []
+      task.log = []
     })
     state.tags = {}
     state.tagOrder = []
@@ -23,10 +24,11 @@ const mutations = {
     }
     for (const log of logs) {
       const task = state.tasks.find(t => t.id === log.taskId)
-      if (task) {
-        const logsForTask = logs.filter(l => l.taskId === log.taskId)
-        logsForTask.sort((a, b) => a.started - b.started)
-        task.log = logsForTask
+      task.log.push(log)
+    }
+    for (const task of state.tasks) {
+      if (task.log.length > 0) {
+        task.log.sort((a, b) => a.started - b.started)
       }
     }
     for (const key of Object.keys(initialState.settings)) {

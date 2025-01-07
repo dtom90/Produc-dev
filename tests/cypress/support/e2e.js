@@ -19,10 +19,11 @@ import './commands'
 Cypress.on('window:before:load', (win) => {
   cy.stub(win.console, 'error').callsFake((...args) => {
     // Log the error to the Cypress console
+    // eslint-disable-next-line no-console
     console.error(...args)
     
     // Fail the test if a console error occurs
-    throw new Error(`Console error: ${args.join(' ')}`);
+    throw new Error(`Console error: ${args.join(' ')}`)
   })
 })
 

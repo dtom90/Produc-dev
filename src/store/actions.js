@@ -7,8 +7,15 @@ const actions = {
     const tasks = await dexieDb.tasks.orderBy('order').toArray()
     const tags = await dexieDb.tags.orderBy('order').toArray()
     const taskTagMaps = await dexieDb.taskTagMap.toArray()
-    const logs = await dexieDb.logs.toArray()
     const settings = await dexieDb.settings.toArray()
+    const logs = await dexieDb.logs.toArray()
+    // If any logs were running but not stopped, stop them.
+    for (const log of logs) {
+      if (!log.stopped) {
+        log.stopped = log.started + log.timeSpent
+        await dexieDb.logs.put(log)
+      }
+    }
     commit('setState', { tasks, tags, taskTagMaps, logs, settings })
   },
 
@@ -23,7 +30,6 @@ const actions = {
         name: taskName,
         notes: '',
         order,
-        log: [],
         created_at: Date.now(),
         completed: null,
         archived: null

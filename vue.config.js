@@ -3,7 +3,12 @@ const webpackConfig = {
     overlay: {
       warnings: false,
       errors: false
-    }
+    },
+    allowedHosts: [
+      'localhost',
+      '0.0.0.0',
+      'host.docker.internal'
+    ]
   },
   publicPath: process.env.BASE_URL ? process.env.BASE_URL : '/',
   configureWebpack: {

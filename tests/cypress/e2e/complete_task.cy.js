@@ -26,5 +26,4 @@ describe('complete task', () => {
       cy.get('td').contains('Stopped')
     })
   })
-  
 })

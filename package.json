@@ -1,6 +1,6 @@
 {
   "name": "devtrack",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "private": true,
   "description": "An app for productive developers",
   "author": {
@@ -9,14 +9,14 @@
   },
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint --no-fix",
+    "lint": "vue-cli-service lint src/ tests/ --no-fix",
     "packages:audit": "/bin/bash -c 'yarn audit --groups dependencies; [[ $? -ge 8 ]] && exit 1 || exit 0'",
     "packages:fix": "npm_config_yes=true npx yarn-audit-fix",
     "electron:build": "vue-cli-service electron:build --dir",
     "electron:dev": "vue-cli-service electron:serve",
     "electron:release": "vue-cli-service electron:build",
     "electron:serve": "electron dist_electron/bundled",
-    "lint:fix": "vue-cli-service lint --fix",
+    "lint:fix": "vue-cli-service lint src/ tests/ --fix",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "test": "yarn packages:audit && yarn run lint && yarn run test:unit && yarn run test:gh_pages:build:e2e",
@@ -84,6 +84,8 @@
     "electron-builder": "^23.0.2",
     "eslint": "^7.4.0",
     "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-chai-friendly": "^1.0.1",
+    "eslint-plugin-cypress": "^4.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^23.18.0",
     "eslint-plugin-node": "^11.1.0",
