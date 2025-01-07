@@ -6,6 +6,9 @@ const mutations = {
   
   setState (state, { tasks, tags, taskTagMaps, logs, settings }) {
     state.tasks = tasks
+    state.tasks.forEach(task => {
+      task.tags = []
+    })
     state.tags = {}
     state.tagOrder = []
     for (const tag of tags) {

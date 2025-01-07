@@ -21,7 +21,6 @@ const actions = {
       const newTask = {
         id: 'task-' + nanoid(),
         name: taskName,
-        tags: state.settings.addSelectedTags && state.selectedTagIds.length > 0 ? [...state.selectedTagIds] : [],
         notes: '',
         order,
         log: [],
@@ -29,8 +28,19 @@ const actions = {
         completed: null,
         archived: null
       }
-      // add to dexie
+      // Note: task added to dexie without tags array
       await dexieDb.tasks.add(newTask)
+      if (state.settings.addSelectedTags && state.selectedTagIds.length) {
+        const taskTagMaps = state.selectedTagIds.map(tagId => ({
+          id: 'taskTag-' + nanoid(),
+          taskId: newTask.id,
+          tagId
+        }))
+        await dexieDb.taskTagMap.bulkAdd(taskTagMaps)
+        newTask.tags = state.selectedTagIds
+      } else {
+        newTask.tags = []
+      }
       commit('addTask', { task: newTask })
       await dispatch('updateSetting', { key: 'selectedTaskID', value: newTask.id })
     }
