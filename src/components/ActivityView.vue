@@ -61,6 +61,7 @@
               <input
                 v-model="target"
                 type="number"
+                min="0"
                 class="form-control"
               >
               <div class="input-group-append">
@@ -201,15 +202,19 @@ export default {
         return targetElement[type]
       },
       set (value) {
+        let numValue = parseFloat(value)
+        if (numValue < 0) {
+          numValue = 0
+        }
         if (this.element === 'All Activity') {
           this.updateSetting({
             key: this.chartType + 'Target',
-            value: parseFloat(value)
+            value: numValue
           })
         } else {
           this.updateTag({
             tagId: this.element,
-            [this.chartType + 'Target']: parseFloat(value)
+            [this.chartType + 'Target']: numValue
           })
         }
       }

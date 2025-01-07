@@ -68,15 +68,23 @@ const defaultChartOptions = {
 
 const baseTargetLine = Object.freeze({
   type: 'line',
-  yMin: 0,
-  yMax: 0,
+  scaleID: 'y',
+  value: 0,
   borderColor: 'red',
   borderWidth: 2,
   label: {
+    display: true,
     backgroundColor: 'red',
     content: '',
-    yAdjust: 10,
-    display: true
+    padding: 5,
+    position: 'center', // 'start', 'center', or 'end' to place the label along the line
+    xAdjust: 0, // Ensure no horizontal offset
+    yAdjust: 0, // Ensure no vertical offset
+    rotation: 0 // Keep the label upright
+    // callout: {
+    //   display: true,
+    //   start: 0
+    // }
   }
 })
 
@@ -84,8 +92,7 @@ function chartOptions (target = null, scrollRight = false) {
   const chartOptions = cloneDeep(defaultChartOptions)
   if (target) {
     const annotation = cloneDeep(baseTargetLine)
-    annotation.yMin = target
-    annotation.yMax = target
+    annotation.value = target
     annotation.label.content = 'Target: ' + displayChartDuration(target)
     chartOptions.plugins.annotation.annotations.targetLine = annotation
   }
