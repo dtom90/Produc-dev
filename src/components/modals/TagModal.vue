@@ -1,6 +1,7 @@
 <template>
   <b-modal
     id="tagModal"
+    content-class="tag-modal-content"
     title="Tags"
     size="lg"
     scrollable
@@ -76,6 +77,13 @@ export default {
   }
 }
 </script>
+
+<style>
+.tag-modal-content {
+  min-height: 600px;
+  overflow-y: scroll;
+}
+</style>
 
 <style scoped lang="scss">
 
