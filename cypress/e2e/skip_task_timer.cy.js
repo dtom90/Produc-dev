@@ -47,5 +47,4 @@ describe('start task timer', () => {
       cy.get('td').contains('Stopped')
     })
   })
-  
 })
