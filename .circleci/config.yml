@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Publish to GitHub Pages
           command: |
-            npm install gh-pages@6.2.0
+            npm install gh-pages@6.2.0 -g
             git config user.email "dtom90@users.noreply.github.com"
             git config user.name "David Thomason"
             ./node_modules/.bin/gh-pages --dist dist_web --dotfiles --no-history --message "GitHub Pages"
