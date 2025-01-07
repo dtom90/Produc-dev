@@ -99,4 +99,42 @@ describe('create tags', () => {
     cy.get('#incomplete-task-list').contains('My First Task')
     cy.get('#incomplete-task-list').should('not.contain', 'My Second Task')
   })
+
+  it('adds tag to new task when filtering on tag', () => {
+    // Arrange
+    cy.get('button > svg.fa-filter').click()
+    cy.get('.dropdown-menu').contains(firstTagName).click()
+
+    // Act
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Second Task{enter}')
+
+    // Assert
+    cy.get('#incomplete-task-list').contains('My Second Task')
+    cy.get('#selected-task-container').within(() => {
+      cy.get('div.tag > button.tag-name').contains(firstTagName).should('be.visible')
+    })
+  })
+
+  it('removes then adds tag again, should have only one tag after reload', () => {
+    // Arrange
+    cy.get('button > svg.fa-filter').click()
+    cy.get('.dropdown-menu').contains(firstTagName).click()
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Second Task{enter}')
+
+    // Act
+    cy.get('#taskTags div.tag.btn-group button > svg.fa-times').click()
+    cy.get('button > svg.fa-plus').click()
+    cy.get('#tagDropdownMenu > button').contains(firstTagName).click()
+    cy.reload()
+
+    // Assert
+    cy.get('#incomplete-task-list').contains('My Second Task')
+    cy.get('#selected-task-container').within(() => {
+      cy.get('div.tag > button.tag-name').contains(firstTagName).should('be.visible')
+    })
+  })
 })

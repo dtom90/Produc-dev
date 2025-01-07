@@ -6,6 +6,9 @@ const mutations = {
   
   setState (state, { tasks, tags, taskTagMaps, logs, settings }) {
     state.tasks = tasks
+    state.tasks.forEach(task => {
+      task.tags = []
+    })
     state.tags = {}
     state.tagOrder = []
     for (const tag of tags) {
@@ -136,10 +139,6 @@ const mutations = {
       state.tags[tag.id] = tag
     })
     state.tagOrder = reorderedTags.map(tag => tag.id)
-  },
-  
-  setTagColor (state, payload) {
-    Vue.set(state.tags[payload.tag], 'color', payload.color)
   },
   
   upgradeTagColor (state) {

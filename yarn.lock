@@ -894,7 +894,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.25.9"
     "@babel/helper-plugin-utils" "^7.25.9"
 
-"@babel/preset-env@^7.11.0", "@babel/preset-env@^7.12.1":
+"@babel/preset-env@^7.11.0", "@babel/preset-env@^7.12.1", "@babel/preset-env@^7.26.0":
   version "7.26.0"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.26.0.tgz#30e5c6bc1bcc54865bff0c5a30f6d4ccdc7fa8b1"
   integrity sha512-H84Fxq0CQJNdPFT2DrfnylZ3cf5K43rGfWK4LJGPpjKHiZlk0/RzwEus3PDDZZg+/Er7lCA03MVacueUuXdzfw==
@@ -1478,6 +1478,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@kurkle/color@^0.3.0":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.4.tgz#4d4ff677e1609214fc71c580125ddddd86abcabf"
+  integrity sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==
+
 "@malept/cross-spawn-promise@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@malept/cross-spawn-promise/-/cross-spawn-promise-1.1.1.tgz#504af200af6b98e198bce768bc1730c6936ae01d"
@@ -1792,13 +1797,6 @@
     "@types/keyv" "^3.1.4"
     "@types/node" "*"
     "@types/responselike" "^1.0.0"
-
-"@types/chart.js@^2.7.55":
-  version "2.9.34"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.34.tgz#d41fb6b74b72a56bac70255bb4ed087386b66ed6"
-  integrity sha512-CtZVk+kh1IN67dv+fB0CWmCLCRrDJgqOj15qPic2B1VCMovNO6B7Vhf/TgPpNscjhAL1j+qUntDMWb9A4ZmPTg==
-  dependencies:
-    moment "^2.10.2"
 
 "@types/connect-history-api-fallback@*":
   version "1.5.4"
@@ -3564,6 +3562,14 @@ babel-loader@^8.1.0:
     make-dir "^3.1.0"
     schema-utils "^2.6.5"
 
+babel-loader@^9.2.1:
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-9.2.1.tgz#04c7835db16c246dd19ba0914418f3937797587b"
+  integrity sha512-fqe8naHt46e0yIdkjUZYqddSXfej3AHajX+CSO5X7oy0EmPc6o5Xh+RClNoHjnieWz9AW4kZxW9yyFMhVB1QLA==
+  dependencies:
+    find-cache-dir "^4.0.0"
+    schema-utils "^4.0.0"
+
 babel-messages@^6.23.0:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-messages/-/babel-messages-6.23.0.tgz#f3cdf4703858035b2a2951c6ec5edf6c62f2630e"
@@ -4474,40 +4480,22 @@ chardet@^0.7.0:
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-chart.js@^2.4.0, chart.js@^2.9.4:
-  version "2.9.4"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.4.tgz#0827f9563faffb2dc5c06562f8eb10337d5b9684"
-  integrity sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A==
+chart.js@^4.4.7:
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.4.7.tgz#7a01ee0b4dac3c03f2ab0589af888db296d896fa"
+  integrity sha512-pwkcKfdzTMAU/+jNosKhNL2bHtJc/sSmYgVbuGTEDhzkrhmyihmP7vUc/5ZK9WopidMDHNe3Wm7jOd/WhuHWuw==
   dependencies:
-    chartjs-color "^2.1.0"
-    moment "^2.10.2"
+    "@kurkle/color" "^0.3.0"
 
-chartjs-color-string@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/chartjs-color-string/-/chartjs-color-string-0.6.0.tgz#1df096621c0e70720a64f4135ea171d051402f71"
-  integrity sha512-TIB5OKn1hPJvO7JcteW4WY/63v6KwEdt6udfnDE9iCAZgy+V4SrbSxoIbTw/xkUIapjEI4ExGtD0+6D3KyFd7A==
-  dependencies:
-    color-name "^1.0.0"
+chartjs-plugin-annotation@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-annotation/-/chartjs-plugin-annotation-3.1.0.tgz#0b3910862bde232344bbb6cf998633f71db7b093"
+  integrity sha512-EkAed6/ycXD/7n0ShrlT1T2Hm3acnbFhgkIEJLa0X+M6S16x0zwj1Fv4suv/2bwayCT3jGPdAtI9uLcAMToaQQ==
 
-chartjs-color@^2.1.0:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/chartjs-color/-/chartjs-color-2.4.1.tgz#6118bba202fe1ea79dd7f7c0f9da93467296c3b0"
-  integrity sha512-haqOg1+Yebys/Ts/9bLo/BqUcONQOdr/hoEr2LLTRl6C5LXctUdHxsCYfvQVg5JIxITrfCNUDr4ntqmQk9+/0w==
-  dependencies:
-    chartjs-color-string "^0.6.0"
-    color-convert "^1.9.3"
-
-chartjs-plugin-annotation@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-annotation/-/chartjs-plugin-annotation-0.5.7.tgz#1bf0e30199a6a9ff9889ce0f37a1e755a80d10bf"
-  integrity sha1-G/DjAZmmqf+Yic4PN6HnVagNEL8=
-  dependencies:
-    chart.js "^2.4.0"
-
-chartjs-plugin-datalabels@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-0.6.0.tgz#cbbb4a3429c9fdfa88b974d46b5363b2d095f339"
-  integrity sha512-3APqqeqVHlxjusTO0hETfNjq9HWCISLkjxQfAKgbnTfjZe60knOzVxDAgLGnpRvnzQvZUtwSlnJX2MHIuIUe8w==
+chartjs-plugin-datalabels@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.2.0.tgz#369578e131d743c2e34b5fbe2d3f9335f6639b8f"
+  integrity sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw==
 
 check-error@^1.0.2:
   version "1.0.3"
@@ -4919,6 +4907,11 @@ commander@~2.19.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
   integrity sha512-6tvAOO+D6OENvRAh524Dh9jcfKTYDQAqvqezbCW82xj5X0pSrcpxtvRKHLG0yBY6SD7PSDrJaj+0AiOcKVd1Xg==
+
+common-path-prefix@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/common-path-prefix/-/common-path-prefix-3.0.0.tgz#7d007a7e07c58c4b4d5f433131a19141b29f11e0"
+  integrity sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==
 
 common-tags@^1.8.0:
   version "1.8.2"
@@ -7376,6 +7369,14 @@ find-cache-dir@^3.0.0, find-cache-dir@^3.3.1:
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
 
+find-cache-dir@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/find-cache-dir/-/find-cache-dir-4.0.0.tgz#a30ee0448f81a3990708f6453633c733e2f6eec2"
+  integrity sha512-9ZonPT4ZAK4a+1pUPVPZJapbi7O5qbbJPdYw/NOQWZZbVLdDTYM3A4R9z/DpAM08IDaFGsvPgiGZ82WEwUDWjg==
+  dependencies:
+    common-path-prefix "^3.0.0"
+    pkg-dir "^7.0.0"
+
 find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
@@ -7398,6 +7399,14 @@ find-up@^4.0.0, find-up@^4.1.0:
   dependencies:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
+
+find-up@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/find-up/-/find-up-6.3.0.tgz#2abab3d3280b2dc7ac10199ef324c4e002c8c790"
+  integrity sha512-v2ZsoEuVHYy8ZIlYqwPe/39Cy+cFDzp4dXPaxNvkEuouymu+2Jbz0PxpKarJHYJTmv2HWT3O382qY8l4jMWthw==
+  dependencies:
+    locate-path "^7.1.0"
+    path-exists "^5.0.0"
 
 flat-cache@^3.0.4:
   version "3.2.0"
@@ -10087,6 +10096,13 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+locate-path@^7.1.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-7.2.0.tgz#69cb1779bd90b35ab1e771e1f2f89a202c2a8a8a"
+  integrity sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==
+  dependencies:
+    p-locate "^6.0.0"
+
 lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
@@ -10698,7 +10714,7 @@ moment-range@^4.0.1:
   dependencies:
     es6-symbol "^3.1.0"
 
-moment@>=2.29.4, moment@^2.10.2, moment@^2.14.1, moment@^2.24.0, moment@^2.29.4:
+moment@>=2.29.4, moment@^2.14.1, moment@^2.24.0, moment@^2.29.4:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
@@ -11294,6 +11310,13 @@ p-limit@^3.0.2:
   dependencies:
     yocto-queue "^0.1.0"
 
+p-limit@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-4.0.0.tgz#914af6544ed32bfa54670b061cafcbd04984b644"
+  integrity sha512-5b0R4txpzjPWVw/cXXUResoD4hb6U/x9BH08L7nw+GN1sezDzPdxeRvpc9c433fZhBan/wusjbCsqwqm4EIBIQ==
+  dependencies:
+    yocto-queue "^1.0.0"
+
 p-locate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/p-locate/-/p-locate-3.0.0.tgz#322d69a05c0264b25997d9f40cd8a891ab0064a4"
@@ -11307,6 +11330,13 @@ p-locate@^4.1.0:
   integrity sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==
   dependencies:
     p-limit "^2.2.0"
+
+p-locate@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/p-locate/-/p-locate-6.0.0.tgz#3da9a49d4934b901089dca3302fa65dc5a05c04f"
+  integrity sha512-wPrq66Llhl7/4AGC6I+cqxT07LhXvWL08LNXz1fENOw0Ap4sRZZ/gZpTTJ5jpurzzzfS2W/Ge9BY3LgLjCShcw==
+  dependencies:
+    p-limit "^4.0.0"
 
 p-map@^1.1.1:
   version "1.2.0"
@@ -11503,6 +11533,11 @@ path-exists@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-4.0.0.tgz#513bdbe2d3b95d7762e8c1137efa195c6c61b5b3"
   integrity sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==
 
+path-exists@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-5.0.0.tgz#a6aad9489200b21fab31e49cf09277e5116fb9e7"
+  integrity sha512-RjhtfwJOxzcFmNOi6ltcbcu4Iu+FL3zEj83dk4kAS+fVpTxXLO1b38RvJgT/0QwvV/L3aY9TAnyv0EOqW4GoMQ==
+
 path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
@@ -11663,6 +11698,13 @@ pkg-dir@^4.1.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
+
+pkg-dir@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-7.0.0.tgz#8f0c08d6df4476756c5ff29b3282d0bab7517d11"
+  integrity sha512-Ie9z/WINcxxLp27BKOCHGde4ITq9UklYKDzVo1nhk5sqGEXU3FpkwP5GM2voTGJkGd9B3Otl+Q4uwSOeSUtOBA==
+  dependencies:
+    find-up "^6.3.0"
 
 pkg-up@^3.1.0:
   version "3.1.0"
@@ -13041,7 +13083,7 @@ schema-utils@^3.2.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-schema-utils@^4.3.0:
+schema-utils@^4.0.0, schema-utils@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-4.3.0.tgz#3b669f04f71ff2dfb5aba7ce2d5a9d79b35622c0"
   integrity sha512-Gf9qqc58SpCA/xdziiHz35F4GNIWYWZrEshUc/G/r5BnLph6xpKuLeoJoQuj5WfBIx/eQLf+hmVPYHaxJu7V2g==
@@ -15160,12 +15202,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vue-chartjs@^3.5.0:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-3.5.1.tgz#d25e845708f7744ae51bed9d23a975f5f8fc6529"
-  integrity sha512-foocQbJ7FtveICxb4EV5QuVpo6d8CmZFmAopBppDIGKY+esJV8IJgwmEW0RexQhxqXaL/E1xNURsgFFYyKzS/g==
-  dependencies:
-    "@types/chart.js" "^2.7.55"
+vue-chartjs@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-5.3.2.tgz#c0f2009af6b08845af158ddee9d0a68d9dae631b"
+  integrity sha512-NrkbRRoYshbXbWqJkTN6InoDVwVb90C0R7eAVgMWcB9dPikbruaOoTFjFYHE/+tNPdIe6qdLCDjfjPHQ0fw4jw==
 
 vue-cli-plugin-electron-builder@^2.1.1:
   version "2.1.1"
@@ -15954,6 +15994,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+yocto-queue@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.1.1.tgz#fef65ce3ac9f8a32ceac5a634f74e17e5b232110"
+  integrity sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g==
 
 yorkie@^2.0.0:
   version "2.0.0"

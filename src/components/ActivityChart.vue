@@ -1,18 +1,23 @@
+<template>
+  <Bar
+    :data="chartData"
+    :options="chartOptions"
+  />
+</template>
+
 <script>
-import { Bar, mixins } from 'vue-chartjs'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import annotationPlugin from 'chartjs-plugin-annotation'
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import ChartPluginDataLabels from 'chartjs-plugin-datalabels'
+import ChartPluginAnnotation from 'chartjs-plugin-annotation'
 import { displayChartDuration, displayChartDurationNewline } from '../lib/time'
 import cloneDeep from 'lodash.clonedeep'
 
-const { reactiveProp } = mixins
+ChartJS.register(Title, Tooltip, Legend, BarElement, LinearScale, CategoryScale, ChartPluginDataLabels, ChartPluginAnnotation)
 
 const defaultChartOptions = {
-  legend: {
-    display: false
-  },
   scales: {
-    yAxes: [{
+    y: {
       scaleLabel: {
         display: true,
         labelString: 'Time Spent'
@@ -23,24 +28,30 @@ const defaultChartOptions = {
         stepSize: 0.5,
         callback: mins => displayChartDurationNewline(mins).split('\n')
       }
-    }]
-  },
-  tooltips: {
-    displayColors: false,
-    position: 'nearest',
-    callbacks: {
-      title: (tooltipItem, data) => data.datasets[tooltipItem[0].datasetIndex].label,
-      label: tooltipItem => tooltipItem.xLabel + ':',
-      afterLabel: tooltipItem => displayChartDuration(tooltipItem.yLabel)
     }
   },
   plugins: {
+    legend: {
+      display: false
+    },
+    tooltip: {
+      displayColors: false,
+      position: 'nearest',
+      callbacks: {
+        title: (tooltipItems) => tooltipItems[0].dataset.label,
+        label: tooltipItem => tooltipItem.label + ':',
+        afterLabel: tooltipItem => displayChartDuration(tooltipItem.raw)
+      }
+    },
     datalabels: {
       anchor: 'end',
       align: 'start',
       clip: true,
       color: 'white',
       formatter: displayChartDurationNewline
+    },
+    annotation: {
+      annotations: {}
     }
   },
   animation: {
@@ -52,41 +63,38 @@ const defaultChartOptions = {
         chartWrapper.scrollLeft = canvas.clientWidth
       }
     }
-  },
-  annotation: {
-    events: ['click'],
-    annotations: []
-  },
-  responsive: true,
-  maintainAspectRatio: false
+  }
 }
 
 const baseTargetLine = Object.freeze({
   type: 'line',
-  mode: 'horizontal',
-  scaleID: 'y-axis-0',
+  scaleID: 'y',
   value: 0,
   borderColor: 'red',
   borderWidth: 2,
   label: {
+    display: true,
     backgroundColor: 'red',
     content: '',
-    yAdjust: 10,
-    enabled: true
+    padding: 5,
+    position: 'center', // 'start', 'center', or 'end' to place the label along the line
+    xAdjust: 0, // Ensure no horizontal offset
+    yAdjust: 0, // Ensure no vertical offset
+    rotation: 0 // Keep the label upright
+    // callout: {
+    //   display: true,
+    //   start: 0
+    // }
   }
 })
 
 function chartOptions (target = null, scrollRight = false) {
   const chartOptions = cloneDeep(defaultChartOptions)
-  if (target !== null) {
+  if (target) {
     const annotation = cloneDeep(baseTargetLine)
     annotation.value = target
     annotation.label.content = 'Target: ' + displayChartDuration(target)
-    if (chartOptions.annotation.annotations.length === 0) {
-      chartOptions.annotation.annotations.push(annotation)
-    } else {
-      chartOptions.annotation.annotations[0] = annotation
-    }
+    chartOptions.plugins.annotation.annotations.targetLine = annotation
   }
   if (scrollRight === false) {
     chartOptions.animation.onComplete = () => {}
@@ -95,32 +103,35 @@ function chartOptions (target = null, scrollRight = false) {
 }
 
 export default {
-  extends: Bar,
-  
-  mixins: [reactiveProp],
-  
+  name: 'BarChart',
+  components: { Bar },
+
   props: {
-    plugins: {
-      type: Array,
-      default: () => [ChartDataLabels, annotationPlugin]
+    chartData: {
+      type: Object,
+      required: true
     },
+    
     target: {
       type: Number,
       default: null
     }
   },
   
-  watch: {
-    chartData: function (newChartData) {
-      this.renderChart(newChartData, chartOptions(this.target))
-    },
-    target: function (newTarget) {
-      this.renderChart(this.chartData, chartOptions(newTarget))
+  data: function () {
+    return {
+      chartOptions: {}
     }
   },
   
+  watch: {
+    target: function (newTarget) {
+      this.chartOptions = chartOptions(newTarget)
+    }
+  },
+
   mounted () {
-    this.renderChart(this.chartData, chartOptions(this.target, true))
+    this.chartOptions = chartOptions(this.target, true)
   }
 }
 
