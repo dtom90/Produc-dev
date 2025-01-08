@@ -45,6 +45,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "color-manager": "https://github.com/dtom90/color-manager",
     "core-js": "^3.38.1",
+    "cypress-browser-permissions": "^1.1.0",
     "dayjs": "^1.11.13",
     "dexie": "^4.0.10",
     "dompurify": "^3.1.3",

@@ -14,5 +14,10 @@ module.exports = defineConfig({
         }
       })
     }
+  },
+  env: {
+    browserPermissions: {
+      notifications: 'allow'
+    }
   }
 })

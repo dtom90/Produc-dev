@@ -8,10 +8,9 @@ const getters = {
   },
   
   notificationsEnabled (state) {
-    const activeTask = state.tasks.find(t => t.id === state.tempState.activeTaskID)
-    return state.settings.globalNotificationsEnabled && (
-      activeTask ? !(activeTask.disableNotifications === true) : true
-    )
+    // const activeTask = state.tasks.find(t => t.id === state.tempState.activeTaskID)
+    return state.settings.globalNotificationsEnabled
+    // && (activeTask ? !(activeTask.disableNotifications === true) : true)
   },
   
   incompleteTasks: (state) => {

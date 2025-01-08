@@ -1,4 +1,4 @@
-describe('start task timer', () => {
+describe('task timer', () => {
   beforeEach(() => {
     cy.get('input[placeholder="enter new task"]')
       .click()
