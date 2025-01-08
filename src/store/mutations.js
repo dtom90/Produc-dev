@@ -33,7 +33,6 @@ const mutations = {
     }
     for (const key of Object.keys(initialState.settings)) {
       const setting = settings.find(s => s.key === key)
-      state[key] = setting ? setting.value : initialState.settings[key]
       state.settings[key] = setting ? setting.value : initialState.settings[key]
     }
   },

@@ -36,14 +36,14 @@ const actions = {
       }
       // Note: task added to dexie without tags array
       await dexieDb.tasks.add(newTask)
-      if (state.settings.addSelectedTags && state.selectedTagIds.length) {
-        const taskTagMaps = state.selectedTagIds.map(tagId => ({
+      if (state.settings.addSelectedTags && state.settings.selectedTagIds.length) {
+        const taskTagMaps = state.settings.selectedTagIds.map(tagId => ({
           id: 'taskTag-' + nanoid(),
           taskId: newTask.id,
           tagId
         }))
         await dexieDb.taskTagMap.bulkAdd(taskTagMaps)
-        newTask.tags = state.selectedTagIds
+        newTask.tags = state.settings.selectedTagIds
       } else {
         newTask.tags = []
       }
