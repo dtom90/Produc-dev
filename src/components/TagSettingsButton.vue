@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="tag"
     ref="tagSettingsButton"
     class="btn-group dropright"
     role="group"
@@ -44,7 +45,7 @@
         type="button"
         class="btn btn-danger"
         title="Delete tag"
-        @click="deleteTag({tag:tagName})"
+        @click="deleteTag({ tagId })"
       >
         <font-awesome-icon icon="trash-alt" />
       </button>
@@ -54,7 +55,7 @@
 
 <script>
 import Sketch from 'vue-color/src/components/Sketch'
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'TagSettingsButton',
@@ -85,16 +86,16 @@ export default {
   },
   
   mounted () {
+    if (!this.tag) {
+      return
+    }
     this.newTagName = this.tag.tagName
     this.color = this.tag.color
   },
   
   methods: {
     ...mapActions([
-      'setTagName'
-    ]),
-    
-    ...mapMutations([
+      'setTagName',
       'deleteTag'
     ]),
     
