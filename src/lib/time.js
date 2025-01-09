@@ -46,7 +46,7 @@ export default {
     daysLater: (a, diffDays) => dayjs.utc(a).add(diffDays, 'day'),
     
     displayTimeFormat () {
-      return `${this.settings.timeFormat24 ? 'H' : 'h'}:mm${this.settings.timeFormat24 ? '' : ' A'}`
+      return this.settings ? `${this.settings.timeFormat24 ? 'H' : 'h'}:mm${this.settings.timeFormat24 ? '' : ' A'}` : ''
     },
     
     displayDateFormat () {

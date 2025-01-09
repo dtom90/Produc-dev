@@ -33,16 +33,7 @@ const initialState = {
     DailyTarget: null,
     WeeklyTarget: null,
     MonthlyTarget: null
-    // totalTarget: {}
   }
 }
-
-// // Load state from sample file
-// import sample1 from '../../tests/fixtures/sample1'
-// const state = sample1
-
-// // Load task with activity
-// import { taskWithActivity } from '../../tests/fixtures'
-// state.tasks.push(taskWithActivity())
 
 export default initialState
