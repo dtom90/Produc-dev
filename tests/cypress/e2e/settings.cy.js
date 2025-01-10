@@ -19,6 +19,7 @@ describe('notifications', () => {
     cy.window().then((win) => {
       cy.stub(win.Notification, 'requestPermission').resolves('granted').as('RequestPermissionStub')
       cy.stub(win, 'Notification').as('NotificationStub')
+      win.Notification.permission = 'granted'
     })
   })
   
@@ -31,7 +32,8 @@ describe('notifications', () => {
     // Assert
     cy.get('@RequestPermissionStub').should('be.called')
   })
-
+  
+  // isPermissionAllowed('notifications') &&
   it('show notification on timer complete', () => {
     // Arrange
     cy.get('input[placeholder="enter new task"]')
@@ -44,7 +46,7 @@ describe('notifications', () => {
     cy.get('button > svg.fa-play').click()
 
     // Assert
-    cy.get('@NotificationStub').should('be.called')
+    cy.get('@NotificationStub').should('be.calledWith', 'Finished Working, Take a Break!')
   })
 
   it('toggles off notifications', () => {
