@@ -36,14 +36,14 @@ const actions = {
       }
       // Note: task added to dexie without tags array
       await dexieDb.tasks.add(newTask)
-      if (state.settings.addSelectedTags && state.selectedTagIds.length) {
-        const taskTagMaps = state.selectedTagIds.map(tagId => ({
+      if (state.settings.addSelectedTags && state.settings.selectedTagIds.length) {
+        const taskTagMaps = state.settings.selectedTagIds.map(tagId => ({
           id: 'taskTag-' + nanoid(),
           taskId: newTask.id,
           tagId
         }))
         await dexieDb.taskTagMap.bulkAdd(taskTagMaps)
-        newTask.tags = state.selectedTagIds
+        newTask.tags = state.settings.selectedTagIds
       } else {
         newTask.tags = []
       }
@@ -220,16 +220,14 @@ const actions = {
   
   async addTaskTagById ({ state, commit }, { taskId, tagId }) {
     const task = state.tasks.find(t => t.id === taskId)
-    if (task) {
-      const tag = state.tags[tagId]
-      if (tag) {
-        await dexieDb.taskTagMap.add({
-          id: 'taskTag-' + nanoid(),
-          taskId,
-          tagId
-        })
-        commit('addTaskTag', { taskId, tag, isNewTag: false })
-      }
+    const tag = state.tags[tagId]
+    if (task && tag) {
+      await dexieDb.taskTagMap.add({
+        id: 'taskTag-' + nanoid(),
+        taskId,
+        tagId
+      })
+      commit('addTaskTag', { taskId, tag, isNewTag: false })
     }
   },
   
@@ -280,6 +278,15 @@ const actions = {
     const newTags = await dexieDb.taskTagMap.where('taskId').equals(taskId).toArray()
     const newTagIds = newTags.map(tag => tag.tagId)
     commit('updateTask', { taskId, taskUpdates: { tags: newTagIds } })
+  },
+  
+  async deleteTag ({ state, commit }, { tagId }) {
+    const tag = await dexieDb.tags.where('id').equals(tagId).first()
+    if (confirm(`Are you sure you want to delete the tag "${tag.tagName}"?\nAll tasks with this tag will lose the tag.`)) {
+      await dexieDb.taskTagMap.where('tagId').equals(tagId).delete()
+      await dexieDb.tags.where('id').equals(tagId).delete()
+      commit('deleteTag', { tagId })
+    }
   },
   
   async selectTask ({ state, dispatch }, { taskId }) {

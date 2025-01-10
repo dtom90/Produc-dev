@@ -23,7 +23,9 @@ describe('Log', () => {
   
   const store = new Vuex.Store({
     state: {
-      timeFormat24: false
+      settings: {
+        timeFormat24: false
+      }
     }
   })
   

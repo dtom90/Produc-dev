@@ -27,7 +27,7 @@ const displayDuration = ms => humanizeDuration(ms, baseDurationOptions)
 
 export default {
   computed: {
-    ...mapState(['timeFormat24'])
+    ...mapState(['settings'])
   },
   
   methods: {
@@ -46,7 +46,7 @@ export default {
     daysLater: (a, diffDays) => dayjs.utc(a).add(diffDays, 'day'),
     
     displayTimeFormat () {
-      return `${this.timeFormat24 ? 'H' : 'h'}:mm${this.timeFormat24 ? '' : ' A'}`
+      return this.settings ? `${this.settings.timeFormat24 ? 'H' : 'h'}:mm${this.settings.timeFormat24 ? '' : ' A'}` : ''
     },
     
     displayDateFormat () {

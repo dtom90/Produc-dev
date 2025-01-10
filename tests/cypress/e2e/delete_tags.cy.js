@@ -34,15 +34,30 @@ describe('delete tags', () => {
     cy.get('#taskTags').contains(firstTagName).should('not.exist')
     cy.get('#taskTags').contains(secondTagName).should('exist')
   })
-  
+
   it('should keep tag removed on page reload', () => {
     // Arrange
     cy.get('#taskTags div.tag.btn-group button > svg.fa-times').click()
-    
+
     // Act
     cy.reload()
-    
+
     // Assert
+    cy.get('#taskTags').contains(firstTagName).should('not.exist')
+  })
+  
+  it('deletes tag from all tasks', () => {
+    // Arrange
+    cy.get('.navbar-nav').get('a.nav-link').contains('Tags').click()
+    cy.contains('.modal-dialog', 'Tags').within(() => {
+      cy.get('.tag-button').contains(firstTagName).click()
+      
+      // Act
+      cy.get('button > svg.fa-trash-alt').click()
+      
+      // Assert
+      cy.get('.tag-button').should('not.exist')
+    })
     cy.get('#taskTags').contains(firstTagName).should('not.exist')
   })
 })

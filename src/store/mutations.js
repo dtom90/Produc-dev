@@ -33,7 +33,6 @@ const mutations = {
     }
     for (const key of Object.keys(initialState.settings)) {
       const setting = settings.find(s => s.key === key)
-      state[key] = setting ? setting.value : initialState.settings[key]
       state.settings[key] = setting ? setting.value : initialState.settings[key]
     }
   },
@@ -161,16 +160,14 @@ const mutations = {
     state.tags[tagId] = tag
   },
   
-  deleteTag (state, payload) {
-    if (confirm(`Are you sure you want to delete the tag "${payload.tag}"? All tasks with this tag will lose the tag.`)) {
-      state.tasks.forEach(task => {
-        task.tags = task.tags.filter(tag => tag !== payload.tag)
-      })
-      state.selectedTagIds = state.selectedTagIds.filter(tag => tag !== payload.tag)
-      Vue.delete(state.tags, payload.tag)
-      state.tagOrder = state.tagOrder.filter(tag => tag !== payload.tag)
-      $('#activityModal').modal('hide')
-    }
+  deleteTag (state, { tagId }) {
+    state.tasks.forEach(task => {
+      task.tags = task.tags.filter(tId => tId !== tagId)
+    })
+    state.settings.selectedTagIds = state.settings.selectedTagIds.filter(tag => tag !== tagId)
+    Vue.delete(state.tags, tagId)
+    state.tagOrder = state.tagOrder.filter(tId => tId !== tagId)
+    $('#activityModal').modal('hide')
   },
   
   deleteTask (state, payload) {

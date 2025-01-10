@@ -8,7 +8,7 @@
     ok-only
   >
     <draggable
-      v-model="changeTagOrder"
+      v-model="tagOrder"
       animation="200"
       @start="startDrag"
       @end="endDrag"
@@ -33,6 +33,7 @@
         </div>
       </div>
     </draggable>
+    <div id="menu-padding" />
   </b-modal>
 </template>
 
@@ -51,12 +52,11 @@ export default {
   
   computed: {
     ...mapState([
-      'tags',
-      'tagOrder'
+      'tags'
     ]),
-    changeTagOrder: {
+    tagOrder: {
       get () {
-        return this.tagOrder
+        return this.$store.state.tagOrder
       },
       set (newOrder) {
         this.reorderTags({ newOrder })
@@ -80,8 +80,10 @@ export default {
 
 <style>
 .tag-modal-content {
-  min-height: 600px;
   overflow-y: scroll;
+}
+#menu-padding {
+  height: 380px;
 }
 </style>
 
@@ -105,7 +107,6 @@ export default {
   .move-btn:hover {
     color: lightgrey;
   }
-  
 }
 
 </style>

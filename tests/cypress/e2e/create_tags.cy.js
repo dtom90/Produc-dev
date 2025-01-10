@@ -137,4 +137,22 @@ describe('create tags', () => {
       cy.get('div.tag > button.tag-name').contains(firstTagName).should('be.visible')
     })
   })
+
+  it('adds then removes tag from filter, new task should not have tag', () => {
+    // Arrange
+    cy.get('button > svg.fa-filter').click()
+    cy.get('.dropdown-menu').contains(firstTagName).click()
+    cy.get('.dropdown-menu div.tag.btn-group button > svg.fa-times').click()
+
+    // Act
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Second Task{enter}')
+
+    // Assert
+    cy.get('#selected-task-container').within(() => {
+      cy.get('#task-name').contains('My Second Task')
+      cy.get('div.tag > button.tag-name').should('not.exist')
+    })
+  })
 })

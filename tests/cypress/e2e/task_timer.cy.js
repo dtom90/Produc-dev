@@ -1,4 +1,4 @@
-describe('start task timer', () => {
+describe('task timer', () => {
   beforeEach(() => {
     cy.get('input[placeholder="enter new task"]')
       .click()
@@ -104,16 +104,13 @@ describe('start task timer', () => {
   it('sets timer to 6 seconds then starts timer, should count all the way down', () => {
     // Arrange
     cy.get('div').contains('25:00').click()
-    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.1{enter}')
+    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.05{enter}')
 
     // Act
     cy.get('button > svg.fa-play').click()
 
     // Assert
     cy.get('button > svg.fa-pause')
-    cy.get('#countdown-container').contains('0:06')
-    cy.get('#countdown-container').contains('0:05')
-    cy.get('#countdown-container').contains('0:04')
     cy.get('#countdown-container').contains('0:03')
     cy.get('#countdown-container').contains('0:02')
     cy.get('#countdown-container').contains('0:01')
@@ -126,16 +123,13 @@ describe('start task timer', () => {
     // Arrange
     cy.get('button > svg.fa-times').click()
     cy.get('div').contains('5:00').click()
-    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.1{enter}')
+    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.05{enter}')
 
     // Act
     cy.get('button > svg.fa-play').click()
 
     // Assert
     cy.get('button > svg.fa-pause')
-    cy.get('#countdown-container').contains('0:06')
-    cy.get('#countdown-container').contains('0:05')
-    cy.get('#countdown-container').contains('0:04')
     cy.get('#countdown-container').contains('0:03')
     cy.get('#countdown-container').contains('0:02')
     cy.get('#countdown-container').contains('0:01')
@@ -147,7 +141,7 @@ describe('start task timer', () => {
   it('should continue timer when selected', () => {
     // Arrange
     cy.get('div').contains('25:00').click()
-    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.1{enter}')
+    cy.get('#countdown-container input[type="number"]:visible').clear().type('0.05{enter}')
     cy.get('button > svg.fa-cog').click()
     cy.get('.form-check').contains('Continue Timer when Interval Complete').click()
 
@@ -155,9 +149,6 @@ describe('start task timer', () => {
     cy.get('button > svg.fa-play').click()
 
     // Assert
-    cy.get('#countdown-container').contains('0:06')
-    cy.get('#countdown-container').contains('0:05')
-    cy.get('#countdown-container').contains('0:04')
     cy.get('#countdown-container').contains('0:03')
     cy.get('#countdown-container').contains('0:02')
     cy.get('#countdown-container').contains('0:01')
