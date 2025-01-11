@@ -22,11 +22,8 @@ const mutations = {
         task.tags.push(taskTagMap.tagId)
       }
     }
-    for (const log of logs) {
-      const task = state.tasks.find(t => t.id === log.taskId)
-      task.log.push(log)
-    }
     for (const task of state.tasks) {
+      task.log = logs.filter(log => log.taskId === task.id)
       if (task.log.length > 0) {
         task.log.sort((a, b) => a.started - b.started)
       }
@@ -69,18 +66,22 @@ const mutations = {
   startTask (state, { log }) {
     const task = state.tasks.find(t => t.id === log.taskId)
     if (task) {
-      task.log.push(log)
+      task.log = [...task.log, log]
       state.tempState.activeTaskID = task.id
       state.tempState.running = true
     }
   },
   
   updateLog (state, { log }) {
-    const task = state.tasks.find(t => t.id === log.taskId)
-    if (task) {
-      const i = task.log.findIndex(l => l.id === log.id)
-      if (i !== -1) {
-        Vue.set(task.log, i, log)
+    const taskIndex = state.tasks.findIndex(t => t.id === log.taskId)
+    if (taskIndex !== -1) {
+      const task = state.tasks[taskIndex]
+      const logIndex = task.log.findIndex(l => l.id === log.id)
+      if (logIndex !== -1) {
+        const newLog = [...task.log]
+        newLog[logIndex] = log
+        task.log = newLog
+        Vue.set(state.tasks, taskIndex, { ...task, log: newLog })
         state.tempState.running = log.stopped === null
       }
     }
