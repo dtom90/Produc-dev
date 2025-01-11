@@ -188,10 +188,6 @@ export default {
       return this.taskId !== null
     },
     
-    descendingLog: function () {
-      return this.log.slice().reverse()
-    },
-    
     target: {
       get () {
         if (this.isTaskActivity) {
@@ -232,8 +228,8 @@ export default {
         }
       }
       
-      // Create dailyActivity Object from this.log
-      for (const event of this.descendingLog) {
+      // Create dailyActivity Object from a copy of descending this.log
+      for (const event of [...this.log].reverse()) {
         const timestamp = 'started' in event ? event.started : event.completed
         day = this.displayDateISO(timestamp)
         if (day in dailyActivity) {

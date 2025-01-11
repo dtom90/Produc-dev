@@ -24,20 +24,20 @@
         <input
           v-model="newTagName"
           title="Rename tag"
-          @keyup.enter="updateTagName"
+          @keyup.enter="updateTagSubmit"
         >
         <button
           type="button"
           class="btn btn-primary"
-          @click="updateTagName"
+          @click="updateTagSubmit"
         >
           <font-awesome-icon icon="save" />
         </button>
       </div>
       <div class="dropdown-divider" />
       <sketch-picker
-        :value="color"
-        @input="updateTagColor"
+        v-model="newTagColor"
+        @input="newTagColor = $event.hex"
       />
       <div class="dropdown-divider" />
       <button
@@ -72,7 +72,7 @@ export default {
   },
   
   data: () => ({
-    color: '#FFFFFF',
+    newTagColor: '#FFFFFF',
     newTagName: ''
   }),
   
@@ -90,31 +90,24 @@ export default {
       return
     }
     this.newTagName = this.tag.tagName
-    this.color = this.tag.color
+    this.newTagColor = this.tag.color
   },
   
   methods: {
     ...mapActions([
-      'setTagName',
+      'updateTag',
       'deleteTag'
     ]),
     
-    updateTagName () {
-      this.setTagName({
+    async updateTagSubmit () {
+      await this.updateTag({
         tagId: this.tagId,
-        newTagName: this.newTagName
+        tagName: this.newTagName,
+        color: this.newTagColor
       })
       this.$refs.tagSettingsButton.classList.remove('show')
       this.$refs.tagSettingsButton.querySelector('button[data-toggle="dropdown"]').setAttribute('aria-expanded', 'false')
       this.$refs.tagSettingsButton.querySelector('.dropdown-menu').classList.remove('show')
-    },
-    
-    updateTagColor (value) {
-      this.updateTag({
-        tagId: this.tagId,
-        color: value.hex
-      })
-      this.color = this.tag.color
     }
   }
 }

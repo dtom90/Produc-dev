@@ -25,7 +25,7 @@ describe('target', () => {
     })
   })
 
-  it('sets preserves daily target after page reload', () => {
+  it('preserves daily target after page reload', () => {
     // Arrange
     cy.get('.navbar-nav').get('a.nav-link').contains('All Activity').click()
     cy.get('button').contains('Set Target').click()
@@ -45,7 +45,7 @@ describe('target', () => {
     })
   })
 
-  it('sets preserves tag target after page reload', () => {
+  it('preserves tag target after page reload', () => {
     // Arrange
     cy.get('button > svg.fa-plus').click()
     cy.get('input[placeholder="add new tag"]')

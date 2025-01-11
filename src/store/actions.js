@@ -184,7 +184,7 @@ const actions = {
   async deleteInterval ({ state, commit }, { logId }) {
     const log = await dexieDb.logs.get(logId)
     await dexieDb.logs.delete(logId)
-    commit('deleteInterval', { logId, taskId: log.taskId })
+    commit('deleteInterval', { taskId: log.taskId, logId })
   },
   
   async addTaskTagByName ({ state, commit }, { taskId, tagName }) {
@@ -231,29 +231,27 @@ const actions = {
     }
   },
   
-  async setTagName ({ state, commit }, { tagId, newTagName }) {
+  async updateTag ({ state, commit }, { tagId, ...tagUpdates }) {
     const tag = await dexieDb.tags.where('id').equals(tagId).first()
-    if (tag) {
-      if (newTagName !== tag.tagName) {
-        const existingTagWithName = await dexieDb.tags.where('tagName').equals(newTagName).first()
-        if (existingTagWithName) {
-          alert('Error: the new tag name you entered already exists. Please rename it to something else.')
-        } else {
-          tag.tagName = newTagName
-          await dexieDb.tags.put(tag)
-          commit('updateTag', { tagId, tag })
-        }
+    if (!tag) {
+      alert('Error: the tag you are trying to update does not exist. Please refresh the page and try again.')
+      return
+    }
+    
+    if ('tagName' in tagUpdates) {
+      const existingTagWithName = await dexieDb.tags
+        .where('tagName').equals(tagUpdates.tagName)
+        .and(tag => tag.id !== tagId)
+        .first()
+      if (existingTagWithName) {
+        alert('Error: the new tag name you entered already exists. Please rename it to something else.')
+        return
       }
     }
-  },
-  
-  async updateTag ({ state, commit }, { tagId, ...newTagProperties }) {
-    const tag = await dexieDb.tags.where('id').equals(tagId).first()
-    for (const [key, value] of Object.entries(newTagProperties)) {
-      tag[key] = value
-    }
-    await dexieDb.tags.put(tag)
-    commit('updateTag', { tagId, tag })
+    
+    await dexieDb.tags.update(tagId, tagUpdates)
+    
+    commit('updateTag', { tagId, tagUpdates })
   },
   
   async reorderTags ({ state, commit }, { newOrder }) {

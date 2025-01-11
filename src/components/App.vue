@@ -94,7 +94,7 @@ import ActiveTask from './ActiveTask'
 import SelectedTask from './SelectedTask'
 import { ActivityModal, AllActivityModal, StandupModal, TagModal, DataModal } from './modals'
 
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import $ from 'jquery'
 
 $(document).on('click', '.dropdown-menu', function (e) {
@@ -145,7 +145,6 @@ export default {
     }
   },
   mounted () {
-    this.ensureTagOrder()
     window.addEventListener('resize', this.handleResize)
   },
   
@@ -154,9 +153,6 @@ export default {
   },
   
   methods: {
-    ...mapMutations([
-      'ensureTagOrder'
-    ]),
     handleResize () {
       this.windowWidth = window.innerWidth
     }

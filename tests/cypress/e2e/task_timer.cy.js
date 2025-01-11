@@ -20,6 +20,22 @@ describe('task timer', () => {
     })
   })
 
+  it('starts a task timer and creates log even after reload', () => {
+    // Arrange
+    cy.reload()
+    cy.get('button').contains('Activity Log').click()
+
+    // Act
+    cy.get('button > svg.fa-play').click()
+
+    // Assert
+    cy.get('#task-log table').within(() => {
+      cy.get('td').contains('Started')
+      cy.get('td').contains('Running')
+      cy.get('td').contains('Time Spent')
+    })
+  })
+
   it('stops a task timer and updates log', () => {
     // Arrange
     cy.get('button > svg.fa-play').click()
@@ -157,7 +173,7 @@ describe('task timer', () => {
     cy.get('#countdown-container').contains('+0:02')
     cy.get('#countdown-container').contains('+0:03')
   })
-  
+
   it('on refresh, task interval should be stopped', () => {
     // Arrange
     cy.get('div').contains('25:00').click()
