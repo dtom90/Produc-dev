@@ -19,7 +19,27 @@ describe('create tags', () => {
     // (No specific action needed for this test)
 
     // Assert
-    cy.get('.btn-group > button.tag-name').contains(firstTagName)
+    cy.get('#selected-task-container').within(() => {
+      cy.get('div.tag > button.tag-name').contains(firstTagName).should('be.visible')
+    })
+  })
+
+  it('adds a tag to the first task after reload', () => {
+    // Arrange
+    cy.get('input[placeholder="enter new task"]')
+      .click()
+      .type('My Second Task{enter}')
+    cy.reload()
+
+    // Act
+    cy.get('button > svg.fa-plus').click()
+    cy.get('input[placeholder="add new tag"]')
+      .should('have.focus').type(secondTagName + '{enter}')
+
+    // Assert
+    cy.get('#selected-task-container').within(() => {
+      cy.get('div.tag > button.tag-name').contains(secondTagName).should('be.visible')
+    })
   })
 
   it('selects previous tag to the second task', () => {
@@ -49,8 +69,10 @@ describe('create tags', () => {
       .should('have.focus').type(secondTagName + '{enter}')
 
     // Assert
-    cy.get('.btn-group > button.tag-name').contains(firstTagName)
-    cy.get('.btn-group > button.tag-name').contains(secondTagName)
+    cy.get('#selected-task-container').within(() => {
+      cy.get('div.tag > button.tag-name').contains(firstTagName)
+      cy.get('div.tag > button.tag-name').contains(secondTagName)
+    })
   })
 
   it('clicks the Tags button to show the Tags Modal', () => {

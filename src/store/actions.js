@@ -231,29 +231,26 @@ const actions = {
     }
   },
   
-  async setTagName ({ state, commit }, { tagId, newTagName }) {
+  async updateTag ({ state, commit }, { tagId, tagName, color }) {
     const tag = await dexieDb.tags.where('id').equals(tagId).first()
-    if (tag) {
-      if (newTagName !== tag.tagName) {
-        const existingTagWithName = await dexieDb.tags.where('tagName').equals(newTagName).first()
-        if (existingTagWithName) {
-          alert('Error: the new tag name you entered already exists. Please rename it to something else.')
-        } else {
-          tag.tagName = newTagName
-          await dexieDb.tags.put(tag)
-          commit('updateTag', { tagId, tag })
-        }
-      }
+    if (!tag) {
+      alert('Error: the tag you are trying to update does not exist. Please refresh the page and try again.')
+      return
     }
-  },
-  
-  async updateTag ({ state, commit }, { tagId, ...newTagProperties }) {
-    const tag = await dexieDb.tags.where('id').equals(tagId).first()
-    for (const [key, value] of Object.entries(newTagProperties)) {
-      tag[key] = value
+    
+    const existingTagWithName = await dexieDb.tags
+      .where('tagName').equals(tagName)
+      .and(tag => tag.id !== tagId)
+      .first()
+    if (existingTagWithName) {
+      alert('Error: the new tag name you entered already exists. Please rename it to something else.')
+      return
     }
-    await dexieDb.tags.put(tag)
-    commit('updateTag', { tagId, tag })
+    
+    const tagUpdates = { tagName, color }
+    await dexieDb.tags.update(tagId, tagUpdates)
+    
+    commit('updateTag', { tagId, tagUpdates })
   },
   
   async reorderTags ({ state, commit }, { newOrder }) {

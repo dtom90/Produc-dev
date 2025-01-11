@@ -119,15 +119,14 @@ const mutations = {
   addTaskTag (state, { taskId, tag, isNewTag }) {
     if (isNewTag) {
       Vue.set(state.tags, tag.id, tag)
-      state.tagOrder.push(tag.id)
+      state.tagOrder = [...state.tagOrder, tag.id]
     }
-    const task = state.tasks.find(t => t.id === taskId)
-    task.tags.push(tag.id)
-  },
-  
-  updateTaskTags (state, { taskId, newTagNames }) {
-    const task = state.tasks.find(t => t.id === taskId)
-    task.tags = newTagNames
+    
+    const taskIndex = state.tasks.findIndex(t => t.id === taskId)
+    if (taskIndex === -1) return
+    const task = state.tasks[taskIndex]
+    task.tags = [...task.tags, tag.id]
+    Vue.set(state.tasks, taskIndex, { ...task, tags: task.tags })
   },
   
   ensureTagOrder (state) {
@@ -157,8 +156,8 @@ const mutations = {
     Vue.set(targetElement, targetType, payload[targetType])
   },
   
-  updateTag (state, { tagId, tag }) {
-    state.tags[tagId] = tag
+  updateTag (state, { tagId, tagUpdates }) {
+    state.tags[tagId] = { ...state.tags[tagId], ...tagUpdates }
   },
   
   deleteTag (state, { tagId }) {
