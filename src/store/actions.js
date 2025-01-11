@@ -184,7 +184,7 @@ const actions = {
   async deleteInterval ({ state, commit }, { logId }) {
     const log = await dexieDb.logs.get(logId)
     await dexieDb.logs.delete(logId)
-    commit('deleteInterval', { logId, taskId: log.taskId })
+    commit('deleteInterval', { taskId: log.taskId, logId })
   },
   
   async addTaskTagByName ({ state, commit }, { taskId, tagName }) {

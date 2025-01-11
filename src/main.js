@@ -17,7 +17,6 @@ new Vue({
   store,
   mounted () {
     this.$store.dispatch('loadInitialData')
-    this.$store.commit('upgradeTagColor')
   },
   render: h => h(App)
 }).$mount('#app')
